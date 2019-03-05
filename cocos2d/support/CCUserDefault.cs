@@ -26,11 +26,8 @@ THE SOFTWARE.
 using System;
 using Cocos2D;
 using System.IO;
-#if !WINDOWS && !MACOS && !LINUX && !NETFX_CORE
+#if !WINDOWS && !MACOS && !LINUX
 using System.IO.IsolatedStorage;
-#endif
-#if NETFX_CORE
-using Microsoft.Xna.Framework.Storage;
 #endif
 using System.Collections.Generic;
 using System.Text;
@@ -47,11 +44,8 @@ namespace Cocos2D
     	private static string USERDEFAULT_ROOT_NAME = "userDefaultRoot";
     	private static string XML_FILE_NAME = "UserDefault.xml";
 
-    #if !WINDOWS && !MACOS && !LINUX && !NETFX_CORE
+    #if !WINDOWS && !MACOS && !LINUX
     	private IsolatedStorageFile myIsolatedStorage;
-    #elif NETFX_CORE
-        private StorageContainer myIsolatedStorage;
-        private StorageDevice myDevice;
     #endif
         private Dictionary<string, string> values = new Dictionary<string, string>();
 
@@ -100,56 +94,12 @@ namespace Cocos2D
     		values[key] = value;
     	}
 
-    #if NETFX_CORE
-        /// <summary>
-        /// This verifies that the save file is created. An AggregateException can be thrown
-        /// in the inner async method that creates the save file. If that occurs, it means the file
-        /// could not be created.
-        /// </summary>
-        /// <returns></returns>
-        private StorageDevice CheckStorageDevice() {
-            if(myDevice != null) {
-                return(myDevice);
-            }
-            IAsyncResult result = StorageDevice.BeginShowSelector(null, null);
-            // Wait for the WaitHandle to become signaled.
-            result.AsyncWaitHandle.WaitOne();
-            myDevice = StorageDevice.EndShowSelector(result);
-            if(myDevice != null) {
-                result =
-                    myDevice.BeginOpenContainer(XML_FILE_NAME, null, null);
-                // Wait for the WaitHandle to become signaled.
-                result.AsyncWaitHandle.WaitOne();
-                myIsolatedStorage = myDevice.EndOpenContainer(result);
-                // Close the wait handle.
-                result.AsyncWaitHandle.Dispose();
-            }
-            return(myDevice);
-        }
-    #endif
-
     	/**
     	 * implements of CCUserDefault
     	 */
     	private CCUserDefault()
     	{
-    #if NETFX_CORE
-            if(myIsolatedStorage == null) {
-                CheckStorageDevice();
-            }
-            if(myIsolatedStorage != null) 
-            {
-                // only create xml file once if it doesnt exist
-                if ((!isXMLFileExist()))
-                {
-                    createXMLFile();
-                }
-                using (Stream s = myIsolatedStorage.OpenFile(XML_FILE_NAME, FileMode.OpenOrCreate))
-                {
-                    parseXMLFile(s);
-                }
-            }
-    #elif WINDOWS || MACOS || LINUX
+    #if WINDOWS || MACOS || LINUX
     		// only create xml file once if it doesnt exist
     		if ((!isXMLFileExist())) {
     			createXMLFile();

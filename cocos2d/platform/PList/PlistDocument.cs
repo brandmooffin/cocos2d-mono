@@ -30,11 +30,11 @@ using System.Xml;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Content;
-#if NETFX_CORE
-using Win8StoreIOUtility = Cocos2D.Win8StoreIOUtility;
-#endif
 using System.Collections.Generic;
 using System.Text;
+#if NETFX_CORE
+using System.IO.IsolatedStorage;
+#endif
 
 namespace Cocos2D
 {
@@ -171,8 +171,7 @@ namespace Cocos2D
             data.CopyTo(memStream);
 #endif
             memStream.Seek(0, SeekOrigin.Begin);
-            data.Close();
-
+            data.Dispose();
             return memStream;
         }
 
@@ -333,7 +332,7 @@ namespace Cocos2D
         public void WriteToFile(string filename)
         {
 #if NETFX_CORE
-            Stream writeStreamFromFileName = Win8StoreIOUtility.GetWriteStreamFromFileName(filename);
+            Stream writeStreamFromFileName = IsolatedStorageFile.GetUserStoreForApplication().CreateFile(filename);
             using (StreamWriter streamWriter = new StreamWriter(writeStreamFromFileName, System.Text.Encoding.UTF8))
 #else
             using (var streamWriter = new StreamWriter(filename, false, System.Text.Encoding.UTF8))
