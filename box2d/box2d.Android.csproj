@@ -35,7 +35,7 @@
     <OutputPath>bin\Android\Release\</OutputPath>
     <IntermediateOutputPath>obj\Android\Release</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\Android\Release</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;ANDROID;OPENGL;GLES;MONOGAME</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>

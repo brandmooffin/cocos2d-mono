@@ -36,9 +36,10 @@
     <OutputPath>bin\Android\Release\</OutputPath>
     <IntermediateOutputPath>obj\Android\Release</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\Android\Release</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;ANDROID;OPENGL;GLES;MONOGAME</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
