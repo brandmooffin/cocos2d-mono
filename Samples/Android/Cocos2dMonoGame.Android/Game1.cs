@@ -68,11 +68,6 @@ namespace Cocos2dMonoGame.Android
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // If the director is no longer showing a scene, then let's exit
-            if (CCDirector.SharedDirector.RunningScene == null)
-            {
-                ExitGame();
-            }
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
