@@ -1,6 +1,6 @@
 ﻿using Cocos2D;
 
-namespace Cocos2dMonoGame.Android
+namespace Cocos2dMonoGame.Uwp
 {
     public class IntroLayer : CCLayerColor
     {

@@ -1,6 +1,6 @@
 ﻿using Cocos2D;
 
-namespace Cocos2dMonoGame.Android
+namespace Cocos2dMonoGame.Windows
 {
     public class IntroLayer : CCLayerColor
     {
@@ -38,6 +38,8 @@ namespace Cocos2dMonoGame.Android
                 // return the scene
                 return scene;
             }
+
         }
+
     }
 }

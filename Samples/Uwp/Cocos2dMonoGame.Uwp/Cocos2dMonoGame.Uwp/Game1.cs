@@ -1,10 +1,10 @@
-using Cocos2D;
+﻿using Cocos2D;
 using CocosDenshion;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Cocos2dMonoGame.Android
+namespace Cocos2dMonoGame.Uwp
 {
     /// <summary>
     /// This is the main type for your game.

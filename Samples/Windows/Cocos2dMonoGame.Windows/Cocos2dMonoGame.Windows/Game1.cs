@@ -1,10 +1,10 @@
-using Cocos2D;
+﻿using Cocos2D;
 using CocosDenshion;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Cocos2dMonoGame.Android
+namespace Cocos2dMonoGame.Windows
 {
     /// <summary>
     /// This is the main type for your game.
@@ -19,6 +19,7 @@ namespace Cocos2dMonoGame.Android
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+            //
             // This is the main Cocos2D connection. The CCApplication is the manager of the
             // nodes that define your game.
             //
