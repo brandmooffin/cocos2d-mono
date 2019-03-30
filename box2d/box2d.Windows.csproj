@@ -32,7 +32,7 @@
     <OutputPath>bin\Windows\Release\</OutputPath>
     <IntermediateOutputPath>obj\Windows\Release</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\Windows\Release</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
