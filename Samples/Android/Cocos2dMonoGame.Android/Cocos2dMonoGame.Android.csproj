@@ -73,6 +73,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\fonts\MarkerFelt-16.spritefont" />
+    <None Include="Content\fonts\MarkerFelt-18.spritefont" />
+    <None Include="Content\fonts\MarkerFelt-22.spritefont" />
+    <None Include="Content\fonts\MarkerFelt-64.spritefont" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
