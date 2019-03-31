@@ -1,6 +1,6 @@
 ﻿using Cocos2D;
 
-namespace Cocos2dMonoGame.Uwp
+namespace Cocos2DMonoGame.DesktopGL
 {
     public class IntroLayer : CCLayerColor
     {

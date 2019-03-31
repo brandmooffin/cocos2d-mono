@@ -3,7 +3,7 @@ using Cocos2D;
 using CocosDenshion;
 using Microsoft.Xna.Framework;
 
-namespace Cocos2dMonoGame.Uwp
+namespace Cocos2DMonoGame.DesktopGL
 {
     /// <summary>
     /// This is your extension of the main Cocos2D application object.

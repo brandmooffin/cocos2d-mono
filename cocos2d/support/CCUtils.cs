@@ -80,14 +80,14 @@ namespace Cocos2D
 				var extstring = GL.GetString(StringName.Extensions);
 
 				#else
-                var extstring = GL.GetString(StringName.Extensions);
                 ErrorCode error = GL.GetError();
                 if (error != ErrorCode.NoError)
                 {
                     CCLog.Log("ERROR: The GL context is in error (" + error + ").");
                 }
-                #endif
-                
+                var extstring = GL.GetString(StringName.Extensions);
+#endif
+
                 if (!string.IsNullOrEmpty(extstring))
                 {
                     extensions.AddRange(extstring.Split(' '));

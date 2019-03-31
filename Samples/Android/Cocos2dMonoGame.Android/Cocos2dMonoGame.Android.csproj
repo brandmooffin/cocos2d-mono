@@ -47,11 +47,11 @@
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Box2D">
-      <HintPath>..\..\..\cocos2d\bin\Android\Release\Box2D.dll</HintPath>
+    <Reference Include="Box2D, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cocos2D-Mono.Android.2.3.5\lib\monoandroid44\Box2D.dll</HintPath>
     </Reference>
-    <Reference Include="Cocos2D">
-      <HintPath>..\..\..\cocos2d\bin\Android\Release\Cocos2D.dll</HintPath>
+    <Reference Include="Cocos2D, Version=2.3.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cocos2D-Mono.Android.2.3.5\lib\monoandroid44\Cocos2D.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="MonoGame.Framework, Version=3.7.1.189, Culture=neutral, processorArchitecture=MSIL">

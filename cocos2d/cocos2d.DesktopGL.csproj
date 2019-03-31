@@ -36,6 +36,7 @@
     <DefineConstants>TRACE;DEBUG;WINDOWSGL;OPENGL;MONOGAME;DESKTOPGL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BitMiracle.LibTiff.NET, Version=2.4.626.0, Culture=neutral, PublicKeyToken=53879b3e20e7a7d6, processorArchitecture=MSIL">
@@ -434,7 +435,6 @@
     <Compile Include="touch_dispatcher\ICCTouchDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

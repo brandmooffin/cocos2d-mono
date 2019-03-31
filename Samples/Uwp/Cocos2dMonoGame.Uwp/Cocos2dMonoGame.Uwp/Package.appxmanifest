@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="7acf34e2-1390-49ef-9358-10067003881a"
+    Name="6965526d-e62c-4e0a-80b6-2626ff3ba3f3"
     Publisher="CN=brand"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="7acf34e2-1390-49ef-9358-10067003881a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="6965526d-e62c-4e0a-80b6-2626ff3ba3f3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Cocos2dMonoGame.Uwp</DisplayName>

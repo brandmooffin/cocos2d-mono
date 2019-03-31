@@ -5,7 +5,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{12BD70AB-6D9B-4623-8278-14A682E68C78}</ProjectGuid>
+    <ProjectGuid>{3D66A534-0AD6-4E20-B26C-94A13A7A76D8}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Cocos2dMonoGame.Uwp</RootNamespace>
@@ -105,6 +105,10 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="Cocos2dMonoGame.Uwp_TemporaryKey.pfx" />
+    <None Include="Content\fonts\MarkerFelt-16.spritefont" />
+    <None Include="Content\fonts\MarkerFelt-18.spritefont" />
+    <None Include="Content\fonts\MarkerFelt-22.spritefont" />
+    <None Include="Content\fonts\MarkerFelt-64.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
@@ -128,11 +132,13 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Box2D">
-      <HintPath>..\..\..\..\..\cocos2d\bin\Uwp\Release\Box2D.dll</HintPath>
+    <Reference Include="Box2D, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\cocos2d\bin\Uwp\Release\Box2D.dll</HintPath>
     </Reference>
-    <Reference Include="Cocos2D">
-      <HintPath>..\..\..\..\..\cocos2d\bin\Uwp\Release\Cocos2D.dll</HintPath>
+    <Reference Include="Cocos2D, Version=2.3.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\cocos2d\bin\Uwp\Release\Cocos2D.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
