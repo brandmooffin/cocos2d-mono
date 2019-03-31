@@ -522,7 +522,7 @@
       <Version>3.7.1.189</Version>
     </PackageReference>
     <PackageReference Include="SharpDX">
-      <Version>4.2.0</Version>
+      <Version>4.0.1</Version>
     </PackageReference>
     <PackageReference Include="SharpZipLib">
       <Version>1.1.0</Version>
