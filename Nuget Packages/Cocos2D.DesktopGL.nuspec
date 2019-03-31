@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.DesktopGL</id>
-    <version>$version$</version>
+    <version>$version$.1</version>
     <title>$title$</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
