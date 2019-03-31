@@ -68,3 +68,7 @@ Getting Started
 ### Samples
 
 Samples can be found [here](https://github.com/brandmooffin/cocos2d-mono/tree/master/Samples)
+
+### NuGet Packages
+
+Cocos2D-Mono is also available as a [NuGet package](https://www.nuget.org/packages?q=cocos2d-mono)
