@@ -430,11 +430,6 @@
     <Compile Include="touch_dispatcher\ICCTouchDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.Android">
-      <Version>3.7.1.189</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="tools\Debug\" />
   </ItemGroup>
   <ItemGroup>
@@ -442,6 +437,11 @@
       <Project>{c0146e28-b1e0-4f07-8407-8411753500ea}</Project>
       <Name>box2d.Android</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.Android">
+      <Version>3.7.1.189</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
