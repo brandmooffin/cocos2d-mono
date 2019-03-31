@@ -1,5 +1,5 @@
 # Cocos2D-Mono
-
+![Cocos2D-Mono](https://raw.githubusercontent.com/brandmooffin/cocos2d-mono/master/Logos/logo-full-200.png)
 
 Cocos2D-Mono is the *premier 2D game development engine based upon the wildly popular and successful Cocos2D-X engine and picking up where Cocos2D-XNA left off. With Cocos2D-Mono, the game developer can create fantastic games with rich user experiences without the tremendous cost of a proprietary game library. MIT licensed, and open source hosted at github.com, this framework gives developers total power and control over every aspect of their game. Cocos2D-XNA has been used to deploy games to nearly every type of device in use today using XNA from Microsoft or MonoGame, Cocos2D-Mono hopes to continue that journet. Refreshing the Cocos2D-XNA project to support latest MonoGame versions and bringing support to more platforms, the power of XNA and the depth of Cocos2d are at every game developers reach -again-, taking their creative genius to over 95% of the computing devices on the planet.
 
