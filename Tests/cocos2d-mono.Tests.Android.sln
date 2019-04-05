@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.539
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cocos2d.Android", "..\cocos2d\cocos2d.Android.csproj", "{BF0247D4-6EF0-4F82-B22B-244D187B124D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "box2d.Android", "..\box2d\box2d.Android.csproj", "{C0146E28-B1E0-4F07-8407-8411753500EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cocos2d-mono.Tests.Android", "cocos2d-mono.Tests\cocos2d-mono.Tests.Android.csproj", "{5CD4F351-4B72-42A8-9786-E42A158B8B4B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF0247D4-6EF0-4F82-B22B-244D187B124D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF0247D4-6EF0-4F82-B22B-244D187B124D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF0247D4-6EF0-4F82-B22B-244D187B124D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF0247D4-6EF0-4F82-B22B-244D187B124D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0146E28-B1E0-4F07-8407-8411753500EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0146E28-B1E0-4F07-8407-8411753500EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0146E28-B1E0-4F07-8407-8411753500EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0146E28-B1E0-4F07-8407-8411753500EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CD4F351-4B72-42A8-9786-E42A158B8B4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CD4F351-4B72-42A8-9786-E42A158B8B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CD4F351-4B72-42A8-9786-E42A158B8B4B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5CD4F351-4B72-42A8-9786-E42A158B8B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CD4F351-4B72-42A8-9786-E42A158B8B4B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8C6E989-8466-46F4-9551-E13C3AEED523}
+	EndGlobalSection
+EndGlobal

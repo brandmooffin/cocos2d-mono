@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.Android</id>
-    <version>$version$</version>
+    <version>$version$.1</version>
     <title>$title$</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
@@ -17,6 +17,7 @@
     <tags>mono monogame cocos2d game</tags>
     <dependencies>
       <dependency id="MonoGame.Framework.Android" version="3.7.1.189" />
+      <dependency id="SharpZipLib" version="1.1.0" />
     </dependencies>
   </metadata>
   <files>
