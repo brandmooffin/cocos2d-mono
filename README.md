@@ -72,3 +72,13 @@ Samples can be found [here](https://github.com/brandmooffin/cocos2d-mono/tree/ma
 ### NuGet Packages
 
 Cocos2D-Mono is also available as a [NuGet package](https://www.nuget.org/packages?q=cocos2d-mono)
+
+### Tests
+
+We have created solutions for all the supported platforms that serves as our Test Bed for each platform.
+
+You can find those in the [Tests directory](https://github.com/brandmooffin/cocos2d-mono/tree/master/Tests "Tests")
+
+  cocos2d-mono.Tests.Android.sln
+
+  More tests coming very shortly!
