@@ -8,6 +8,7 @@ using tests.FontTest;
 using tests.Extensions;
 using tests.classes.tests.Box2DTestBet;
 using Box2D.TestBed;
+using Microsoft.Xna.Framework;
 
 namespace tests
 {
@@ -221,9 +222,12 @@ namespace tests
 
         public void closeCallback(object pSender)
         {
-            CCDirector.SharedDirector.End();
 #if (WINDOWS && !WINRT) || WINDOWSGL || WINDOWSDX || MACOS
             CCApplication.SharedApplication.Game.Exit();
+#elif ANDROID
+            Game.Activity.MoveTaskToBack(true);
+#else
+            Exit()
 #endif
         }
 

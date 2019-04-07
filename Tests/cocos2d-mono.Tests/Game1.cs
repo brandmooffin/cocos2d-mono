@@ -81,6 +81,9 @@ namespace tests
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed) {
 #if WINRT || WINDOWS_STOREAPP || WINDOWS_PHONE8 || IOS
                 return;
+#elif ANDROID
+                 Game.Activity.MoveTaskToBack(true);
+
 #else
                 Exit();
 #endif

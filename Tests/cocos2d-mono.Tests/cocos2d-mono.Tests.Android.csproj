@@ -490,6 +490,7 @@
     <Compile Include="PerformanceTest\PerformanceTouchesTest\TouchesPerformTest2.cs" />
     <Compile Include="PerformanceTest\PerformBasicLayer.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.Android.cs" />
     <Compile Include="RenderTextureTest\RenderTextureCompositeTest.cs" />
     <Compile Include="RenderTextureTest\RenderTextureIssue937.cs" />
     <Compile Include="RenderTextureTest\RenderTextureSave.cs" />

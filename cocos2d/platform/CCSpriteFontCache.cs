@@ -98,8 +98,9 @@ namespace Cocos2D
                     loadedName = CCDrawManager.DefaultFont;
                     result = InternalLoadFont(loadedName, fontSize, out loadedSize);
                 }
-                catch (ContentLoadException)
+                catch (ContentLoadException ex)
                 {
+                    CCLog.Log(ex.Message);
                 }
             }
 
@@ -119,8 +120,9 @@ namespace Cocos2D
             {
                 return _contentManager.Load<SpriteFont>(FontKey(fontName, fontSize));
             }
-            catch (ContentLoadException)
+            catch (ContentLoadException ex)
             {
+                CCLog.Log(ex.Message);
             }
 
             //Try nearest size

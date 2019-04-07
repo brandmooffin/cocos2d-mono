@@ -80,5 +80,6 @@ We have created solutions for all the supported platforms that serves as our Tes
 You can find those in the [Tests directory](https://github.com/brandmooffin/cocos2d-mono/tree/master/Tests "Tests")
 
   cocos2d-mono.Tests.Android.sln
+  cocos2d-mono.Tests.Windows.sln
 
   More tests coming very shortly!
