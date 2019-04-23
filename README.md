@@ -18,13 +18,13 @@ We support a growing list of platforms across the desktop, mobile, and console s
  * Consoles (for registered developers)
    * Xbox One (UWP)
  * Coming Soon
-   * tvOS (OpenGL)
+   * iOS (Metal)
+   * tvOS (Metal)
    * Xbox One (XDK)
    * Nintendo Switch
    * PlayStation Vita
    * PlayStation 4
-   * iPhone/iPad (OpenGL)
-   * Mac OS X (OpenGL)
+   * macOS (Metal)
    * Linux (OpenGL)
    * PlayStation 4
    * PlayStation Vita
@@ -82,5 +82,7 @@ You can find those in the [Tests directory](https://github.com/brandmooffin/coco
   cocos2d-mono.Tests.Android.sln
   
   cocos2d-mono.Tests.Windows.sln
+
+  cocos2d-mono.Tests.Uwp.sln
 
   More tests coming very shortly!
