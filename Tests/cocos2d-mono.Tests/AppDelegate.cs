@@ -87,14 +87,14 @@ namespace tests
 
             CCDrawManager.SetDesignResolutionSize(designSize.Width, designSize.Height, CCResolutionPolicy.ShowAll);
 
-/*
-#if WINDOWS || WINDOWSGL
-            CCDrawManager.SetDesignResolutionSize(1280, 768, CCResolutionPolicy.ExactFit);
-#else
-            CCDrawManager.SetDesignResolutionSize(800, 480, CCResolutionPolicy.ShowAll);
-            //CCDrawManager.SetDesignResolutionSize(480, 320, CCResolutionPolicy.ShowAll);
-#endif
-*/
+
+//#if WINDOWS || WINDOWSGL
+//            CCDrawManager.SetDesignResolutionSize(1280, 768, CCResolutionPolicy.ExactFit);
+//#else
+//                        CCDrawManager.SetDesignResolutionSize(800, 480, CCResolutionPolicy.ShowAll);
+//                        CCDrawManager.SetDesignResolutionSize(480, 320, CCResolutionPolicy.ShowAll);
+//#endif
+
 
             // create a scene. it's an autorelease object
             CCScene pScene = new CCScene();

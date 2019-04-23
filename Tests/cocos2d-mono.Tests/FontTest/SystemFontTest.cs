@@ -197,8 +197,20 @@ namespace tests.FontTest
 			RemoveChildByTag(kTagLabel3, true);
 			RemoveChildByTag(kTagLabel4, true);
 
+#if WINDOWS_UWP
+            var top = new CCLabelTTF(pFont, "Arial", 24);
 
-			var top = new CCLabel(pFont,"Arial", 24);
+            var left = new CCLabelTTF("alignment left", pFont, fontSize,
+                                             blockSize, CCTextAlignment.Left,
+                                             SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
+            var center = new CCLabelTTF("alignment center", pFont, fontSize,
+                                               blockSize, CCTextAlignment.Center,
+                                               SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
+            var right = new CCLabelTTF("alignment right", pFont, fontSize,
+                                              blockSize, CCTextAlignment.Right,
+                                              SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
+#else
+            var top = new CCLabel(pFont,"Arial", 24);
 
 			var left = new CCLabel("alignment left", pFont, fontSize,
 			                                 blockSize, CCTextAlignment.Left,
@@ -209,6 +221,7 @@ namespace tests.FontTest
 			var right = new CCLabel("alignment right", pFont, fontSize,
 			                                  blockSize, CCTextAlignment.Right,
 			                                  SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
+#endif
 
             top.AnchorPoint = CCPoint.AnchorMiddleBottom;
             left.AnchorPoint = CCPoint.AnchorMiddle;// new CCPoint(0, 0.5f);
