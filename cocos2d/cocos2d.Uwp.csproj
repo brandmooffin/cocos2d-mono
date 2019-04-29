@@ -25,7 +25,7 @@
     <OutputPath>bin\Uwp\Debug\</OutputPath>
     <IntermediateOutputPath>obj\Uwp\Debug</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\Uwp\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -47,7 +47,7 @@
     <OutputPath>bin\Uwp\x86\Debug\</OutputPath>
     <IntermediateOutputPath>obj\Uwp\x86\Debug</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\Uwp\x86\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;WINDOWS</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <UseVSHostingProcess>false</UseVSHostingProcess>

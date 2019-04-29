@@ -41,7 +41,7 @@ namespace tests
             pMenu.Position = CCPoint.Zero;
             pCloseItem.Position = new CCPoint(s.Width - 30, s.Height - 30);
 #if !PSM && !WINDOWS_PHONE
-#if NETFX_CORE
+#if NETFX_CORE && !WINDOWS_UWP
             CCLabelTTF versionLabel = new CCLabelTTF("v" + this.GetType().GetAssemblyName().Version.ToString(), "arial", 12);
 #else
             CCLabelTTF versionLabel = new CCLabelTTF("v" + this.GetType().Assembly.GetName().Version.ToString(), "arial", 12);
@@ -222,12 +222,12 @@ namespace tests
 
         public void closeCallback(object pSender)
         {
-#if (WINDOWS && !WINRT) || WINDOWSGL || WINDOWSDX || MACOS
+#if (WINDOWS && !WINRT) || WINDOWSGL || WINDOWSDX || MACOS || WINDOWS_UWP
             CCApplication.SharedApplication.Game.Exit();
 #elif ANDROID
             Game.Activity.MoveTaskToBack(true);
 #else
-            Exit()
+            Exit();
 #endif
         }
 

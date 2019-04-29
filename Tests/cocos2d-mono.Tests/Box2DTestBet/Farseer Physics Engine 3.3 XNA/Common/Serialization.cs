@@ -14,7 +14,7 @@ namespace FarseerPhysics.Common
     {
         public static void Serialize(World world, string filename)
         {
-#if NETFX_CORE
+#if NETFX_CORE && !WINDOWS_UWP
             using (Stream fs = Cocos2D.Win8StoreIOUtility.GetWriteStreamFromFileName(filename))
 #else
             using (FileStream fs = new FileStream(filename, FileMode.Create))
@@ -26,7 +26,7 @@ namespace FarseerPhysics.Common
 
         public static void Deserialize(World world, string filename)
         {
-#if NETFX_CORE
+#if NETFX_CORE && !WINDOWS_UWP
             using (Stream fs = Cocos2D.Win8StoreIOUtility.GetReadStreamFromFileName(filename))
 #else
             using (FileStream fs = new FileStream(filename, FileMode.Open))
@@ -38,7 +38,7 @@ namespace FarseerPhysics.Common
 
         public static World Deserialize(string filename)
         {
-#if NETFX_CORE
+#if NETFX_CORE && !WINDOWS_UWP
             using (Stream fs = Cocos2D.Win8StoreIOUtility.GetReadStreamFromFileName(filename))
 #else
             using (FileStream fs = new FileStream(filename, FileMode.Open))
@@ -1237,7 +1237,7 @@ namespace FarseerPhysics.Common
 
         public XMLFragmentParser(string fileName)
         {
-#if NETFX_CORE
+#if NETFX_CORE && !WINDOWS_UWP
             using (Stream fs = Cocos2D.Win8StoreIOUtility.GetReadStreamFromFileName(fileName))
 #else
             using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))

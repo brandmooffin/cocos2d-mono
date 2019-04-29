@@ -1,0 +1,696 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{40C1898D-DD60-4112-BBCA-39FECD44C895}</ProjectGuid>
+    <OutputType>AppContainerExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>cocos2d_mono.Tests.Uwp</RootNamespace>
+    <AssemblyName>cocos2d-mono.Tests.Uwp</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PackageCertificateKeyFile>cocos2d-mono.Tests.Uwp_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\WindowsUniversal\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UAP;CODE_ANALYSIS;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <OutputPath>bin\WindowsUniversal\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UAP;CODE_ANALYSIS;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\WindowsUniversal\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UAP;CODE_ANALYSIS;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\WindowsUniversal\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UAP;CODE_ANALYSIS;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\WindowsUniversal\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WINDOWS;NETFX_CORE;WINDOWS_UAP;CODE_ANALYSIS;WINDOWS_UWP;CODE_ANALYSIS</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\WindowsUniversal\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UAP;CODE_ANALYSIS;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AccelerometerTest\AccelerometerTest.cs" />
+    <Compile Include="ActionManagerTest\ActionManagerTest.cs" />
+    <Compile Include="ActionManagerTest\ActionManagerTestScene.cs" />
+    <Compile Include="ActionManagerTest\CrashTest.cs" />
+    <Compile Include="ActionManagerTest\LogicTest.cs" />
+    <Compile Include="ActionManagerTest\PauseTest.cs" />
+    <Compile Include="ActionManagerTest\RemoveTest.cs" />
+    <Compile Include="ActionManagerTest\ResumeTest.cs" />
+    <Compile Include="ActionsEaseTest\EaseActionsTest.cs" />
+    <Compile Include="ActionsProgressTest\ProgressActionsTestScene.cs" />
+    <Compile Include="ActionsProgressTest\SpriteDemo.cs" />
+    <Compile Include="ActionsProgressTest\SpriteProgressBarTintAndFade.cs" />
+    <Compile Include="ActionsProgressTest\SpriteProgressBarVarious.cs" />
+    <Compile Include="ActionsProgressTest\SpriteProgressToHorizontal.cs" />
+    <Compile Include="ActionsProgressTest\SpriteProgressToRadial.cs" />
+    <Compile Include="ActionsProgressTest\SpriteProgressToRadialMidpointChanged.cs" />
+    <Compile Include="ActionsProgressTest\SpriteProgressToVertical.cs" />
+    <Compile Include="ActionsProgressTest\SpriteProgressWithSpriteFrame.cs" />
+    <Compile Include="ActionsTest\ActionsTest.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="BaseTest.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Box2dTestBedScene.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Box2DView.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\MenuLayer.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Test.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\TestEntries.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\AddPair.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\ApplyForce.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\BodyTypes.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Breakable.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Bridge.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\BulletTest.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Cantilever.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Car.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Chain.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\CharacterCollision.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\CircleStress.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\CollisionFiltering.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\CollisionProcessing.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\CompoundShapes.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Confined.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\ContinuousTest.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\DistanceTest.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Dominos.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\DumpShell.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\DynamicTreeTest.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\EdgeShapes.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\EdgeTest.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Gears.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\LiquidTest.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\OneSidedPlatform.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Other\CircleBenchmarkTest.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Pinball.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\PolyCollision.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\PolyShapes.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Prismatic.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Pulleys.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Pyramid.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\RayCast.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Revolute.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Rope.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\RopeJoint.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\SensorTest.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\ShapeEditing.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\SliderCrank.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\SphereStack.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\TheoJansen.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Tiles.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\TimeOfImpact.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Tumbler.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\VaryingFriction.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\VaryingRestitution.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\VerticalStack.cs" />
+    <Compile Include="Box2DTestBet%28Box2D%29\Tests\Web.cs" />
+    <Compile Include="Box2DTestBet\Box2dTestBedScene.cs" />
+    <Compile Include="Box2DTestBet\Box2DView.cs" />
+    <Compile Include="Box2DTestBet\DebugViewXNA.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\Collision.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\Distance.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\DynamicTree.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\DynamicTreeBroadPhase.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\IBroadPhase.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\QuadTree.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\QuadTreeBroadPhase.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\Shapes\CircleShape.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\Shapes\EdgeShape.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\Shapes\LoopShape.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\Shapes\PolygonShape.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\Shapes\Shape.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Collision\TimeOfImpact.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\ConvexHull\ChainHull.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\ConvexHull\GiftWrap.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\ConvexHull\Melkman.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\BayazitDecomposer.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDTDecomposer.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFront.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFrontNode.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Delaunay\Sweep\DTSweep.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepConstraint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepContext.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepPointComparator.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Delaunay\Sweep\PointOnEdgeException.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\ITriangulatable.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Orientation.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Polygon\Polygon.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Polygon\PolygonPoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Polygon\PolygonSet.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Sets\ConstrainedPointSet.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Sets\PointSet.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\TriangulationConstraint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\TriangulationContext.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\TriangulationMode.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\TriangulationPoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\TriangulationUtil.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Util\FixedArray3.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Util\FixedBitArray3.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Util\PointGenerator.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\CDT\Util\PolygonGenerator.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\EarclipDecomposer.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\FlipcodeDecomposer.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Decomposition\SeidelDecomposer.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\FixedArray.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\HashSet.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\LineTools.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Math.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Path.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\PathManager.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\PhysicsLogic\Explosion.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\PhysicsLogic\PhysicsLogic.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\PolygonManipulation\CuttingTools.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\PolygonManipulation\SimplifyTools.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\PolygonManipulation\YuPengClipper.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\PolygonTools.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Serialization.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\TextureTools\MarchingSquares.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\TextureTools\MSTerrain.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\TextureTools\TextureConverter.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Common\Vertices.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Controllers\AbstractForceController.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Controllers\BuoyancyController.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Controllers\Controller.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Controllers\GravityController.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Controllers\SimpleWindForce.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Controllers\VelocityLimitController.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\DebugView.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Body.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\BreakableBody.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\ContactManager.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Contacts\Contact.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Contacts\ContactSolver.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Fixture.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Island.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\AngleJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\DistanceJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\FixedAngleJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\FixedDistanceJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\FixedFrictionJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\FixedLineJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\FixedMouseJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\FixedPrismaticJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\FixedRevoluteJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\FrictionJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\GearJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\Joint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\LineJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\PrismaticJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\PulleyJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\RevoluteJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\RopeJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\SliderJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\Joints\WeldJoint.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\TimeStep.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\World.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Dynamics\WorldCallbacks.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Factories\BodyFactory.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Factories\FixtureFactory.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Factories\JointFactory.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Factories\LinkFactory.cs" />
+    <Compile Include="Box2DTestBet\Farseer Physics Engine 3.3 XNA\Settings.cs" />
+    <Compile Include="Box2DTestBet\MenuLayer.cs" />
+    <Compile Include="Box2DTestBet\Test.cs" />
+    <Compile Include="Box2DTestBet\Tests\AngleJointTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\ApplyForceTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\BodyTypesTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\BreakableTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\BridgeTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\BulletTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\BuoyancyTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\CantileverTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\CarTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\ChainTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\CharacterCollisionTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\CircleBenchmarkTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\CirclePenetrationTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\CloneTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\CollisionFilteringTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\CollisionProcessingTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\CompoundShapes.cs" />
+    <Compile Include="Box2DTestBet\Tests\ConfinedTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\ContinuousTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\ControllerTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\ConvexHullTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\CuttingTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\DeletionTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\DestructibleTerrainMSTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\DestructibleTerrainYuPengTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\DistanceTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\DominosTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\DynamicTreeTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\EdgeShapeBenchmark.cs" />
+    <Compile Include="Box2DTestBet\Tests\EdgeShapesTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\EdgeTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\ExplosionTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\GearsTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\LineJointTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\LockTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\OneSidedPlatformTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\PathTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\PinballTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\PolyCollisionTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\PolyShapesTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\PrismaticTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\PulleysTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\PyramidTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\QuadTreeTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\RaycastTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\RevoluteTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\RopeTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\RoundedRectangle.cs" />
+    <Compile Include="Box2DTestBet\Tests\SensorTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\SerializationTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\ShapeEditingTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\SimpleWindForceTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\SliderCrankTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\SliderJointTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\SphereStackTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\TestEntries.cs" />
+    <Compile Include="Box2DTestBet\Tests\TextureVerticesTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\TheoJansenTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\TilesTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\TimeOfImpactTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\Tumbler.cs" />
+    <Compile Include="Box2DTestBet\Tests\VaryingFrictionTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\VaryingRestitutionTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\VerticalStackTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\WebTest.cs" />
+    <Compile Include="Box2DTestBet\Tests\YuPengPolygonTest.cs" />
+    <Compile Include="Box2DTest\Box2DTest.cs" />
+    <Compile Include="BugsTest\Bug-458\Bug-458.cs" />
+    <Compile Include="BugsTest\Bug-458\QuestionContainerSprite.cs" />
+    <Compile Include="BugsTest\Bug1159Layer.cs" />
+    <Compile Include="BugsTest\Bug1174Layer.cs" />
+    <Compile Include="BugsTest\Bug350Layer.cs" />
+    <Compile Include="BugsTest\Bug422Layer.cs" />
+    <Compile Include="BugsTest\Bug624Layer.cs" />
+    <Compile Include="BugsTest\Bug886Layer.cs" />
+    <Compile Include="BugsTest\Bug899Layer.cs" />
+    <Compile Include="BugsTest\Bug914Layer.cs" />
+    <Compile Include="BugsTest\BugsTestBaseLayer.cs" />
+    <Compile Include="BugsTest\BugsTestMainLayer.cs" />
+    <Compile Include="BugsTest\BugsTestScene.cs" />
+    <Compile Include="ClickAndMoveTest\ClickAndMoveTest.cs" />
+    <Compile Include="ClippingNodeTest\ClippingNodeTestScene.cs" />
+    <Compile Include="CocosDenshionTest\CocosDenshionTest.cs" />
+    <Compile Include="controller.cs" />
+    <Compile Include="DeviceTest\OrientationTest.cs" />
+    <Compile Include="DrawPrimitivesTest\DrawPrimitivesTest.cs" />
+    <Compile Include="DrawPrimitivesTest\DrawPrimitivesTestScene.cs" />
+    <Compile Include="EffectsAdvancedTest\Effect1.cs" />
+    <Compile Include="EffectsAdvancedTest\Effect2.cs" />
+    <Compile Include="EffectsAdvancedTest\Effect3.cs" />
+    <Compile Include="EffectsAdvancedTest\Effect4.cs" />
+    <Compile Include="EffectsAdvancedTest\Effect5.cs" />
+    <Compile Include="EffectsAdvancedTest\EffectAdvanceScene.cs" />
+    <Compile Include="EffectsAdvancedTest\EffectAdvanceTextLayer.cs" />
+    <Compile Include="EffectsAdvancedTest\Issue631.cs" />
+    <Compile Include="EffectsTest\EffectTestScene.cs" />
+    <Compile Include="EffectsTest\FadeOutBLTilesDemo.cs" />
+    <Compile Include="EffectsTest\FadeOutDownTilesDemo.cs" />
+    <Compile Include="EffectsTest\FadeOutTRTilesDemo.cs" />
+    <Compile Include="EffectsTest\FadeOutUpTilesDemo.cs" />
+    <Compile Include="EffectsTest\FlipX3DDemo.cs" />
+    <Compile Include="EffectsTest\FlipY3DDemo.cs" />
+    <Compile Include="EffectsTest\JumpTiles3DDemo.cs" />
+    <Compile Include="EffectsTest\Lens3DDemo.cs" />
+    <Compile Include="EffectsTest\LiquidDemo.cs" />
+    <Compile Include="EffectsTest\PageTurn3DDemo.cs" />
+    <Compile Include="EffectsTest\Ripple3DDemo.cs" />
+    <Compile Include="EffectsTest\Shaky3DDemo.cs" />
+    <Compile Include="EffectsTest\ShakyTiles3DDemo.cs" />
+    <Compile Include="EffectsTest\ShatteredTiles3DDemo.cs" />
+    <Compile Include="EffectsTest\ShuffleTilesDemo.cs" />
+    <Compile Include="EffectsTest\SplitColsDemo.cs" />
+    <Compile Include="EffectsTest\SplitRowsDemo.cs" />
+    <Compile Include="EffectsTest\TextLayer.cs" />
+    <Compile Include="EffectsTest\TurnOffTilesDemo.cs" />
+    <Compile Include="EffectsTest\TwirlDemo.cs" />
+    <Compile Include="EffectsTest\Waves3DDemo.cs" />
+    <Compile Include="EffectsTest\WavesDemo.cs" />
+    <Compile Include="EffectsTest\WavesTiles3DDemo.cs" />
+    <Compile Include="ExtensionsTest\CocosBuilderTest\AnimationTest.cs" />
+    <Compile Include="ExtensionsTest\CocosBuilderTest\BaseLayer.cs" />
+    <Compile Include="ExtensionsTest\CocosBuilderTest\ButtonTest.cs" />
+    <Compile Include="ExtensionsTest\CocosBuilderTest\CocosBuilderTest.cs" />
+    <Compile Include="ExtensionsTest\CocosBuilderTest\HelloCocosBuilder.cs" />
+    <Compile Include="ExtensionsTest\CocosBuilderTest\MenuTestLayer.cs" />
+    <Compile Include="ExtensionsTest\CocosBuilderTest\ParticleSystemTestLayer.cs" />
+    <Compile Include="ExtensionsTest\CocosBuilderTest\ScrollViewTestLayer.cs" />
+    <Compile Include="ExtensionsTest\CocosBuilderTest\SpriteTestLayer.cs" />
+    <Compile Include="ExtensionsTest\CocosBuilderTest\TestHeader.cs" />
+    <Compile Include="ExtensionsTest\CocosBuilderTest\TimelineCallbackTestLayer.cs" />
+    <Compile Include="ExtensionsTest\ControlExtensionTest\CCControlButtonTest\CCControlButtonTest.cs" />
+    <Compile Include="ExtensionsTest\ControlExtensionTest\CCControlColourPickerTest.cs" />
+    <Compile Include="ExtensionsTest\ControlExtensionTest\CCControlPotentiometerTest.cs" />
+    <Compile Include="ExtensionsTest\ControlExtensionTest\CCControlScene.cs" />
+    <Compile Include="ExtensionsTest\ControlExtensionTest\CCControlSceneManager.cs" />
+    <Compile Include="ExtensionsTest\ControlExtensionTest\CCControlSliderTest\CCControlSliderTest.cs" />
+    <Compile Include="ExtensionsTest\ControlExtensionTest\CCControlStepperTest.cs" />
+    <Compile Include="ExtensionsTest\ControlExtensionTest\CCControlSwitchTest\CCControlSwitchTest.cs" />
+    <Compile Include="ExtensionsTest\ExtensionsTestMainLayer.cs" />
+    <Compile Include="ExtensionsTest\ExtensionsTestScene.cs" />
+    <Compile Include="ExtensionsTest\Scale9SpriteTest\Scale9SpriteSceneManager.cs" />
+    <Compile Include="ExtensionsTest\Scale9SpriteTest\Scale9SpriteTest.cs" />
+    <Compile Include="ExtensionsTest\TableViewTest\CustomTableViewCell.cs" />
+    <Compile Include="ExtensionsTest\TableViewTest\TableViewTestScene.cs" />
+    <Compile Include="FontTest\FontTest.cs" />
+    <Compile Include="FontTest\SystemFontTest.cs" />
+    <Compile Include="IntervalTest\IntervalLayer.cs" />
+    <Compile Include="IntervalTest\IntervalTestScene.cs" />
+    <Compile Include="LabelTest\Atlas1.cs" />
+    <Compile Include="LabelTest\Atlas3.cs" />
+    <Compile Include="LabelTest\Atlas4.cs" />
+    <Compile Include="LabelTest\Atlas5.cs" />
+    <Compile Include="LabelTest\Atlas6.cs" />
+    <Compile Include="LabelTest\AtlasBitmapColor.cs" />
+    <Compile Include="LabelTest\AtlasFastBitmap.cs" />
+    <Compile Include="LabelTest\AtlasTestScene.cs" />
+    <Compile Include="LabelTest\BitmapFontMultiLine.cs" />
+    <Compile Include="LabelTest\BitmapFontMultiLineAlignment.cs" />
+    <Compile Include="LabelTest\BMFontInit.cs" />
+    <Compile Include="LabelTest\BMFontOneAtlas.cs" />
+    <Compile Include="LabelTest\BMFontUnicode.cs" />
+    <Compile Include="LabelTest\GitHubIssue5.cs" />
+    <Compile Include="LabelTest\Issue1343.cs" />
+    <Compile Include="LabelTest\LabelAtlasColorTest.cs" />
+    <Compile Include="LabelTest\LabelAtlasHD.cs" />
+    <Compile Include="LabelTest\LabelAtlasTest.cs" />
+    <Compile Include="LabelTest\LabelBMFontHD.cs" />
+    <Compile Include="LabelTest\LabelGlyphDesigner.cs" />
+    <Compile Include="LabelTest\LabelsEmpty.cs" />
+    <Compile Include="LabelTest\LabelTest.cs" />
+    <Compile Include="LabelTest\LabelTTFA8Test.cs" />
+    <Compile Include="LabelTest\LabelTTFChinese.cs" />
+    <Compile Include="LabelTest\LabelTTFMultiline.cs" />
+    <Compile Include="LabelTest\LabelTTFTest.cs" />
+    <Compile Include="LabelTest\TTFFontInit.cs" />
+    <Compile Include="LayerTest\LayerGradient.cs" />
+    <Compile Include="LayerTest\LayerScaleTest.cs" />
+    <Compile Include="LayerTest\Layertest.cs" />
+    <Compile Include="LayerTest\LayerTest1.cs" />
+    <Compile Include="LayerTest\LayerTest2.cs" />
+    <Compile Include="LayerTest\LayerTestBlend.cs" />
+    <Compile Include="LayerTest\LayerTestScene.cs" />
+    <Compile Include="MenuTest\MenuLayer1.cs" />
+    <Compile Include="MenuTest\MenuLayer2.cs" />
+    <Compile Include="MenuTest\MenuLayer3.cs" />
+    <Compile Include="MenuTest\MenuLayer4.cs" />
+    <Compile Include="MenuTest\MenuLayerPriorityTest.cs" />
+    <Compile Include="MenuTest\MenuTestScene.cs" />
+    <Compile Include="MotionStreakTest\Issue1358.cs" />
+    <Compile Include="MotionStreakTest\LightningStreakTest.cs" />
+    <Compile Include="MotionStreakTest\MotionStreakTest.cs" />
+    <Compile Include="MotionStreakTest\MotionStreakTest1.cs" />
+    <Compile Include="MotionStreakTest\MotionStreakTest2.cs" />
+    <Compile Include="MotionStreakTest\MotionStreakTestScene.cs" />
+    <Compile Include="MultiTouchTest\MultiTouchTest.cs" />
+    <Compile Include="NodeTest\CameraCenterTest.cs" />
+    <Compile Include="NodeTest\CameraOrbitTest.cs" />
+    <Compile Include="NodeTest\CameraZoomTest.cs" />
+    <Compile Include="NodeTest\CocosNodeTestScene.cs" />
+    <Compile Include="NodeTest\CocosNodeTestStaticLibrary.cs" />
+    <Compile Include="NodeTest\ConvertToNode.cs" />
+    <Compile Include="NodeTest\NodeToWorld.cs" />
+    <Compile Include="NodeTest\SchedulerTest1.cs" />
+    <Compile Include="NodeTest\StressTest1.cs" />
+    <Compile Include="NodeTest\StressTest2.cs" />
+    <Compile Include="NodeTest\Test2.cs" />
+    <Compile Include="NodeTest\Test4.cs" />
+    <Compile Include="NodeTest\Test5.cs" />
+    <Compile Include="NodeTest\Test6.cs" />
+    <Compile Include="NodeTest\TestCocosNodeDemo.cs" />
+    <Compile Include="ParallaxTest\Parallax1.cs" />
+    <Compile Include="ParallaxTest\Parallax2.cs" />
+    <Compile Include="ParallaxTest\ParallaxDemo.cs" />
+    <Compile Include="ParallaxTest\ParallaxScrollTest.cs" />
+    <Compile Include="ParallaxTest\ParallaxTestScene.cs" />
+    <Compile Include="ParticleTest\ParticleTest.cs" />
+    <Compile Include="PerformanceTest\PerformanceMainLayer.cs" />
+    <Compile Include="PerformanceTest\PerformanceNodeChildrenTest\AddRemoveSpriteSheet.cs" />
+    <Compile Include="PerformanceTest\PerformanceNodeChildrenTest\AddSpriteSheet.cs" />
+    <Compile Include="PerformanceTest\PerformanceNodeChildrenTest\IterateSpriteSheet.cs" />
+    <Compile Include="PerformanceTest\PerformanceNodeChildrenTest\IterateSpriteSheetCArray.cs" />
+    <Compile Include="PerformanceTest\PerformanceNodeChildrenTest\IterateSpriteSheetFastEnum.cs" />
+    <Compile Include="PerformanceTest\PerformanceNodeChildrenTest\NodeChildrenMainScene.cs" />
+    <Compile Include="PerformanceTest\PerformanceNodeChildrenTest\NodeChildrenMenuLayer.cs" />
+    <Compile Include="PerformanceTest\PerformanceNodeChildrenTest\PerformanceNodeChildrenTest..cs" />
+    <Compile Include="PerformanceTest\PerformanceNodeChildrenTest\RemoveSpriteSheet.cs" />
+    <Compile Include="PerformanceTest\PerformanceNodeChildrenTest\ReorderSpriteSheet.cs" />
+    <Compile Include="PerformanceTest\PerformanceParticleTest\ParticleMainScene.cs" />
+    <Compile Include="PerformanceTest\PerformanceParticleTest\ParticleMenuLayer.cs" />
+    <Compile Include="PerformanceTest\PerformanceParticleTest\ParticlePerformTest1.cs" />
+    <Compile Include="PerformanceTest\PerformanceParticleTest\ParticlePerformTest2.cs" />
+    <Compile Include="PerformanceTest\PerformanceParticleTest\ParticlePerformTest3.cs" />
+    <Compile Include="PerformanceTest\PerformanceParticleTest\ParticlePerformTest4.cs" />
+    <Compile Include="PerformanceTest\PerformanceParticleTest\PerformanceParticleTest.cs" />
+    <Compile Include="PerformanceTest\PerformanceSpriteTest\PerformanceSpriteTest.cs" />
+    <Compile Include="PerformanceTest\PerformanceSpriteTest\SpriteMainScene.cs" />
+    <Compile Include="PerformanceTest\PerformanceSpriteTest\SpriteMenuLayer.cs" />
+    <Compile Include="PerformanceTest\PerformanceSpriteTest\SpritePerformTest1.cs" />
+    <Compile Include="PerformanceTest\PerformanceSpriteTest\SpritePerformTest2.cs" />
+    <Compile Include="PerformanceTest\PerformanceSpriteTest\SpritePerformTest3.cs" />
+    <Compile Include="PerformanceTest\PerformanceSpriteTest\SpritePerformTest4.cs" />
+    <Compile Include="PerformanceTest\PerformanceSpriteTest\SpritePerformTest5.cs" />
+    <Compile Include="PerformanceTest\PerformanceSpriteTest\SpritePerformTest6.cs" />
+    <Compile Include="PerformanceTest\PerformanceSpriteTest\SpritePerformTest7.cs" />
+    <Compile Include="PerformanceTest\PerformanceSpriteTest\SubTest.cs" />
+    <Compile Include="PerformanceTest\PerformanceTestScene.cs" />
+    <Compile Include="PerformanceTest\PerformanceTextureTest\PerformanceTextureTest.cs" />
+    <Compile Include="PerformanceTest\PerformanceTextureTest\TextureMenuLayer.cs" />
+    <Compile Include="PerformanceTest\PerformanceTextureTest\TextureTest.cs" />
+    <Compile Include="PerformanceTest\PerformanceTouchesTest\PerformanceTouchesTest.cs" />
+    <Compile Include="PerformanceTest\PerformanceTouchesTest\TouchesMainScene.cs" />
+    <Compile Include="PerformanceTest\PerformanceTouchesTest\TouchesPerformTest1.cs" />
+    <Compile Include="PerformanceTest\PerformanceTouchesTest\TouchesPerformTest2.cs" />
+    <Compile Include="PerformanceTest\PerformBasicLayer.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Game1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenderTextureTest\RenderTextureCompositeTest.cs" />
+    <Compile Include="RenderTextureTest\RenderTextureIssue937.cs" />
+    <Compile Include="RenderTextureTest\RenderTextureSave.cs" />
+    <Compile Include="RenderTextureTest\RenderTextureScene.cs" />
+    <Compile Include="RenderTextureTest\RenderTextureTestDemo.cs" />
+    <Compile Include="RenderTextureTest\RenderTextureTestDepthStencil.cs" />
+    <Compile Include="RenderTextureTest\RenderTextureZbuffer.cs" />
+    <Compile Include="RotateWorldTest\RotateWorldMainLayer.cs" />
+    <Compile Include="RotateWorldTest\RotateWorldTestScene.cs" />
+    <Compile Include="RotateWorldTest\SpriteLayer.cs" />
+    <Compile Include="RotateWorldTest\TestLayer.cs" />
+    <Compile Include="SceneTest\SceneTestLayer1.cs" />
+    <Compile Include="SceneTest\SceneTestLayer2.cs" />
+    <Compile Include="SceneTest\SceneTestLayer3.cs" />
+    <Compile Include="SceneTest\SceneTestScene.cs" />
+    <Compile Include="SchedulerTest\RescheduleSelector.cs" />
+    <Compile Include="SchedulerTest\SchedulerAutoremove.cs" />
+    <Compile Include="SchedulerTest\SchedulerPauseResume.cs" />
+    <Compile Include="SchedulerTest\SchedulerSchedulesAndRemove.cs" />
+    <Compile Include="SchedulerTest\SchedulerTestLayer.cs" />
+    <Compile Include="SchedulerTest\SchedulerTestScene.cs" />
+    <Compile Include="SchedulerTest\SchedulerUnscheduleAll.cs" />
+    <Compile Include="SchedulerTest\SchedulerUnscheduleAllHard.cs" />
+    <Compile Include="SchedulerTest\SchedulerUpdate.cs" />
+    <Compile Include="SchedulerTest\SchedulerUpdateAndCustom.cs" />
+    <Compile Include="SchedulerTest\SchedulerUpdateFromCustom.cs" />
+    <Compile Include="SchedulerTest\TestNode.cs" />
+    <Compile Include="SpriteTest\AnimationCache.cs" />
+    <Compile Include="SpriteTest\Sprite1.cs" />
+    <Compile Include="SpriteTest\Sprite6.cs" />
+    <Compile Include="SpriteTest\SpriteAliased.cs" />
+    <Compile Include="SpriteTest\SpriteAnchorPoint.cs" />
+    <Compile Include="SpriteTest\SpriteAnimationSplit.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNode1.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeAliased.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeAnchorPoint.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeChildren.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeChildrenAnchorPoint.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeChildrenChildren.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeChildrenScale.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeChildrenZ.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeColorOpacity.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeFlip.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeNewTexture.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeOffsetAnchorFlip.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeOffsetAnchorRotation.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeOffsetAnchorScale.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeOffsetAnchorSkew.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeOffsetAnchorSkewScale.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeReorder.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeReorderIssue744.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeReorderIssue766.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeReorderIssue767.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeZOrder.cs" />
+    <Compile Include="SpriteTest\SpriteBatchNodeZVertex.cs" />
+    <Compile Include="SpriteTest\SpriteChildrenAnchorPoint.cs" />
+    <Compile Include="SpriteTest\SpriteChildrenChildren.cs" />
+    <Compile Include="SpriteTest\SpriteChildrenVisibility.cs" />
+    <Compile Include="SpriteTest\SpriteChildrenVisibilityIssue665.cs" />
+    <Compile Include="SpriteTest\SpriteColorOpacity.cs" />
+    <Compile Include="SpriteTest\SpriteFlip.cs" />
+    <Compile Include="SpriteTest\SpriteFrameAliasNameTest.cs" />
+    <Compile Include="SpriteTest\SpriteFrameTest.cs" />
+    <Compile Include="SpriteTest\SpriteHybrid.cs" />
+    <Compile Include="SpriteTest\SpriteNewTexture.cs" />
+    <Compile Include="SpriteTest\SpriteNilTexture.cs" />
+    <Compile Include="SpriteTest\SpriteOffsetAnchorFlip.cs" />
+    <Compile Include="SpriteTest\SpriteOffsetAnchorRotation.cs" />
+    <Compile Include="SpriteTest\SpriteOffsetAnchorScale.cs" />
+    <Compile Include="SpriteTest\SpriteOffsetAnchorSkew.cs" />
+    <Compile Include="SpriteTest\SpriteOffsetAnchorSkewScale.cs" />
+    <Compile Include="SpriteTest\SpriteSubclass.cs" />
+    <Compile Include="SpriteTest\SpriteTestDemo.cs" />
+    <Compile Include="SpriteTest\SpriteTestScene.cs" />
+    <Compile Include="SpriteTest\SpriteZOrder.cs" />
+    <Compile Include="SpriteTest\SpriteZVertex.cs" />
+    <Compile Include="test.cs" />
+    <Compile Include="testBasic.cs" />
+    <Compile Include="testResource.cs" />
+    <Compile Include="TextInputTest\TextInputTest.cs" />
+    <Compile Include="TextInputTest\TextInputTestScene.cs" />
+    <Compile Include="Texture2dTest\Texture2dTest.cs" />
+    <Compile Include="TileMapTest\TileMapTest.cs" />
+    <Compile Include="TouchesTest\Ball.cs" />
+    <Compile Include="TouchesTest\Paddle.cs" />
+    <Compile Include="TouchesTest\PongLayer.cs" />
+    <Compile Include="TouchesTest\PongScene.cs" />
+    <Compile Include="TransitionsTest\FadeWhiteTransition.cs" />
+    <Compile Include="TransitionsTest\FlipAngularLeftOver.cs" />
+    <Compile Include="TransitionsTest\FlipAngularRightOver.cs" />
+    <Compile Include="TransitionsTest\FlipXLeftOver.cs" />
+    <Compile Include="TransitionsTest\FlipXRightOver.cs" />
+    <Compile Include="TransitionsTest\FlipYDownOver.cs" />
+    <Compile Include="TransitionsTest\FlipYUpOver.cs" />
+    <Compile Include="TransitionsTest\PageTransitionBackward.cs" />
+    <Compile Include="TransitionsTest\PageTransitionForward.cs" />
+    <Compile Include="TransitionsTest\TestLayer1.cs" />
+    <Compile Include="TransitionsTest\TestLayer2.cs" />
+    <Compile Include="TransitionsTest\TransitionsTestScene.cs" />
+    <Compile Include="TransitionsTest\ZoomFlipAngularLeftOver.cs" />
+    <Compile Include="TransitionsTest\ZoomFlipAngularRightOver.cs" />
+    <Compile Include="TransitionsTest\ZoomFlipXLeftOver.cs" />
+    <Compile Include="TransitionsTest\ZoomFlipXRightOver.cs" />
+    <Compile Include="TransitionsTest\ZoomFlipYDownOver.cs" />
+    <Compile Include="TransitionsTest\ZoomFlipYUpOver.cs" />
+    <Compile Include="UserDefaultTest\UserDefaultTest.cs" />
+    <Compile Include="UserDefaultTest\UserDefaultTestScene.cs" />
+    <Compile Include="ZwoptexTest\ZwoptexGenericTest.cs" />
+    <Compile Include="ZwoptexTest\ZwoptexTest.cs" />
+    <Compile Include="ZwoptexTest\ZwoptexTestScene.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <None Include="cocos2d-mono.Tests.Uwp_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Properties\Default.rd.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.2.7</Version>
+    </PackageReference>
+    <PackageReference Include="MonoGame.Framework.WindowsUniversal">
+      <Version>3.7.1.189</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\box2d\box2d.Uwp.csproj">
+      <Project>{acac14a0-8c2b-413c-875f-a2ad3c647800}</Project>
+      <Name>box2d.Uwp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\cocos2d\cocos2d.Uwp.csproj">
+      <Project>{11382845-c53d-4d81-8f2e-a7f88c9bdad6}</Project>
+      <Name>cocos2d.Uwp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
