@@ -106,15 +106,10 @@ namespace tests
 #endif
         static void Main(string[] args)
         {
-#if WINDOWS || WINDOWSGL
-            game = new Game1();
-            game.Run();
-#else
-            using (Game1 game = new Game1())
+            using (game = new Game1())
             {
                 game.Run();
             }
-#endif
         }
     }
 #endif
