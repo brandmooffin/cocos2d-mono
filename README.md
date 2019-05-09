@@ -12,6 +12,7 @@ We support a growing list of platforms across the desktop, mobile, and console s
  * Desktop PCs
    * Windows 10 Store Apps (UWP)
    * Windows Win32 (OpenGL & DirectX)
+   * Linux (OpenGL)
  * Mobile/Tablet Devices
    * Android (OpenGL)
    * Windows Phone 10 (UWP)
@@ -25,7 +26,6 @@ We support a growing list of platforms across the desktop, mobile, and console s
    * PlayStation Vita
    * PlayStation 4
    * macOS (Metal)
-   * Linux (OpenGL)
    * PlayStation 4
    * PlayStation Vita
 
@@ -85,4 +85,16 @@ You can find those in the [Tests directory](https://github.com/brandmooffin/coco
 
   cocos2d-mono.Tests.Uwp.sln
 
-  More tests coming very shortly!
+  cocos2d-mono.Tests.DesktopGL.sln
+
+LINUX SETUP NOTE: There are some fonts used within the Test Bed not natively found on Linux, please run the following command to add the missing fonts:
+
+ > sudo apt-get install ttf-mscorefonts-installer
+
+More tests coming very shortly!
+
+### Linux
+
+For Linux projects there are two options available, DesktopGL (cross-platform with Windows support) and Linux (stand-alone). It recommended to use the DesktopGL version but if you prefer to develop solely for Linux, feel free to use cocos2d-mono.Linux. 
+
+NOTE: For cocos2d-mono.Linux there is no NuGet package available yet so you will need to build from source at the moment.
