@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cocos2d.Linux", "cocos2d\cocos2d.Linux.csproj", "{05E7D383-661F-4716-9A74-335DF6860707}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "box2d.Linux", "box2d\box2d.Linux.csproj", "{389AB006-C105-4383-8D26-10712EFE5A7E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05E7D383-661F-4716-9A74-335DF6860707}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05E7D383-661F-4716-9A74-335DF6860707}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05E7D383-661F-4716-9A74-335DF6860707}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05E7D383-661F-4716-9A74-335DF6860707}.Release|Any CPU.Build.0 = Release|Any CPU
+		{389AB006-C105-4383-8D26-10712EFE5A7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{389AB006-C105-4383-8D26-10712EFE5A7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{389AB006-C105-4383-8D26-10712EFE5A7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{389AB006-C105-4383-8D26-10712EFE5A7E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -22,7 +22,7 @@
     <OutputPath>bin\DesktopGL\Debug\</OutputPath>
     <IntermediateOutputPath>obj\DesktopGL\Debug</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\DesktopGL\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;DEBUG;WINDOWSGL;OPENGL;MONOGAME;DESKTOPGL</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WINDOWSGL;OPENGL;MONOGAME;DESKTOPGL;LINUX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

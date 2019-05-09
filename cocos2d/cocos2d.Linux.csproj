@@ -1,146 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{11382845-C53D-4D81-8F2E-A7F88C9BDAD6}</ProjectGuid>
+    <ProjectGuid>{05E7D383-661F-4716-9A74-335DF6860707}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Cocos2D</RootNamespace>
     <AssemblyName>Cocos2D</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
-    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Uwp\Debug\</OutputPath>
-    <IntermediateOutputPath>obj\Uwp\Debug</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\Uwp\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;WINDOWS</DefineConstants>
+    <OutputPath>bin\Linux\Debug</OutputPath>
+    <DefineConstants>DEBUG;OPENGL;OPENAL;XNADESIGNPROVIDED;TRACE;LINUX;DESKTOPGL;SUPPORTS_EFX;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Uwp\Release\</OutputPath>
-    <IntermediateOutputPath>obj\Uwp\Release</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\Uwp\Release</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;WINDOWS</DefineConstants>
+    <OutputPath>bin\Linux\Release</OutputPath>
+    <DefineConstants>OPENGL;OPENAL;XNADESIGNPROVIDED;TRACE;LINUX;DESKTOPGL;SUPPORTS_EFX;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Uwp\x86\Debug\</OutputPath>
-    <IntermediateOutputPath>obj\Uwp\x86\Debug</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\Uwp\x86\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;WINDOWS</DefineConstants>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>full</DebugType>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\Uwp\x86\Release\</OutputPath>
-    <IntermediateOutputPath>obj\Uwp\x86\Release</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\Uwp\x86\Release</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>pdbonly</DebugType>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
-    <PlatformTarget>ARM</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Uwp\ARM\Debug\</OutputPath>
-    <IntermediateOutputPath>obj\Uwp\ARM\Debug</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\Uwp\ARM\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>full</DebugType>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
-    <PlatformTarget>ARM</PlatformTarget>
-    <OutputPath>bin\Uwp\ARM\Release\</OutputPath>
-    <IntermediateOutputPath>obj\Uwp\ARM\Release</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\Uwp\ARM\Release</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>pdbonly</DebugType>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
-    <PlatformTarget>ARM64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Uwp\ARM64\Debug\</OutputPath>
-    <IntermediateOutputPath>obj\Uwp\ARM64\Debug</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\Uwp\ARM64\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>full</DebugType>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
-    <PlatformTarget>ARM64</PlatformTarget>
-    <OutputPath>bin\Uwp\ARM64\Release\</OutputPath>
-    <IntermediateOutputPath>obj\Uwp\ARM64\Release</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\Uwp\ARM64\Release</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>pdbonly</DebugType>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Uwp\x64\Debug\</OutputPath>
-    <IntermediateOutputPath>obj\Uwp\x64\Debug</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\Uwp\x64\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>full</DebugType>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>bin\Uwp\x64\Release\</OutputPath>
-    <IntermediateOutputPath>obj\Uwp\x64\Release</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\Uwp\x64\Release</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>pdbonly</DebugType>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\packages\MonoGame.Framework.OpenGL.3.7.1.189\lib\net45\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>..\packages\OpenTK.3.0.1\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.1.1.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="actions\action\CCAction.cs" />
     <Compile Include="actions\action\CCFiniteTimeAction.cs" />
     <Compile Include="actions\action\CCFollow.cs" />
@@ -170,6 +75,12 @@
     <Compile Include="actions\action_ease\CCEaseSineIn.cs" />
     <Compile Include="actions\action_ease\CCEaseSineInOut.cs" />
     <Compile Include="actions\action_ease\CCEaseSineOut.cs" />
+    <Compile Include="actions\action_grid\CCAccelAmplitude.cs" />
+    <Compile Include="actions\action_grid\CCAccelDeccelAmplitude.cs" />
+    <Compile Include="actions\action_grid\CCDeccelAmplitude.cs" />
+    <Compile Include="actions\action_grid\CCGrid3DAction.cs" />
+    <Compile Include="actions\action_grid\CCGridAction.cs" />
+    <Compile Include="actions\action_grid\CCTiledGrid3DAction.cs" />
     <Compile Include="actions\action_grid3d\CCFlipX3D.cs" />
     <Compile Include="actions\action_grid3d\CCFlipY3D.cs" />
     <Compile Include="actions\action_grid3d\CCLens3D.cs" />
@@ -180,12 +91,6 @@
     <Compile Include="actions\action_grid3d\CCTwirl.cs" />
     <Compile Include="actions\action_grid3d\CCWaves.cs" />
     <Compile Include="actions\action_grid3d\CCWaves3D.cs" />
-    <Compile Include="actions\action_grid\CCAccelAmplitude.cs" />
-    <Compile Include="actions\action_grid\CCAccelDeccelAmplitude.cs" />
-    <Compile Include="actions\action_grid\CCDeccelAmplitude.cs" />
-    <Compile Include="actions\action_grid\CCGrid3DAction.cs" />
-    <Compile Include="actions\action_grid\CCGridAction.cs" />
-    <Compile Include="actions\action_grid\CCTiledGrid3DAction.cs" />
     <Compile Include="actions\action_instants\callfunc\CCCallFunc.cs" />
     <Compile Include="actions\action_instants\callfunc\CCCallFuncN.cs" />
     <Compile Include="actions\action_instants\callfunc\CCCallFuncND.cs" />
@@ -248,15 +153,6 @@
     <Compile Include="base_nodes\CCAtlasNode.cs" />
     <Compile Include="base_nodes\CCNode.cs" />
     <Compile Include="base_nodes\CCNodeRGBA.cs" />
-    <Compile Include="CCCamera.cs" />
-    <Compile Include="CCConfiguration.cs" />
-    <Compile Include="CCContent.cs" />
-    <Compile Include="CCDirector.cs" />
-    <Compile Include="CCDisplayLinkDirector.cs" />
-    <Compile Include="CCDrawingPrimitives-DrawEllipticleArc.cs" />
-    <Compile Include="CCDrawingPrimitives.cs" />
-    <Compile Include="CCFPSImage.cs" />
-    <Compile Include="CCScheduler.cs" />
     <Compile Include="cocoa\CCAffineTransform.cs" />
     <Compile Include="cocoa\CCGeometry.cs" />
     <Compile Include="cocoa\ICCCopyable.cs" />
@@ -321,17 +217,11 @@
     <Compile Include="keypad_dispatcher\CCKeypadDispatcher.cs" />
     <Compile Include="keypad_dispatcher\ICCKeypadDelegate.cs" />
     <Compile Include="label_nodes\CCBMFontConfiguration.cs" />
-    <None Include="label_nodes\CCLabel.cs" />
+    <Compile Include="label_nodes\CCLabel.cs" />
     <Compile Include="label_nodes\CCLabelAtlas.cs" />
     <Compile Include="label_nodes\CCLabelBMFont.cs" />
     <Compile Include="label_nodes\CCLabelTTF.cs" />
     <Compile Include="label_nodes\CCLabelUtilities.cs" />
-    <Compile Include="layers_scenes_transitions_nodes\CCLayer.cs" />
-    <Compile Include="layers_scenes_transitions_nodes\CCLayerColor.cs" />
-    <Compile Include="layers_scenes_transitions_nodes\CCLayerGradient.cs" />
-    <Compile Include="layers_scenes_transitions_nodes\CCLayerMultiplex.cs" />
-    <Compile Include="layers_scenes_transitions_nodes\CCLayerRGBA.cs" />
-    <Compile Include="layers_scenes_transitions_nodes\CCScene.cs" />
     <Compile Include="layers_scenes_transitions_nodes\transition\CCTransitionCrossFade.cs" />
     <Compile Include="layers_scenes_transitions_nodes\transition\CCTransitionFade.cs" />
     <Compile Include="layers_scenes_transitions_nodes\transition\CCTransitionFadeBL.cs" />
@@ -363,6 +253,12 @@
     <Compile Include="layers_scenes_transitions_nodes\transition\CCTransitionZoomFlipX.cs" />
     <Compile Include="layers_scenes_transitions_nodes\transition\CCTransitionZoomFlipY.cs" />
     <Compile Include="layers_scenes_transitions_nodes\transition\ICCTransitionEaseScene.cs" />
+    <Compile Include="layers_scenes_transitions_nodes\CCLayer.cs" />
+    <Compile Include="layers_scenes_transitions_nodes\CCLayerColor.cs" />
+    <Compile Include="layers_scenes_transitions_nodes\CCLayerGradient.cs" />
+    <Compile Include="layers_scenes_transitions_nodes\CCLayerMultiplex.cs" />
+    <Compile Include="layers_scenes_transitions_nodes\CCLayerRGBA.cs" />
+    <Compile Include="layers_scenes_transitions_nodes\CCScene.cs" />
     <Compile Include="Math\CCEaseMath.cs" />
     <Compile Include="Math\CCFastRandom.cs" />
     <Compile Include="Math\CCLightningTrack.cs" />
@@ -388,8 +284,26 @@
     <Compile Include="misc_nodes\CCRenderTexture.cs" />
     <Compile Include="particle_nodes\CCParticleBatchNode.cs" />
     <Compile Include="particle_nodes\CCParticleExamples.cs" />
-    <Compile Include="particle_nodes\CCParticleSystem.cs" />
     <Compile Include="particle_nodes\CCParticleSystemQuad.cs" />
+    <Compile Include="platform\ContentReaders\CCBMFontPaddingReader.cs" />
+    <Compile Include="platform\ContentReaders\CCPointReader.cs" />
+    <Compile Include="platform\ContentReaders\CCRectReader.cs" />
+    <Compile Include="platform\ContentReaders\CCSizeReader.cs" />
+    <Compile Include="platform\ContentReaders\KerningHashElementReader.cs" />
+    <Compile Include="platform\Zlib\Adler32.cs" />
+    <Compile Include="platform\Zlib\Deflate.cs" />
+    <Compile Include="platform\Zlib\InfBlocks.cs" />
+    <Compile Include="platform\Zlib\InfCodes.cs" />
+    <Compile Include="platform\Zlib\Inflate.cs" />
+    <Compile Include="platform\Zlib\InfTree.cs" />
+    <Compile Include="platform\Zlib\StaticTree.cs" />
+    <Compile Include="platform\Zlib\SupportClass.cs" />
+    <Compile Include="platform\Zlib\Tree.cs" />
+    <Compile Include="platform\Zlib\ZInputStream.cs" />
+    <Compile Include="platform\Zlib\Zlib.cs" />
+    <Compile Include="platform\Zlib\ZOutputStream.cs" />
+    <Compile Include="platform\Zlib\ZStream.cs" />
+    <Compile Include="platform\Zlib\ZStreamException.cs" />
     <Compile Include="platform\CCAccelerometer.cs" />
     <Compile Include="platform\CCAccelerometerDelegate.cs" />
     <Compile Include="platform\CCApplication.cs" />
@@ -406,50 +320,16 @@
     <Compile Include="platform\CCPrimitiveBatch.cs" />
     <Compile Include="platform\CCRawList.cs" />
     <Compile Include="platform\CCReusedObject.cs" />
-    <Compile Include="platform\CCSAXParser.cs" />
     <Compile Include="platform\CCSpriteFontCache.cs" />
     <Compile Include="platform\CCTask.cs" />
-    <Compile Include="platform\ContentReaders\CCBMFontPaddingReader.cs" />
-    <Compile Include="platform\ContentReaders\CCPointReader.cs" />
-    <Compile Include="platform\ContentReaders\CCRectReader.cs" />
-    <Compile Include="platform\ContentReaders\CCSizeReader.cs" />
-    <Compile Include="platform\ContentReaders\KerningHashElementReader.cs" />
     <Compile Include="platform\ICCFocusable.cs" />
     <Compile Include="platform\ICCSAXDelegator.cs" />
-    <Compile Include="platform\PList\PlistArray.cs" />
-    <Compile Include="platform\PList\PlistBoolean.cs" />
-    <Compile Include="platform\PList\PlistData.cs" />
-    <Compile Include="platform\PList\PlistDate.cs" />
-    <Compile Include="platform\PList\PlistDictionary.cs" />
-    <Compile Include="platform\PList\PlistDocument.cs" />
-    <Compile Include="platform\PList\PlistInteger.cs" />
-    <Compile Include="platform\PList\PListNull.cs" />
-    <Compile Include="platform\PList\PlistObject.cs" />
-    <Compile Include="platform\PList\PlistObjectBase.cs" />
-    <Compile Include="platform\PList\PlistReal.cs" />
-    <Compile Include="platform\PList\PlistString.cs" />
     <Compile Include="platform\Tuple.cs" />
-    <Compile Include="platform\Zlib\Adler32.cs" />
-    <Compile Include="platform\Zlib\Deflate.cs" />
-    <Compile Include="platform\Zlib\InfBlocks.cs" />
-    <Compile Include="platform\Zlib\InfCodes.cs" />
-    <Compile Include="platform\Zlib\Inflate.cs" />
-    <Compile Include="platform\Zlib\InfTree.cs" />
-    <Compile Include="platform\Zlib\StaticTree.cs" />
-    <Compile Include="platform\Zlib\SupportClass.cs" />
-    <Compile Include="platform\Zlib\Tree.cs" />
-    <Compile Include="platform\Zlib\ZInputStream.cs" />
-    <Compile Include="platform\Zlib\Zlib.cs" />
-    <Compile Include="platform\Zlib\ZOutputStream.cs" />
-    <Compile Include="platform\Zlib\ZStream.cs" />
-    <Compile Include="platform\Zlib\ZStreamException.cs" />
     <Compile Include="predefine\CCProtocols.cs" />
     <Compile Include="predefine\CCTouch.cs" />
     <Compile Include="predefine\ccTypes.cs" />
     <Compile Include="predefine\CocosMacros.cs" />
     <Compile Include="predefine\ICCSelectorProtocol.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\AssemblyInfo.Uwp.cs" />
     <Compile Include="script_support\CCScriptEngineManager.cs" />
     <Compile Include="script_support\CCScriptEngineProtocol.cs" />
     <Compile Include="sprite_nodes\CCAnimation.cs" />
@@ -462,8 +342,6 @@
     <Compile Include="sprite_nodes\CCSpriteFrameCache.cs" />
     <Compile Include="sprite_nodes\CCSpriteSheet.cs" />
     <Compile Include="sprite_nodes\CCSpriteSheetCache.cs" />
-    <Compile Include="support\CCUserDefault.cs" />
-    <Compile Include="support\CCUtils.cs" />
     <Compile Include="support\Compression\Adler.cs" />
     <Compile Include="support\Compression\Crc32.cs" />
     <Compile Include="support\Compression\FlushType.cs" />
@@ -483,16 +361,17 @@
     <Compile Include="support\data_support\CCArray.cs" />
     <Compile Include="support\image_support\CCTGAlib.cs" />
     <Compile Include="support\Serialization\CCSerialization.cs" />
-    <Compile Include="support\TransformUtils.cs" />
     <Compile Include="support\zip_support\CCZHeader.cs" />
     <Compile Include="support\zip_support\ZipUtils.cs" />
-    <Compile Include="textures\CCTexture2D.cs" />
-    <Compile Include="textures\CCTextureAtlas.cs" />
-    <Compile Include="textures\CCTextureCache.cs" />
+    <Compile Include="support\CCUtils.cs" />
+    <Compile Include="support\TransformUtils.cs" />
     <Compile Include="text_input_node\CCIMEKeyboardNotificationInfo.cs" />
     <Compile Include="text_input_node\CCTextFieldTTF.cs" />
     <Compile Include="text_input_node\ICCIMEDelegate.cs" />
     <Compile Include="text_input_node\ICCTextFieldDelegate.cs" />
+    <Compile Include="textures\CCTexture2D.cs" />
+    <Compile Include="textures\CCTextureAtlas.cs" />
+    <Compile Include="textures\CCTextureCache.cs" />
     <Compile Include="tileMap_parallax_nodes\CCParallaxNode.cs" />
     <Compile Include="tileMap_parallax_nodes\CCPointObject.cs" />
     <Compile Include="tileMap_parallax_nodes\CCTileMapAtlas.cs" />
@@ -513,39 +392,42 @@
     <Compile Include="touch_dispatcher\ICCStandardTouchDelegate.cs" />
     <Compile Include="touch_dispatcher\ICCTargetedTouchDelegate.cs" />
     <Compile Include="touch_dispatcher\ICCTouchDelegate.cs" />
+    <Compile Include="CCCamera.cs" />
+    <Compile Include="CCConfiguration.cs" />
+    <Compile Include="CCContent.cs" />
+    <Compile Include="CCDirector.cs" />
+    <Compile Include="CCDisplayLinkDirector.cs" />
+    <Compile Include="CCDrawingPrimitives.cs" />
+    <Compile Include="CCDrawingPrimitives-DrawEllipticleArc.cs" />
+    <Compile Include="CCFPSImage.cs" />
+    <Compile Include="CCScheduler.cs" />
+    <Compile Include="particle_nodes\CCParticleSystem.cs" />
+    <Compile Include="platform\PList\PlistDictionary.cs" />
+    <Compile Include="platform\PList\PlistObjectBase.cs" />
+    <Compile Include="platform\PList\PlistArray.cs" />
+    <Compile Include="platform\PList\PlistBoolean.cs" />
+    <Compile Include="platform\PList\PlistData.cs" />
+    <Compile Include="platform\PList\PlistDate.cs" />
+    <Compile Include="platform\PList\PlistDocument.cs" />
+    <Compile Include="platform\PList\PlistInteger.cs" />
+    <Compile Include="platform\PList\PListNull.cs" />
+    <Compile Include="platform\PList\PlistObject.cs" />
+    <Compile Include="platform\PList\PlistReal.cs" />
+    <Compile Include="platform\PList\PlistString.cs" />
+    <Compile Include="platform\CCSAXParser.cs" />
+    <Compile Include="label_nodes\CCLabel-Gdi.cs" />
+    <Compile Include="support\CCUserDefault.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.3</Version>
-    </PackageReference>
-    <PackageReference Include="MonoGame.Framework.WindowsUniversal">
-      <Version>3.7.1.189</Version>
-    </PackageReference>
-    <PackageReference Include="SharpDX">
-      <Version>4.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="SharpZipLib">
-      <Version>1.1.0</Version>
-    </PackageReference>
+    <None Include="packages.linux.config" />
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="tools\Debug\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\box2d\box2d.Uwp.csproj">
-      <Project>{acac14a0-8c2b-413c-875f-a2ad3c647800}</Project>
-      <Name>box2d.Uwp</Name>
+    <ProjectReference Include="..\box2d\box2d.Linux.csproj">
+      <Project>{389AB006-C105-4383-8D26-10712EFE5A7E}</Project>
+      <Name>box2d.Linux</Name>
     </ProjectReference>
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
-    <VisualStudioVersion>14.0</VisualStudioVersion>
-  </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
