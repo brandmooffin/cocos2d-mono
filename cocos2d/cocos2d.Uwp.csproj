@@ -37,7 +37,7 @@
     <OutputPath>bin\Uwp\Release\</OutputPath>
     <IntermediateOutputPath>obj\Uwp\Release</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\Uwp\Release</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
