@@ -657,11 +657,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\box2d\box2d.DesktopGL.csproj">
+    <ProjectReference Include="..\..\box2d\box2d.DesktopGL\box2d.DesktopGL.csproj">
       <Project>{18aafe9f-27fd-4b00-9aac-14612319ea91}</Project>
       <Name>box2d.DesktopGL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\cocos2d\cocos2d.DesktopGL.csproj">
+    <ProjectReference Include="..\..\cocos2d\cocos2d.DesktopGL\cocos2d.DesktopGL.csproj">
       <Project>{01382ad1-179c-4322-91c4-e4fac0ca6c84}</Project>
       <Name>cocos2d.DesktopGL</Name>
     </ProjectReference>

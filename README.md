@@ -13,6 +13,7 @@ We support a growing list of platforms across the desktop, mobile, and console s
    * Windows 10 Store Apps (UWP)
    * Windows Win32 (OpenGL & DirectX)
    * Linux (OpenGL)
+   * macOS (OpenGL)
  * Mobile/Tablet Devices
    * Android (OpenGL)
    * Windows Phone 10 (UWP)
@@ -61,6 +62,8 @@ Templates for Visual Studio
 
 To make things as easy as possible templates for Visual Studio are provided and can be found [here](https://github.com/brandmooffin/cocos2d-mono/tree/master/ProjectTemplates).
 
+There are currently templates available for Visual Studio 2017 and Visual Studio 2019. Additional IDEs will be supported soon!
+
 
 Getting Started
 ---------------
@@ -93,8 +96,6 @@ LINUX SETUP NOTE: There are some fonts used within the Test Bed not natively fou
 
 More tests coming very shortly!
 
-### Linux
+### Linux & macOS (OpenGL)
 
-For Linux projects there are two options available, DesktopGL (cross-platform with Windows support) and Linux (stand-alone). It recommended to use the DesktopGL version but if you prefer to develop solely for Linux, feel free to use cocos2d-mono.Linux. 
-
-NOTE: For cocos2d-mono.Linux there is no NuGet package available yet so you will need to build from source at the moment.
+For Linux & macOS projects use DesktopGL (cross-platform with Windows support).

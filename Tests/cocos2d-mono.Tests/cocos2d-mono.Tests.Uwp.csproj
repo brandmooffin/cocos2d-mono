@@ -672,11 +672,11 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\box2d\box2d.Uwp.csproj">
+    <ProjectReference Include="..\..\box2d\box2d.Uwp\box2d.Uwp.csproj">
       <Project>{acac14a0-8c2b-413c-875f-a2ad3c647800}</Project>
       <Name>box2d.Uwp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\cocos2d\cocos2d.Uwp.csproj">
+    <ProjectReference Include="..\..\cocos2d\cocos2d.Uwp\cocos2d.Uwp.csproj">
       <Project>{11382845-c53d-4d81-8f2e-a7f88c9bdad6}</Project>
       <Name>cocos2d.Uwp</Name>
     </ProjectReference>

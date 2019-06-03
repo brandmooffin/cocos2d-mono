@@ -1,3 +1,4 @@
+#if MACOS || IOS
 using System;
 using System.Runtime.Serialization;
 using System.Runtime.InteropServices;
@@ -488,3 +489,4 @@ namespace Cocos2D
 }	
 
 
+#endif

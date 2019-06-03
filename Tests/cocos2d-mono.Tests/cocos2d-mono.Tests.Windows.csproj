@@ -651,16 +651,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\box2d\box2d.Windows.csproj">
+    <ProjectReference Include="..\..\box2d\box2d.Windows\box2d.Windows.csproj">
       <Project>{18aafe9f-27fd-4b00-9aac-14612319ea91}</Project>
       <Name>box2d.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\cocos2d\cocos2d.Windows.csproj">
+    <ProjectReference Include="..\..\cocos2d\cocos2d.Windows\cocos2d.Windows.csproj">
       <Project>{01382ad1-179c-4322-91c4-e4fac0ca6c84}</Project>
       <Name>cocos2d.Windows</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <Import Project="..\packages\MonoGame.Framework.WindowsDX.3.7.1.189\build\MonoGame.Framework.WindowsDX.targets" Condition="Exists('..\packages\MonoGame.Framework.WindowsDX.3.7.1.189\build\MonoGame.Framework.WindowsDX.targets')" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ANDROID
+using System;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Android.App;
@@ -189,3 +190,4 @@ namespace Cocos2D
         }
     }
 }
+#endif

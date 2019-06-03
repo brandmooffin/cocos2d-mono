@@ -1,3 +1,4 @@
+#if MACOS || IOS
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,3 +100,4 @@ namespace Cocos2D
 
 	}
 }
+#endif

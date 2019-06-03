@@ -1124,13 +1124,12 @@
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\box2d\box2d.Android.csproj">
+    <ProjectReference Include="..\..\box2d\box2d.Android\box2d.Android.csproj">
       <Project>{c0146e28-b1e0-4f07-8407-8411753500ea}</Project>
       <Name>box2d.Android</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\cocos2d\cocos2d.Android.csproj">
+    <ProjectReference Include="..\..\cocos2d\cocos2d.Android\cocos2d.Android.csproj">
       <Project>{bf0247d4-6ef0-4f82-b22b-244d187b124d}</Project>
       <Name>cocos2d.Android</Name>
     </ProjectReference>

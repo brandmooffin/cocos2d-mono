@@ -26,7 +26,7 @@ THE SOFTWARE.
 using System;
 using Cocos2D;
 using System.IO;
-#if (WINDOWS && WINDOWS_UWP) && !MACOS && !LINUX
+#if (WINDOWS && WINDOWS_UWP && !MACOS && !LINUX) || ANDROID
 using System.IO.IsolatedStorage;
 #endif
 using System.Collections.Generic;
@@ -44,7 +44,7 @@ namespace Cocos2D
     	private static string USERDEFAULT_ROOT_NAME = "userDefaultRoot";
     	private static string XML_FILE_NAME = "UserDefault.xml";
 
-#if (WINDOWS && WINDOWS_UWP) && !MACOS && !LINUX
+#if (WINDOWS && WINDOWS_UWP && !MACOS && !LINUX) || ANDROID
         private IsolatedStorageFile myIsolatedStorage;
     #endif
         private Dictionary<string, string> values = new Dictionary<string, string>();
