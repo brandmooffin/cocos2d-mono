@@ -4,9 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
+[assembly: AssemblyTitle("Cocos2d-Mono Tests for UWP")]
+[assembly: AssemblyDescription("Cocos2D-Mono Tests for UWP (Windows Universal)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Broken Walls Studios")]
-[assembly: AssemblyProduct("cocos2d-mono.Tests.Android")]
+[assembly: AssemblyProduct("cocos2d-mono.Tests.Uwp")]
 [assembly: AssemblyCopyright("Copyright © 2019 Cocos2D-Mono Team; Broken Walls Studios, LLC.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
