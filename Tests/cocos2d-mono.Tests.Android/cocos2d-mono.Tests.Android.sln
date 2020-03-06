@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "box2d", "..\..\box2d\box2d.shproj", "{02F4E1C8-8A0D-49DE-9B39-A966E126ACC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "box2d.Android", "..\..\box2d\box2d.Android\box2d.Android.csproj", "{C0146E28-B1E0-4F07-8407-8411753500EA}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "cocos2d", "..\..\cocos2d\cocos2d.shproj", "{AFED60A6-F61D-4C4E-BB3B-20FFDA06B990}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cocos2d.Android", "..\..\cocos2d\cocos2d.Android\cocos2d.Android.csproj", "{BF0247D4-6EF0-4F82-B22B-244D187B124D}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "cocos2d-mono.Tests", "..\cocos2d-mono.Tests\cocos2d-mono.Tests.shproj", "{2AA8482A-DC8A-4905-8D09-F34D95FC66B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cocos2d-mono.Tests.Android", "..\cocos2d-mono.Tests\cocos2d-mono.Tests.Android\cocos2d-mono.Tests.Android.csproj", "{5CD4F351-4B72-42A8-9786-E42A158B8B4B}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\box2d\box2d.projitems*{02f4e1c8-8a0d-49de-9b39-a966e126acc3}*SharedItemsImports = 13
+		..\cocos2d-mono.Tests\cocos2d-mono.Tests.projitems*{2aa8482a-dc8a-4905-8d09-f34d95fc66b4}*SharedItemsImports = 13
+		..\cocos2d-mono.Tests\cocos2d-mono.Tests.projitems*{5cd4f351-4b72-42a8-9786-e42a158b8b4b}*SharedItemsImports = 4
+		..\..\cocos2d\cocos2d.projitems*{afed60a6-f61d-4c4e-bb3b-20ffda06b990}*SharedItemsImports = 13
+		..\..\cocos2d\cocos2d.projitems*{bf0247d4-6ef0-4f82-b22b-244d187b124d}*SharedItemsImports = 4
+		..\..\box2d\box2d.projitems*{c0146e28-b1e0-4f07-8407-8411753500ea}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0146E28-B1E0-4F07-8407-8411753500EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0146E28-B1E0-4F07-8407-8411753500EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0146E28-B1E0-4F07-8407-8411753500EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0146E28-B1E0-4F07-8407-8411753500EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF0247D4-6EF0-4F82-B22B-244D187B124D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF0247D4-6EF0-4F82-B22B-244D187B124D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF0247D4-6EF0-4F82-B22B-244D187B124D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF0247D4-6EF0-4F82-B22B-244D187B124D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CD4F351-4B72-42A8-9786-E42A158B8B4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CD4F351-4B72-42A8-9786-E42A158B8B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CD4F351-4B72-42A8-9786-E42A158B8B4B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5CD4F351-4B72-42A8-9786-E42A158B8B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CD4F351-4B72-42A8-9786-E42A158B8B4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CD4F351-4B72-42A8-9786-E42A158B8B4B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8C6E989-8466-46F4-9551-E13C3AEED523}
+	EndGlobalSection
+EndGlobal

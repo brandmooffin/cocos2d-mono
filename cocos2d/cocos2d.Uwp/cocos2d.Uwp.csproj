@@ -74,11 +74,12 @@
     <OutputPath>bin\Uwp\ARM\Debug\</OutputPath>
     <IntermediateOutputPath>obj\Uwp\ARM\Debug</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\Uwp\ARM\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;WINDOWS</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <PlatformTarget>ARM</PlatformTarget>
@@ -98,11 +99,12 @@
     <OutputPath>bin\Uwp\ARM64\Debug\</OutputPath>
     <IntermediateOutputPath>obj\Uwp\ARM64\Debug</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\Uwp\ARM64\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;WINDOWS</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
     <PlatformTarget>ARM64</PlatformTarget>
@@ -122,11 +124,12 @@
     <OutputPath>bin\Uwp\x64\Debug\</OutputPath>
     <IntermediateOutputPath>obj\Uwp\x64\Debug</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\Uwp\x64\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;WINDOWS</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
