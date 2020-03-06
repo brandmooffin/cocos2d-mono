@@ -99,3 +99,6 @@ More tests coming very shortly!
 ### Linux & macOS (OpenGL)
 
 For Linux & macOS projects use DesktopGL (cross-platform with Windows support).
+
+### Troubleshooting
+If you are running into issues related `Unable to load DLL 'freetype6.dll'` or something similar, you may need to install [VC++ Runtime for 2012](https://www.microsoft.com/en-us/download/details.aspx?id=30679).
