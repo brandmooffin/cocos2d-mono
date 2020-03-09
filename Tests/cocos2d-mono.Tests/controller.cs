@@ -88,7 +88,9 @@ namespace tests
             m_pItemMenu.Position = _HomePosition;
             AddChild(m_pItemMenu);
 
+#if !IOS
             AddChild(pMenu, 1);
+#endif
 
             _GamePadDPadDelegate = new CCGamePadDPadDelegate(MyOnGamePadDPadUpdate);
             _GamePadButtonDelegate = new CCGamePadButtonDelegate(MyOnGamePadButtonUpdate);
@@ -226,7 +228,7 @@ namespace tests
             CCApplication.SharedApplication.Game.Exit();
 #elif ANDROID
             Game.Activity.MoveTaskToBack(true);
-#else
+#elif !IOS
             Exit();
 #endif
         }
