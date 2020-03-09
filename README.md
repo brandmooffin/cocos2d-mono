@@ -16,19 +16,19 @@ We support a growing list of platforms across the desktop, mobile, and console s
    * macOS (OpenGL)
  * Mobile/Tablet Devices
    * Android (OpenGL)
+   * iOS (OpenGL)
    * Windows Phone 10 (UWP)
- * Consoles (for registered developers)
+ * Consoles 
    * Xbox One (UWP)
  * Coming Soon
    * iOS (Metal)
    * tvOS (Metal)
+   * macOS (Metal)
    * Xbox One (XDK)
    * Nintendo Switch
    * PlayStation Vita
    * PlayStation 4
-   * macOS (Metal)
-   * PlayStation 4
-   * PlayStation Vita
+   
 
 Download and Run
 ----------------
