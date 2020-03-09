@@ -88,7 +88,9 @@ namespace tests
             m_pItemMenu.Position = _HomePosition;
             AddChild(m_pItemMenu);
 
+#if !IOS
             AddChild(pMenu, 1);
+#endif
 
             _GamePadDPadDelegate = new CCGamePadDPadDelegate(MyOnGamePadDPadUpdate);
             _GamePadButtonDelegate = new CCGamePadButtonDelegate(MyOnGamePadButtonUpdate);
