@@ -82,13 +82,15 @@ We have created solutions for all the supported platforms that serves as our Tes
 
 You can find those in the [Tests directory](https://github.com/brandmooffin/cocos2d-mono/tree/master/Tests "Tests")
 
-  cocos2d-mono.Tests.Android.sln
+  cocos2d-mono.Tests.Android
   
-  cocos2d-mono.Tests.Windows.sln
+  cocos2d-mono.Tests.Windows
 
-  cocos2d-mono.Tests.Uwp.sln
+  cocos2d-mono.Tests.Uwp
 
-  cocos2d-mono.Tests.DesktopGL.sln
+  cocos2d-mono.Tests.DesktopGL
+  
+  cocos2d-mono.Tests.iOS
 
 LINUX SETUP NOTE: There are some fonts used within the Test Bed not natively found on Linux, please run the following command to add the missing fonts:
 
