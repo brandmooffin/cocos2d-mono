@@ -226,7 +226,7 @@ namespace tests
             CCApplication.SharedApplication.Game.Exit();
 #elif ANDROID
             Game.Activity.MoveTaskToBack(true);
-#else
+#elif !IOS
             Exit();
 #endif
         }
