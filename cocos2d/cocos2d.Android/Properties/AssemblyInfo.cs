@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Broken Walls Studios")]
 [assembly: AssemblyProduct("cocos2d-mono")]
-[assembly: AssemblyCopyright("Copyright © 2019 Cocos2D-Mono Team; Broken Walls Studios, LLC.")]
+[assembly: AssemblyCopyright("Copyright © 2020 Cocos2D-Mono Team; Broken Walls Studios, LLC.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

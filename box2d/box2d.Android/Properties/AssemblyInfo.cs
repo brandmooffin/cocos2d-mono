@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("box2d")]
-[assembly: AssemblyDescription("Box2D for Cocos2D-Mono")]
+[assembly: AssemblyTitle("box2d for Android")]
+[assembly: AssemblyDescription("Box2D for Android (4.4+)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Broken Walls Studios")]
 [assembly: AssemblyProduct("box2d")]
-[assembly: AssemblyCopyright("Copyright ©  2019 Cocos2D-Mono Team; Broken Walls Studios, LLC.")]
+[assembly: AssemblyCopyright("Copyright © 2020 Cocos2D-Mono Team; Broken Walls Studios, LLC.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

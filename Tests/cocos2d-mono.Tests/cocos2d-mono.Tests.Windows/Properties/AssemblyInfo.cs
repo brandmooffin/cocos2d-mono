@@ -8,8 +8,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Cocos2D-Mono Tests for Windows (DX)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Broken Walls Studios")]
-[assembly: AssemblyProduct("cocos2d-mono.Tests.Android")]
-[assembly: AssemblyCopyright("Copyright © 2019 Cocos2D-Mono Team; Broken Walls Studios, LLC.")]
+[assembly: AssemblyProduct("cocos2d-mono.Tests.Windows")]
+[assembly: AssemblyCopyright("Copyright © 2020 Cocos2D-Mono Team; Broken Walls Studios, LLC.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
@@ -24,5 +24,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.3.6.0")]
-[assembly: AssemblyFileVersion("2.3.6.0")]
+[assembly: AssemblyVersion("2.3.7.0")]
+[assembly: AssemblyFileVersion("2.3.7.0")]

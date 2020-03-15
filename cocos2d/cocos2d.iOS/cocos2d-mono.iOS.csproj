@@ -20,6 +20,8 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iOS\Debug\</OutputPath>
+    <IntermediateOutputPath>obj\iOS\Debug</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\iOS\Debug</BaseIntermediateOutputPath>
     <DefineConstants>DEBUG;__IOS__;__MOBILE__;__UNIFIED__;IPHONE;IOS;GLES;OPENGL;MONOGAME</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -30,6 +32,8 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iOS\Release\</OutputPath>
+    <IntermediateOutputPath>obj\iOS\Release</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\iOS\Release</BaseIntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
