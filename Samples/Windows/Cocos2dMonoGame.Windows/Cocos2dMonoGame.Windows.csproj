@@ -51,49 +51,49 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="BitMiracle.LibTiff.NET, Version=2.4.626.0, Culture=neutral, PublicKeyToken=53879b3e20e7a7d6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\BitMiracle.LibTiff.NET.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\BitMiracle.LibTiff.NET.dll</HintPath>
     </Reference>
     <Reference Include="Box2D, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\Box2D.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\Box2D.dll</HintPath>
     </Reference>
-    <Reference Include="Cocos2D, Version=2.3.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\Cocos2D.dll</HintPath>
+    <Reference Include="Cocos2D, Version=2.3.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\Cocos2D.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework, Version=3.7.1.189, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\MonoGame.Framework.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.3.0.1\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\SharpDX.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\SharpDX.Direct3D9.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Mathematics, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\SharpDX.Mathematics.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\SharpDX.Mathematics.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.MediaFoundation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\SharpDX.MediaFoundation.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\SharpDX.MediaFoundation.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.XAudio2, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\SharpDX.XAudio2.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\SharpDX.XAudio2.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.XInput, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.6\lib\net45\SharpDX.XInput.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Windows.2.3.7.2\lib\net45\SharpDX.XInput.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
