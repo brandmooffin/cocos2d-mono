@@ -40,6 +40,7 @@
     <BundleAssemblies>false</BundleAssemblies>
     <AndroidSupportedAbis>
     </AndroidSupportedAbis>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -53,10 +54,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Box2D, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Android.2.3.6\lib\monoandroid44\Box2D.dll</HintPath>
+      <HintPath>..\packages\Cocos2D-Mono.Android.2.3.7\lib\monoandroid44\Box2D.dll</HintPath>
     </Reference>
-    <Reference Include="Cocos2D, Version=2.3.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cocos2D-Mono.Android.2.3.6\lib\monoandroid44\Cocos2D.dll</HintPath>
+    <Reference Include="Cocos2D, Version=2.3.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cocos2D-Mono.Android.2.3.7\lib\monoandroid44\Cocos2D.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.1.0\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
