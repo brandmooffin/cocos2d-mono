@@ -62,7 +62,7 @@
       <Name>cocos2d.DesktopGL</Name>
     </ProjectReference>
   </ItemGroup>
-    <ItemGroup>
+  <ItemGroup>
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   <ItemGroup>

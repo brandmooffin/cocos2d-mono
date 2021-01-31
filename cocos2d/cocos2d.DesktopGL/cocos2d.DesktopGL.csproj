@@ -12,13 +12,20 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <PackageId>cocos2d-mono for DesktopGL</PackageId>
+    <PackageId>Cocos2D-Mono.DesktopGL</PackageId>
     <Version>2.3.8.0</Version>
     <Description>Cocos2D-Mono for DesktopGL (OpenGL Desktop Platforms)</Description>
     <Copyright>Copyright © 2021 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
     <Company>Broken Walls Studios</Company>
-    <Product>cocos2d-mono</Product>
+    <Product>cocos2d-mono for DesktopGL</Product>
+    <PackageTags>mono monogame cocos2d game</PackageTags>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReleaseNotes>Support for MonoGame 3.8.0</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
+    <PackageIcon>logo-small.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,6 +62,12 @@
       <Project>{18aafe9f-27fd-4b00-9aac-14612319ea91}</Project>
       <Name>box2d.DesktopGL</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Logos\logo-small.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
   <Import Project="..\cocos2d.projitems" Label="Shared" />
 </Project>
