@@ -27,6 +27,7 @@
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageIcon>logo-small.png</PackageIcon>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -63,6 +64,12 @@
       <Project>{18aafe9f-27fd-4b00-9aac-14612319ea91}</Project>
       <Name>box2d.Windows</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Logos\logo-small.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
   <Import Project="..\cocos2d.projitems" Label="Shared" />
 </Project>

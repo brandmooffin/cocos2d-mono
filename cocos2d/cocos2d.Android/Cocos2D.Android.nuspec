@@ -12,11 +12,12 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>$description$</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
-    <releaseNotes>Support for MonoGame 3.7.1</releaseNotes>
-    <copyright>Copyright © 2020 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
+    <releaseNotes>Support for MonoGame 3.8.0</releaseNotes>
+    <copyright>Copyright © 2021 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
     <dependencies>
-      <dependency id="MonoGame.Framework.Android" version="3.7.1.189" />
+      <dependency id="MonoGame.Content.Builder.Task" version="3.8.0.1641" />
+      <dependency id="MonoGame.Framework.Android" version="3.8.0.1641" />
       <dependency id="SharpZipLib" version="1.1.0" />
     </dependencies>
   </metadata>
