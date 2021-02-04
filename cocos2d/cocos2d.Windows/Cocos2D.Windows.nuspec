@@ -3,7 +3,7 @@
   <metadata>
     <id>Cocos2D-Mono.Windows</id>
     <version>$version$</version>
-    <title>$title$</title>
+    <title>Cocos2D-Mono for Windows</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
     <license type="expression">MIT</license>
