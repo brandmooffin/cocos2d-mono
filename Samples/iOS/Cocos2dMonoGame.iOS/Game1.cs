@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Cocos2dMonoGame.iOS
+namespace Cocos2DMonoGame.iOS
 {
     /// <summary>
     /// This is the main type for your game.
@@ -97,4 +97,3 @@ namespace Cocos2dMonoGame.iOS
         }
     }
 }
-
