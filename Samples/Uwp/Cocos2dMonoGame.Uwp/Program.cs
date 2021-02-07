@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cocos2dMonoGame.Uwp
+namespace Cocos2DMonoGame.Uwp
 {
     /// <summary>
     /// The main class.
