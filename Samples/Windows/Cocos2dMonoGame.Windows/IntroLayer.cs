@@ -1,6 +1,6 @@
 ﻿using Cocos2D;
 
-namespace Cocos2dMonoGame.Windows
+namespace Cocos2DMonoGame.Windows
 {
     public class IntroLayer : CCLayerColor
     {

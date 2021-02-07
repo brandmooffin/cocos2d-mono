@@ -1,16 +1,9 @@
 ﻿using System;
 
-namespace Cocos2dMonoGame.Windows
+namespace Cocos2DMonoGame.Windows
 {
-#if WINDOWS || LINUX
-    /// <summary>
-    /// The main class.
-    /// </summary>
     public static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
@@ -18,5 +11,4 @@ namespace Cocos2dMonoGame.Windows
                 game.Run();
         }
     }
-#endif
 }

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Cocos2dMonoGame.Windows
+namespace Cocos2DMonoGame.Windows
 {
     /// <summary>
     /// This is the main type for your game.
