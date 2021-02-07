@@ -2,8 +2,8 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.iOS</id>
-    <version>2.3.8</version>
-    <title>cocos2d-mono for iOS</title>
+    <version>2.3.8.1</version>
+    <title>Cocos2d-Mono for iOS</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
     <license type="expression">MIT</license>
