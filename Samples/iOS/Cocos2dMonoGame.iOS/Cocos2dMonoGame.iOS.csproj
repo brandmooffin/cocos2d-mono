@@ -5,14 +5,11 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{1FC9C842-6DCA-4CB5-8F23-EB1E1A0740BC}</ProjectGuid>
+    <ProjectGuid>{9554F207-CAC8-4214-842B-35B4FF37D6E5}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Cocos2dMonoGame.iOS</RootNamespace>
+    <RootNamespace>Cocos2DMonoGame.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>Cocos2dMonoGame.iOS</AssemblyName>
-    <MonoGamePlatform>iOS</MonoGamePlatform>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <AssemblyName>Cocos2DMonoGame.iOS</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -104,18 +101,6 @@
     <CodesignKey>iPhone Distribution</CodesignKey>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="box2d.iOS, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cocos2d-mono.iOS.2.3.7\lib\xamarinios10\box2d.iOS.dll</HintPath>
-    </Reference>
-    <Reference Include="cocos2d-mono.iOS, Version=2.3.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cocos2d-mono.iOS.2.3.7\lib\xamarinios10\cocos2d-mono.iOS.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpZipLib.1.1.0\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoGame.Framework, Version=3.7.1.189, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoGame.Framework.iOS.3.7.1.189\lib\XamariniOS\MonoGame.Framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -123,28 +108,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />
-    <Compile Include="Game1.cs" />
     <Compile Include="IntroLayer.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Game1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <MonoGameContentReference Include="Content\Content.mgcb" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Default.png" />
     <BundleResource Include="GameThumbnail.png" />
   </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="LaunchScreen.storyboard" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Cocos2D-Mono.iOS">
+      <Version>2.3.8.1</Version>
+    </PackageReference>
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
+    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.0.1641" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
-  <Import Project="..\packages\MonoGame.Framework.iOS.3.7.1.189\build\MonoGame.Framework.iOS.targets" Condition="Exists('..\packages\MonoGame.Framework.iOS.3.7.1.189\build\MonoGame.Framework.iOS.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\MonoGame.Framework.iOS.3.7.1.189\build\MonoGame.Framework.iOS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MonoGame.Framework.iOS.3.7.1.189\build\MonoGame.Framework.iOS.targets'))" />
-  </Target>
 </Project>

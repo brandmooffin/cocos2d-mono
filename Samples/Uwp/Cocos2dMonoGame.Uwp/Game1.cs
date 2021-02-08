@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Cocos2dMonoGame.Uwp
+namespace Cocos2DMonoGame.Uwp
 {
     /// <summary>
     /// This is the main type for your game.
@@ -100,3 +100,4 @@ namespace Cocos2dMonoGame.Uwp
         }
     }
 }
+

@@ -1,6 +1,6 @@
 ﻿using Cocos2D;
 
-namespace Cocos2dMonoGame.iOS
+namespace Cocos2DMonoGame.iOS
 {
     public class IntroLayer : CCLayerColor
     {

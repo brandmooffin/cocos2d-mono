@@ -13,7 +13,7 @@ namespace Cocos2DMonoGame.DesktopGL
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
+
         public Game1() : base()
         {
             graphics = new GraphicsDeviceManager(this);

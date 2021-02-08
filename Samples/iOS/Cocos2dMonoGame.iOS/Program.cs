@@ -2,7 +2,7 @@
 using Foundation;
 using UIKit;
 
-namespace Cocos2dMonoGame.iOS
+namespace Cocos2DMonoGame.iOS
 {
     [Register("AppDelegate")]
     class Program : UIApplicationDelegate

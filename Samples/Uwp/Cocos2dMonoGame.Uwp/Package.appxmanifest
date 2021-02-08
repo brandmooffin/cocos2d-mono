@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="0a9dcf21-b3c8-4ec7-b73b-2fdd24cb3b24"
-    Publisher="CN=brand"
+    Name="Cocos2DMonoGame.Uwp"
+    Publisher="CN=Cocos2DMonoGame.Uwp"
     Version="1.0.0.0" />
-
-  <mp:PhoneIdentity PhoneProductId="0a9dcf21-b3c8-4ec7-b73b-2fdd24cb3b24" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  
+  <mp:PhoneIdentity PhoneProductId="00000000-0000-0000-0000-000000000000" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Cocos2dMonoGame.Uwp</DisplayName>
-    <PublisherDisplayName>brand</PublisherDisplayName>
+    <DisplayName>Cocos2DMonoGame.Uwp</DisplayName>
+    <PublisherDisplayName>Cocos2DMonoGame.Uwp</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -29,13 +29,13 @@
 
   <Applications>
     <Application Id="App"
-      Executable="$targetnametoken$.exe"
-      EntryPoint="Cocos2dMonoGame.Uwp.App">
+      Executable="Cocos2DMonoGame.Uwp.exe"
+      EntryPoint="Cocos2DMonoGame.Uwp.App">
       <uap:VisualElements
-        DisplayName="Cocos2dMonoGame.Uwp"
+        DisplayName="Cocos2DMonoGame.Uwp"
         Square150x150Logo="Assets\Logo.png"
         Square44x44Logo="Assets\SmallLogo.png"
-        Description="Cocos2dMonoGame.Uwp"
+        Description="Cocos2DMonoGame.Uwp"
         BackgroundColor="#464646">
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>

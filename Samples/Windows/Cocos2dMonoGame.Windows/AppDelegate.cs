@@ -3,7 +3,7 @@ using Cocos2D;
 using CocosDenshion;
 using Microsoft.Xna.Framework;
 
-namespace Cocos2dMonoGame.Windows
+namespace Cocos2DMonoGame.Windows
 {
     /// <summary>
     /// This is your extension of the main Cocos2D application object.
@@ -47,11 +47,8 @@ namespace Cocos2dMonoGame.Windows
                 pDirector.DisplayStats = false;
 
                 // set FPS. the default value is 1.0/60 if you don't call this
-#if WINDOWS_PHONE
-                pDirector.AnimationInterval = 1f / 30f;
-#else
                 pDirector.AnimationInterval = 1.0 / 60;
-#endif
+
                 CCScene pScene = IntroLayer.Scene;
 
                 pDirector.RunWithScene(pScene);
