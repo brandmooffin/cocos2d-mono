@@ -114,6 +114,8 @@ namespace tests
             return true;
         }
 
+        public override bool UseInputStateManagement => true;
+
         /// <summary>
         /// The function be called when the application enter background
         /// </summary>
