@@ -87,6 +87,10 @@
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Content\fonts\MarkerFelt-16.spritefont" />
+    <None Include="Content\fonts\MarkerFelt-18.spritefont" />
+    <None Include="Content\fonts\MarkerFelt-22.spritefont" />
+    <None Include="Content\fonts\MarkerFelt-64.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />
