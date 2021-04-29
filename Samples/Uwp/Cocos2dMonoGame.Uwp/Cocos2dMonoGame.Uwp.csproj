@@ -87,6 +87,10 @@
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Content\fonts\MarkerFelt-16.spritefont" />
+    <None Include="Content\fonts\MarkerFelt-18.spritefont" />
+    <None Include="Content\fonts\MarkerFelt-22.spritefont" />
+    <None Include="Content\fonts\MarkerFelt-64.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />
@@ -121,7 +125,7 @@
       <Version>2.3.8</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.9</Version>
+      <Version>6.2.11</Version>
     </PackageReference>
     <PackageReference Include="MonoGame.Framework.WindowsUniversal" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
