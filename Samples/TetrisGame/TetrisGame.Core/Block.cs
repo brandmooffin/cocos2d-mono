@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Cocos2D;
 using Microsoft.Xna.Framework;
 
 namespace TetrisGame.Core
@@ -8,12 +9,10 @@ namespace TetrisGame.Core
 	/// <summary>
 	/// Represents a block that shapes consist of.
 	/// </summary>
-	public class Block
+	public class Block : CCSprite
 	{
 		private Color background = new Color(20, 20, 20);
 		private IBoard board;
-		private Color colour;
-		private Point position;
 
 		/// <summary>
 		/// Instantiates Block object.
@@ -23,35 +22,15 @@ namespace TetrisGame.Core
 		/// <param name="board">The Tetris board</param>
 		/// <param name="colour">The colour of the block</param>
 		/// <param name="position">The initial position of the block</param>
-		public Block(IBoard board, Color colour, Point position)
+		public Block(IBoard board, Color color, CCPoint position)
 		{
-			if (board == null || colour == null || position == null)
+			if (board == null || color == null || position == null)
 				throw new ArgumentNullException();
 
 			this.board = board;
-			this.colour = colour;
+			Color = new CCColor3B(color);
 			checkCoordinate(position, board);
-			this.position = position;
-		}
-
-		/// <summary>
-		/// Returns Block's colour.
-		/// </summary>
-		public Color Colour
-		{ get { return colour; } }
-
-		/// <summary>
-		/// Returns Block's current position.
-		/// </summary>
-		public Point Position
-		{
-			get { return new Point(position.X, position.Y); }
-			set
-			{
-				checkCoordinate(value, board);
-				position.X = value.X;
-				position.Y = value.Y;
-			}
+			Position = position;
 		}
 
 		/// <summary>
@@ -61,7 +40,9 @@ namespace TetrisGame.Core
 		public void MoveDown()
 		{
 			if (TryMoveDown())
-				position.Y++;
+			{
+				Position = new CCPoint(Position.X, Position.Y - 1);
+			}
 		}
 
 		/// <summary>
@@ -71,7 +52,9 @@ namespace TetrisGame.Core
 		public void MoveLeft()
 		{
 			if (TryMoveLeft())
-				position.X--;
+			{
+				Position = new CCPoint(Position.X - 1, Position.Y);
+			}
 		}
 
 		/// <summary>
@@ -81,7 +64,9 @@ namespace TetrisGame.Core
 		public void MoveRight()
 		{
 			if (TryMoveRight())
-				position.X++;
+			{
+				Position = new CCPoint(Position.X + 1, Position.Y);
+			}
 		}
 
 		/// <summary>
@@ -89,12 +74,11 @@ namespace TetrisGame.Core
 		/// (i.e. there are no blocks and it is not the wall of the board).
 		/// </summary>
 		/// <param name="offset">The coordinate by which the block changes the position</param>
-		public void Rotate(Point offset)
+		public void Rotate(CCPoint offset)
 		{
 			if (TryRotate(offset))
 			{
-				position.X += offset.X;
-				position.Y += offset.Y;
+				Position = new CCPoint(Position.X + offset.X, PositionY + offset.Y);
 			}
 		}
 
@@ -105,9 +89,9 @@ namespace TetrisGame.Core
 		/// <returns>true if it is possible; false otherwise</returns>
 		public bool TryMoveDown()
 		{
-			int y = position.Y + 1;
+			int y = (int)Position.Y + 1;
 			//the empty space is determined whether the colour at this position is board's background colour
-			if (y >= board.GetLength(1) || board[position.X, y] != background)
+			if (y >= board.GetLength(1) || board[(int)Position.X, y] != background)
 				return false;
 			return true;
 		}
@@ -119,9 +103,9 @@ namespace TetrisGame.Core
 		/// <returns>true if it is possible; false otherwise</returns>
 		public bool TryMoveLeft()
 		{
-			int x = position.X - 1;
+			int x = (int)Position.X - 1;
 			//the empty space is determined whether the colour at this position is board's background colour
-			if (x < 0 || board[x, position.Y] != background)
+			if (x < 0 || board[x, (int)Position.Y] != background)
 				return false;
 			return true;
 		}
@@ -133,9 +117,9 @@ namespace TetrisGame.Core
 		/// <returns>true if it is possible; false otherwise</returns>
 		public bool TryMoveRight()
 		{
-			int x = position.X + 1;
+			int x = (int)(Position.X + 1);
 			//the empty space is determined whether the colour at this position is board's background colour
-			if (x >= board.GetLength(0) || board[x, position.Y] != background)
+			if (x >= board.GetLength(0) || board[x, (int)Position.Y] != background)
 				return false;
 			return true;
 		}
@@ -146,10 +130,10 @@ namespace TetrisGame.Core
 		/// </summary>
 		/// <param name="offset"></param>
 		/// <returns>true if it is possible; false otherwise</returns>
-		public bool TryRotate(Point offset)
+		public bool TryRotate(CCPoint offset)
 		{
-			int x = position.X + offset.X;
-			int y = position.Y + offset.Y;
+			int x = (int)(Position.X + offset.X);
+			int y = (int)(Position.Y + offset.Y);
 
 			//the empty space is determined whether the colour at this position is board's background colour
 			if (x < 0 || y < 0 || x >= board.GetLength(0) ||
@@ -160,12 +144,17 @@ namespace TetrisGame.Core
 
 		//Checks whether given coordinates are valid
 		//(i.e. they are not outside of the board boundaries.
-		private static void checkCoordinate(Point coord, IBoard board)
+		private static void checkCoordinate(CCPoint coord, IBoard board)
 		{
 			if (coord.X < 0 || coord.Y < 0)
 				throw new ArgumentException("Given coordinate is negative.");
 			if (coord.X >= board.GetLength(0) || coord.Y >= board.GetLength(1))
 				throw new ArgumentException("Given coordinate is out of border bounds.");
+		}
+
+		public void Update()
+        {
+			checkCoordinate(Position, board);
 		}
 
 	}

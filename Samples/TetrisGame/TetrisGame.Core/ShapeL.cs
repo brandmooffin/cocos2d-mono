@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Cocos2D;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -11,6 +12,7 @@ namespace TetrisGame.Core
 	/// </summary>
 	public class ShapeL : Shape
 	{
+		private static CCColor3B ShapeColor = new CCColor3B(Microsoft.Xna.Framework.Color.DarkOrange);
 		/// <summary>
 		/// Instantiates ShapeL.
 		/// </summary>
@@ -22,22 +24,22 @@ namespace TetrisGame.Core
 		private static Block[] setBlocks(IBoard board)
 		{
 			Block[] blocks = new Block[4];
-			blocks[0] = new Block(board, Color.DarkOrange, new Point(5, 1));
-			blocks[1] = new Block(board, Color.DarkOrange, new Point(5, 0));
-			blocks[2] = new Block(board, Color.DarkOrange, new Point(6, 0));
-			blocks[3] = new Block(board, Color.DarkOrange, new Point(7, 0));
+			blocks[0] = new Block(board, ShapeColor, new CCPoint(5, 1));
+			blocks[1] = new Block(board, ShapeColor, new CCPoint(5, 0));
+			blocks[2] = new Block(board, ShapeColor, new CCPoint(6, 0));
+			blocks[3] = new Block(board, ShapeColor, new CCPoint(7, 0));
 			return blocks;
 		}
 
 		//Creates offsets for each block used for rotation.
 		//ShapeL has four possible rotations.
-		private static Point[][] setOffsets()
+		private static CCPoint[][] setOffsets()
 		{
-			Point[][] offsets = new Point[4][];
-			offsets[0] = new Point[4] { new Point(2, 0), new Point(1, 1), new Point(0, 0), new Point(-1, -1) };
-			offsets[1] = new Point[4] { new Point(0, -2), new Point(1, -1), new Point(0, 0), new Point(-1, 1) };
-			offsets[2] = new Point[4] { new Point(-2, 0), new Point(-1, -1), new Point(0, 0), new Point(1, 1) };
-			offsets[3] = new Point[4] { new Point(0, 2), new Point(-1, 1), new Point(0, 0), new Point(1, -1) };
+			CCPoint[][] offsets = new CCPoint[4][];
+			offsets[0] = new CCPoint[4] { new CCPoint(2, 0), new CCPoint(1, 1), new CCPoint(0, 0), new CCPoint(-1, -1) };
+			offsets[1] = new CCPoint[4] { new CCPoint(0, -2), new CCPoint(1, -1), new CCPoint(0, 0), new CCPoint(-1, 1) };
+			offsets[2] = new CCPoint[4] { new CCPoint(-2, 0), new CCPoint(-1, -1), new CCPoint(0, 0), new CCPoint(1, 1) };
+			offsets[3] = new CCPoint[4] { new CCPoint(0, 2), new CCPoint(-1, 1), new CCPoint(0, 0), new CCPoint(1, -1) };
 			return offsets;
 		}
 	}

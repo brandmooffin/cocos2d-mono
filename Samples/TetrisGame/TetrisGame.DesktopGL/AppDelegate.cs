@@ -2,6 +2,7 @@
 using CocosDenshion;
 using Microsoft.Xna.Framework;
 using System;
+using TetrisGame.Core.Scenes;
 
 namespace TetrisGame.DesktopGL
 {
@@ -37,7 +38,7 @@ namespace TetrisGame.DesktopGL
                 // Set your design resolution here, which is the target resolution of your primary
                 // design hardware.
                 //
-                CCDrawManager.SetDesignResolutionSize(1280f, 720f, CCResolutionPolicy.ShowAll);
+                CCDrawManager.SetDesignResolutionSize(555f, 450f, CCResolutionPolicy.ShowAll);
                 CCApplication.SharedApplication.GraphicsDevice.Clear(Color.Black);
                 //initialize director
                 pDirector = CCDirector.SharedDirector;
@@ -52,7 +53,7 @@ namespace TetrisGame.DesktopGL
 #else
                 pDirector.AnimationInterval = 1.0 / 60;
 #endif
-                CCScene pScene = IntroLayer.Scene;
+                CCScene pScene = GameScene.Scene;
 
                 pDirector.RunWithScene(pScene);
             }

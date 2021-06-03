@@ -3,7 +3,7 @@ using CocosDenshion;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TetrisGame.Core;
+
 
 namespace TetrisGame.DesktopGL
 {
@@ -14,9 +14,6 @@ namespace TetrisGame.DesktopGL
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        BoardSprite boardSprite;
-        ShapeSprite shapeSprite;
-        ScoreSprite scoreSprite;
 
         public Game1() : base()
         {
@@ -39,22 +36,7 @@ namespace TetrisGame.DesktopGL
         /// </summary>
         protected override void Initialize()
         {
-            Board board = new Board();
-            Score score = new Score(board);
-
-            boardSprite = new BoardSprite(this, board);
-            Components.Add(boardSprite);
-            shapeSprite = new ShapeSprite(this, board, score);
-            Components.Add(shapeSprite);
-            scoreSprite = new ScoreSprite(this, score);
-            Components.Add(scoreSprite);
-
-            graphics.PreferredBackBufferHeight = 555;
-            graphics.PreferredBackBufferWidth = 450;
-            graphics.ApplyChanges();
-
             base.Initialize();
-            board.GameOver += gameOver;
         }
 
         /// <summary>
@@ -114,13 +96,6 @@ namespace TetrisGame.DesktopGL
             // TODO: add your exit code here to restore the device to its per-game environment.
             CCSimpleAudioEngine.SharedEngine.RestoreMediaState();
             Exit();
-        }
-
-        //If the game is over, the shape is removed, and the appropriate message is displayed.
-        private void gameOver()
-        {
-            Components.Remove(shapeSprite);
-            scoreSprite.HandleGameOver();
         }
     }
 }

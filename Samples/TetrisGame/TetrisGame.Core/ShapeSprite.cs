@@ -11,7 +11,7 @@ namespace TetrisGame.Core
 	/// <summary>
 	/// The class that draws and updates the Shape movements on the board.
 	/// </summary>
-	public class ShapeSprite : DrawableGameComponent
+	public class ShapeSprite
 	{
 		IShape shape;
 

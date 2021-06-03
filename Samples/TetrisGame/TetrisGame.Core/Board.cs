@@ -1,20 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Cocos2D;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using TetrisGame.Core.Scenes;
 
 namespace TetrisGame.Core
 {
 	/// <summary>
 	/// Represents the Tetris board.
 	/// </summary>
-	public class Board : IBoard
+	public class Board : CCSprite, IBoard
 	{
 		private Color background = new Color(20, 20, 20);
 		private Color[,] board;
 		private IShape shape;
 		private IShape nextShape;
+
+		GameScene gameScene;
+		CCTexture2D filledBlock;
+
+		//To show the ghost shape if the "G" key was pressed.
+		private bool drawGhost = false;
+		private bool keyGhost = false;
 
 		/// <summary>
 		/// Fires when the game is over.
@@ -28,8 +38,13 @@ namespace TetrisGame.Core
 		/// <summary>
 		/// Instantiates the Board object.
 		/// </summary>
-		public Board()
+		public Board(GameScene gameScene)
 		{
+			this.gameScene = gameScene;
+
+			filledBlock = new CCTexture2D();
+			filledBlock.InitWithFile("FilledBlock");
+
 			board = new Color[10, 21];
 			for (int i = 0; i < 10; i++)
 			{
@@ -191,6 +206,100 @@ namespace TetrisGame.Core
 			}
 			for (int x = 0; x < boardWidth; x++)
 				board[x, 0] = background;
+		}
+
+		/// <summary>
+		/// Allows updating the Board.
+		/// </summary>
+		/// <param name="gameTime">Provides a snapshot of timing values.</param>
+		public void Update()
+		{
+			checkGhostKey(Keyboard.GetState());
+		}
+
+		//Checks if the user requested a ghost mode.
+		private void checkGhostKey(KeyboardState keyboardState)
+		{
+			bool keyGhostNow = (keyboardState.IsKeyDown(Keys.G));
+
+			if (!keyGhost && keyGhostNow)
+				drawGhost = !drawGhost;
+
+			keyGhost = keyGhostNow;
+		}
+
+		//Deetrmines if the ghost should be drawn at this position.
+		private bool isGhostPosition(Block[] shapeGhost, int x, int y)
+		{
+			for (int i = 0; i < shapeGhost.Length; i++)
+				if (shapeGhost[i].Position.X == x && shapeGhost[i].Position.Y == y)
+					return true;
+			return false;
+		}
+
+		//Creates a ghost shape, which represents Shape's final position
+		//if the user decides to drop it.
+		private void fill(ref Block[] shapeGhost)
+		{
+			//copy the shape
+			for (int i = 0; i < Shape.Length; i++)
+			{
+				shapeGhost[i] = Shape[i];
+			}
+			//drop it to its final position
+			while (tryMoveDown(shapeGhost))
+			{
+				for (int i = 0; i < shapeGhost.Length; i++)
+					shapeGhost[i].MoveDown();
+			}
+			for (int i = 0; i < Shape.Length; i++)
+			{
+				if (shapeGhost[i].Position.Y < 2)
+					drawGhost = false;
+			}
+		}
+
+		//Tries to move down the blocks. Returns true if it is possible for every block.
+		private bool tryMoveDown(Block[] array)
+		{
+			for (int i = 0; i < array.Length; i++)
+			{
+				if (!array[i].TryMoveDown())
+					return false;
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// Called when the Board is to be drawn.
+		/// Responsible for drawing ghost shapes and the next shape.
+		/// </summary>
+		/// <param name="gameTime">Provides a snapshot of timing values.</param>
+		public void Draw()
+		{
+			//creates a copy of current shape to draw it as a ghost
+			Block[] shapeCopy = new Block[Shape.Length];
+			fill(ref shapeCopy);
+
+			for (int i = 0; i < board.GetLength(0); i++)
+			{
+				for (int j = 1; j < board.GetLength(1); j++)
+				{
+					if (isGhostPosition(shapeCopy, i, j) && drawGhost)
+						spriteBatch.Draw(filledBlock, new Vector2(20 + i * 20, 35 + j * 20),
+							shapeCopy[0].Colour * 0.3f);
+					else
+						spriteBatch.Draw(filledBlock, new Vector2(20 + i * 20, 35 + j * 20), board[i, j]);
+				}
+			}
+
+			//draws the next shape
+			IShape next = NextShape;
+			for (int i = 0; i < next.Length; i++)
+			{
+				spriteBatch.Draw(filledBlock, new Vector2(160 + next[i].Position.X * 20, 110 + next[i].Position.Y * 20),
+				next[i].Colour);
+			}
 		}
 	}
 }

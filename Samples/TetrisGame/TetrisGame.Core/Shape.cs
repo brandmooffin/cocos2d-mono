@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Cocos2D;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -9,11 +10,11 @@ namespace TetrisGame.Core
 	/// <summary>
 	/// Represents the Tetris Shape.
 	/// </summary>
-	public abstract class Shape : IShape
+	public abstract class Shape : CCSprite, IShape
 	{
 		protected Block[] blocks;
 		protected int currentRotation = 0;
-		protected Point[][] rotationOffset;
+		protected CCPoint[][] rotationOffset;
 		private IBoard board;
 
 		//Fires when the Shape is about to join the board pile.
@@ -25,7 +26,7 @@ namespace TetrisGame.Core
 		/// <param name="board">the Tetris board</param>
 		/// <param name="blocks">the Blocks the Shape consists of</param>
 		/// <param name="offset">the different offset combinations for Shape rotation</param>
-		public Shape(IBoard board, Block[] blocks, Point[][] offset)
+		public Shape(IBoard board, Block[] blocks, CCPoint[][] offset)
 		{
 			if (board == null || blocks == null)
 				throw new ArgumentNullException();
@@ -50,7 +51,7 @@ namespace TetrisGame.Core
 
 			this.board = board;
 			this.blocks = blocks;
-			this.rotationOffset = offset;
+			rotationOffset = offset;
 		}
 
 		/// <summary>
@@ -71,7 +72,7 @@ namespace TetrisGame.Core
 			get
 			{
 				checkIndex(i);
-				return new Block(board, blocks[i].Colour, blocks[i].Position);
+				return new Block(board, blocks[i].Color, blocks[i].Position);
 			}
 		}
 

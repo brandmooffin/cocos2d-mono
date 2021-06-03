@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Cocos2D;
 using Microsoft.Xna.Framework;
 
 namespace TetrisGame.Core
@@ -22,19 +20,19 @@ namespace TetrisGame.Core
 		{
 			Block[] blocks = new Block[4];
 			for (int i = 0; i < 4; i++)
-				blocks[i] = new Block(board, Color.DodgerBlue, new Point(4 + i, 0));
+				blocks[i] = new Block(board, new CCColor3B(Microsoft.Xna.Framework.Color.DodgerBlue), new CCPoint(4 + i, 0));
 			return blocks;
 		}
 
 		//Creates offsets for each block used for rotation.
 		//Since ShapeI has 2 rotating positions, offset values are the opposites of each other for every rotation.
-		private static Point[][] setOffsets()
+		private static CCPoint[][] setOffsets()
 		{
-			Point[][] offsets = new Point[2][];
-			offsets[0] = new Point[4] { new Point(2, 2), new Point(1, 1), new Point(0, 0), new Point(-1, -1) };
-			offsets[1] = new Point[4];
+			CCPoint[][] offsets = new CCPoint[2][];
+			offsets[0] = new CCPoint[4] { new CCPoint(2, 2), new CCPoint(1, 1), new CCPoint(0, 0), new CCPoint(-1, -1) };
+			offsets[1] = new CCPoint[4];
 			for (int i = 0; i < 4; i++)
-				offsets[1][i] = new Point(-offsets[0][i].X, -offsets[0][i].Y);
+				offsets[1][i] = new CCPoint(-offsets[0][i].X, -offsets[0][i].Y);
 			return offsets;
 		}
 	}
