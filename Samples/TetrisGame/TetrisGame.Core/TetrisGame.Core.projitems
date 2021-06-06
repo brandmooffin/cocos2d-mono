@@ -11,13 +11,11 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Block.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Board.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BoardSprite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IBoard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IShape.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IShapeFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Score.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ScoreSprite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shape.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShapeI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShapeJ.cs" />
@@ -25,7 +23,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ShapeO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShapeProxy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShapeS.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ShapeSprite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShapeT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShapeZ.cs" />
   </ItemGroup>

@@ -5,18 +5,14 @@ namespace TetrisGame.Core.Scenes
 {
     public class GameScene : CCScene
     {
-        BoardSprite boardSprite;
-        ShapeSprite shapeSprite;
-        ScoreSprite scoreSprite;
+
+        Board Board;
+        Score Score;
 
         public GameScene()
         {
             Board board = new Board(this);
-            Score score = new Score(board);
-
-            boardSprite = new BoardSprite(this, board);
-            shapeSprite = new ShapeSprite(this, board, score);
-            scoreSprite = new ScoreSprite(this, score);
+            Score score = new Score(this, board);
 
             board.GameOver += gameOver;
             // create and initialize a Label
@@ -42,15 +38,17 @@ namespace TetrisGame.Core.Scenes
 
         public override void Update(float gameTime)
         {
-            boardSprite.Update();
+            Board.Update();
+            Score.Update();
+
             base.Update(gameTime);
         }
 
         //If the game is over, the shape is removed, and the appropriate message is displayed.
         private void gameOver()
         {
-            Components.Remove(shapeSprite);
-            scoreSprite.HandleGameOver();
+            // TODO: Remove all shapes from scene
+            Score.HandleGameOver();
         }
     }
 }
