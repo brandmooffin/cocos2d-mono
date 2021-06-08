@@ -1,6 +1,7 @@
 ﻿using Cocos2D;
 using CocosDenshion;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using TetrisGame.Core.Scenes;
 
@@ -11,14 +12,16 @@ namespace TetrisGame.DesktopGL
     /// </summary>
     internal class AppDelegate : CCApplication
     {
+        GraphicsDeviceManager graphics;
         public AppDelegate(Game game, GraphicsDeviceManager graphics)
             : base(game, graphics)
         {
+            this.graphics = graphics;
             s_pSharedApplication = this;
             //
             // TODO: Set the display orientation that you want for this game.
             // 
-            CCDrawManager.InitializeDisplay(game, graphics, DisplayOrientation.Portrait);
+            CCDrawManager.InitializeDisplay(game, graphics, DisplayOrientation.Default);
         }
 
         /// <summary>
@@ -35,17 +38,21 @@ namespace TetrisGame.DesktopGL
             CCDirector pDirector = null;
             try
             {
-                // Set your design resolution here, which is the target resolution of your primary
-                // design hardware.
-                //
-                CCDrawManager.SetDesignResolutionSize(555f, 450f, CCResolutionPolicy.ShowAll);
                 CCApplication.SharedApplication.GraphicsDevice.Clear(Color.Black);
                 //initialize director
+               
                 pDirector = CCDirector.SharedDirector;
                 pDirector.SetOpenGlView();
 
+                // Set your design resolution here, which is the target resolution of your primary
+                // design hardware.
+                //
+                CCDrawManager.SetDesignResolutionSize(450f, 555f, CCResolutionPolicy.ExactFit);
+
                 //turn on display FPS
                 pDirector.DisplayStats = false;
+
+                graphics.ApplyChanges();
 
                 // set FPS. the default value is 1.0/60 if you don't call this
 #if WINDOWS_PHONE

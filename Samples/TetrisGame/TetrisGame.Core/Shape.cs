@@ -4,18 +4,25 @@ using System.Text;
 using Cocos2D;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace TetrisGame.Core
 {
 	/// <summary>
+	/// Delegate for JoinPile event.
+	/// </summary>
+	/// <param name="shape">The Shape to join the pile</param>
+	public delegate void JoinPileHandler();
+
+	/// <summary>
 	/// Represents the Tetris Shape.
 	/// </summary>
-	public abstract class Shape : CCSprite, IShape
+	public abstract class Shape : CCSprite
 	{
 		protected Block[] blocks;
 		protected int currentRotation = 0;
 		protected CCPoint[][] rotationOffset;
-		private IBoard board;
+		private Board board;
 
 		//Fires when the Shape is about to join the board pile.
 		public event JoinPileHandler JoinPile;
@@ -27,8 +34,6 @@ namespace TetrisGame.Core
 		int counterInput = 0;
 		int threshold;
 
-		Texture2D filledBlock;
-
 		//To pause the game. The game is paused if the user selects "P" key or the space bar.
 		private bool paused = false;
 		private bool keyPaused = false;
@@ -39,7 +44,7 @@ namespace TetrisGame.Core
 		/// <param name="board">the Tetris board</param>
 		/// <param name="blocks">the Blocks the Shape consists of</param>
 		/// <param name="offset">the different offset combinations for Shape rotation</param>
-		public Shape(IBoard board, Block[] blocks, CCPoint[][] offset)
+		public Shape(Board board, Block[] blocks, CCPoint[][] offset)
 		{
 			if (board == null || blocks == null)
 				throw new ArgumentNullException();
@@ -217,7 +222,7 @@ namespace TetrisGame.Core
 		/// Pauses the game if the user requests it.
 		/// </summary>
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
-		public override void Update(GameTime gameTime)
+		public void Update()
 		{
 			checkPauseKey(Keyboard.GetState());
 			if (!paused)
@@ -225,7 +230,7 @@ namespace TetrisGame.Core
 				double delay = (11 - score.Level) * 0.05 * 60;
 				if (counterMoveDown > delay)
 				{
-					shape.MoveDown();
+					MoveDown();
 					counterMoveDown = 0;
 				}
 				else
@@ -234,28 +239,21 @@ namespace TetrisGame.Core
 					checkInput();
 				}
 			}
-			base.Update(gameTime);
 		}
 
 		/// <summary>
 		/// Called when the Shape is to be drawn.
 		/// </summary>
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
-		public override void Draw(GameTime gameTime)
+		public void Draw()
 		{
-			spriteBatch.Begin();
-
-			for (int i = 0; i < shape.Length; i++)
-			{
-				int x = shape[i].Position.X;
-				int y = shape[i].Position.Y;
-				if (y > 0)
-					spriteBatch.Draw(filledBlock, new Vector2(20 + x * 20, 35 + y * 20), shape[i].Colour);
-			}
-
-			spriteBatch.End();
-
-			base.Draw(gameTime);
+			//for (int i = 0; i < shape.Length; i++)
+			//{
+			//	int x = shape[i].Position.X;
+			//	int y = shape[i].Position.Y;
+			//	if (y > 0)
+			//		spriteBatch.Draw(filledBlock, new Vector2(20 + x * 20, 35 + y * 20), shape[i].Colour);
+			//}
 		}
 
 		//Moves the Shape if the according key was pressed.
@@ -282,16 +280,16 @@ namespace TetrisGame.Core
 		{
 			KeyboardState newState = Keyboard.GetState();
 			if (newState.IsKeyDown(Keys.Right))
-				checkCounter(Keys.Right, shape.MoveRight);
+				checkCounter(Keys.Right, MoveRight);
 			else if (newState.IsKeyDown(Keys.Left))
-				checkCounter(Keys.Left, shape.MoveLeft);
+				checkCounter(Keys.Left, MoveLeft);
 			else if (newState.IsKeyDown(Keys.Down))
-				checkCounter(Keys.Down, shape.MoveDown);
+				checkCounter(Keys.Down, MoveDown);
 			else if (newState.IsKeyDown(Keys.Up))
-				checkCounter(Keys.Up, shape.Rotate);
+				checkCounter(Keys.Up, Rotate);
 			//in order to drop the figure, the user should press enter
 			else if (newState.IsKeyDown(Keys.Enter))
-				checkCounter(Keys.Enter, shape.Drop);
+				checkCounter(Keys.Enter, Drop);
 
 			// Once finished checking all keys, update old state.
 			oldState = newState;
@@ -309,4 +307,7 @@ namespace TetrisGame.Core
 			keyPaused = keyPausedNow;
 		}
 	}
+
+	//delegate representing one of the Shape movements.
+	public delegate void MoveFunction();
 }

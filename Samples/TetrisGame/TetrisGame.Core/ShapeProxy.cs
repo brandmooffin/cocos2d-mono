@@ -7,11 +7,11 @@ namespace TetrisGame.Core
 	/// <summary>
 	/// Represents the current Shape on the board.
 	/// </summary>
-	public class ShapeProxy : IShapeFactory, IShape
+	public class ShapeProxy
 	{
 		private static Random random = new Random();
-		private IBoard board;
-		private IShape current;
+		private Board board;
+		private Shape current;
 
 		//Fires when the Shape is about to join the board pile.
 		public event JoinPileHandler JoinPile;
@@ -20,13 +20,18 @@ namespace TetrisGame.Core
 		/// Instantiates ShapeProxy object and creates the new Shape.
 		/// </summary>
 		/// <param name="board">The Tetris board</param>
-		public ShapeProxy(IBoard board)
+		public ShapeProxy(Board board)
 		{
 			if (board == null)
 				throw new ArgumentNullException();
 			this.board = board;
 			DeployNewShape();
 		}
+
+		public Shape Shape
+        {
+			get { return current; }
+        }
 
 		/// <summary>
 		/// The length of the current Shape 
@@ -79,6 +84,7 @@ namespace TetrisGame.Core
 					break;
 			}
 			current.JoinPile += joinPileHandler;
+			board.AddChild(current);
 		}
 
 		/// <summary>
@@ -87,7 +93,7 @@ namespace TetrisGame.Core
 		/// <param name="nextShape">The shape after which the new shape should be modeled.</param>
 		public void DeployNewShape(ShapeProxy nextShape)
 		{
-			IShape shape = nextShape.current;
+			Shape shape = nextShape.current;
 			if (shape is ShapeL)
 				current = new ShapeL(board);
 			else if (shape is ShapeI)

@@ -10,17 +10,28 @@ using TetrisGame.Core.Scenes;
 namespace TetrisGame.Core
 {
 	/// <summary>
+	/// Delegate for GameOver event.
+	/// </summary>
+	public delegate void GameOverHandle();
+
+	/// <summary>
+	/// Delegate for LinesCleared event.
+	/// </summary>
+	/// <param name="num">The number of lines cleared</param>
+	public delegate void LinesClearedHandle(int num);
+
+	/// <summary>
 	/// Represents the Tetris board.
 	/// </summary>
-	public class Board : CCSprite, IBoard
+	public class Board : CCSprite
 	{
 		private Color background = new Color(20, 20, 20);
 		private Color[,] board;
-		private IShape shape;
-		private IShape nextShape;
+		private Block[,] blocks;
+		private ShapeProxy shape;
+		private ShapeProxy nextShape;
 
 		GameScene gameScene;
-		CCTexture2D filledBlock;
 
 		//To show the ghost shape if the "G" key was pressed.
 		private bool drawGhost = false;
@@ -42,14 +53,16 @@ namespace TetrisGame.Core
 		{
 			this.gameScene = gameScene;
 
-			filledBlock = new CCTexture2D();
-			filledBlock.InitWithFile("FilledBlock");
-
+			blocks = new Block[10, 21];
 			board = new Color[10, 21];
 			for (int i = 0; i < 10; i++)
 			{
 				for (int j = 0; j < 21; j++)
+				{
 					board[i, j] = background;
+					var block = new Block(this, background, CCPoint.Zero);
+					blocks[i,j] = block;
+				}
 			}
 
 			this.shape = new ShapeProxy(this);
@@ -60,17 +73,17 @@ namespace TetrisGame.Core
 		/// <summary>
 		/// The current Shape.
 		/// </summary>
-		public IShape Shape
+		public Shape Shape
 		{
-			get { return shape; }
+			get { return shape.Shape; }
 		}
 
 		/// <summary>
 		/// The next Shape.
 		/// </summary>
-		public IShape NextShape
+		public Shape NextShape
 		{
-			get { return nextShape; }
+			get { return nextShape.Shape; }
 		}
 
 		/// <summary>
@@ -96,7 +109,9 @@ namespace TetrisGame.Core
 		public int GetLength(int rank)
 		{
 			if (rank < 0 || rank >= board.Rank)
+			{
 				throw new IndexOutOfRangeException("Index: " + rank + ". Rank: " + board.Rank);
+			}
 			return board.GetLength(rank);
 		}
 
@@ -106,7 +121,9 @@ namespace TetrisGame.Core
 		protected virtual void OnGameOver()
 		{
 			if (GameOver != null)
+			{
 				GameOver();
+			}
 		}
 
 		/// <summary>
@@ -116,7 +133,9 @@ namespace TetrisGame.Core
 		protected virtual void OnLinesCleared(int lines)
 		{
 			if (LinesCleared != null)
+			{
 				LinesCleared(lines);
+			}
 		}
 
 		//Handles JoinPile event by adding the Shape to the board.
@@ -127,15 +146,15 @@ namespace TetrisGame.Core
 			for (int i = 0; i < shape.Length; i++)
 			{
 				Block block = shape[i];
-				board[block.Position.X, block.Position.Y] = block.Colour;
+				board[(int)block.Position.X, (int)block.Position.Y] = block.Color;
 			}
 
 			checkClearedLines();
 
 			if (!checkGameOver())
 			{
-				((ShapeProxy)shape).DeployNewShape((ShapeProxy)nextShape);
-				((IShapeFactory)nextShape).DeployNewShape();
+				shape.DeployNewShape(nextShape);
+				nextShape.DeployNewShape();
 			}
 		}
 
@@ -153,7 +172,9 @@ namespace TetrisGame.Core
 				for (int x = 0; x < boardWidth && noBlack; x++)
 				{
 					if (board[x, y] == background)
+					{
 						noBlack = false;
+					}
 					else if (x == (boardWidth - 1))
 					{
 						clearLine(y, boardWidth, boardHeight);
@@ -172,9 +193,13 @@ namespace TetrisGame.Core
 		private void checkCoordinate(int x, int y)
 		{
 			if (x < 0 || y < 0)
+			{
 				throw new IndexOutOfRangeException("Given coordinate is negative.");
+			}
 			if (x >= this.GetLength(0) || y >= this.GetLength(1))
+			{
 				throw new IndexOutOfRangeException("Given coordinate is out of border bounds.");
+			}
 		}
 
 		//Checks if the game is over. Returns true and fires the GameOver if it is the case; 
@@ -202,10 +227,16 @@ namespace TetrisGame.Core
 			for (int y = line; y > 0; y--)
 			{
 				for (int x = 0; x < boardWidth; x++)
+				{
 					board[x, y] = board[x, y - 1];
+					blocks[x, y] = blocks[x, y - 1];
+				}
 			}
 			for (int x = 0; x < boardWidth; x++)
+			{
 				board[x, 0] = background;
+				blocks[x, 0].Color = new CCColor3B(background);
+			}
 		}
 
 		/// <summary>
@@ -215,6 +246,8 @@ namespace TetrisGame.Core
 		public void Update()
 		{
 			checkGhostKey(Keyboard.GetState());
+
+			UpdateBlocks();
 		}
 
 		//Checks if the user requested a ghost mode.
@@ -223,7 +256,9 @@ namespace TetrisGame.Core
 			bool keyGhostNow = (keyboardState.IsKeyDown(Keys.G));
 
 			if (!keyGhost && keyGhostNow)
+			{
 				drawGhost = !drawGhost;
+			}
 
 			keyGhost = keyGhostNow;
 		}
@@ -232,8 +267,12 @@ namespace TetrisGame.Core
 		private bool isGhostPosition(Block[] shapeGhost, int x, int y)
 		{
 			for (int i = 0; i < shapeGhost.Length; i++)
+			{
 				if (shapeGhost[i].Position.X == x && shapeGhost[i].Position.Y == y)
+				{
 					return true;
+				}
+			}
 			return false;
 		}
 
@@ -265,7 +304,9 @@ namespace TetrisGame.Core
 			for (int i = 0; i < array.Length; i++)
 			{
 				if (!array[i].TryMoveDown())
+				{
 					return false;
+				}
 			}
 			return true;
 		}
@@ -275,30 +316,35 @@ namespace TetrisGame.Core
 		/// Responsible for drawing ghost shapes and the next shape.
 		/// </summary>
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
-		public void Draw()
+		public void UpdateBlocks()
 		{
 			//creates a copy of current shape to draw it as a ghost
 			Block[] shapeCopy = new Block[Shape.Length];
-			fill(ref shapeCopy);
+			//fill(ref shapeCopy);
 
 			for (int i = 0; i < board.GetLength(0); i++)
 			{
 				for (int j = 1; j < board.GetLength(1); j++)
 				{
-					if (isGhostPosition(shapeCopy, i, j) && drawGhost)
-						spriteBatch.Draw(filledBlock, new Vector2(20 + i * 20, 35 + j * 20),
-							shapeCopy[0].Colour * 0.3f);
+					if (drawGhost && isGhostPosition(shapeCopy, i, j))
+					{
+						//spriteBatch.Draw(filledBlock, new Vector2(20 + i * 20, 35 + j * 20),
+						//	shapeCopy[0].Color * 0.3f);
+					}
 					else
-						spriteBatch.Draw(filledBlock, new Vector2(20 + i * 20, 35 + j * 20), board[i, j]);
-				}
+					{
+						blocks[i, j].Position = new Vector2(20 + i * 20, 35 + j * 20);
+						blocks[i, j].Color = new CCColor3B(board[i, j]);
+					}
+                }
 			}
 
 			//draws the next shape
-			IShape next = NextShape;
+			Shape next = NextShape;
 			for (int i = 0; i < next.Length; i++)
 			{
-				spriteBatch.Draw(filledBlock, new Vector2(160 + next[i].Position.X * 20, 110 + next[i].Position.Y * 20),
-				next[i].Colour);
+				//spriteBatch.Draw(filledBlock, new Vector2(160 + next[i].Position.X * 20, 110 + next[i].Position.Y * 20),
+				//next[i].Color);
 			}
 		}
 	}

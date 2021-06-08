@@ -12,7 +12,7 @@ namespace TetrisGame.Core
 	public class Block : CCSprite
 	{
 		private Color background = new Color(20, 20, 20);
-		private IBoard board;
+		private Board board;
 
 		/// <summary>
 		/// Instantiates Block object.
@@ -22,15 +22,17 @@ namespace TetrisGame.Core
 		/// <param name="board">The Tetris board</param>
 		/// <param name="colour">The colour of the block</param>
 		/// <param name="position">The initial position of the block</param>
-		public Block(IBoard board, Color color, CCPoint position)
+		public Block(Board board, Color color, CCPoint position)
 		{
 			if (board == null || color == null || position == null)
 				throw new ArgumentNullException();
 
 			this.board = board;
+			InitWithFile("FilledBlock");
 			Color = new CCColor3B(color);
 			checkCoordinate(position, board);
 			Position = position;
+			board.AddChild(this);
 		}
 
 		/// <summary>
@@ -144,12 +146,16 @@ namespace TetrisGame.Core
 
 		//Checks whether given coordinates are valid
 		//(i.e. they are not outside of the board boundaries.
-		private static void checkCoordinate(CCPoint coord, IBoard board)
+		private static void checkCoordinate(CCPoint coord, Board board)
 		{
 			if (coord.X < 0 || coord.Y < 0)
+			{
 				throw new ArgumentException("Given coordinate is negative.");
+			}
 			if (coord.X >= board.GetLength(0) || coord.Y >= board.GetLength(1))
+			{
 				throw new ArgumentException("Given coordinate is out of border bounds.");
+			}
 		}
 
 		public void Update()

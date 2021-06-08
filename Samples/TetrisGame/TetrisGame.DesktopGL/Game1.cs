@@ -3,7 +3,7 @@ using CocosDenshion;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using System;
 
 namespace TetrisGame.DesktopGL
 {
@@ -20,6 +20,10 @@ namespace TetrisGame.DesktopGL
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+            graphics.PreferredBackBufferHeight = 555;
+            graphics.PreferredBackBufferWidth = 450;
+
+            TargetElapsedTime = TimeSpan.FromTicks(166667);
             //
             // This is the main Cocos2D connection. The CCApplication is the manager of the
             // nodes that define your game.

@@ -15,11 +15,16 @@ namespace TetrisGame.Core
 		private int level = 1;
 		private int lines = 0;
 		private int score = 0;
-		private IBoard board;
+		private Board board;
 		private String gameover = "";
 		private CCColor3B fontColour = new CCColor3B(Microsoft.Xna.Framework.Color.Silver);
 		//the previous high score
 		int highScore = 0;
+
+		CCLabel ScoreLabel;
+		CCLabel TitleLabel;
+
+
 
 		/// <summary>
 		/// Instantiates score object.
@@ -29,12 +34,25 @@ namespace TetrisGame.Core
 		public Score(GameScene game, Board board)
 		{
 			if (board == null)
+			{
 				throw new ArgumentNullException();
+			}
 
 			this.board = board;
 			board.LinesCleared += incrementLinesCleared;
 			//game.Exiting += saveResults;
 			findHighScore();
+
+			ScoreLabel = new CCLabel("Score:", "MakerFelt", 16);
+			ScoreLabel.Color = fontColour;
+			ScoreLabel.Position = new CCPoint(20, 90);
+
+			TitleLabel = new CCLabel("TETRIS", "MakerFelt", 18);
+			TitleLabel.Color = new CCColor3B(Microsoft.Xna.Framework.Color.LimeGreen);
+			TitleLabel.Position = new CCPoint(75, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - 30);
+
+			game.AddChild(ScoreLabel);
+			game.AddChild(TitleLabel);
 		}
 
 		/// <summary>
@@ -61,12 +79,18 @@ namespace TetrisGame.Core
 		private void calculateScore(int num)
 		{
 			if (num <= 0)
+			{
 				throw new ArgumentException("Argument value is illegal: " + num);
+			}
 
 			if (num < 4)
+			{
 				score += num * 100;
+			}
 			else
+			{
 				score += (num / 4 * 800 + (num - num / 4 * 4) * 100);
+			}
 		}
 
 		//Calculates the current level.
@@ -86,7 +110,9 @@ namespace TetrisGame.Core
 		private void incrementLinesCleared(int num)
 		{
 			if (num < 0 || num >= board.GetLength(1))
+			{
 				throw new ArgumentException("The number of lines value is out of range: " + num);
+			}
 
 			lines += num;
 
@@ -95,12 +121,17 @@ namespace TetrisGame.Core
 			calculateScore(num);
 		}
 
+		public void Update()
+        {
+			UpdateLabels();
+        }
+
 		/// <summary>
 		/// Draws the Score, including the score, the level, the number of cleared lines,
 		/// the previous hign score, and the title of the game.
 		/// </summary>
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
-		public void Draw()
+		public void UpdateLabels()
 		{
 			//Color baseTxt = Color.White;
 			//Color emTxt = Color.SeaGreen;
@@ -108,7 +139,10 @@ namespace TetrisGame.Core
 			//spriteBatch.DrawString(fontEm,
 			//	"Score: " + score.ScoreValue + "\nLevel: " + score.Level + "\nNumber of cleared lines: "
 			//	+ score.Lines + gameover, new Vector2(20, GraphicsDevice.Viewport.Height - 90), fontColour);
-			//spriteBatch.DrawString(fontTitle, "TETRIS", new Vector2(75, 15), Color.LimeGreen);
+			ScoreLabel.Text = "Score: " + ScoreValue + "\nLevel: " + Level + "\nNumber of cleared lines: " + Lines + gameover;
+			ScoreLabel.Position = new CCPoint(20, 90);
+
+	
 
 			//spriteBatch.DrawString(font, "The next shape:", new Vector2(230, 80), baseTxt);
 			//spriteBatch.DrawString(font, "The Highest Score:", new Vector2(230, 180), baseTxt);

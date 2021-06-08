@@ -11,19 +11,14 @@ namespace TetrisGame.Core.Scenes
 
         public GameScene()
         {
-            Board board = new Board(this);
-            Score score = new Score(this, board);
+            Board = new Board(this);
+            Score = new Score(this, Board);
 
-            board.GameOver += gameOver;
-            // create and initialize a Label
-            var label = new CCLabelTTF("Hello World!", "MarkerFelt", 22)
-            {
-                // position the label on the center of the screen
-                Position = CCDirector.SharedDirector.WinSize.Center
-            };
+            Board.GameOver += gameOver;
 
-            // add the label as a child to this Layer
-            AddChild(label);
+            AddChild(Board);
+
+            ScheduleUpdate();
         }
 
         public static CCScene Scene

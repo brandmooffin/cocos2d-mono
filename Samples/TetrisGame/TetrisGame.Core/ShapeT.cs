@@ -17,11 +17,11 @@ namespace TetrisGame.Core
 		/// Instantiates ShapeT.
 		/// </summary>
 		/// <param name="board">The board where the ShapeT should be created.</param>
-		public ShapeT(IBoard board) : base(board, setBlocks(board), setOffsets())
+		public ShapeT(Board board) : base(board, setBlocks(board), setOffsets())
 		{ }
 
 		//Creates the blocks for ShapeT with purple colour and pivot block starting at (6,0)
-		private static Block[] setBlocks(IBoard board)
+		private static Block[] setBlocks(Board board)
 		{
 			Block[] blocks = new Block[4];
 			blocks[0] = new Block(board, ShapeColor, new CCPoint(5, 0));
@@ -33,13 +33,13 @@ namespace TetrisGame.Core
 
 		//Creates offsets for each block used for rotation.
 		//ShapeT has four possible rotations.
-		private static Point[][] setOffsets()
+		private static CCPoint[][] setOffsets()
 		{
-			Point[][] offsets = new Point[4][];
-			offsets[0] = new Point[4] { new Point(1, 1), new Point(0, 0), new Point(-1, -1), new Point(1, -1) };
-			offsets[1] = new Point[4] { new Point(1, -1), new Point(0, 0), new Point(-1, 1), new Point(-1, -1) };
-			offsets[2] = new Point[4] { new Point(-1, -1), new Point(0, 0), new Point(1, 1), new Point(-1, 1) };
-			offsets[3] = new Point[4] { new Point(-1, 1), new Point(0, 0), new Point(1, -1), new Point(1, 1) };
+			CCPoint[][] offsets = new CCPoint[4][];
+			offsets[0] = new CCPoint[4] { new CCPoint(1, 1), new CCPoint(0, 0), new CCPoint(-1, -1), new CCPoint(1, -1) };
+			offsets[1] = new CCPoint[4] { new CCPoint(1, -1), new CCPoint(0, 0), new CCPoint(-1, 1), new CCPoint(-1, -1) };
+			offsets[2] = new CCPoint[4] { new CCPoint(-1, -1), new CCPoint(0, 0), new CCPoint(1, 1), new CCPoint(-1, 1) };
+			offsets[3] = new CCPoint[4] { new CCPoint(-1, 1), new CCPoint(0, 0), new CCPoint(1, -1), new CCPoint(1, 1) };
 			return offsets;
 		}
 	}

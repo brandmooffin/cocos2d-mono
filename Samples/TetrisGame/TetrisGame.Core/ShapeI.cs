@@ -12,11 +12,11 @@ namespace TetrisGame.Core
 		/// Instantiates ShapeI.
 		/// </summary>
 		/// <param name="board">The board where the ShapeI should be created.</param>
-		public ShapeI(IBoard board) : base(board, setBlocks(board), setOffsets())
+		public ShapeI(Board board) : base(board, setBlocks(board), setOffsets())
 		{ }
 
 		//Creates the blocks for ShapeI with cyan colour and pivot block starting at (6,0)
-		private static Block[] setBlocks(IBoard board)
+		private static Block[] setBlocks(Board board)
 		{
 			Block[] blocks = new Block[4];
 			for (int i = 0; i < 4; i++)

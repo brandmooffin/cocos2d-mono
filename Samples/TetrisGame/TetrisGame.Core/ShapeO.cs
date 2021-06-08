@@ -16,7 +16,7 @@ namespace TetrisGame.Core
 		/// Instantiates ShapeO.
 		/// </summary>
 		/// <param name="board">The board where the ShapeO should be created.</param>
-		public ShapeO(IBoard board) : base(board, setBlocks(board), null)
+		public ShapeO(Board board) : base(board, setBlocks(board), null)
 		{ }
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace TetrisGame.Core
 		{ }
 
 		//Creates the blocks for ShapeO with yellow colour and pivot block starting at (6,0)
-		private static Block[] setBlocks(IBoard board)
+		private static Block[] setBlocks(Board board)
 		{
 			Block[] blocks = new Block[4];
 			blocks[0] = new Block(board, ShapeColor, new CCPoint(5, 0));

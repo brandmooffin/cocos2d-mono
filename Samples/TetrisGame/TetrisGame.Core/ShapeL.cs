@@ -17,11 +17,11 @@ namespace TetrisGame.Core
 		/// Instantiates ShapeL.
 		/// </summary>
 		/// <param name="board">The board where the ShapeL should be created.</param>
-		public ShapeL(IBoard board) : base(board, setBlocks(board), setOffsets())
+		public ShapeL(Board board) : base(board, setBlocks(board), setOffsets())
 		{ }
 
 		//Creates the blocks for ShapeL with orange colour and pivot block starting at (6,0)
-		private static Block[] setBlocks(IBoard board)
+		private static Block[] setBlocks(Board board)
 		{
 			Block[] blocks = new Block[4];
 			blocks[0] = new Block(board, ShapeColor, new CCPoint(5, 1));
