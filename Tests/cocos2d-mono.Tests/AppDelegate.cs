@@ -8,9 +8,11 @@ namespace tests
 {
     public class AppDelegate : CCApplication
     {
+        GraphicsDeviceManager graphics;
         public AppDelegate(Game game, GraphicsDeviceManager graphics)
             : base(game, graphics)
         {
+            this.graphics = graphics;
             s_pSharedApplication = this;
             CCDrawManager.InitializeDisplay(game, graphics, DisplayOrientation.LandscapeRight | DisplayOrientation.LandscapeLeft);
 
@@ -20,10 +22,6 @@ namespace tests
             game.Window.AllowUserResizing = true;
             graphics.PreferMultiSampling = false;
 
-#if WINDOWS || WINDOWSGL || WINDOWSDX || MACOS
-            graphics.PreferredBackBufferWidth = 1024;
-            graphics.PreferredBackBufferHeight = 768;
-#endif
         }
 
         /// <summary>
@@ -45,7 +43,6 @@ namespace tests
         {
             //initialize director
             CCDirector pDirector = CCDirector.SharedDirector;
-            pDirector.SetOpenGlView();
 
             CCSpriteFontCache.FontScale = 0.6f;
             CCSpriteFontCache.RegisterFont("arial", 12, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 38, 50, 64);
@@ -86,15 +83,19 @@ namespace tests
             }
 
             CCDrawManager.SetDesignResolutionSize(designSize.Width, designSize.Height, CCResolutionPolicy.ShowAll);
+            pDirector.SetOpenGlView();
+            pDirector.Projection = CCDirectorProjection.Projection2D;
 
+            //#if WINDOWS || WINDOWSGL
+            //            CCDrawManager.SetDesignResolutionSize(1280, 768, CCResolutionPolicy.ExactFit);
+            //#else
+            //                        CCDrawManager.SetDesignResolutionSize(800, 480, CCResolutionPolicy.ShowAll);
+            //                        CCDrawManager.SetDesignResolutionSize(480, 320, CCResolutionPolicy.ShowAll);
+            //#endif
 
-//#if WINDOWS || WINDOWSGL
-//            CCDrawManager.SetDesignResolutionSize(1280, 768, CCResolutionPolicy.ExactFit);
-//#else
-//                        CCDrawManager.SetDesignResolutionSize(800, 480, CCResolutionPolicy.ShowAll);
-//                        CCDrawManager.SetDesignResolutionSize(480, 320, CCResolutionPolicy.ShowAll);
-//#endif
-
+            //graphics.PreferredBackBufferWidth = 1920;
+            //graphics.PreferredBackBufferHeight = 1080;
+            graphics.ApplyChanges();
 
             // create a scene. it's an autorelease object
             CCScene pScene = new CCScene();

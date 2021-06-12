@@ -23,7 +23,9 @@ namespace TetrisGame.Core
 		public ShapeProxy(Board board)
 		{
 			if (board == null)
+			{
 				throw new ArgumentNullException();
+			}
 			this.board = board;
 			DeployNewShape();
 		}

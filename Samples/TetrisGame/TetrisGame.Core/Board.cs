@@ -26,12 +26,20 @@ namespace TetrisGame.Core
 	public class Board : CCSprite
 	{
 		private Color background = new Color(20, 20, 20);
+		private CCColor3B infoFontColor = new CCColor3B(Microsoft.Xna.Framework.Color.SeaGreen);
 		private Color[,] board;
 		private Block[,] blocks;
 		private ShapeProxy shape;
 		private ShapeProxy nextShape;
 
 		GameScene gameScene;
+		CCLabelTTF TitleLabel;
+
+		CCLabelTTF HighestScoreLabel;
+		CCLabelTTF NextShapeLabel;
+		CCLabelTTF PauseResumeInfoLabel;
+		CCLabelTTF PauseResumeKeyLabel;
+
 
 		//To show the ghost shape if the "G" key was pressed.
 		private bool drawGhost = false;
@@ -65,9 +73,51 @@ namespace TetrisGame.Core
 				}
 			}
 
+			TitleLabel = new CCLabelTTF("TETRIS", "MarkerFelt", 18);
+			TitleLabel.Color = new CCColor3B(Microsoft.Xna.Framework.Color.LimeGreen);
+			TitleLabel.Position = new CCPoint(75, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - 15);
+
+			gameScene.AddChild(TitleLabel);
+
 			this.shape = new ShapeProxy(this);
 			shape.JoinPile += addToPile;
 			this.nextShape = new ShapeProxy(this);
+
+
+			NextShapeLabel = new CCLabelTTF("The Next Shape:", "MarkerFelt", 13);
+			NextShapeLabel.Color = CCColor3B.White;
+			NextShapeLabel.Position = new CCPoint(230, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - 80);
+			NextShapeLabel.VerticalAlignment = CCVerticalTextAlignment.Top;
+			NextShapeLabel.HorizontalAlignment = CCTextAlignment.Left;
+			NextShapeLabel.AnchorPoint = new CCPoint(0, 0);
+
+			HighestScoreLabel = new CCLabelTTF("The Highest Score:", "MarkerFelt", 13);
+			HighestScoreLabel.Color = CCColor3B.White;
+			HighestScoreLabel.Position = new CCPoint(230, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - 180);
+			HighestScoreLabel.VerticalAlignment = CCVerticalTextAlignment.Top;
+			HighestScoreLabel.HorizontalAlignment = CCTextAlignment.Left;
+			HighestScoreLabel.AnchorPoint = new CCPoint(0, 0);
+
+			//spriteBatch.DrawString(font, "To pause/resume\nthe game press ", new Vector2(230, 250), baseTxt);
+			//spriteBatch.DrawString(fontEm, "SPACEBAR.", new Vector2(365, 270), emTxt);
+			PauseResumeInfoLabel = new CCLabelTTF("To pause/resume the\ngame press ", "MarkerFelt", 13);
+			PauseResumeInfoLabel.Color = CCColor3B.White;
+			PauseResumeInfoLabel.Position = new CCPoint(230, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - 250);
+			PauseResumeInfoLabel.VerticalAlignment = CCVerticalTextAlignment.Top;
+			PauseResumeInfoLabel.HorizontalAlignment = CCTextAlignment.Left;
+			PauseResumeInfoLabel.AnchorPoint = new CCPoint(0, 0);
+
+			PauseResumeKeyLabel = new CCLabelTTF("SPACEBAR", "MarkerFelt", 18);
+			PauseResumeKeyLabel.Color = infoFontColor;
+			PauseResumeKeyLabel.Position = new CCPoint(230, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - 290);
+			PauseResumeKeyLabel.VerticalAlignment = CCVerticalTextAlignment.Top;
+			PauseResumeKeyLabel.HorizontalAlignment = CCTextAlignment.Left;
+			PauseResumeKeyLabel.AnchorPoint = new CCPoint(0, 0);
+
+			gameScene.AddChild(NextShapeLabel, 99);
+			gameScene.AddChild(HighestScoreLabel, 99);
+			gameScene.AddChild(PauseResumeInfoLabel, 99);
+			gameScene.AddChild(PauseResumeKeyLabel, 99);
 		}
 
 		/// <summary>
@@ -245,35 +295,8 @@ namespace TetrisGame.Core
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		public void Update()
 		{
-			checkGhostKey(Keyboard.GetState());
-
 			UpdateBlocks();
-		}
-
-		//Checks if the user requested a ghost mode.
-		private void checkGhostKey(KeyboardState keyboardState)
-		{
-			bool keyGhostNow = (keyboardState.IsKeyDown(Keys.G));
-
-			if (!keyGhost && keyGhostNow)
-			{
-				drawGhost = !drawGhost;
-			}
-
-			keyGhost = keyGhostNow;
-		}
-
-		//Deetrmines if the ghost should be drawn at this position.
-		private bool isGhostPosition(Block[] shapeGhost, int x, int y)
-		{
-			for (int i = 0; i < shapeGhost.Length; i++)
-			{
-				if (shapeGhost[i].Position.X == x && shapeGhost[i].Position.Y == y)
-				{
-					return true;
-				}
-			}
-			return false;
+			UpdateLabels();
 		}
 
 		//Creates a ghost shape, which represents Shape's final position
@@ -326,17 +349,9 @@ namespace TetrisGame.Core
 			{
 				for (int j = 1; j < board.GetLength(1); j++)
 				{
-					if (drawGhost && isGhostPosition(shapeCopy, i, j))
-					{
-						//spriteBatch.Draw(filledBlock, new Vector2(20 + i * 20, 35 + j * 20),
-						//	shapeCopy[0].Color * 0.3f);
-					}
-					else
-					{
-						blocks[i, j].Position = new Vector2(20 + i * 20, 35 + j * 20);
-						blocks[i, j].Color = new CCColor3B(board[i, j]);
-					}
-                }
+					blocks[i, j].Position = new Vector2(20 + i * 20, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - (35 + j * 20));
+					blocks[i, j].Color = new CCColor3B(board[i, j]);
+				}
 			}
 
 			//draws the next shape
@@ -346,6 +361,23 @@ namespace TetrisGame.Core
 				//spriteBatch.Draw(filledBlock, new Vector2(160 + next[i].Position.X * 20, 110 + next[i].Position.Y * 20),
 				//next[i].Color);
 			}
+		}
+
+		private void UpdateLabels()
+        {
+			//spriteBatch.DrawString(font, "To pause/resume\nthe game press ", new Vector2(230, 250), baseTxt);
+			//spriteBatch.DrawString(fontEm, "P", new Vector2(365, 270), emTxt);
+			//spriteBatch.DrawString(font, "key", new Vector2(380, 270), baseTxt);
+			//spriteBatch.DrawString(font, "or a", new Vector2(230, 290), baseTxt);
+			//spriteBatch.DrawString(fontEm, "SPACEBAR.", new Vector2(270, 290), emTxt);
+
+			//spriteBatch.DrawString(font, "To enter the Ghost Mode\npress", new Vector2(230, 330), baseTxt);
+			//spriteBatch.DrawString(fontEm, "G", new Vector2(285, 350), emTxt);
+			//spriteBatch.DrawString(font, "key.", new Vector2(305, 350), baseTxt);
+
+
+			//spriteBatch.DrawString(font, "To drop the shape\npress", new Vector2(230, 390), baseTxt);
+			//spriteBatch.DrawString(fontEm, "ENTER.", new Vector2(285, 410), emTxt);
 		}
 	}
 }

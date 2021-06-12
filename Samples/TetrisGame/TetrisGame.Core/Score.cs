@@ -17,21 +17,26 @@ namespace TetrisGame.Core
 		private int score = 0;
 		private Board board;
 		private String gameover = "";
-		private CCColor3B fontColour = new CCColor3B(Microsoft.Xna.Framework.Color.Silver);
+		private GameScene gameScene;
+
+		private CCColor3B scoreFontColor = new CCColor3B(Microsoft.Xna.Framework.Color.Silver);
+		private CCColor3B infoFontColor = new CCColor3B(Microsoft.Xna.Framework.Color.SeaGreen);
+
 		//the previous high score
 		int highScore = 0;
 
-		CCLabel ScoreLabel;
-		CCLabel TitleLabel;
-
-
+		CCLabelTTF ScoreLabel;
+		CCLabelTTF LevelLabel;
+		CCLabelTTF LinesClearedLabel;
+		CCLabelTTF GameOverLabel;
+		CCLabelTTF HighScoreLabel;
 
 		/// <summary>
 		/// Instantiates score object.
 		/// Listens for the LinesCleared event.
 		/// </summary>
 		/// <param name="board">The Tetris board</param>
-		public Score(GameScene game, Board board)
+		public Score(GameScene gameScene, Board board)
 		{
 			if (board == null)
 			{
@@ -39,20 +44,12 @@ namespace TetrisGame.Core
 			}
 
 			this.board = board;
+			this.gameScene = gameScene;
 			board.LinesCleared += incrementLinesCleared;
 			//game.Exiting += saveResults;
 			findHighScore();
 
-			ScoreLabel = new CCLabel("Score:", "MakerFelt", 16);
-			ScoreLabel.Color = fontColour;
-			ScoreLabel.Position = new CCPoint(20, 90);
-
-			TitleLabel = new CCLabel("TETRIS", "MakerFelt", 18);
-			TitleLabel.Color = new CCColor3B(Microsoft.Xna.Framework.Color.LimeGreen);
-			TitleLabel.Position = new CCPoint(75, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - 30);
-
-			game.AddChild(ScoreLabel);
-			game.AddChild(TitleLabel);
+			SetupScoreLabels();
 		}
 
 		/// <summary>
@@ -133,42 +130,72 @@ namespace TetrisGame.Core
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		public void UpdateLabels()
 		{
-			//Color baseTxt = Color.White;
-			//Color emTxt = Color.SeaGreen;
 
 			//spriteBatch.DrawString(fontEm,
 			//	"Score: " + score.ScoreValue + "\nLevel: " + score.Level + "\nNumber of cleared lines: "
 			//	+ score.Lines + gameover, new Vector2(20, GraphicsDevice.Viewport.Height - 90), fontColour);
-			ScoreLabel.Text = "Score: " + ScoreValue + "\nLevel: " + Level + "\nNumber of cleared lines: " + Lines + gameover;
-			ScoreLabel.Position = new CCPoint(20, 90);
+			ScoreLabel.Text = "Score: " + ScoreValue;
+			LevelLabel.Text = "Level:" + Level;
+			LinesClearedLabel.Text = "Number of cleared lines: " + Lines;
 
-	
+			HighScoreLabel.Text = highScore.ToString();
 
-			//spriteBatch.DrawString(font, "The next shape:", new Vector2(230, 80), baseTxt);
-			//spriteBatch.DrawString(font, "The Highest Score:", new Vector2(230, 180), baseTxt);
-			//spriteBatch.DrawString(fontTitle, "" + highScore, new Vector2(230, 200), emTxt);
-
-			//spriteBatch.DrawString(font, "To pause/resume\nthe game press ", new Vector2(230, 250), baseTxt);
-			//spriteBatch.DrawString(fontEm, "P", new Vector2(365, 270), emTxt);
-			//spriteBatch.DrawString(font, "key", new Vector2(380, 270), baseTxt);
-			//spriteBatch.DrawString(font, "or a", new Vector2(230, 290), baseTxt);
-			//spriteBatch.DrawString(fontEm, "SPACEBAR.", new Vector2(270, 290), emTxt);
-
-			//spriteBatch.DrawString(font, "To enter the Ghost Mode\npress", new Vector2(230, 330), baseTxt);
-			//spriteBatch.DrawString(fontEm, "G", new Vector2(285, 350), emTxt);
-			//spriteBatch.DrawString(font, "key.", new Vector2(305, 350), baseTxt);
-
-
-			//spriteBatch.DrawString(font, "To drop the shape\npress", new Vector2(230, 390), baseTxt);
-			//spriteBatch.DrawString(fontEm, "ENTER.", new Vector2(285, 410), emTxt);
+			LevelLabel.Color = scoreFontColor;
+			LinesClearedLabel.Color = scoreFontColor;
+			ScoreLabel.Color = scoreFontColor;
 
 		}
 
 		//Displays the game over message.
 		public void HandleGameOver()
 		{
-			gameover = "\nGAME OVER";
-			fontColour = CCColor3B.Red;
+			scoreFontColor = CCColor3B.Red;
+			GameOverLabel.Visible = true;
+		}
+
+		private void SetupScoreLabels()
+        {
+			ScoreLabel = new CCLabelTTF("Score: test", "MarkerFelt", 13);
+			ScoreLabel.Color = scoreFontColor;
+			ScoreLabel.Position = new CCPoint(20, 90);
+			ScoreLabel.VerticalAlignment = CCVerticalTextAlignment.Top;
+			ScoreLabel.HorizontalAlignment = CCTextAlignment.Left;
+			ScoreLabel.AnchorPoint = new CCPoint(0, 0);
+
+			LevelLabel = new CCLabelTTF("Score: test", "MarkerFelt", 13);
+			LevelLabel.Color = scoreFontColor;
+			LevelLabel.Position = new CCPoint(20, 70);
+			LevelLabel.VerticalAlignment = CCVerticalTextAlignment.Top;
+			LevelLabel.HorizontalAlignment = CCTextAlignment.Left;
+			LevelLabel.AnchorPoint = new CCPoint(0, 0);
+
+			LinesClearedLabel = new CCLabelTTF("Score: test", "MarkerFelt", 13);
+			LinesClearedLabel.Color = scoreFontColor;
+			LinesClearedLabel.Position = new CCPoint(20, 50);
+			LinesClearedLabel.VerticalAlignment = CCVerticalTextAlignment.Top;
+			LinesClearedLabel.HorizontalAlignment = CCTextAlignment.Left;
+			LinesClearedLabel.AnchorPoint = new CCPoint(0, 0);
+
+			GameOverLabel = new CCLabelTTF("GAME OVER", "MarkerFelt", 13);
+			GameOverLabel.Color = CCColor3B.Red;
+			GameOverLabel.Position = new CCPoint(20, 50);
+			GameOverLabel.VerticalAlignment = CCVerticalTextAlignment.Top;
+			GameOverLabel.HorizontalAlignment = CCTextAlignment.Left;
+			GameOverLabel.AnchorPoint = new CCPoint(0, 0);
+			GameOverLabel.Visible = false;
+
+			HighScoreLabel = new CCLabelTTF("0", "MarkerFelt", 18);
+			HighScoreLabel.Color = infoFontColor;
+			HighScoreLabel.Position = new CCPoint(230, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - 200);
+			HighScoreLabel.VerticalAlignment = CCVerticalTextAlignment.Top;
+			HighScoreLabel.HorizontalAlignment = CCTextAlignment.Left;
+			HighScoreLabel.AnchorPoint = new CCPoint(0, 0);
+
+			gameScene.AddChild(ScoreLabel, 99);
+			gameScene.AddChild(LevelLabel, 99);
+			gameScene.AddChild(LinesClearedLabel, 99);
+			gameScene.AddChild(GameOverLabel, 99);
+			gameScene.AddChild(HighScoreLabel, 99);
 		}
 
 		//Determines the previous high score from the file.

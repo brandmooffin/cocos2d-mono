@@ -25,6 +25,13 @@
 /processorParam:TextureFormat=Color
 /build:FilledBlock.png
 
+#begin fonts/MarkerFelt-13.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/MarkerFelt-13.spritefont
+
 #begin fonts/MarkerFelt-16.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
