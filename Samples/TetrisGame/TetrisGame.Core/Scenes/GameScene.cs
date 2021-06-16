@@ -1,5 +1,4 @@
 ﻿using Cocos2D;
-using TetrisGame.Core;
 
 namespace TetrisGame.Core.Scenes
 {
@@ -12,8 +11,7 @@ namespace TetrisGame.Core.Scenes
         public GameScene()
         {
             Board = new Board(this);
-            Score = new Score(this, Board);
-
+            
             Board.GameOver += gameOver;
 
             AddChild(Board);
@@ -34,7 +32,6 @@ namespace TetrisGame.Core.Scenes
         public override void Update(float gameTime)
         {
             Board.Update();
-            Score.Update();
 
             base.Update(gameTime);
         }

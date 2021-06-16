@@ -40,10 +40,7 @@ namespace TetrisGame.Core
 		CCLabelTTF PauseResumeInfoLabel;
 		CCLabelTTF PauseResumeKeyLabel;
 
-
-		//To show the ghost shape if the "G" key was pressed.
-		private bool drawGhost = false;
-		private bool keyGhost = false;
+        public Score Score;
 
 		/// <summary>
 		/// Fires when the game is over.
@@ -60,6 +57,7 @@ namespace TetrisGame.Core
 		public Board(GameScene gameScene)
 		{
 			this.gameScene = gameScene;
+			
 
 			blocks = new Block[10, 21];
 			board = new Color[10, 21];
@@ -68,7 +66,7 @@ namespace TetrisGame.Core
 				for (int j = 0; j < 21; j++)
 				{
 					board[i, j] = background;
-					var block = new Block(this, background, CCPoint.Zero);
+					var block = new Block(this, background, new CCPoint(0, board.GetLength(1) - 1));
 					blocks[i,j] = block;
 				}
 			}
@@ -98,9 +96,7 @@ namespace TetrisGame.Core
 			HighestScoreLabel.HorizontalAlignment = CCTextAlignment.Left;
 			HighestScoreLabel.AnchorPoint = new CCPoint(0, 0);
 
-			//spriteBatch.DrawString(font, "To pause/resume\nthe game press ", new Vector2(230, 250), baseTxt);
-			//spriteBatch.DrawString(fontEm, "SPACEBAR.", new Vector2(365, 270), emTxt);
-			PauseResumeInfoLabel = new CCLabelTTF("To pause/resume the\ngame press ", "MarkerFelt", 13);
+			PauseResumeInfoLabel = new CCLabelTTF("To pause/resume press ", "MarkerFelt", 13);
 			PauseResumeInfoLabel.Color = CCColor3B.White;
 			PauseResumeInfoLabel.Position = new CCPoint(230, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - 250);
 			PauseResumeInfoLabel.VerticalAlignment = CCVerticalTextAlignment.Top;
@@ -109,7 +105,7 @@ namespace TetrisGame.Core
 
 			PauseResumeKeyLabel = new CCLabelTTF("SPACEBAR", "MarkerFelt", 18);
 			PauseResumeKeyLabel.Color = infoFontColor;
-			PauseResumeKeyLabel.Position = new CCPoint(230, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - 290);
+			PauseResumeKeyLabel.Position = new CCPoint(230, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - 280);
 			PauseResumeKeyLabel.VerticalAlignment = CCVerticalTextAlignment.Top;
 			PauseResumeKeyLabel.HorizontalAlignment = CCTextAlignment.Left;
 			PauseResumeKeyLabel.AnchorPoint = new CCPoint(0, 0);
@@ -118,6 +114,8 @@ namespace TetrisGame.Core
 			gameScene.AddChild(HighestScoreLabel, 99);
 			gameScene.AddChild(PauseResumeInfoLabel, 99);
 			gameScene.AddChild(PauseResumeKeyLabel, 99);
+
+			Score = new Score(gameScene, this);
 		}
 
 		/// <summary>
@@ -297,54 +295,15 @@ namespace TetrisGame.Core
 		{
 			UpdateBlocks();
 			UpdateLabels();
-		}
-
-		//Creates a ghost shape, which represents Shape's final position
-		//if the user decides to drop it.
-		private void fill(ref Block[] shapeGhost)
-		{
-			//copy the shape
-			for (int i = 0; i < Shape.Length; i++)
-			{
-				shapeGhost[i] = Shape[i];
-			}
-			//drop it to its final position
-			while (tryMoveDown(shapeGhost))
-			{
-				for (int i = 0; i < shapeGhost.Length; i++)
-					shapeGhost[i].MoveDown();
-			}
-			for (int i = 0; i < Shape.Length; i++)
-			{
-				if (shapeGhost[i].Position.Y < 2)
-					drawGhost = false;
-			}
-		}
-
-		//Tries to move down the blocks. Returns true if it is possible for every block.
-		private bool tryMoveDown(Block[] array)
-		{
-			for (int i = 0; i < array.Length; i++)
-			{
-				if (!array[i].TryMoveDown())
-				{
-					return false;
-				}
-			}
-			return true;
+			Score.Update();
 		}
 
 		/// <summary>
 		/// Called when the Board is to be drawn.
-		/// Responsible for drawing ghost shapes and the next shape.
 		/// </summary>
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		public void UpdateBlocks()
 		{
-			//creates a copy of current shape to draw it as a ghost
-			Block[] shapeCopy = new Block[Shape.Length];
-			//fill(ref shapeCopy);
-
 			for (int i = 0; i < board.GetLength(0); i++)
 			{
 				for (int j = 1; j < board.GetLength(1); j++)
@@ -358,26 +317,16 @@ namespace TetrisGame.Core
 			Shape next = NextShape;
 			for (int i = 0; i < next.Length; i++)
 			{
-				//spriteBatch.Draw(filledBlock, new Vector2(160 + next[i].Position.X * 20, 110 + next[i].Position.Y * 20),
-				//next[i].Color);
+				next[i].Position = new Vector2(160 + next[i].Position.X * 20, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - 110 + next[i].Position.Y * 20);
 			}
+
+			Shape.Update();
+			NextShape.Update();
 		}
 
 		private void UpdateLabels()
         {
-			//spriteBatch.DrawString(font, "To pause/resume\nthe game press ", new Vector2(230, 250), baseTxt);
-			//spriteBatch.DrawString(fontEm, "P", new Vector2(365, 270), emTxt);
-			//spriteBatch.DrawString(font, "key", new Vector2(380, 270), baseTxt);
-			//spriteBatch.DrawString(font, "or a", new Vector2(230, 290), baseTxt);
-			//spriteBatch.DrawString(fontEm, "SPACEBAR.", new Vector2(270, 290), emTxt);
-
-			//spriteBatch.DrawString(font, "To enter the Ghost Mode\npress", new Vector2(230, 330), baseTxt);
-			//spriteBatch.DrawString(fontEm, "G", new Vector2(285, 350), emTxt);
-			//spriteBatch.DrawString(font, "key.", new Vector2(305, 350), baseTxt);
-
-
-			//spriteBatch.DrawString(font, "To drop the shape\npress", new Vector2(230, 390), baseTxt);
-			//spriteBatch.DrawString(fontEm, "ENTER.", new Vector2(285, 410), emTxt);
+		
 		}
 	}
 }

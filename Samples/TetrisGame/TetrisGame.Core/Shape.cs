@@ -27,7 +27,6 @@ namespace TetrisGame.Core
 		//Fires when the Shape is about to join the board pile.
 		public event JoinPileHandler JoinPile;
 
-		Score score;
 		int counterMoveDown = 0;
 
 		KeyboardState oldState;
@@ -227,7 +226,7 @@ namespace TetrisGame.Core
 			checkPauseKey(Keyboard.GetState());
 			if (!paused)
 			{
-				double delay = (11 - score.Level) * 0.05 * 60;
+				double delay = (11 - board.Score.Level) * 0.05 * 60;
 				if (counterMoveDown > delay)
 				{
 					MoveDown();
