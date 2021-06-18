@@ -6,7 +6,6 @@ namespace TetrisGame.Core.Scenes
     {
 
         Board Board;
-        Score Score;
 
         public GameScene()
         {
@@ -40,7 +39,7 @@ namespace TetrisGame.Core.Scenes
         private void gameOver()
         {
             // TODO: Remove all shapes from scene
-            Score.HandleGameOver();
+            Board.Score.HandleGameOver();
         }
     }
 }

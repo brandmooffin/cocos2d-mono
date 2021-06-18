@@ -66,7 +66,7 @@ namespace TetrisGame.Core
 				for (int j = 0; j < 21; j++)
 				{
 					board[i, j] = background;
-					var block = new Block(this, background, new CCPoint(0, board.GetLength(1) - 1));
+					var block = new Block(this, background, new CCPoint(0, 0));
 					blocks[i,j] = block;
 				}
 			}
@@ -261,8 +261,8 @@ namespace TetrisGame.Core
 				//y=0 row is not a part of the game board and serves as a buffer for newly-created shapes
 				if (board[i, 1] != background)
 				{
-					OnGameOver();
-					return true;
+					//OnGameOver();
+					//return true;
 				}
 			}
 			return false;

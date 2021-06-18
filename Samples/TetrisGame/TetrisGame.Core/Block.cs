@@ -31,7 +31,7 @@ namespace TetrisGame.Core
 			InitWithFile("FilledBlock");
 			Color = new CCColor3B(color);
 			checkCoordinate(position, board);
-			Position = position;
+			Position = new CCPoint(position.X, board.GetLength(1) - 1 - position.Y);
 			board.AddChild(this);
 		}
 
@@ -152,7 +152,7 @@ namespace TetrisGame.Core
 			{
 				throw new ArgumentException("Given coordinate is negative.");
 			}
-			if (coord.X >= board.GetLength(0) || coord.Y >= board.GetLength(1))
+			if (coord.X > board.GetLength(0) || coord.Y > board.GetLength(1))
 			{
 				throw new ArgumentException("Given coordinate is out of border bounds.");
 			}

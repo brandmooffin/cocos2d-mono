@@ -178,7 +178,7 @@ namespace TetrisGame.Core
 
 			GameOverLabel = new CCLabelTTF("GAME OVER", "MarkerFelt", 13);
 			GameOverLabel.Color = CCColor3B.Red;
-			GameOverLabel.Position = new CCPoint(20, 50);
+			GameOverLabel.Position = new CCPoint(20, 30);
 			GameOverLabel.VerticalAlignment = CCVerticalTextAlignment.Top;
 			GameOverLabel.HorizontalAlignment = CCTextAlignment.Left;
 			GameOverLabel.AnchorPoint = new CCPoint(0, 0);
