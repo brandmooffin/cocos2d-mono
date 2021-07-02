@@ -68,6 +68,7 @@ namespace TetrisGame.Core
 					board[i, j] = background;
 					var block = new Block(this, background, new CCPoint(0, 0));
 					blocks[i,j] = block;
+					AddChild(block);
 				}
 			}
 
@@ -80,7 +81,6 @@ namespace TetrisGame.Core
 			this.shape = new ShapeProxy(this);
 			shape.JoinPile += addToPile;
 			this.nextShape = new ShapeProxy(this);
-
 
 			NextShapeLabel = new CCLabelTTF("The Next Shape:", "MarkerFelt", 13);
 			NextShapeLabel.Color = CCColor3B.White;
@@ -308,7 +308,7 @@ namespace TetrisGame.Core
 			{
 				for (int j = 1; j < board.GetLength(1); j++)
 				{
-					blocks[i, j].Position = new Vector2(20 + i * 20, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - (35 + j * 20));
+					blocks[i, j].Position = new Vector2(20 + i * 20, CCApplication.SharedApplication.GraphicsDevice.Viewport.Height - (35 + (j + 1) * 20));
 					blocks[i, j].Color = new CCColor3B(board[i, j]);
 				}
 			}

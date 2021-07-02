@@ -9,12 +9,6 @@ using Microsoft.Xna.Framework.Input;
 namespace TetrisGame.Core
 {
 	/// <summary>
-	/// Delegate for JoinPile event.
-	/// </summary>
-	/// <param name="shape">The Shape to join the pile</param>
-	public delegate void JoinPileHandler();
-
-	/// <summary>
 	/// Represents the Tetris Shape.
 	/// </summary>
 	public abstract class Shape : CCSprite
