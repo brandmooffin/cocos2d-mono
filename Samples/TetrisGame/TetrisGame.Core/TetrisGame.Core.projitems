@@ -12,8 +12,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Block.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Board.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Grid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Score.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shape.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tetromino.cs" />
   </ItemGroup>
 </Project>
