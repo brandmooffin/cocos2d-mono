@@ -7,57 +7,57 @@ namespace TetrisGame.Core
     class GameState
     {
         const float INITIAL_SPEED = 0.5f;
-        int level = 0;
-        int points = 0;
-        int lines = 0;
-        int linesCountToLevelUp = 10;
-        float speed = INITIAL_SPEED;
-        bool isGameOver = false;
+        int Level = 0;
+        int Points = 0;
+        int Lines = 0;
+        int LinesCountToLevelUp = 10;
+        float Speed = INITIAL_SPEED;
+        bool IsGameOver = false;
 
         public GameState()
         {
-            level = 0;
-            points = 0;
-            lines = 0;
-            linesCountToLevelUp = 10;
-            speed = INITIAL_SPEED;
-            isGameOver = false;
+            Level = 0;
+            Points = 0;
+            Lines = 0;
+            LinesCountToLevelUp = 10;
+            Speed = INITIAL_SPEED;
+            IsGameOver = false;
         }
 
-        public void addPointsForRowsCount(int destroyedRowsCount)
+        public void AddPointsForRowsCount(int destroyedRowsCount)
         {
-            this.lines += destroyedRowsCount;
-            this.points += 1 * destroyedRowsCount * destroyedRowsCount;
+            Lines += destroyedRowsCount;
+            Points += 1 * destroyedRowsCount * destroyedRowsCount;
         }
 
-        public void setLevel(int level)
+        public void SetLevel(int level)
         {
-            this.lines = 0;
-            this.level = level;
-            this.speed = INITIAL_SPEED - (0.05f * level);
+            Lines = 0;
+            Level = level;
+            Speed = INITIAL_SPEED - (0.05f * level);
         }
 
-        public bool check()
+        public bool Check()
         {
-            if (this.lines >= this.linesCountToLevelUp)
+            if (Lines >= LinesCountToLevelUp)
             {
-                this.setLevel(this.level + 1);
+                SetLevel(Level + 1);
                 //$levelupSound.play();
                 return true;
             }
-            if (this.isGameOver)
+            if (IsGameOver)
             {
-                this.setLevel(0);
-                this.isGameOver = false;
-                this.points = 0;
+                SetLevel(0);
+                IsGameOver = false;
+                Points = 0;
                 return true;
             }
             return false;
         }
 
-        public void gameOver()
+        public void GameOver()
         {
-            this.isGameOver = true;
+            IsGameOver = true;
         }
     }
 }

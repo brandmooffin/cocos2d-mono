@@ -1,147 +1,153 @@
-﻿using System;
+﻿using Cocos2D;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace TetrisGame.Core
 {
-    var Grid = ctx.Grid = cc.Node.extend({
+    public class Grid : CCNode {
 
-    ctor: function() {
-      this._super();
-      this.size = new cc.Rect(0, 0, 10, 20);
-      this.setContentSize(this.size.width* BrickSprite.WIDTH, this.size.height* BrickSprite.HEIGHT);
-      this.tetrimino = null;
-      this.bricksMap = [];
-      this.level = 0;
-      this.setLevel(0);
-    },
+        CCRect Size;
+        Tetrimino Tetrimino;
+        int Level;
+        List<List<bool>> BricksMap;
+        GameState GameState;
 
-    update: function(dt)
-    {
-        if (!this.tetrimino) return;
-        this.tetrimino.update(dt);
-        if (this.tetrimino.isFrozen) delete this.tetrimino;
-    },
+        public Grid() {
+            Init();
+            Size = new CCRect(0, 0, 10, 20);
+            ContentSize = new CCSize(Size.MaxX * Block.WIDTH, Size.MaxY * Block.HEIGHT);
+            Tetrimino = null;
+            BricksMap = new List<List<bool>>();
+            SetLevel(0);
+            GameState = new GameState();
+        }
 
-    pushTetrimino: function(tetrimino)
-    {
-        tetrimino.setGrid(this);
-        this.addChild(tetrimino);
-        this.tetrimino = tetrimino;
-    },
-
-    setLevel: function(level)
-    {
-        this.level = level;
-        this.bricksMap = Grid.createBricksMap(this.size.width, this.size.height, level * 2);
-        this.tetrimino = null;
-        this._updateBriks();
-    },
-
-    addBricksFromTetrimino: function(tetrimino)
-    {
-        var ri = Tetrimino.SIZE;
-        while (ri--)
+        public void Update(float dt)
         {
-            for (var ci = 0; ci < Tetrimino.SIZE; ci++)
+            if (Tetrimino == null) return;
+            Tetrimino.Update(dt);
+            if (Tetrimino.IsFrozen)
             {
-                if (!tetrimino.bricksMap[ri][ci]) continue;
-                var brickPos = { x: tetrimino.gridPos.x + ci, y: tetrimino.gridPos.y + (Tetrimino.SIZE - ri - 1)};
-            this.bricksMap[brickPos.y][brickPos.x] = 1;
+                Tetrimino = null;
+            }
         }
-    }
-    var gameOver = !Grid.rowIsEmpty(this.bricksMap[this.size.height - 1]);
-      if (gameOver) {
-        cc.game.state.gameOver();
-      }
-this._updateBriks();
-    },
 
-    _updateBriks: function() {
-    this.removeAllChildren();
-
-    // remove completed rows
-    var removedCount = 0;
-    this.bricksMap = this.bricksMap.filter(function(row) {
-        if (!Grid.rowIsCompleted(row)) return true;
-        removedCount++;
-        return false;
-    });
-    if (removedCount)
-    {
-        $clearSound.play();
-        cc.game.state.addPointsForRowsCount(removedCount);
-    }
-    while (removedCount--)
-    {
-        this.bricksMap.push(Grid.createRow(this.size.width));
-    }
-
-    // create bricks sprites
-    for (var ri = 0; ri < this.size.height; ri++)
-    {
-        for (var ci = 0; ci < this.size.width; ci++)
+        public void pushTetrimino(Tetrimino tetrimino)
         {
-            if (!this.bricksMap[ri][ci]) continue;
-            var brick = new BrickSprite();
-            brick.setPosition(
-                ci * BrickSprite.WIDTH + BrickSprite.WIDTH / 2,
-                ri * BrickSprite.HEIGHT
-            );
-            this.addChild(brick);
+            tetrimino.setGrid(this);
+            AddChild(tetrimino);
+            Tetrimino = tetrimino;
         }
+
+        public void SetLevel(int level)
+        {
+            Level = level;
+            BricksMap = CreateBricksMap((int)Size.MaxX, (int)Size.MaxY, level * 2);
+            Tetrimino = null;
+            UpdateBricks();
+        }
+
+        public void addBricksFromTetrimino(Tetrimino tetrimino)
+        {
+            var ri = Tetrimino.SIZE;
+            while (ri--)
+            {
+                for (var ci = 0; ci < Tetrimino.SIZE; ci++)
+                {
+                    if (!tetrimino.BricksMap[ri][ci]) continue;
+                    var brickPos = new CCPoint(tetrimino.gridPos.x + ci, tetrimino.gridPos.y + (Tetrimino.SIZE - ri - 1));
+                    BricksMap[(int)brickPos.Y][(int)brickPos.X] = 1;
+                }
+            }
+
+            var gameOver = !RowIsEmpty(BricksMap[(int)Size.MaxY - 1]);
+            if (gameOver) {
+                GameState.GameOver();
+            }
+            UpdateBricks();
+        }
+
+        public void UpdateBricks() {
+            RemoveAllChildren();
+
+            // remove completed rows
+            var removedCount = 0;
+            BricksMap = BricksMap.Where(row => !RowIsCompleted(row)).ToList();
+            if (removedCount > 0)
+            {
+                //$clearSound.play();
+                GameState.AddPointsForRowsCount(removedCount);
+            }
+            while (removedCount-- > -1)
+            {
+                BricksMap.Add(CreateRow((int)Size.MaxX));
+            }
+
+            // create bricks sprites
+            for (var ri = 0; ri < Size.MaxY; ri++)
+            {
+                for (var ci = 0; ci < Size.MaxX; ci++)
+                {
+                    if (!BricksMap[ri][ci]) continue;
+                    var brick = new Block(CCColor3B.Red);
+                    brick.Position = new CCPoint(
+                        ci * Block.WIDTH + Block.WIDTH / 2,
+                        ri * Block.HEIGHT
+                    );
+                    AddChild(brick);
+                }
+            }
+        }
+
+        public List<List<bool>> CreateBricksMap(int width, int height, int level) {
+            var bricksMap = new List<List<bool>>();
+            for (var ri = 0; ri < height; ri++)
+            {
+                var rowHasBricks = ri < level;
+                BricksMap.Add(CreateRow(width, rowHasBricks));
+            }
+            return bricksMap;
+        }
+
+        public bool RowIsCompleted(List<bool> row) {
+            var ci = row.Count;
+            while (ci-- > -1)
+            {
+                if (!row[ci]) return false;
+            }
+            return true;
+        }
+
+        public bool RowIsEmpty(List<bool> row) {
+            var ci = row.Count;
+            while (ci-- > -1)
+            {
+                if (row[ci]) return false;
+            }
+            return true;
+        }
+
+        public bool ColIsEmpty(List<List<bool>> bricksMap, int colInd) {
+            var ri = bricksMap.Count;
+            while (ri-- > -1)
+            {
+                if (bricksMap[ri][colInd]) return false;
+            }
+            return true;
+        }
+
+        public List<bool> CreateRow(int width, bool needCreateBricks = false) {
+            var row = new List<bool>();
+            var ci = width;
+            while (ci-- > -1)
+            {
+                var hasBrick = needCreateBricks;
+                row.Add(hasBrick);
+            }
+            return row;
+        }
+
     }
-}
-
-  });
-
-Grid.createBricksMap = function(width, height, level) {
-    var bricksMap = [];
-    for (var ri = 0; ri < height; ri++)
-    {
-        var rowHasBricks = ri < level;
-        bricksMap.push(Grid.createRow(width, rowHasBricks));
-    }
-    return bricksMap;
-};
-
-Grid.rowIsCompleted = function(row) {
-    var ci = row.length;
-    while (ci--)
-    {
-        if (!row[ci]) return false;
-    }
-    return true;
-};
-
-Grid.rowIsEmpty = function(row) {
-    var ci = row.length;
-    while (ci--)
-    {
-        if (row[ci]) return false;
-    }
-    return true;
-};
-
-Grid.colIsEmpty = function(bricksMap, colInd) {
-    var ri = bricksMap.length;
-    while (ri--)
-    {
-        if (bricksMap[ri][colInd]) return false;
-    }
-    return true;
-};
-
-Grid.createRow = function(width, needCreateBricks) {
-    var row = [];
-    var ci = width;
-    while (ci--)
-    {
-        var hasBrick = needCreateBricks ? Math.round(Math.random()) : 0;
-        row.push(hasBrick);
-    }
-    return row;
-};
-
-}
 }

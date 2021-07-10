@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Cocos2D;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace TetrisGame.Core
 {
-    var Tetrimino = ctx.Tetrimino = cc.Sprite.extend({
+    public class Tetrimino : CCSprite {
 
-    ctor: function(fallSpeed) {
+
+
+    public Tetrimino(float fallSpeed) {
 
        this._super();
       this.fallSpeed = fallSpeed;// interval in seconds
@@ -20,9 +23,9 @@ namespace TetrisGame.Core
       this.action = Tetrimino.ACTION_NONE;
       this.isFrozen = false;
       this.isAccelerated = false;
-    },
+    }
 
-    update: function(dt)
+    public void update(float dt)
     {
         if (cc.game.keyboardEvent) this.onKeyboardEvent(cc.game.keyboardEvent);
         switch (this.action)
@@ -54,21 +57,21 @@ namespace TetrisGame.Core
                 this.freeze();
             }
         }
-    },
+    }
 
-    moveRight: function()
+    public void MoveRight()
     {
         var newPos = { x: this.gridPos.x + 1, y: this.gridPos.y};
       if (this.isValidPosition(newPos)) this.setGridPos(newPos);
       $clickSound.play();
-    },
+    }
 
     moveLeft: function()
     {
         var newPos = { x: this.gridPos.x - 1, y: this.gridPos.y};
       if (this.isValidPosition(newPos)) this.setGridPos(newPos);
       $clickSound.play();
-    },
+    }
 
     moveDown: function()
     {

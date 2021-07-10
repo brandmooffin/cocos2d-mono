@@ -16,6 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Score.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shape.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tetromino.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tetrimino.cs" />
   </ItemGroup>
 </Project>

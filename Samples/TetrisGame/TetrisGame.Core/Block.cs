@@ -11,12 +11,13 @@ namespace TetrisGame.Core
 	/// </summary>
 	public class Block : CCSprite
 	{
-		float WIDTH = 14.2f;
-		float HEIGHT = 14.2f;
+		public const float WIDTH = 14.2f;
+		public const float HEIGHT = 14.2f;
 
 		public Block(CCColor3B color)
 		{
 			InitWithFile("FilledBlock", new CCRect(0, 0, WIDTH, HEIGHT));
+			ContentSize = new CCSize(WIDTH, HEIGHT);
 			Color = color;
 		}
 	}
