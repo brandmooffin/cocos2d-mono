@@ -8,20 +8,20 @@ namespace TetrisGame.Core
 {
     public class Grid : CCNode {
 
-        CCRect Size;
-        Tetrimino Tetrimino;
+        public CCRect Size;
+        public Tetrimino Tetrimino;
         int Level;
-        List<List<bool>> BricksMap;
+        public List<List<bool>> BricksMap;
         GameState GameState;
 
-        public Grid() {
+        public Grid(GameState gameState) {
             Init();
             Size = new CCRect(0, 0, 10, 20);
             ContentSize = new CCSize(Size.MaxX * Block.WIDTH, Size.MaxY * Block.HEIGHT);
             Tetrimino = null;
             BricksMap = new List<List<bool>>();
             SetLevel(0);
-            GameState = new GameState();
+            GameState = gameState;
         }
 
         public void Update(float dt)
@@ -34,9 +34,9 @@ namespace TetrisGame.Core
             }
         }
 
-        public void pushTetrimino(Tetrimino tetrimino)
+        public void PushTetrimino(Tetrimino tetrimino)
         {
-            tetrimino.setGrid(this);
+            tetrimino.SetGrid(this);
             AddChild(tetrimino);
             Tetrimino = tetrimino;
         }
@@ -49,16 +49,16 @@ namespace TetrisGame.Core
             UpdateBricks();
         }
 
-        public void addBricksFromTetrimino(Tetrimino tetrimino)
+        public void AddBricksFromTetrimino(Tetrimino tetrimino)
         {
             var ri = Tetrimino.SIZE;
-            while (ri--)
+            while (ri-- > 0)
             {
                 for (var ci = 0; ci < Tetrimino.SIZE; ci++)
                 {
                     if (!tetrimino.BricksMap[ri][ci]) continue;
-                    var brickPos = new CCPoint(tetrimino.gridPos.x + ci, tetrimino.gridPos.y + (Tetrimino.SIZE - ri - 1));
-                    BricksMap[(int)brickPos.Y][(int)brickPos.X] = 1;
+                    var brickPos = new CCPoint(tetrimino.GridPos.X + ci, tetrimino.GridPos.Y + (Tetrimino.SIZE - ri - 1));
+                    BricksMap[(int)brickPos.Y][(int)brickPos.X] = true;
                 }
             }
 
@@ -106,14 +106,14 @@ namespace TetrisGame.Core
             for (var ri = 0; ri < height; ri++)
             {
                 var rowHasBricks = ri < level;
-                BricksMap.Add(CreateRow(width, rowHasBricks));
+                bricksMap.Add(CreateRow(width, rowHasBricks));
             }
             return bricksMap;
         }
 
         public bool RowIsCompleted(List<bool> row) {
             var ci = row.Count;
-            while (ci-- > -1)
+            while (ci-- > 0)
             {
                 if (!row[ci]) return false;
             }
@@ -122,7 +122,7 @@ namespace TetrisGame.Core
 
         public bool RowIsEmpty(List<bool> row) {
             var ci = row.Count;
-            while (ci-- > -1)
+            while (ci-- > 0)
             {
                 if (row[ci]) return false;
             }
@@ -131,7 +131,7 @@ namespace TetrisGame.Core
 
         public bool ColIsEmpty(List<List<bool>> bricksMap, int colInd) {
             var ri = bricksMap.Count;
-            while (ri-- > -1)
+            while (ri-- > 0)
             {
                 if (bricksMap[ri][colInd]) return false;
             }
@@ -141,7 +141,7 @@ namespace TetrisGame.Core
         public List<bool> CreateRow(int width, bool needCreateBricks = false) {
             var row = new List<bool>();
             var ci = width;
-            while (ci-- > -1)
+            while (ci-- > 0)
             {
                 var hasBrick = needCreateBricks;
                 row.Add(hasBrick);

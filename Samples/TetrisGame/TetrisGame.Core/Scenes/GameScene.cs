@@ -1,45 +1,45 @@
-﻿using Cocos2D;
+﻿//using Cocos2D;
 
-namespace TetrisGame.Core.Scenes
-{
-    public class GameScene : CCScene
-    {
+//namespace TetrisGame.Core.Scenes
+//{
+//    public class GameScene : CCScene
+//    {
 
-        Board Board;
+//        Board Board;
 
-        public GameScene()
-        {
-            Board = new Board(this);
+//        public GameScene()
+//        {
+//            Board = new Board(this);
             
-            Board.GameOver += gameOver;
+//            Board.GameOver += gameOver;
 
-            AddChild(Board);
+//            AddChild(Board);
 
-            ScheduleUpdate();
-        }
+//            ScheduleUpdate();
+//        }
 
-        public static CCScene Scene
-        {
-            get
-            {
-                // return the scene
-                return new GameScene();
-            }
+//        public static CCScene Scene
+//        {
+//            get
+//            {
+//                // return the scene
+//                return new GameScene();
+//            }
 
-        }
+//        }
 
-        public override void Update(float gameTime)
-        {
-            Board.Update();
+//        public override void Update(float gameTime)
+//        {
+//            Board.Update();
 
-            base.Update(gameTime);
-        }
+//            base.Update(gameTime);
+//        }
 
-        //If the game is over, the shape is removed, and the appropriate message is displayed.
-        private void gameOver()
-        {
-            // TODO: Remove all shapes from scene
-            Board.Score.HandleGameOver();
-        }
-    }
-}
+//        //If the game is over, the shape is removed, and the appropriate message is displayed.
+//        private void gameOver()
+//        {
+//            // TODO: Remove all shapes from scene
+//            Board.Score.HandleGameOver();
+//        }
+//    }
+//}

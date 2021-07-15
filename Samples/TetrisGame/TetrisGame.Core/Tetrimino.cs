@@ -1,398 +1,446 @@
 ﻿using Cocos2D;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace TetrisGame.Core
 {
     public class Tetrimino : CCSprite {
 
+        float FallSpeed;
+        float TimeToFall;
+
+        public const int ACTION_NONE = 0;
+        public const int ACTION_MOVE_LEFT = 1;
+        public const int ACTION_MOVE_RIGHT = 2;
+        public const int ACTION_MOVE_DOWN = 3;
+        public const int ACTION_STOP_MOVE = 4;
+        public const int ACTION_ROTATE = 5;
+        public const int SIZE = 4;
+
+        Grid Grid;
+        public CCPoint GridPos;
+        List<List<List<int>>> BricksPlan;
+        public List<List<bool>> BricksMap;
+        int RotationInd;
+        int Action;
+        public bool IsFrozen;
+        bool IsAccelerated;
+        public Tetrimino(float fallSpeed, Grid grid) {
 
 
-    public Tetrimino(float fallSpeed) {
+            FallSpeed = fallSpeed;// interval in seconds
+            TimeToFall = fallSpeed;
+            ContentSize = new CCSize(Block.WIDTH * SIZE, Block.HEIGHT * SIZE);
+            GridPos = new CCPoint(0, 0);
+            BricksPlan = Utils.GetRandomItem(PLANS);
+            RotationInd = Utils.GetRandomInt(BricksPlan.Count);
+            BricksMap = new List<List<bool>>();
+            Action = ACTION_NONE;
+            IsFrozen = false;
+            IsAccelerated = false;
+            Grid = grid;
 
-       this._super();
-      this.fallSpeed = fallSpeed;// interval in seconds
-      this.timeToFall = this.fallSpeed;
-      this.setContentSize(BrickSprite.WIDTH* Tetrimino.SIZE, BrickSprite.HEIGHT* Tetrimino.SIZE);
-      this.grid = 0;
-      this.gridPos = { x: 0, y: 0};
-      this.bricksPlan = Utils.getRandomItem(Tetrimino.PLANS);
-      this.rotationInd = Utils.getRandomInt(this.bricksPlan.length);
-      this.bricksMap = [];
-      this.action = Tetrimino.ACTION_NONE;
-      this.isFrozen = false;
-      this.isAccelerated = false;
-    }
 
-    public void update(float dt)
-    {
-        if (cc.game.keyboardEvent) this.onKeyboardEvent(cc.game.keyboardEvent);
-        switch (this.action)
-        {
-            case Tetrimino.ACTION_MOVE_LEFT: this.moveLeft(); break;
-            case Tetrimino.ACTION_MOVE_RIGHT: this.moveRight(); break;
-            case Tetrimino.ACTION_MOVE_DOWN: this.accelerate(); break;
-            case Tetrimino.ACTION_ROTATE: this.rotate(); break;
-            case Tetrimino.ACTION_STOP_MOVE: this.stopAcceleration(); break;
+            Render();
+            SetGridPos(new CCPoint(3, 16 + GetPaddings().MaxY));
         }
-        this.action = Tetrimino.ACTION_NONE;
 
-        if (this.isAccelerated)
+        public void Update(float dt)
         {
-            this.moveDown();
-        }
-
-        this.timeToFall -= dt;
-        if (this.timeToFall <= 0)
-        {
-            this.timeToFall = this.fallSpeed;
-            if (this.canMoveDown())
+            OnKeyboardEvent(Keyboard.GetState());
+            switch (Action)
             {
-                this.moveDown();
+                case ACTION_MOVE_LEFT: MoveLeft(); break;
+                case ACTION_MOVE_RIGHT: MoveRight(); break;
+                case ACTION_MOVE_DOWN: Accelerate(); break;
+                case ACTION_ROTATE: Rotate(); break;
+                case ACTION_STOP_MOVE: StopAcceleration(); break;
+            }
+            Action = ACTION_NONE;
+
+            if (IsAccelerated)
+            {
+                MoveDown();
+            }
+
+            TimeToFall -= dt;
+            if (TimeToFall <= 0)
+            {
+                TimeToFall = FallSpeed;
+                if (CanMoveDown())
+                {
+                    MoveDown();
+                }
+                else
+                {
+                    //$clickSound.play();
+                    Freeze();
+                }
+            }
+        }
+
+        public void MoveRight()
+        {
+            var newPos = new CCPoint(GridPos.X + 1, GridPos.Y);
+            if (IsValidPosition(newPos)) SetGridPos(newPos);
+            //$clickSound.play();
+        }
+
+        public void MoveLeft()
+        {
+            var newPos = new CCPoint(GridPos.X - 1, GridPos.Y);
+            if (IsValidPosition(newPos)) SetGridPos(newPos);
+            //$clickSound.play();
+        }
+
+        public void MoveDown()
+        {
+            if (CanMoveDown())
+            {
+                SetGridPos(new CCPoint(GridPos.X, GridPos.Y - 1));
+                //$clickSound.play();
+            }
+        }
+
+        public bool CanMoveDown()
+        {
+            return IsValidPosition(new CCPoint(GridPos.X, GridPos.Y - 1));
+        }
+
+        public void Accelerate()
+        {
+            IsAccelerated = true;
+        }
+
+        public void StopAcceleration()
+        {
+            IsAccelerated = false;
+        }
+
+        public void Rotate()
+        {
+            var rotatedBricksMap = GetRotatedBricksMap().ToList().Select(bp => bp.ToList().Select(p => p > 0).ToList()).ToList();
+            var rotatedPaddings = GetPaddings(rotatedBricksMap);
+            var canRotate = false;
+            if (IsValidPosition(GridPos, rotatedBricksMap))
+            {
+                canRotate = true;
             }
             else
             {
-          $clickSound.play();
-                this.freeze();
+                // move tetrominto to left or to right if after rotation it across borders
+                var leftLedge = -(GridPos.X + rotatedPaddings.MinX);
+                var rightLedge = (GridPos.X + SIZE - rotatedPaddings.MaxX) - Grid.Size.MaxX;
+                var correctToRightPos = new CCPoint(GridPos.X + leftLedge, GridPos.Y);
+                var correctToLeftPos = new CCPoint(GridPos.X - rightLedge, GridPos.Y);
+                if (leftLedge > 0 && IsValidPosition(correctToRightPos, rotatedBricksMap))
+                {
+                    SetGridPos(correctToRightPos);
+                    canRotate = true;
+                }
+                else if (rightLedge > 0 && IsValidPosition(correctToLeftPos, rotatedBricksMap))
+                {
+                    SetGridPos(correctToLeftPos);
+                    canRotate = true;
+                }
+            }
+            if (canRotate)
+            {
+                //$clickSound.play();
+                RotationInd = GetNextRotationInd();
+                Render();
             }
         }
-    }
 
-    public void MoveRight()
-    {
-        var newPos = { x: this.gridPos.x + 1, y: this.gridPos.y};
-      if (this.isValidPosition(newPos)) this.setGridPos(newPos);
-      $clickSound.play();
-    }
-
-    moveLeft: function()
-    {
-        var newPos = { x: this.gridPos.x - 1, y: this.gridPos.y};
-      if (this.isValidPosition(newPos)) this.setGridPos(newPos);
-      $clickSound.play();
-    }
-
-    moveDown: function()
-    {
-        if (this.canMoveDown())
-        {
-            this.setGridPos({ y: this.gridPos.y - 1});
-        $clickSound.play();
+        public void Freeze() {
+            IsFrozen = true;
+            Grid.AddBricksFromTetrimino(this);
         }
-    },
 
-    canMoveDown: function()
-    {
-        return this.isValidPosition({ x: this.gridPos.x, y: this.gridPos.y - 1});
-    },
-
-    accelerate: function()
-    {
-        this.isAccelerated = true;
-    },
-
-    stopAcceleration: function()
-    {
-        this.isAccelerated = false;
-    },
-
-    rotate: function()
-    {
-        var rotatedBricksMap = this.getRotatedBricksMap();
-        var rotatedPaddings = Tetrimino.getPaddings(rotatedBricksMap);
-        var canRotate = false;
-        if (this.isValidPosition(this.gridPos, rotatedBricksMap))
-        {
-            canRotate = true;
+        public int GetNextRotationInd() {
+            var nextRotationInd = RotationInd + 1;
+            return nextRotationInd < BricksPlan.Count ? nextRotationInd : 0;
         }
-        else
-        {
-            // move tetrominto to left or to right if after rotation it across borders
-            var leftLedge = -(this.gridPos.x + rotatedPaddings.left);
-            var rightLedge = (this.gridPos.x + Tetrimino.SIZE - rotatedPaddings.right) - this.grid.size.width;
-            var correctToRightPos = { x: this.gridPos.x + leftLedge, y: this.gridPos.y};
-        var correctToLeftPos = { x: this.gridPos.x - rightLedge, y: this.gridPos.y};
-        if (leftLedge > 0 && this.isValidPosition(correctToRightPos, rotatedBricksMap)) {
-        this.setGridPos(correctToRightPos);
-        canRotate = true;
-    } else if (rightLedge > 0 && this.isValidPosition(correctToLeftPos, rotatedBricksMap)) {
-        this.setGridPos(correctToLeftPos);
-        canRotate = true;
-    }
-    }
-      if (canRotate) {
-        $clickSound.play();
-        this.rotationInd = this._getNextRotationInd();
-        this.render();
-      }
-},
 
-    freeze: function() {
-    this.isFrozen = true;
-    this.grid.addBricksFromTetrimino(this);
-},
+        public List<List<int>> GetRotatedBricksMap() {
+            return BricksPlan[GetNextRotationInd()];
+        }
 
-    _getNextRotationInd: function() {
-    var nextRotationInd = this.rotationInd + 1;
-    return nextRotationInd < this.bricksPlan.length ? nextRotationInd : 0;
-},
-
-    getRotatedBricksMap: function() {
-    return this.bricksPlan[this._getNextRotationInd()];
-},
-
-    setGridPos: function(gridPos) {
-    this.gridPos.x = gridPos.x !== void 0 ? gridPos.x : this.gridPos.x;
-    this.gridPos.y = gridPos.y !== void 0 ? gridPos.y : this.gridPos.y;
-    this.setPosition(
-      this.gridPos.x * BrickSprite.WIDTH + this.width / 2,
-      this.gridPos.y * BrickSprite.HEIGHT + this.height / 2
-    )
-    },
-
-    isValidPosition: function(gridPos, bricksMap) {
-    bricksMap = bricksMap || this.bricksMap;
-    var ri = Tetrimino.SIZE;
-    while (ri--)
-    {
-        for (var ci = 0; ci < Tetrimino.SIZE; ci++)
-        {
-            if (!bricksMap[ri][ci]) continue;
-            var brickPos = { x: gridPos.x + ci, y: gridPos.y + Tetrimino.SIZE - ri - 1};
-        var isOutOfBounds = (
-          brickPos.y < 0 || brickPos.x < 0 ||
-          brickPos.x >= this.grid.size.width ||
-          brickPos.y >= this.grid.size.height
-        );
-        if (isOutOfBounds) return false;
-        var isCollidesBricks = this.grid.bricksMap[brickPos.y][brickPos.x];
-        if (isCollidesBricks) return false;
-    }
-}
-return true;
-    },
-
-    onEnter: function() {
-    this.render();
-    this.setGridPos({ x: 3, y: 16 + this.getPaddings().top});
-},
-
-    render: function() {
-    this.removeAllChildren();
-    this.bricksMap = this.bricksPlan[this.rotationInd];
-    var rowInd = Tetrimino.SIZE;
-    while (rowInd--)
-    {
-        for (var colInd = 0; colInd < Tetrimino.SIZE; colInd++)
-        {
-            if (!this.bricksMap[rowInd][colInd]) continue;
-            var brick = new BrickSprite();
-            brick.setPosition(
-                colInd * BrickSprite.WIDTH + BrickSprite.WIDTH / 2,
-                (Tetrimino.SIZE - rowInd - 1) * BrickSprite.HEIGHT
+        public void SetGridPos(CCPoint gridPos) {
+            GridPos.X = gridPos.X >= 0 ? gridPos.X : GridPos.X;
+            GridPos.Y = gridPos.Y >= -1 ? gridPos.Y : GridPos.Y;
+            Position = new CCPoint(
+              GridPos.X * Block.WIDTH + ContentSize.Width / 2,
+              GridPos.Y * Block.HEIGHT + ContentSize.Height / 2
             );
-            this.addChild(brick);
         }
-    }
-},
 
-    onKeyboardEvent: function(ev) {
-    if (ev.type === 'keyup')
-    {
-        if (ev.code === 'ArrowDown') this.action = Tetrimino.ACTION_STOP_MOVE;
-        return;
-    }
-    switch (ev.code)
-    {
-        case 'ArrowRight': this.action = Tetrimino.ACTION_MOVE_RIGHT; break;
-        case 'ArrowLeft': this.action = Tetrimino.ACTION_MOVE_LEFT; break;
-        case 'ArrowDown': this.action = Tetrimino.ACTION_MOVE_DOWN; break;
-        case 'Space': this.action = Tetrimino.ACTION_ROTATE; break;
-    }
-},
+        public bool IsValidPosition(CCPoint gridPos, List<List<bool>> bricksMap = null)
+        {
+            bricksMap = bricksMap ?? BricksMap;
+            var ri = SIZE;
+            while (ri-- > 0)
+            {
+                for (var ci = 0; ci < SIZE; ci++)
+                {
+                    if (!bricksMap[ri][ci]) continue;
+                    var brickPos = new CCPoint(gridPos.X + ci, gridPos.Y + SIZE - ri - 1);
+                    var isOutOfBounds = (
+                      brickPos.Y < 0 || brickPos.X < 0 ||
+                      brickPos.X >= Grid.Size.MaxX ||
+                      brickPos.Y >= Grid.Size.MaxY
+                    );
+                    if (isOutOfBounds) return false;
+                    var isCollidesBricks = Grid.BricksMap[(int)brickPos.Y][(int)brickPos.X];
+                    if (isCollidesBricks) return false;
+                }
+            }
+            return true;
+        }
 
-    setGrid: function(tetrisGrid) {
-    this.grid = tetrisGrid;
-},
+        public void Render() {
+            RemoveAllChildren();
+            BricksMap = BricksPlan[RotationInd].ToList().Select(bp => bp.ToList().Select(p => p > 0).ToList()).ToList();
+            var rowInd = SIZE;
+            while (rowInd-- > 0)
+            {
+                for (var colInd = 0; colInd < Tetrimino.SIZE; colInd++)
+                {
+                    if (!BricksMap[rowInd][colInd]) continue;
+                    var brick = new Block(CCColor3B.Green);
+                    brick.Position = new CCPoint(
+                        colInd * Block.WIDTH + Block.WIDTH / 2,
+                        (SIZE - rowInd - 1) * Block.HEIGHT
+                    );
+                    AddChild(brick);
+                }
+            }
+        }
 
-    getPaddings: function() {
-    return Tetrimino.getPaddings(this.bricksMap);
-}
+        public void OnKeyboardEvent(KeyboardState keyboardState)
+        {
+            if (keyboardState.IsKeyUp(Keys.Down))
+            {
+                Action = ACTION_STOP_MOVE;
+            }
 
-  });
-Tetrimino.ACTION_NONE = 0;
-Tetrimino.ACTION_MOVE_LEFT = 1;
-Tetrimino.ACTION_MOVE_RIGHT = 2;
-Tetrimino.ACTION_MOVE_DOWN = 3;
-Tetrimino.ACTION_STOP_MOVE = 4;
-Tetrimino.ACTION_ROTATE = 5;
-Tetrimino.SIZE = 4;
-Tetrimino.getPaddings = function(bricksMap) {
-    var paddings = { top: 0, right: 0, left: 0};
-var ri = Tetrimino.SIZE;
-while (ri--)
-{
-    if (!Grid.rowIsEmpty(bricksMap[ri])) break;
-    paddings.top++;
-}
-for (var ci = 0; ci < Tetrimino.SIZE; ci++)
-{
-    if (!Grid.colIsEmpty(bricksMap, ci)) break;
-    paddings.left++;
-}
-var ci = Tetrimino.SIZE;
-while (ci--)
-{
-    if (!Grid.colIsEmpty(bricksMap, ci)) break;
-    paddings.right++;
-}
-return paddings;
-  };
-Tetrimino.PLANS = [
+            if (keyboardState.IsKeyDown(Keys.Right)) { 
+                Action = ACTION_MOVE_RIGHT;
+                return;
+            }
+            if (keyboardState.IsKeyDown(Keys.Left)) { 
+                Action = ACTION_MOVE_LEFT;
+                return;
+            }
+            if (keyboardState.IsKeyDown(Keys.Down)) { 
+                Action = ACTION_MOVE_DOWN;
+                return;
+            }
+            if (keyboardState.IsKeyDown(Keys.Space)) { 
+                Action = ACTION_ROTATE; 
+            }
+        }
 
-    [
-        // square
-      [
+        public void SetGrid(Grid tetrisGrid) {
+            Grid = tetrisGrid;
+        }
 
-        [0, 0, 0, 0],
-          [0, 1, 1, 0],
-          [0, 1, 1, 0],
-          [0, 0, 0, 0]
-        ]
-      ],
+        public CCRect GetPaddings() {
+            return GetPaddings(BricksMap);
+        }
+        public CCRect GetPaddings(List<List<bool>> bricksMap)
+        {
+            var paddingsLeft = 0;
+            var paddingsRight = 0;
+            var paddingsTop = 0;
+            var ri = SIZE;
+            while (ri-- > -1)
+            {
+                if (!Grid.RowIsEmpty(bricksMap[ri])) break;
+                paddingsTop++;
+            }
+
+            for (var ci = 0; ci < SIZE; ci++)
+            {
+                if (!Grid.ColIsEmpty(bricksMap, ci)) break;
+                paddingsLeft++;
+            }
+
+            var cSize = SIZE;
+            while (cSize-- > -1)
+            {
+                if (!Grid.ColIsEmpty(bricksMap, cSize)) break;
+                paddingsRight++;
+            }
+            return new CCRect(paddingsLeft, 0, paddingsRight, paddingsTop); ;
+        }
+        public static List<List<List<List<int>>>> PLANS = new List<List<List<List<int>>>> {
+
+
+            new List<List<List<int>>> { 
+              // square
+              new List<List<int>>
+              {
+
+
+                  new List<int> { 0, 0, 0, 0 },
+                  new List<int> {0, 1, 1, 0},
+          new List<int> {0, 1, 1, 0},
+          new List<int> { 0, 0, 0, 0 }
+              }
+            },
       // T
-      [
-        [
-          [0, 0, 0, 0],
-          [0, 1, 0, 0],
-          [1, 1, 1, 0],
-          [0, 0, 0, 0]
-        ],
-        [
-          [0, 0, 0, 0],
-          [0, 1, 0, 0],
-          [0, 1, 1, 0],
-          [0, 1, 0, 0]
-        ],
-        [
-          [0, 0, 0, 0],
-          [0, 0, 0, 0],
-          [1, 1, 1, 0],
-          [0, 1, 0, 0]
-        ],
-        [
-          [0, 0, 0, 0],
-          [0, 0, 1, 0],
-          [0, 1, 1, 0],
-          [0, 0, 1, 0]
-        ]
-      ],
+      new List<List<List<int>>> {
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0 },
+          new List<int> {0, 1, 0, 0 },
+          new List<int> {1, 1, 1, 0},
+          new List<int> {0, 0, 0, 0 }
+        },
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 1, 0, 0},
+          new List<int> {0, 1, 1, 0},
+          new List<int> {0, 1, 0, 0 }
+        },
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 0, 0, 0},
+          new List<int> {1, 1, 1, 0},
+          new List<int> {0, 1, 0, 0 }
+        },
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 0, 1, 0},
+          new List<int> {0, 1, 1, 0},
+          new List<int> {0, 0, 1, 0 }
+        }
+      },
        //I
-      [
-        [
-          [0, 1, 0, 0],
-          [0, 1, 0, 0],
-          [0, 1, 0, 0],
-          [0, 1, 0, 0]
-        ],
-        [
-          [0, 0, 0, 0],
-          [0, 0, 0, 0],
-          [1, 1, 1, 1],
-          [0, 0, 0, 0]
-        ]
-      ],
+      new List<List<List<int>>> {
+        new List<List<int>>
+              {
+          new List<int> {0, 1, 0, 0 },
+          new List<int> {0, 1, 0, 0},
+          new List<int> {0, 1, 0, 0},
+          new List<int> {0, 1, 0, 0}
+        },
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 0, 0, 0},
+          new List<int> {1, 1, 1, 1},
+          new List<int> {0, 0, 0, 0 }
+        }
+      },
       // L
-      [
-        [
-          [0, 0, 0, 0],
-          [0, 1, 0, 0],
-          [0, 1, 0, 0],
-          [0, 1, 1, 0]
-        ],
-        [
-          [0, 0, 0, 0],
-          [0, 1, 1, 1],
-          [0, 1, 0, 0],
-          [0, 0, 0, 0]
-        ],
-        [
-          [0, 0, 0, 0],
-          [0, 1, 1, 0],
-          [0, 0, 1, 0],
-          [0, 0, 1, 0]
-        ],
-        [
-          [0, 0, 0, 0],
-          [0, 0, 1, 0],
-          [1, 1, 1, 0],
-          [0, 0, 0, 0]
-        ]
-      ],
+      new List<List<List<int>>> {
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 1, 0, 0},
+          new List<int> {0, 1, 0, 0},
+          new List<int> {0, 1, 1, 0 }
+        },
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 1, 1, 1},
+          new List<int> {0, 1, 0, 0},
+          new List<int> {0, 0, 0, 0 }
+        },
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 1, 1, 0},
+          new List<int> {0, 0, 1, 0},
+          new List<int> {0, 0, 1, 0 }
+        },
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 0, 1, 0},
+          new List<int> {1, 1, 1, 0},
+          new List<int> {0, 0, 0, 0 }
+        }
+      },
 
       // L - reversed
-      [
-        [
-          [0, 0, 0, 0],
-          [0, 0, 1, 0],
-          [0, 0, 1, 0],
-          [0, 1, 1, 0]
-        ],
-        [
-          [0, 0, 0, 0],
-          [0, 1, 0, 0],
-          [0, 1, 1, 1],
-          [0, 0, 0, 0]
-        ],
-        [
-          [0, 0, 0, 0],
-          [0, 1, 1, 0],
-          [0, 1, 0, 0],
-          [0, 1, 0, 0]
-        ],
-        [
-          [0, 0, 0, 0],
-          [1, 1, 1, 0],
-          [0, 0, 1, 0],
-          [0, 0, 0, 0]
-        ]
-      ],
+      new List<List<List<int>>> {
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 0, 1, 0},
+          new List<int> {0, 0, 1, 0},
+          new List<int> {0, 1, 1, 0 }
+        },
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 1, 0, 0},
+          new List<int> {0, 1, 1, 1},
+          new List<int> {0, 0, 0, 0 }
+        },
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 1, 1, 0},
+          new List<int> {0, 1, 0, 0},
+          new List<int> {0, 1, 0, 0 }
+        },
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {1, 1, 1, 0},
+          new List<int> {0, 0, 1, 0},
+          new List<int> {0, 0, 0, 0 }
+        }
+      },
 
 
       // Z
-      [
-        [
-          [0, 0, 0, 0],
-          [0, 0, 1, 0],
-          [0, 1, 1, 0],
-          [0, 1, 0, 0]
-        ],
-        [
-          [0, 0, 0, 0],
-          [0, 1, 1, 0],
-          [0, 0, 1, 1],
-          [0, 0, 0, 0]
-        ]
-      ],
+      new List<List<List<int>>> {
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 0, 1, 0},
+          new List<int> {0, 1, 1, 0},
+          new List<int> {0, 1, 0, 0 }
+        },
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 1, 1, 0},
+          new List<int> {0, 0, 1, 1},
+          new List<int> {0, 0, 0, 0 }
+        }
+      },
 
       // Z - reversed
-      [
-        [
-          [0, 0, 0, 0],
-          [0, 1, 0, 0],
-          [0, 1, 1, 0],
-          [0, 0, 1, 0]
-        ],
-        [
-          [0, 0, 0, 0],
-          [0, 0, 1, 1],
-          [0, 1, 1, 0],
-          [0, 0, 0, 0]
-        ]
-      ]
-
-  ];
+      new List<List<List<int>>> {
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 1, 0, 0},
+          new List<int> {0, 1, 1, 0},
+          new List<int> {0, 0, 1, 0 }
+        },
+        new List<List<int>>
+              {
+          new List<int> {0, 0, 0, 0},
+          new List<int> {0, 0, 1, 1},
+          new List<int> {0, 1, 1, 0},
+          new List<int> {0, 0, 0, 0 }
+        }
+      }
+};
 
 
 }

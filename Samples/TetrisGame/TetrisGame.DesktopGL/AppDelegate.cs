@@ -60,7 +60,7 @@ namespace TetrisGame.DesktopGL
 #else
                 pDirector.AnimationInterval = 1.0 / 60;
 #endif
-                CCScene pScene = GameScene.Scene;
+                CCScene pScene = new TetrisScene();
 
                 pDirector.RunWithScene(pScene);
             }

@@ -4,15 +4,15 @@ using System.Text;
 
 namespace TetrisGame.Core
 {
-    class GameState
+    public class GameState
     {
         const float INITIAL_SPEED = 0.5f;
-        int Level = 0;
-        int Points = 0;
-        int Lines = 0;
-        int LinesCountToLevelUp = 10;
-        float Speed = INITIAL_SPEED;
-        bool IsGameOver = false;
+        public int Level = 0;
+        public int Points = 0;
+        public int Lines = 0;
+        public int LinesCountToLevelUp = 10;
+        public float Speed = INITIAL_SPEED;
+        public bool IsGameOver = false;
 
         public GameState()
         {
