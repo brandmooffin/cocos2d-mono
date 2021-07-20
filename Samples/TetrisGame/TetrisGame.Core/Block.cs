@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Cocos2D;
-using Microsoft.Xna.Framework;
+﻿using Cocos2D;
 
 namespace TetrisGame.Core
 {
-	/// <summary>
-	/// Represents a block that shapes consist of.
-	/// </summary>
-	public class Block : CCSprite
+    /// <summary>
+    /// Represents a block that shapes consist of.
+    /// </summary>
+    public class Block : CCSprite
 	{
 		public const float WIDTH = 14.2f;
 		public const float HEIGHT = 14.2f;

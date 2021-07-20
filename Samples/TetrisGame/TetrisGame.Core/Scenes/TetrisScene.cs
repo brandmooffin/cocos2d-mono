@@ -1,7 +1,4 @@
 ﻿using Cocos2D;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace TetrisGame.Core.Scenes
 {
@@ -32,28 +29,45 @@ namespace TetrisGame.Core.Scenes
             if (!Initialized)
             {
                 var size = CCDirector.SharedDirector.WinSize;
-                var background = new CCSprite("background.png");
-                background.Position = new CCPoint(size.Width / 2, size.Height / 2);
-                background.Scale = 0.5f;
-                AddChild(background, 0);
+               
                 Grid = new Grid(GameState);
                 Grid.Position = new CCPoint(74, 70);
                 AddChild(Grid);
+
+                var pointsTitleLabel = new CCLabelTTF("Score", "MarkerFelt", 13);
+                pointsTitleLabel.Color = CCColor3B.White;
+                pointsTitleLabel.Position = new CCPoint(size.Width - 100, size.Height - 110);
+                AddChild(pointsTitleLabel);
 
                 PointsLabel = new CCLabelTTF("111", "MarkerFelt", 13);
                 PointsLabel.Color = CCColor3B.White;
                 PointsLabel.Position = new CCPoint(size.Width - 100, size.Height - 130);
                 AddChild(PointsLabel);
 
-                LevelLabel = new CCLabelTTF("111", "MarkerFelt", 13);
-                LevelLabel.Color = CCColor3B.White;
-                LevelLabel.Position = new CCPoint(size.Width - 100, size.Height - 250);
-                AddChild(LevelLabel);
+                var linesTitleLabel = new CCLabelTTF("Lines", "MarkerFelt", 13);
+                linesTitleLabel.Color = CCColor3B.White;
+                linesTitleLabel.Position = new CCPoint(size.Width - 100, size.Height - 190);
+                AddChild(linesTitleLabel);
 
                 LinesLabel = new CCLabelTTF("111", "MarkerFelt", 13);
                 LinesLabel.Color = CCColor3B.White;
                 LinesLabel.Position = new CCPoint(size.Width - 100, size.Height - 210);
                 AddChild(LinesLabel);
+
+                var levelTitleLabel = new CCLabelTTF("Level", "MarkerFelt", 13);
+                levelTitleLabel.Color = CCColor3B.White;
+                levelTitleLabel.Position = new CCPoint(size.Width - 100, size.Height - 230);
+                AddChild(levelTitleLabel);
+
+                LevelLabel = new CCLabelTTF("111", "MarkerFelt", 13);
+                LevelLabel.Color = CCColor3B.White;
+                LevelLabel.Position = new CCPoint(size.Width - 100, size.Height - 250);
+                AddChild(LevelLabel);
+
+                var nextShapLabel = new CCLabelTTF("Next", "MarkerFelt", 13);
+                nextShapLabel.Color = CCColor3B.White;
+                nextShapLabel.Position = new CCPoint(size.Width - 100, size.Height - 290);
+                AddChild(nextShapLabel);
 
                 ScheduleUpdate();
                 Initialized = true;

@@ -1,8 +1,6 @@
 ﻿using Cocos2D;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace TetrisGame.Core
 {
@@ -46,6 +44,7 @@ namespace TetrisGame.Core
             Level = level;
             BricksMap = CreateBricksMap((int)Size.MaxX, (int)Size.MaxY, level * 2);
             Tetrimino = null;
+
             UpdateBricks();
         }
 
@@ -73,11 +72,11 @@ namespace TetrisGame.Core
             RemoveAllChildren();
 
             // remove completed rows
-            var removedCount = 0;
+            var removedCount = BricksMap.Where(row => RowIsCompleted(row)).ToList().Count;
             BricksMap = BricksMap.Where(row => !RowIsCompleted(row)).ToList();
             if (removedCount > 0)
             {
-                //$clearSound.play();
+                CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/clear");
                 GameState.AddPointsForRowsCount(removedCount);
             }
             while (removedCount-- > -1)
@@ -90,8 +89,7 @@ namespace TetrisGame.Core
             {
                 for (var ci = 0; ci < Size.MaxX; ci++)
                 {
-                    if (!BricksMap[ri][ci]) continue;
-                    var brick = new Block(CCColor3B.Red);
+                    var brick = new Block(!BricksMap[ri][ci] ? CCColor3B.Gray : CCColor3B.Red);
                     brick.Position = new CCPoint(
                         ci * Block.WIDTH + Block.WIDTH / 2,
                         ri * Block.HEIGHT

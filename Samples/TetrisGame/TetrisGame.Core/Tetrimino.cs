@@ -1,9 +1,7 @@
 ﻿using Cocos2D;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace TetrisGame.Core
 {
@@ -28,6 +26,8 @@ namespace TetrisGame.Core
         int Action;
         public bool IsFrozen;
         bool IsAccelerated;
+
+        int InputDelay = 5;
         public Tetrimino(float fallSpeed, Grid grid) {
 
 
@@ -50,7 +50,12 @@ namespace TetrisGame.Core
 
         public void Update(float dt)
         {
-            OnKeyboardEvent(Keyboard.GetState());
+            if (InputDelay < 0)
+            {
+                OnKeyboardEvent(Keyboard.GetState());
+                InputDelay = 5;
+            }
+            InputDelay -= 1;
             switch (Action)
             {
                 case ACTION_MOVE_LEFT: MoveLeft(); break;
@@ -69,6 +74,7 @@ namespace TetrisGame.Core
             TimeToFall -= dt;
             if (TimeToFall <= 0)
             {
+                
                 TimeToFall = FallSpeed;
                 if (CanMoveDown())
                 {
@@ -76,7 +82,7 @@ namespace TetrisGame.Core
                 }
                 else
                 {
-                    //$clickSound.play();
+                    CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
                     Freeze();
                 }
             }
@@ -86,14 +92,14 @@ namespace TetrisGame.Core
         {
             var newPos = new CCPoint(GridPos.X + 1, GridPos.Y);
             if (IsValidPosition(newPos)) SetGridPos(newPos);
-            //$clickSound.play();
+            CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
         }
 
         public void MoveLeft()
         {
             var newPos = new CCPoint(GridPos.X - 1, GridPos.Y);
             if (IsValidPosition(newPos)) SetGridPos(newPos);
-            //$clickSound.play();
+            CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
         }
 
         public void MoveDown()
@@ -101,7 +107,7 @@ namespace TetrisGame.Core
             if (CanMoveDown())
             {
                 SetGridPos(new CCPoint(GridPos.X, GridPos.Y - 1));
-                //$clickSound.play();
+                CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
             }
         }
 
@@ -149,7 +155,7 @@ namespace TetrisGame.Core
             }
             if (canRotate)
             {
-                //$clickSound.play();
+                CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
                 RotationInd = GetNextRotationInd();
                 Render();
             }
@@ -170,7 +176,7 @@ namespace TetrisGame.Core
         }
 
         public void SetGridPos(CCPoint gridPos) {
-            GridPos.X = gridPos.X >= 0 ? gridPos.X : GridPos.X;
+            GridPos.X = gridPos.X >= -1 ? gridPos.X : GridPos.X;
             GridPos.Y = gridPos.Y >= -1 ? gridPos.Y : GridPos.Y;
             Position = new CCPoint(
               GridPos.X * Block.WIDTH + ContentSize.Width / 2,
@@ -229,15 +235,12 @@ namespace TetrisGame.Core
 
             if (keyboardState.IsKeyDown(Keys.Right)) { 
                 Action = ACTION_MOVE_RIGHT;
-                return;
             }
             if (keyboardState.IsKeyDown(Keys.Left)) { 
                 Action = ACTION_MOVE_LEFT;
-                return;
             }
             if (keyboardState.IsKeyDown(Keys.Down)) { 
                 Action = ACTION_MOVE_DOWN;
-                return;
             }
             if (keyboardState.IsKeyDown(Keys.Space)) { 
                 Action = ACTION_ROTATE; 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace TetrisGame.Core
 {
@@ -13,7 +12,7 @@ namespace TetrisGame.Core
 
         public static List<List<List<int>>> GetRandomItem(List<List<List<List<int>>>> arr)
         {
-            return arr[Utils.GetRandomInt(arr.Count)];
+            return arr[GetRandomInt(arr.Count)];
         }
     }
 }

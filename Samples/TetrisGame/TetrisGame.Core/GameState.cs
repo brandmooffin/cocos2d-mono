@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TetrisGame.Core
+﻿namespace TetrisGame.Core
 {
     public class GameState
     {
@@ -42,7 +38,7 @@ namespace TetrisGame.Core
             if (Lines >= LinesCountToLevelUp)
             {
                 SetLevel(Level + 1);
-                //$levelupSound.play();
+                CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/levelup");
                 return true;
             }
             if (IsGameOver)

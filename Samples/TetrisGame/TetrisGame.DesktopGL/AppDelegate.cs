@@ -1,7 +1,6 @@
 ﻿using Cocos2D;
 using CocosDenshion;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using TetrisGame.Core.Scenes;
 
@@ -47,7 +46,7 @@ namespace TetrisGame.DesktopGL
                 // Set your design resolution here, which is the target resolution of your primary
                 // design hardware.
                 //
-                CCDrawManager.SetDesignResolutionSize(450f, 555f, CCResolutionPolicy.ExactFit);
+                CCDrawManager.SetDesignResolutionSize(352f, 410f, CCResolutionPolicy.ExactFit);
 
                 //turn on display FPS
                 pDirector.DisplayStats = false;
@@ -55,11 +54,12 @@ namespace TetrisGame.DesktopGL
                 graphics.ApplyChanges();
 
                 // set FPS. the default value is 1.0/60 if you don't call this
-#if WINDOWS_PHONE
+#if ANDROID
                 pDirector.AnimationInterval = 1f / 30f;
 #else
                 pDirector.AnimationInterval = 1.0 / 60;
 #endif
+                CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("bgm/main", true);
                 CCScene pScene = new TetrisScene();
 
                 pDirector.RunWithScene(pScene);
