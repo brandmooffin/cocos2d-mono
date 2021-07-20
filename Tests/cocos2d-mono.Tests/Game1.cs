@@ -26,13 +26,18 @@ namespace tests
             graphics.PreferredBackBufferWidth = 1024;
             graphics.PreferredBackBufferHeight = 768;
 #endif
-            
+
             // Frame rate is 30 fps by default for Windows Phone.
             // Divide by 2 to make it 60 fps
             TargetElapsedTime = TimeSpan.FromTicks(333333 / 2);
             IsFixedTimeStep = true;
 
             IsMouseVisible = true;
+
+#if WINDOWS || WINDOWSGL || WINDOWSDX || MACOS
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
+#endif
 
             // Extend battery life under lock.
             //InactiveSleepTime = TimeSpan.FromSeconds(1);

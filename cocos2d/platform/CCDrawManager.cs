@@ -191,9 +191,12 @@ namespace Cocos2D
             set
             {
                 m_depthTest = value;
-                // NOTE: This must be disabled when primitives are drawing, e.g. lines, polylines, etc.
-                graphicsDevice.DepthStencilState = value ? m_DepthEnableStencilState : m_DepthDisableStencilState;
-                //graphicsDevice.DepthStencilState = value ? DepthStencilState.Default : DepthStencilState.None;
+                if (graphicsDevice != null)
+                {
+                    // NOTE: This must be disabled when primitives are drawing, e.g. lines, polylines, etc.
+                    graphicsDevice.DepthStencilState = value ? m_DepthEnableStencilState : m_DepthDisableStencilState;
+                    //graphicsDevice.DepthStencilState = value ? DepthStencilState.Default : DepthStencilState.None;
+                }
             }
         }
 
@@ -820,7 +823,10 @@ namespace Cocos2D
                 }
             }
 
-            graphicsDevice.BlendState = bs;
+            if (graphicsDevice != null)
+            {
+                graphicsDevice.BlendState = bs;
+            }
 
             m_currBlend.Source = blendFunc.Source;
             m_currBlend.Destination = blendFunc.Destination;
