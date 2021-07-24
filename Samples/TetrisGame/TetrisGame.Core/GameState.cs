@@ -1,4 +1,6 @@
-﻿namespace TetrisGame.Core
+﻿using TetrisGame.Core.Managers;
+
+namespace TetrisGame.Core
 {
     public class GameState
     {
@@ -38,7 +40,7 @@
             if (Lines >= LinesCountToLevelUp)
             {
                 SetLevel(Level + 1);
-                CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/levelup");
+                AudioManager.Instance.PlaySoundEffect("levelup");
                 return true;
             }
             if (IsGameOver)
@@ -54,6 +56,11 @@
         public void GameOver()
         {
             IsGameOver = true;
+            if (AppDataManager.Instance.AppSettings.HighScore < Points)
+            {
+                AppDataManager.Instance.AppSettings.HighScore = Points;
+                AppDataManager.Instance.SaveData();
+            }
         }
     }
 }

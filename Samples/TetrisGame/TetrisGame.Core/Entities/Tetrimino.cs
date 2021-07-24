@@ -2,10 +2,15 @@
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
+using TetrisGame.Core.Managers;
 
 namespace TetrisGame.Core
 {
-    public class Tetrimino : CCSprite {
+    /// <summary>
+    /// Represents a shape.
+    /// </summary>
+    public class Tetrimino : CCSprite
+    {
 
         float FallSpeed;
         float TimeToFall;
@@ -28,14 +33,19 @@ namespace TetrisGame.Core
         bool IsAccelerated;
 
         int InputDelay = 5;
-        public Tetrimino(float fallSpeed, Grid grid) {
 
-
-            FallSpeed = fallSpeed;// interval in seconds
+        /// <summary>
+        /// Create a new shape to be added to the grid
+        /// </summary>
+        /// <param name="fallSpeed">The rate the shape will fall</param>
+        /// <param name="grid">Grid to add the shape to</param>
+        public Tetrimino(float fallSpeed, Grid grid)
+        {
+            FallSpeed = fallSpeed;
             TimeToFall = fallSpeed;
             ContentSize = new CCSize(Block.WIDTH * SIZE, Block.HEIGHT * SIZE);
             GridPos = new CCPoint(0, 0);
-            BricksPlan = Utils.GetRandomItem(PLANS);
+            BricksPlan = Utils.GetRandomItem(SHAPES);
             RotationInd = Utils.GetRandomInt(BricksPlan.Count);
             BricksMap = new List<List<bool>>();
             Action = ACTION_NONE;
@@ -48,7 +58,7 @@ namespace TetrisGame.Core
             SetGridPos(new CCPoint(3, 16 + GetPaddings().MaxY));
         }
 
-        public void Update(float dt)
+        public override void Update(float dt)
         {
             if (InputDelay < 0)
             {
@@ -74,7 +84,7 @@ namespace TetrisGame.Core
             TimeToFall -= dt;
             if (TimeToFall <= 0)
             {
-                
+
                 TimeToFall = FallSpeed;
                 if (CanMoveDown())
                 {
@@ -82,7 +92,7 @@ namespace TetrisGame.Core
                 }
                 else
                 {
-                    CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
+                    AudioManager.Instance.PlaySoundEffect("click");
                     Freeze();
                 }
             }
@@ -92,14 +102,14 @@ namespace TetrisGame.Core
         {
             var newPos = new CCPoint(GridPos.X + 1, GridPos.Y);
             if (IsValidPosition(newPos)) SetGridPos(newPos);
-            CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
+            AudioManager.Instance.PlaySoundEffect("click");
         }
 
         public void MoveLeft()
         {
             var newPos = new CCPoint(GridPos.X - 1, GridPos.Y);
             if (IsValidPosition(newPos)) SetGridPos(newPos);
-            CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
+            AudioManager.Instance.PlaySoundEffect("click");
         }
 
         public void MoveDown()
@@ -107,7 +117,7 @@ namespace TetrisGame.Core
             if (CanMoveDown())
             {
                 SetGridPos(new CCPoint(GridPos.X, GridPos.Y - 1));
-                CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
+                AudioManager.Instance.PlaySoundEffect("click");
             }
         }
 
@@ -137,7 +147,6 @@ namespace TetrisGame.Core
             }
             else
             {
-                // move tetrominto to left or to right if after rotation it across borders
                 var leftLedge = -(GridPos.X + rotatedPaddings.MinX);
                 var rightLedge = (GridPos.X + SIZE - rotatedPaddings.MaxX) - Grid.Size.MaxX;
                 var correctToRightPos = new CCPoint(GridPos.X + leftLedge, GridPos.Y);
@@ -155,27 +164,31 @@ namespace TetrisGame.Core
             }
             if (canRotate)
             {
-                CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
+                AudioManager.Instance.PlaySoundEffect("click");
                 RotationInd = GetNextRotationInd();
                 Render();
             }
         }
 
-        public void Freeze() {
+        public void Freeze()
+        {
             IsFrozen = true;
             Grid.AddBricksFromTetrimino(this);
         }
 
-        public int GetNextRotationInd() {
+        public int GetNextRotationInd()
+        {
             var nextRotationInd = RotationInd + 1;
             return nextRotationInd < BricksPlan.Count ? nextRotationInd : 0;
         }
 
-        public List<List<int>> GetRotatedBricksMap() {
+        public List<List<int>> GetRotatedBricksMap()
+        {
             return BricksPlan[GetNextRotationInd()];
         }
 
-        public void SetGridPos(CCPoint gridPos) {
+        public void SetGridPos(CCPoint gridPos)
+        {
             GridPos.X = gridPos.X >= -1 ? gridPos.X : GridPos.X;
             GridPos.Y = gridPos.Y >= -1 ? gridPos.Y : GridPos.Y;
             Position = new CCPoint(
@@ -207,7 +220,8 @@ namespace TetrisGame.Core
             return true;
         }
 
-        public void Render() {
+        public void Render()
+        {
             RemoveAllChildren();
             BricksMap = BricksPlan[RotationInd].ToList().Select(bp => bp.ToList().Select(p => p > 0).ToList()).ToList();
             var rowInd = SIZE;
@@ -233,25 +247,31 @@ namespace TetrisGame.Core
                 Action = ACTION_STOP_MOVE;
             }
 
-            if (keyboardState.IsKeyDown(Keys.Right)) { 
+            if (keyboardState.IsKeyDown(Keys.Right))
+            {
                 Action = ACTION_MOVE_RIGHT;
             }
-            if (keyboardState.IsKeyDown(Keys.Left)) { 
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
                 Action = ACTION_MOVE_LEFT;
             }
-            if (keyboardState.IsKeyDown(Keys.Down)) { 
+            if (keyboardState.IsKeyDown(Keys.Down))
+            {
                 Action = ACTION_MOVE_DOWN;
             }
-            if (keyboardState.IsKeyDown(Keys.Space)) { 
-                Action = ACTION_ROTATE; 
+            if (keyboardState.IsKeyDown(Keys.Space))
+            {
+                Action = ACTION_ROTATE;
             }
         }
 
-        public void SetGrid(Grid tetrisGrid) {
+        public void SetGrid(Grid tetrisGrid)
+        {
             Grid = tetrisGrid;
         }
 
-        public CCRect GetPaddings() {
+        public CCRect GetPaddings()
+        {
             return GetPaddings(BricksMap);
         }
         public CCRect GetPaddings(List<List<bool>> bricksMap)
@@ -280,171 +300,177 @@ namespace TetrisGame.Core
             }
             return new CCRect(paddingsLeft, 0, paddingsRight, paddingsTop); ;
         }
-        public static List<List<List<List<int>>>> PLANS = new List<List<List<List<int>>>> {
 
+        /// <summary>
+        /// List of possible shapes that can be created
+        /// </summary>
+        public static List<List<List<List<int>>>> SHAPES = new List<List<List<List<int>>>> {
 
-            new List<List<List<int>>> { 
-              // square
-              new List<List<int>>
-              {
-
-
-                  new List<int> { 0, 0, 0, 0 },
-                  new List<int> {0, 1, 1, 0},
-          new List<int> {0, 1, 1, 0},
-          new List<int> { 0, 0, 0, 0 }
-              }
+            // square
+            new List<List<List<int>>> 
+            { 
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 1, 1, 0 },
+                    new List<int> { 0, 1, 1, 0 },
+                    new List<int> { 0, 0, 0, 0 }
+                }
             },
-      // T
-      new List<List<List<int>>> {
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0 },
-          new List<int> {0, 1, 0, 0 },
-          new List<int> {1, 1, 1, 0},
-          new List<int> {0, 0, 0, 0 }
-        },
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 1, 0, 0},
-          new List<int> {0, 1, 1, 0},
-          new List<int> {0, 1, 0, 0 }
-        },
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 0, 0, 0},
-          new List<int> {1, 1, 1, 0},
-          new List<int> {0, 1, 0, 0 }
-        },
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 0, 1, 0},
-          new List<int> {0, 1, 1, 0},
-          new List<int> {0, 0, 1, 0 }
-        }
-      },
-       //I
-      new List<List<List<int>>> {
-        new List<List<int>>
-              {
-          new List<int> {0, 1, 0, 0 },
-          new List<int> {0, 1, 0, 0},
-          new List<int> {0, 1, 0, 0},
-          new List<int> {0, 1, 0, 0}
-        },
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 0, 0, 0},
-          new List<int> {1, 1, 1, 1},
-          new List<int> {0, 0, 0, 0 }
-        }
-      },
-      // L
-      new List<List<List<int>>> {
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 1, 0, 0},
-          new List<int> {0, 1, 0, 0},
-          new List<int> {0, 1, 1, 0 }
-        },
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 1, 1, 1},
-          new List<int> {0, 1, 0, 0},
-          new List<int> {0, 0, 0, 0 }
-        },
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 1, 1, 0},
-          new List<int> {0, 0, 1, 0},
-          new List<int> {0, 0, 1, 0 }
-        },
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 0, 1, 0},
-          new List<int> {1, 1, 1, 0},
-          new List<int> {0, 0, 0, 0 }
-        }
-      },
+            // T
+            new List<List<List<int>>> 
+            {
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 1, 0, 0 },
+                    new List<int> { 1, 1, 1, 0 },
+                    new List<int> { 0, 0, 0, 0 }
+                },
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 1, 0, 0 },
+                    new List<int> { 0, 1, 1, 0 },
+                    new List<int> { 0, 1, 0, 0 }
+                },
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 1, 1, 1, 0 },
+                    new List<int> { 0, 1, 0, 0 }
+                },
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 0, 1, 0 },
+                    new List<int> { 0, 1, 1, 0 },
+                    new List<int> { 0, 0, 1, 0 }
+                }
+            },
+            // I
+            new List<List<List<int>>> 
+            {
+                new List<List<int>>
+                {
+                    new List<int> { 0, 1, 0, 0 },
+                    new List<int> { 0, 1, 0, 0 },
+                    new List<int> { 0, 1, 0, 0 },
+                    new List<int> { 0, 1, 0, 0 }
+                },
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 1, 1, 1, 1 },
+                    new List<int> { 0, 0, 0, 0 }
+                }
+            },
+            // L
+            new List<List<List<int>>> 
+            {
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 1, 0, 0 },
+                    new List<int> { 0, 1, 0, 0 },
+                    new List<int> { 0, 1, 1, 0 }
+                },
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 1, 1, 1 },
+                    new List<int> { 0, 1, 0, 0 },
+                    new List<int> { 0, 0, 0, 0 }
+                },
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 1, 1, 0 },
+                    new List<int> { 0, 0, 1, 0 },
+                    new List<int> { 0, 0, 1, 0 }
+                },
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 0, 1, 0 },
+                    new List<int> { 1, 1, 1, 0 },
+                    new List<int> { 0, 0, 0, 0 }
+                }
+            },
 
-      // L - reversed
-      new List<List<List<int>>> {
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 0, 1, 0},
-          new List<int> {0, 0, 1, 0},
-          new List<int> {0, 1, 1, 0 }
-        },
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 1, 0, 0},
-          new List<int> {0, 1, 1, 1},
-          new List<int> {0, 0, 0, 0 }
-        },
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 1, 1, 0},
-          new List<int> {0, 1, 0, 0},
-          new List<int> {0, 1, 0, 0 }
-        },
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {1, 1, 1, 0},
-          new List<int> {0, 0, 1, 0},
-          new List<int> {0, 0, 0, 0 }
-        }
-      },
-
-
-      // Z
-      new List<List<List<int>>> {
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 0, 1, 0},
-          new List<int> {0, 1, 1, 0},
-          new List<int> {0, 1, 0, 0 }
-        },
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 1, 1, 0},
-          new List<int> {0, 0, 1, 1},
-          new List<int> {0, 0, 0, 0 }
-        }
-      },
-
-      // Z - reversed
-      new List<List<List<int>>> {
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 1, 0, 0},
-          new List<int> {0, 1, 1, 0},
-          new List<int> {0, 0, 1, 0 }
-        },
-        new List<List<int>>
-              {
-          new List<int> {0, 0, 0, 0},
-          new List<int> {0, 0, 1, 1},
-          new List<int> {0, 1, 1, 0},
-          new List<int> {0, 0, 0, 0 }
-        }
-      }
-};
+            // L - reversed
+            new List<List<List<int>>> 
+            {
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 0, 1, 0 },
+                    new List<int> { 0, 0, 1, 0 },
+                    new List<int> { 0, 1, 1, 0 }
+                },
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 1, 0, 0 },
+                    new List<int> { 0, 1, 1, 1 },
+                    new List<int> { 0, 0, 0, 0 }
+                },
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 1, 1, 0 },
+                    new List<int> { 0, 1, 0, 0 },
+                    new List<int> { 0, 1, 0, 0 }
+                },
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 1, 1, 1, 0 },
+                    new List<int> { 0, 0, 1, 0 },
+                    new List<int> { 0, 0, 0, 0 }
+                }
+            },
 
 
-}
+            // Z
+            new List<List<List<int>>> 
+            {
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 0, 1, 0 },
+                    new List<int> { 0, 1, 1, 0 },
+                    new List<int> { 0, 1, 0, 0 }
+                },
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 1, 1, 0 },
+                    new List<int> { 0, 0, 1, 1 },
+                    new List<int> { 0, 0, 0, 0 }
+                }
+            },
+
+            // Z - reversed
+            new List<List<List<int>>> 
+            {
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 1, 0, 0 },
+                    new List<int> { 0, 1, 1, 0 },
+                    new List<int> { 0, 0, 1, 0 }
+                },
+                new List<List<int>>
+                {
+                    new List<int> { 0, 0, 0, 0 },
+                    new List<int> { 0, 0, 1, 1 },
+                    new List<int> { 0, 1, 1, 0 },
+                    new List<int> { 0, 0, 0, 0 }
+                }
+            }
+        };
+    }
 }

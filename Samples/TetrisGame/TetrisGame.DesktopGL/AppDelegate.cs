@@ -2,6 +2,7 @@
 using CocosDenshion;
 using Microsoft.Xna.Framework;
 using System;
+using TetrisGame.Core.Managers;
 using TetrisGame.Core.Scenes;
 
 namespace TetrisGame.DesktopGL
@@ -59,7 +60,7 @@ namespace TetrisGame.DesktopGL
 #else
                 pDirector.AnimationInterval = 1.0 / 60;
 #endif
-                CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("bgm/main", true);
+                AudioManager.Instance.PlayBackgroundMusic("main");
                 CCScene pScene = new TetrisScene();
 
                 pDirector.RunWithScene(pScene);
