@@ -1,4 +1,5 @@
 ﻿using Cocos2D;
+using TetrisGame.Core.Managers;
 
 namespace TetrisGame.Core.Scenes
 {
@@ -6,6 +7,7 @@ namespace TetrisGame.Core.Scenes
     {
         public Grid Grid;
         public Tetrimino NextTetrimino;
+        public CCLabelTTF HighScoreLabel;
         public CCLabelTTF PointsLabel;
         public CCLabelTTF LevelLabel;
         public CCLabelTTF LinesLabel;
@@ -33,6 +35,16 @@ namespace TetrisGame.Core.Scenes
                 Grid = new Grid(GameState);
                 Grid.Position = new CCPoint(74, 70);
                 AddChild(Grid);
+
+                var highScoreTitleLabel = new CCLabelTTF("High Score", "MarkerFelt", 13);
+                highScoreTitleLabel.Color = CCColor3B.White;
+                highScoreTitleLabel.Position = new CCPoint(size.Width - 100, size.Height - 30);
+                AddChild(highScoreTitleLabel);
+
+                HighScoreLabel = new CCLabelTTF($"{AppDataManager.Instance.AppSettings.HighScore}", "MarkerFelt", 13);
+                HighScoreLabel.Color = CCColor3B.White;
+                HighScoreLabel.Position = new CCPoint(size.Width - 100, size.Height - 50);
+                AddChild(HighScoreLabel);
 
                 var pointsTitleLabel = new CCLabelTTF("Score", "MarkerFelt", 13);
                 pointsTitleLabel.Color = CCColor3B.White;
@@ -96,9 +108,9 @@ namespace TetrisGame.Core.Scenes
             }
 
             Grid.Update(gameTime);
-            LinesLabel.Text = gameState.Lines.ToString();
-            PointsLabel.Text = gameState.Points.ToString();
-            LevelLabel.Text = gameState.Level.ToString();
+            LinesLabel.Text = $"{gameState.Lines}";
+            PointsLabel.Text = $"{gameState.Points}";
+            LevelLabel.Text = $"{gameState.Level}";
             var needChangeLevel = gameState.Check();
 
             if (needChangeLevel)
@@ -108,6 +120,10 @@ namespace TetrisGame.Core.Scenes
                 Grid.SetLevel(gameState.Level);
             }
 
+            if (AppDataManager.Instance.AppSettings.HighScore < GameState.Points)
+            {
+                HighScoreLabel.Text = $"{GameState.Points}";
+            }
         }
     }
 }

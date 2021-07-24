@@ -9,11 +9,17 @@
     <Import_RootNamespace>TetrisGame.Core</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Block.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\Block.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameState.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Grid.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\Grid.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Managers\AppDataManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Managers\AudioManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\TetrisScene.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tetrimino.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\AppSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\Tetrimino.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Entities\" />
   </ItemGroup>
 </Project>
