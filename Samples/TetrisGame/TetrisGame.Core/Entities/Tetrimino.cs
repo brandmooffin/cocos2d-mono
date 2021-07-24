@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
+using TetrisGame.Core.Managers;
 
 namespace TetrisGame.Core
 {
@@ -82,7 +83,7 @@ namespace TetrisGame.Core
                 }
                 else
                 {
-                    CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
+                    AudioManager.Instance.PlaySoundEffect("click");
                     Freeze();
                 }
             }
@@ -92,14 +93,14 @@ namespace TetrisGame.Core
         {
             var newPos = new CCPoint(GridPos.X + 1, GridPos.Y);
             if (IsValidPosition(newPos)) SetGridPos(newPos);
-            CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
+            AudioManager.Instance.PlaySoundEffect("click");
         }
 
         public void MoveLeft()
         {
             var newPos = new CCPoint(GridPos.X - 1, GridPos.Y);
             if (IsValidPosition(newPos)) SetGridPos(newPos);
-            CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
+            AudioManager.Instance.PlaySoundEffect("click");
         }
 
         public void MoveDown()
@@ -107,7 +108,7 @@ namespace TetrisGame.Core
             if (CanMoveDown())
             {
                 SetGridPos(new CCPoint(GridPos.X, GridPos.Y - 1));
-                CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
+                AudioManager.Instance.PlaySoundEffect("click");
             }
         }
 
@@ -155,7 +156,7 @@ namespace TetrisGame.Core
             }
             if (canRotate)
             {
-                CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/click");
+                AudioManager.Instance.PlaySoundEffect("click");
                 RotationInd = GetNextRotationInd();
                 Render();
             }

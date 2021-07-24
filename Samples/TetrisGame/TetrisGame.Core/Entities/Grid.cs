@@ -1,6 +1,7 @@
 ﻿using Cocos2D;
 using System.Collections.Generic;
 using System.Linq;
+using TetrisGame.Core.Managers;
 
 namespace TetrisGame.Core
 {
@@ -76,7 +77,7 @@ namespace TetrisGame.Core
             BricksMap = BricksMap.Where(row => !RowIsCompleted(row)).ToList();
             if (removedCount > 0)
             {
-                CocosDenshion.CCSimpleAudioEngine.SharedEngine.PlayEffect("sound/clear");
+                AudioManager.Instance.PlaySoundEffect("clear");
                 GameState.AddPointsForRowsCount(removedCount);
             }
             while (removedCount-- > -1)
