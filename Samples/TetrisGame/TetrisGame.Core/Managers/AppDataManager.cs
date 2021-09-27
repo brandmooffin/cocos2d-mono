@@ -6,6 +6,9 @@ using TetrisGame.Core.Settings;
 
 namespace TetrisGame.Core.Managers
 {
+    /// <summary>
+    /// Manage app data for the game. Helps maintain state for AppSettings
+    /// </summary>
     public class AppDataManager
     {
         private const string AppDataFilename = "app_data.json";

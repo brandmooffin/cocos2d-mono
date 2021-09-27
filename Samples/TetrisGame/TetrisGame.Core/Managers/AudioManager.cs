@@ -4,6 +4,9 @@ using System.Text;
 
 namespace TetrisGame.Core.Managers
 {
+    /// <summary>
+    /// Wrapper for CCSimpleAudioEngine to streamline audio playback
+    /// </summary>
     public class AudioManager
     {
         private static AudioManager audioManager;

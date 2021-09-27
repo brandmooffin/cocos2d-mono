@@ -5,6 +5,9 @@ using TetrisGame.Core.Managers;
 
 namespace TetrisGame.Core
 {
+    /// <summary>
+    /// Represents the main Tetris grid.
+    /// </summary>
     public class Grid : CCNode {
 
         public CCRect Size;
@@ -23,22 +26,28 @@ namespace TetrisGame.Core
             GameState = gameState;
         }
 
-        public void Update(float dt)
+        public override void Update(float dt)
         {
             if (Tetrimino == null) return;
+
             Tetrimino.Update(dt);
+
             if (Tetrimino.IsFrozen)
             {
                 Tetrimino = null;
             }
         }
 
+        /// <summary>
+        /// Add Tetrimino to Grid
+        /// </summary>
         public void PushTetrimino(Tetrimino tetrimino)
         {
             tetrimino.SetGrid(this);
             AddChild(tetrimino);
             Tetrimino = tetrimino;
         }
+
 
         public void SetLevel(int level)
         {
@@ -49,6 +58,9 @@ namespace TetrisGame.Core
             UpdateBricks();
         }
 
+        /// <summary>
+        /// Add bricks to board based on Tetrimino shape.
+        /// </summary>
         public void AddBricksFromTetrimino(Tetrimino tetrimino)
         {
             var ri = Tetrimino.SIZE;
