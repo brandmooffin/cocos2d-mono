@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{18AAFE9F-27FD-4B00-9AAC-14612319EA91}</ProjectGuid>
+    <ProjectGuid>{F0F33689-AED5-4D53-9BE7-8E8F9306CF26}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Box2D</RootNamespace>
     <AssemblyName>Box2D</AssemblyName>
