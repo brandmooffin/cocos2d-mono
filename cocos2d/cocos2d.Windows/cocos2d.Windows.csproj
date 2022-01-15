@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{01382AD1-179C-4322-91C4-E4FAC0CA6C84}</ProjectGuid>
+    <ProjectGuid>{E3CF514A-3539-4F29-9E16-0AEA2EDEF311}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Cocos2D</RootNamespace>
     <AssemblyName>Cocos2D</AssemblyName>
