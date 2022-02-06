@@ -87,6 +87,75 @@ namespace Cocos2D
             }
         }
 
+        public override CCColor3B Color
+        {
+            get { return _realColor; }
+            set
+            {
+                _displayedColor = _realColor = value;
+                if (NormalImage is CCSprite)
+                {
+                    (NormalImage as CCSprite).Color = value;
+                }
+
+                if (SelectedImage is CCSprite)
+                {
+                    (SelectedImage as CCSprite).Color = value;
+                }
+
+                if (DisabledImage is CCSprite)
+                {
+                    (DisabledImage as CCSprite).Color = value;
+                }
+
+                if (_cascadeColorEnabled)
+                {
+                    var parentColor = CCTypes.CCWhite;
+                    var parent = m_pParent as ICCRGBAProtocol;
+                    if (parent != null && parent.CascadeColorEnabled)
+                    {
+                        parentColor = parent.DisplayedColor;
+                    }
+
+                    UpdateDisplayedColor(parentColor);
+                }
+            }
+        }
+
+        public override byte Opacity
+        {
+            get { return _realOpacity; }
+            set
+            {
+                _displayedOpacity = _realOpacity = value;
+                if (NormalImage is CCSprite)
+                {
+                    (NormalImage as CCSprite).Opacity = value;
+                }
+
+                if (SelectedImage is CCSprite)
+                {
+                    (SelectedImage as CCSprite).Opacity = value;
+                }
+
+                if (DisabledImage is CCSprite)
+                {
+                    (DisabledImage as CCSprite).Opacity = value;
+                }
+
+                if (_cascadeOpacityEnabled)
+                {
+                    byte parentOpacity = 255;
+                    var pParent = m_pParent as ICCRGBAProtocol;
+                    if (pParent != null && pParent.CascadeOpacityEnabled)
+                    {
+                        parentOpacity = pParent.DisplayedOpacity;
+                    }
+                    UpdateDisplayedOpacity(parentOpacity);
+                }
+            }
+        }
+
         public CCMenuItemSprite()
             : this(null, null, null, null)
         {
