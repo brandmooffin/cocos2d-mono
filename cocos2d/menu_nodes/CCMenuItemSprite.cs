@@ -172,6 +172,11 @@ namespace Cocos2D
         {
         }
 
+        public CCMenuItemSprite(CCTexture2D normalSprite, CCTexture2D selectedSprite, Action<CCMenuItem> selector)
+            : this(new CCSprite(normalSprite), new CCSprite(selectedSprite), null, selector)
+        {
+        }
+
         public CCMenuItemSprite(CCNode normalSprite, CCNode selectedSprite)
             :this(normalSprite, selectedSprite, null, null)
         {
