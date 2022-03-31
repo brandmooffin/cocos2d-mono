@@ -79,6 +79,14 @@ namespace Cocos2D
             RefreshAntialiasSetting ();
         }
 
+        public CCTexture2D(string fileName)
+        {
+            if (!InitWithFile(fileName))
+            {
+                CCLog.Log("CCTexture2D (string fileName): Problems initializing class");
+            }
+        }
+
         public bool IsTextureDefined
         {
             get { return (m_Texture2D != null && !m_Texture2D.IsDisposed); }
