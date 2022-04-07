@@ -1,7 +1,9 @@
 ﻿using Cocos2D;
 using CocosDenshion;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input.Touch;
 using System;
+using TetrisGame.Core.Enums;
 using TetrisGame.Core.Managers;
 using TetrisGame.Core.Scenes;
 
@@ -16,6 +18,7 @@ namespace TetrisGame.Android
             : base(game, graphics)
         {
             s_pSharedApplication = this;
+            TouchPanel.EnabledGestures = GestureType.Tap | GestureType.Flick;
             //
             // TODO: Set the display orientation that you want for this game.
             // 
@@ -48,6 +51,8 @@ namespace TetrisGame.Android
                 //turn on display FPS
                 pDirector.DisplayStats = false;
 
+                OnGesture += AppDelegate_OnGesture;
+
                 // set FPS. the default value is 1.0/60 if you don't call this
 #if WINDOWS_PHONE
                 pDirector.AnimationInterval = 1f / 30f;
@@ -64,6 +69,18 @@ namespace TetrisGame.Android
                 CCLog.Log("ApplicationDidFinishLaunching(): Error " + ex.ToString());
             }
             return true;
+        }
+
+        private void AppDelegate_OnGesture(CCGesture g)
+        {
+            InputManager.Instance.ClearInputs();
+            if (g.GestureType == GestureType.Tap)
+            {
+                InputManager.Instance.IsTapping = true;
+            } else if (g.GestureType == GestureType.Flick)
+            {
+                InputManager.Instance.SetFlickDirection(g.Delta);
+            }
         }
 
         /// <summary>
@@ -89,5 +106,6 @@ namespace TetrisGame.Android
             //
             CCDirector.SharedDirector.ResumeFromBackground();
         }
+
     }
 }
