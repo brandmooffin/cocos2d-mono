@@ -10,10 +10,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Block.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\FlickDirection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Grid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Managers\AppDataManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Managers\AudioManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Managers\InputManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\TetrisScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\AppSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Tetrimino.cs" />

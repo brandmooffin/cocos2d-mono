@@ -1,7 +1,9 @@
 ﻿using Cocos2D;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using System.Collections.Generic;
 using System.Linq;
+using TetrisGame.Core.Enums;
 using TetrisGame.Core.Managers;
 
 namespace TetrisGame.Core
@@ -247,22 +249,27 @@ namespace TetrisGame.Core
                 Action = ACTION_STOP_MOVE;
             }
 
-            if (keyboardState.IsKeyDown(Keys.Right))
+            if (keyboardState.IsKeyDown(Keys.Right) 
+                || InputManager.Instance.CurrentFlickDirection == FlickDirection.Right)
             {
                 Action = ACTION_MOVE_RIGHT;
             }
-            if (keyboardState.IsKeyDown(Keys.Left))
+            if (keyboardState.IsKeyDown(Keys.Left)
+                || InputManager.Instance.CurrentFlickDirection == FlickDirection.Left)
             {
                 Action = ACTION_MOVE_LEFT;
             }
-            if (keyboardState.IsKeyDown(Keys.Down))
+            if (keyboardState.IsKeyDown(Keys.Down)
+                || InputManager.Instance.CurrentFlickDirection == FlickDirection.Down)
             {
                 Action = ACTION_MOVE_DOWN;
             }
-            if (keyboardState.IsKeyDown(Keys.Space))
+            if (keyboardState.IsKeyDown(Keys.Space) || InputManager.Instance.IsTapping)
             {
                 Action = ACTION_ROTATE;
             }
+
+            InputManager.Instance.ClearInputs();
         }
 
         public void SetGrid(Grid tetrisGrid)
