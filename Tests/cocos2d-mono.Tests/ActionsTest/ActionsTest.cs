@@ -109,7 +109,7 @@ namespace tests
                     pLayer = new ActionTint();
                     break;
                 case (int) ActionTest.ACTION_ANIMATE_LAYER:
-                    pLayer = new ActionSequence();// TODO: Test uses plist and needs to be updatenew ActionAnimate();
+                    pLayer = new ActionAnimate();// TODO: Test uses plist and needs to be updatenew ActionAnimate();
                     break;
                 case (int) ActionTest.ACTION_SEQUENCE_LAYER:
                     pLayer = new ActionSequence();
