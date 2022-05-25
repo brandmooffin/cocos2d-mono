@@ -14,6 +14,9 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin animations/animations-2.plist
+/copy:animations/animations-2.plist
+
 #begin animations/dragon_animation.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -50,6 +53,9 @@
 /processorParam:TextureFormat=Color
 /build:animations/ghosts.png
 
+#begin animations/grossini.plist
+/copy:animations/grossini.plist
+
 #begin animations/grossini.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -62,6 +68,9 @@
 /processorParam:TextureFormat=Color
 /build:animations/grossini.png
 
+#begin animations/grossini_blue.plist
+/copy:animations/grossini_blue.plist
+
 #begin animations/grossini_blue.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -73,6 +82,21 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:animations/grossini_blue.png
+
+#begin animations/grossini_family.plist
+/copy:animations/grossini_family.plist
+
+#begin animations/grossini_family.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:animations/grossini_family.png
 
 #begin animations/grossini_family.png
 /importer:TextureImporter
