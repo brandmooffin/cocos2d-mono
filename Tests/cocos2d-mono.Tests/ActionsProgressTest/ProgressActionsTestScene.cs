@@ -5,7 +5,7 @@ namespace tests
     public class ProgressActionsTestScene : TestScene
     {
         public static int sceneIdx = -1;
-        public static int MAX_LAYER = 6;//7;
+        public static int MAX_LAYER = 7;
 
         public static CCLayer createLayer(int nIndex)
         {
