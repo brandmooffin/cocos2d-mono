@@ -98,17 +98,8 @@
 /processorParam:TextureFormat=Color
 /build:animations/grossini_family.png
 
-#begin animations/grossini_family.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:animations/grossini_family.png
+#begin animations/grossini_gray.plist
+/copy:animations/grossini_gray.plist
 
 #begin animations/grossini_gray.png
 /importer:TextureImporter
@@ -4055,6 +4046,9 @@
 /processorParam:TextureFormat=Color
 /build:TileMaps/tmw_desert_spacing-hd.png
 
+#begin zwoptex/grossini.plist
+/copy:zwoptex/grossini.plist
+
 #begin zwoptex/grossini.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -4066,6 +4060,9 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:zwoptex/grossini.png
+
+#begin zwoptex/grossini-generic.plist
+/copy:zwoptex/grossini-generic.plist
 
 #begin zwoptex/grossini-generic.png
 /importer:TextureImporter
