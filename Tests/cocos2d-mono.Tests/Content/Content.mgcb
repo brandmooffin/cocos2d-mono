@@ -773,12 +773,25 @@
 /processorParam:TextureFormat=Color
 /build:extensions/yellow_edit.png
 
+#begin fonts/A Damn Mess.ttf
+/copy:fonts/A Damn Mess.ttf
+
 #begin fonts/A Damn Mess-26.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/A Damn Mess-26.spritefont
+
+#begin fonts/A Damn Mess-26.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/A Damn Mess-26.spritefont
+
+#begin fonts/Abberancy.ttf
+/copy:fonts/Abberancy.ttf
 
 #begin fonts/Abberancy-26.spritefont
 /importer:FontDescriptionImporter
@@ -787,12 +800,32 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/Abberancy-26.spritefont
 
+#begin fonts/Abberancy-26.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/Abberancy-26.spritefont
+
+#begin fonts/Abduction.ttf
+/copy:fonts/Abduction.ttf
+
 #begin fonts/Abduction-26.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/Abduction-26.spritefont
+
+#begin fonts/Abduction-26.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/Abduction-26.spritefont
+
+#begin fonts/American Typewriter.ttf
+/copy:fonts/American Typewriter.ttf
 
 #begin fonts/Arial.spritefont
 /importer:FontDescriptionImporter
@@ -801,12 +834,51 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/Arial.spritefont
 
+#begin fonts/Arial.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/Arial.spritefont
+
+#begin fonts/arial.ttf
+/copy:fonts/arial.ttf
+
 #begin fonts/arial-12.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/arial-12.spritefont
+
+#begin fonts/arial-12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-12.spritefont
+
+#begin fonts/arial16.fnt
+/copy:fonts/arial16.fnt
+
+#begin fonts/arial16.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/arial16.png
+
+#begin fonts/arial-16.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-16.spritefont
 
 #begin fonts/arial-16.spritefont
 /importer:FontDescriptionImporter
@@ -822,12 +894,33 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/arial-18.spritefont
 
+#begin fonts/arial-18.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-18.spritefont
+
 #begin fonts/arial-20.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/arial-20.spritefont
+
+#begin fonts/arial-20.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-20.spritefont
+
+#begin fonts/arial-22.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-22.spritefont
 
 #begin fonts/arial-22.spritefont
 /importer:FontDescriptionImporter
@@ -843,12 +936,33 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/arial-24.spritefont
 
+#begin fonts/arial-24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-24.spritefont
+
 #begin fonts/arial-26.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/arial-26.spritefont
+
+#begin fonts/arial-26.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-26.spritefont
+
+#begin fonts/arial-28.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-28.spritefont
 
 #begin fonts/arial-28.spritefont
 /importer:FontDescriptionImporter
@@ -864,12 +978,33 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/arial-30.spritefont
 
+#begin fonts/arial-30.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-30.spritefont
+
 #begin fonts/arial-32.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/arial-32.spritefont
+
+#begin fonts/arial-32.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-32.spritefont
+
+#begin fonts/arial-34.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-34.spritefont
 
 #begin fonts/arial-34.spritefont
 /importer:FontDescriptionImporter
@@ -885,6 +1020,20 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/arial-38.spritefont
 
+#begin fonts/arial-38.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-38.spritefont
+
+#begin fonts/arial-50.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-50.spritefont
+
 #begin fonts/arial-50.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -899,12 +1048,267 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/arial-64.spritefont
 
+#begin fonts/arial-64.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/arial-64.spritefont
+
+#begin fonts/arial-unicode-26.fnt
+/copy:fonts/arial-unicode-26.fnt
+
+#begin fonts/arial-unicode-26.GlyphProject
+/copy:fonts/arial-unicode-26.GlyphProject
+
+#begin fonts/arial-unicode-26.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/arial-unicode-26.png
+
+#begin fonts/bitmapFontChinese.fnt
+/copy:fonts/bitmapFontChinese.fnt
+
+#begin fonts/bitmapFontChinese.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/bitmapFontChinese.png
+
+#begin fonts/bitmapFontTest.fnt
+/copy:fonts/bitmapFontTest.fnt
+
+#begin fonts/bitmapFontTest.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/bitmapFontTest.png
+
+#begin fonts/bitmapFontTest2.fnt
+/copy:fonts/bitmapFontTest2.fnt
+
+#begin fonts/bitmapFontTest2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/bitmapFontTest2.png
+
+#begin fonts/bitmapFontTest3.fnt
+/copy:fonts/bitmapFontTest3.fnt
+
+#begin fonts/bitmapFontTest3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/bitmapFontTest3.png
+
+#begin fonts/bitmapFontTest4.fnt
+/copy:fonts/bitmapFontTest4.fnt
+
+#begin fonts/bitmapFontTest4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/bitmapFontTest4.png
+
+#begin fonts/bitmapFontTest5.fnt
+/copy:fonts/bitmapFontTest5.fnt
+
+#begin fonts/bitmapFontTest5.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/bitmapFontTest5.png
+
+#begin fonts/Courier New.ttf
+/copy:fonts/Courier New.ttf
+
 #begin fonts/debugfont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/debugfont.spritefont
+
+#begin fonts/debugfont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/debugfont.spritefont
+
+#begin fonts/font-issue1343.fnt
+/copy:fonts/font-issue1343.fnt
+
+#begin fonts/font-issue1343.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/font-issue1343.png
+
+#begin fonts/font-issue1343-hd.fnt
+/copy:fonts/font-issue1343-hd.fnt
+
+#begin fonts/font-issue1343-hd.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/font-issue1343-hd.png
+
+#begin fonts/futura-48.fnt
+/copy:fonts/futura-48.fnt
+
+#begin fonts/futura-48.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/futura-48.png
+
+#begin fonts/geneva-32.fnt
+/copy:fonts/geneva-32.fnt
+
+#begin fonts/helvetica-32.fnt
+/copy:fonts/helvetica-32.fnt
+
+#begin fonts/helvetica-geneva-32.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/helvetica-geneva-32.png
+
+#begin fonts/konqa32.fnt
+/copy:fonts/konqa32.fnt
+
+#begin fonts/konqa32.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/konqa32.png
+
+#begin fonts/labelatlas.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/labelatlas.png
+
+#begin fonts/larabie-16.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/larabie-16.png
+
+#begin fonts/Marker Felt.ttf
+/copy:fonts/Marker Felt.ttf
+
+#begin fonts/MarkerFelt Thin Plain.ttf
+/copy:fonts/MarkerFelt Thin Plain.ttf
+
+#begin fonts/markerFelt.fnt
+/copy:fonts/markerFelt.fnt
+
+#begin fonts/markerFelt.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/markerFelt.png
+
+#begin fonts/MarkerFelt-16.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/MarkerFelt-16.spritefont
 
 #begin fonts/MarkerFelt-16.spritefont
 /importer:FontDescriptionImporter
@@ -920,12 +1324,33 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/MarkerFelt-18.spritefont
 
+#begin fonts/MarkerFelt-18.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/MarkerFelt-18.spritefont
+
 #begin fonts/MarkerFelt-22.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/MarkerFelt-22.spritefont
+
+#begin fonts/MarkerFelt-22.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/MarkerFelt-22.spritefont
+
+#begin fonts/MarkerFelt-Thin-12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/MarkerFelt-Thin-12.spritefont
 
 #begin fonts/MarkerFelt-Thin-12.spritefont
 /importer:FontDescriptionImporter
@@ -941,12 +1366,32 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/MarkerFelt-Thin-18.spritefont
 
+#begin fonts/MarkerFelt-Thin-18.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/MarkerFelt-Thin-18.spritefont
+
+#begin fonts/Paint Boy.ttf
+/copy:fonts/Paint Boy.ttf
+
 #begin fonts/Paint Boy-26.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/Paint Boy-26.spritefont
+
+#begin fonts/Paint Boy-26.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/Paint Boy-26.spritefont
+
+#begin fonts/Schwarzwald Regular.ttf
+/copy:fonts/Schwarzwald Regular.ttf
 
 #begin fonts/Schwarzwald Regular-26.spritefont
 /importer:FontDescriptionImporter
@@ -955,12 +1400,71 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/Schwarzwald Regular-26.spritefont
 
+#begin fonts/Schwarzwald Regular-26.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/Schwarzwald Regular-26.spritefont
+
+#begin fonts/Scissor Cuts.ttf
+/copy:fonts/Scissor Cuts.ttf
+
 #begin fonts/Scissor Cuts-26.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/Scissor Cuts-26.spritefont
+
+#begin fonts/Scissor Cuts-26.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/Scissor Cuts-26.spritefont
+
+#begin fonts/strings.plist
+/copy:fonts/strings.plist
+
+#begin fonts/strings.xml
+/copy:fonts/strings.xml
+
+#begin fonts/tahoma.ttf
+/copy:fonts/tahoma.ttf
+
+#begin fonts/Thonburi.ttf
+/copy:fonts/Thonburi.ttf
+
+#begin fonts/ThonburiBold.ttf
+/copy:fonts/ThonburiBold.ttf
+
+#begin fonts/tuffy_bold_italic-charmap.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/tuffy_bold_italic-charmap.png
+
+#begin fonts/west_england-64.fnt
+/copy:fonts/west_england-64.fnt
+
+#begin fonts/west_england-64.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/west_england-64.png
 
 #begin hd/animations/dragon_animation.png
 /importer:TextureImporter
@@ -1165,6 +1669,90 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:hd/extensions/stepper-plus.png
+
+#begin hd/fonts/font-issue1343.fnt
+/copy:hd/fonts/font-issue1343.fnt
+
+#begin hd/fonts/font-issue1343.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:hd/fonts/font-issue1343.png
+
+#begin hd/fonts/konqa32.fnt
+/copy:hd/fonts/konqa32.fnt
+
+#begin hd/fonts/konqa32.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:hd/fonts/konqa32.png
+
+#begin hd/fonts/labelatlas.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:hd/fonts/labelatlas.png
+
+#begin hd/fonts/larabie-16.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:hd/fonts/larabie-16.png
+
+#begin hd/fonts/markerFelt.fnt
+/copy:hd/fonts/markerFelt.fnt
+
+#begin hd/fonts/markerFelt.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:hd/fonts/markerFelt.png
+
+#begin hd/fonts/tuffy_bold_italic-charmap.plist
+/copy:hd/fonts/tuffy_bold_italic-charmap.plist
+
+#begin hd/fonts/tuffy_bold_italic-charmap.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:hd/fonts/tuffy_bold_italic-charmap.png
 
 #begin hd/Images/arrows.png
 /importer:TextureImporter
