@@ -2432,6 +2432,9 @@
 /processorParam:TextureFormat=Color
 /build:Images/bugs/bug886_.png
 
+#begin Images/bugs/circle.plist
+/copy:Images/bugs/circle.plist
+
 #begin Images/bugs/circle.png
 /importer:TextureImporter
 /processor:TextureProcessor
