@@ -41,6 +41,9 @@
 /processorParam:TextureFormat=Color
 /build:animations/dragon_animation-hd.png
 
+#begin animations/ghosts.plist
+/copy:animations/ghosts.plist
+
 #begin animations/ghosts.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -112,6 +115,9 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:animations/grossini_gray.png
+
+#begin animations/grossini-aliases.plist
+/copy:animations/grossini-aliases.plist
 
 #begin animations/grossini-aliases.png
 /importer:TextureImporter
