@@ -351,8 +351,8 @@ namespace tests
                     pScene = new CocosDenshionTestScene(); break;
                 case (int)TestCases.TEST_PERFORMANCE:
                     pScene = new PerformanceTestScene(); break;
-                //case (int)TestCases.TEST_ZWOPTEX:
-                //    pScene = new ZwoptexTestScene(); break;
+                case (int)TestCases.TEST_ZWOPTEX:
+                    pScene = new ZwoptexTestScene(); break;
                 //#if (CC_TARGET_PLATFORM != CC_PLATFORM_AIRPLAY)
                 //    case TEST_CURL:
                 //        pScene = new CurlTestScene(); break;
@@ -362,7 +362,7 @@ namespace tests
                 //    case TEST_BUGS:
                 //        pScene = new BugsTestScene(); break;
                 //#if (CC_TARGET_PLATFORM != CC_PLATFORM_AIRPLAY)
-                
+
                 case (int)TestCases.TEST_FONTS:
                         pScene = new FontTestScene(); break;
 #if IPHONE || IOS || MACOS || WINDOWSGL || WINDOWS || (ANDROID && !OUYA) || NETFX_CORE
