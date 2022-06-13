@@ -9,7 +9,7 @@ namespace tests
     public class RenderTextureScene : TestScene
     {
         public static int sceneIdx = -1;
-        public static int MAX_LAYER = 4;//5;
+        public static int MAX_LAYER = 5;
 
         public static CCLayer createTestCase(int nIndex)
         {
@@ -17,9 +17,9 @@ namespace tests
             {
                 case 0: return new RenderTextureSave();
                 case 1: return new RenderTextureIssue937();
-                //case 2: return new RenderTextureZbuffer();
-                case 2: return new RenderTextureTestDepthStencil();
-                case 3: return new RenderTextureCompositeTest();
+                case 2: return new RenderTextureZbuffer();
+                case 3: return new RenderTextureTestDepthStencil();
+                case 4: return new RenderTextureCompositeTest();
             }
 
             return null;
