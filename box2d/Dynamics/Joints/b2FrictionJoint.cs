@@ -130,9 +130,9 @@ namespace Box2D.Dynamics.Joints
 
                 b2Vec2 P = new b2Vec2(m_linearImpulse.x, m_linearImpulse.y);
                 vA -= mA * P;
-                wA -= iA * (b2Math.b2Cross(m_rA, P) + m_angularImpulse);
+                wA -= iA * (b2Math.b2Cross(ref m_rA, ref P) + m_angularImpulse);
                 vB += mB * P;
-                wB += iB * (b2Math.b2Cross(m_rB, P) + m_angularImpulse);
+                wB += iB * (b2Math.b2Cross(ref m_rB, ref P) + m_angularImpulse);
             }
             else
             {

@@ -132,7 +132,8 @@ namespace Box2D.Dynamics.Joints
 
                 b2Vec2 pC = m_localAnchorC;
                 b2Vec2 pA = b2Math.b2MulT(xfC.q, b2Math.b2Mul(xfA.q, m_localAnchorA) + (xfA.p - xfC.p));
-                coordinateA = b2Math.b2Dot(pA - pC, m_localAxisC);
+                var diff = pA - pC;
+                coordinateA = b2Math.b2Dot(ref diff, ref m_localAxisC);
             }
 
             m_bodyD = m_joint2.GetBodyA();
@@ -164,7 +165,8 @@ namespace Box2D.Dynamics.Joints
 
                 b2Vec2 pD = m_localAnchorD;
                 b2Vec2 pB = b2Math.b2MulT(xfD.q, b2Math.b2Mul(xfB.q, m_localAnchorB) + (xfB.p - xfD.p));
-                coordinateB = b2Math.b2Dot(pB - pD, m_localAxisD);
+                var diff = pB - pD;
+                coordinateB = b2Math.b2Dot(ref diff, ref m_localAxisD);
             }
 
             m_ratio = def.ratio;
@@ -238,8 +240,8 @@ namespace Box2D.Dynamics.Joints
                 b2Vec2 rC = b2Math.b2Mul(qC, m_localAnchorC - m_lcC);
                 b2Vec2 rA = b2Math.b2Mul(qA, m_localAnchorA - m_lcA);
                 m_JvAC = u;
-                m_JwC = b2Math.b2Cross(rC, u);
-                m_JwA = b2Math.b2Cross(rA, u);
+                m_JwC = b2Math.b2Cross(ref rC, ref u);
+                m_JwA = b2Math.b2Cross(ref rA, ref u);
                 m_mass += m_mC + m_mA + m_iC * m_JwC * m_JwC + m_iA * m_JwA * m_JwA;
             }
 
@@ -256,8 +258,8 @@ namespace Box2D.Dynamics.Joints
                 b2Vec2 rD = b2Math.b2Mul(qD, m_localAnchorD - m_lcD);
                 b2Vec2 rB = b2Math.b2Mul(qB, m_localAnchorB - m_lcB);
                 m_JvBD = m_ratio * u;
-                m_JwD = m_ratio * b2Math.b2Cross(rD, u);
-                m_JwB = m_ratio * b2Math.b2Cross(rB, u);
+                m_JwD = m_ratio * b2Math.b2Cross(ref rD, ref u);
+                m_JwB = m_ratio * b2Math.b2Cross(ref rB, ref u);
                 m_mass += m_ratio * m_ratio * (m_mD + m_mB) + m_iD * m_JwD * m_JwD + m_iB * m_JwB * m_JwB;
             }
 
@@ -301,7 +303,9 @@ namespace Box2D.Dynamics.Joints
             b2Vec2 vD = m_bodyD.InternalVelocity.v;
             float wD = m_bodyD.InternalVelocity.w;
 
-            float Cdot = b2Math.b2Dot(m_JvAC, vA - vC) + b2Math.b2Dot(m_JvBD, vB - vD);
+            var diff = vA - vC;
+            var diff2 = vB - vD;
+            float Cdot = b2Math.b2Dot(ref m_JvAC, ref diff) + b2Math.b2Dot(ref m_JvBD, ref diff2);
             Cdot += (m_JwA * wA - m_JwC * wC) + (m_JwB * wB - m_JwD * wD);
 
             float impulse = -m_mass * Cdot;
@@ -365,13 +369,14 @@ namespace Box2D.Dynamics.Joints
                 b2Vec2 rC = b2Math.b2Mul(qC, m_localAnchorC - m_lcC);
                 b2Vec2 rA = b2Math.b2Mul(qA, m_localAnchorA - m_lcA);
                 JvAC = u;
-                JwC = b2Math.b2Cross(rC, u);
-                JwA = b2Math.b2Cross(rA, u);
+                JwC = b2Math.b2Cross(ref rC, ref u);
+                JwA = b2Math.b2Cross(ref rA, ref u);
                 mass += m_mC + m_mA + m_iC * JwC * JwC + m_iA * JwA * JwA;
 
                 b2Vec2 pC = m_localAnchorC - m_lcC;
                 b2Vec2 pA = b2Math.b2MulT(qC, rA + (cA - cC));
-                coordinateA = b2Math.b2Dot(pA - pC, m_localAxisC);
+                var diff = pA - pC;
+                coordinateA = b2Math.b2Dot(ref diff, ref m_localAxisC);
             }
 
             if (m_typeB == b2JointType.e_revoluteJoint)
@@ -389,13 +394,14 @@ namespace Box2D.Dynamics.Joints
                 b2Vec2 rD = b2Math.b2Mul(qD, m_localAnchorD - m_lcD);
                 b2Vec2 rB = b2Math.b2Mul(qB, m_localAnchorB - m_lcB);
                 JvBD = m_ratio * u;
-                JwD = m_ratio * b2Math.b2Cross(rD, u);
-                JwB = m_ratio * b2Math.b2Cross(rB, u);
+                JwD = m_ratio * b2Math.b2Cross(ref rD, ref u);
+                JwB = m_ratio * b2Math.b2Cross(ref rB, ref u);
                 mass += m_ratio * m_ratio * (m_mD + m_mB) + m_iD * JwD * JwD + m_iB * JwB * JwB;
 
                 b2Vec2 pD = m_localAnchorD - m_lcD;
                 b2Vec2 pB = b2Math.b2MulT(qD, rB + (cB - cD));
-                coordinateB = b2Math.b2Dot(pB - pD, m_localAxisD);
+                var diff = pB - pD;
+                coordinateB = b2Math.b2Dot(ref diff, ref m_localAxisD);
             }
 
             float C = (coordinateA + m_ratio * coordinateB) - m_constant;

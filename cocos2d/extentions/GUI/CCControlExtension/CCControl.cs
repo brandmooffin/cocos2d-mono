@@ -402,14 +402,6 @@ namespace Cocos2D
         {
         }
 
-        // for the subclass of CCLayer, each has to implement the static "create" method 
-//        [Obsolete("Use the default ctor")]
- //       public new static CCLayer Create()
-//        {
-//            var ret = new CCLayer();
-//            return (ret);
-//        }
-
         public virtual void NeedsLayout()
         {
         }

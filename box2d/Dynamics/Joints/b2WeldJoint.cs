@@ -170,10 +170,10 @@ namespace Box2D.Dynamics.Joints
                 b2Vec2 P = new b2Vec2(m_impulse.x, m_impulse.y);
 
                 vA -= mA * P;
-                wA -= iA * (b2Math.b2Cross(m_rA, P) + m_impulse.z);
+                wA -= iA * (b2Math.b2Cross(ref m_rA, ref P) + m_impulse.z);
 
                 vB += mB * P;
-                wB += iB * (b2Math.b2Cross(m_rB, P) + m_impulse.z);
+                wB += iB * (b2Math.b2Cross(ref m_rB, ref P) + m_impulse.z);
             }
             else
             {
@@ -287,10 +287,10 @@ namespace Box2D.Dynamics.Joints
                 b2Vec2 P = -K.Solve22(C1);
 
                 cA -= mA * P;
-                aA -= iA * b2Math.b2Cross(rA, P);
+                aA -= iA * b2Math.b2Cross(ref rA, ref P);
 
                 cB += mB * P;
-                aB += iB * b2Math.b2Cross(rB, P);
+                aB += iB * b2Math.b2Cross(ref rB, ref P);
             }
             else
             {
@@ -306,10 +306,10 @@ namespace Box2D.Dynamics.Joints
                 b2Vec2 P = new b2Vec2(impulse.x, impulse.y);
 
                 cA -= mA * P;
-                aA -= iA * (b2Math.b2Cross(rA, P) + impulse.z);
+                aA -= iA * (b2Math.b2Cross(ref rA, ref P) + impulse.z);
 
                 cB += mB * P;
-                aB += iB * (b2Math.b2Cross(rB, P) + impulse.z);
+                aB += iB * (b2Math.b2Cross(ref rB, ref P) + impulse.z);
             }
 
             m_bodyA.InternalPosition.c = cA;

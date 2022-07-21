@@ -143,8 +143,8 @@ namespace Box2D.Dynamics.Joints
             }
 
             // Compute effective mass.
-            float ruA = b2Math.b2Cross(m_rA, m_uA);
-            float ruB = b2Math.b2Cross(m_rB, m_uB);
+            float ruA = b2Math.b2Cross(ref m_rA, ref m_uA);
+            float ruB = b2Math.b2Cross(ref m_rB, ref m_uB);
 
             float mA = m_invMassA + m_invIA * ruA * ruA;
             float mB = m_invMassB + m_invIB * ruB * ruB;
@@ -166,9 +166,9 @@ namespace Box2D.Dynamics.Joints
                 b2Vec2 PB = (-m_ratio * m_impulse) * m_uB;
 
                 vA += m_invMassA * PA;
-                wA += m_invIA * b2Math.b2Cross(m_rA, PA);
+                wA += m_invIA * b2Math.b2Cross(ref m_rA, ref PA);
                 vB += m_invMassB * PB;
-                wB += m_invIB * b2Math.b2Cross(m_rB, PB);
+                wB += m_invIB * b2Math.b2Cross(ref m_rB, ref PB);
             }
             else
             {
@@ -191,16 +191,16 @@ namespace Box2D.Dynamics.Joints
             b2Vec2 vpA = vA + b2Math.b2Cross(wA, ref m_rA);
             b2Vec2 vpB = vB + b2Math.b2Cross(wB, ref m_rB);
 
-            float Cdot = -b2Math.b2Dot(m_uA, vpA) - m_ratio * b2Math.b2Dot(m_uB, vpB);
+            float Cdot = -b2Math.b2Dot(ref m_uA, ref vpA) - m_ratio * b2Math.b2Dot(ref m_uB, ref vpB);
             float impulse = -m_mass * Cdot;
             m_impulse += impulse;
 
             b2Vec2 PA = -impulse * m_uA;
             b2Vec2 PB = -m_ratio * impulse * m_uB;
             vA += m_invMassA * PA;
-            wA += m_invIA * b2Math.b2Cross(m_rA, PA);
+            wA += m_invIA * b2Math.b2Cross(ref m_rA, ref PA);
             vB += m_invMassB * PB;
-            wB += m_invIB * b2Math.b2Cross(m_rB, PB);
+            wB += m_invIB * b2Math.b2Cross(ref m_rB, ref PB);
 
             m_bodyA.InternalVelocity.v = vA;
             m_bodyA.InternalVelocity.w = wA;
@@ -247,8 +247,8 @@ namespace Box2D.Dynamics.Joints
             }
 
             // Compute effective mass.
-            float ruA = b2Math.b2Cross(rA, uA);
-            float ruB = b2Math.b2Cross(rB, uB);
+            float ruA = b2Math.b2Cross(ref rA, ref uA);
+            float ruB = b2Math.b2Cross(ref rB, ref uB);
 
             float mA = m_invMassA + m_invIA * ruA * ruA;
             float mB = m_invMassB + m_invIB * ruB * ruB;
@@ -269,9 +269,9 @@ namespace Box2D.Dynamics.Joints
             b2Vec2 PB = -m_ratio * impulse * uB;
 
             cA += m_invMassA * PA;
-            aA += m_invIA * b2Math.b2Cross(rA, PA);
+            aA += m_invIA * b2Math.b2Cross(ref rA, ref PA);
             cB += m_invMassB * PB;
-            aB += m_invIB * b2Math.b2Cross(rB, PB);
+            aB += m_invIB * b2Math.b2Cross(ref rB, ref PB);
 
             m_bodyA.InternalPosition.c = cA;
             m_bodyA.InternalPosition.a = aA;

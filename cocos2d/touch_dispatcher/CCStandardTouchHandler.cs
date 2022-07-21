@@ -11,14 +11,6 @@ namespace Cocos2D
         {
 
         }
-        /// <summary>
-        ///  initializes a TouchHandler with a delegate and a priority
-        /// </summary>
-        [Obsolete("Use the constructor", true)]
-        public virtual bool InitWithDelegate(ICCStandardTouchDelegate pDelegate, int nPriority)
-        {
-            return base.InitWithDelegate(pDelegate, nPriority);
-        }
 
         /// <summary>
         /// allocates a TouchHandler with a delegate and a priority

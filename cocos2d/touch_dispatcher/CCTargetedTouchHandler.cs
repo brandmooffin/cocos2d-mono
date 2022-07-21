@@ -35,22 +35,6 @@ namespace Cocos2D
             m_pClaimedTouches = new List<CCTouch>();
             m_bConsumesTouches = bSwallow;
         }
-        /// <summary>
-        ///  initializes a TargetedTouchHandler with a delegate, a priority and whether or not it swallows touches or not
-        /// </summary>
-        [Obsolete("Use the constructor", true)]
-        public bool InitWithDelegate(ICCTargetedTouchDelegate pDelegate, int nPriority, bool bSwallow)
-        {
-            if (base.InitWithDelegate(pDelegate, nPriority))
-            {
-                m_pClaimedTouches = new List<CCTouch>();
-                m_bConsumesTouches = bSwallow;
-
-                return true;
-            }
-
-            return false;
-        }
 
         /// <summary>
         /// allocates a TargetedTouchHandler with a delegate, a priority and whether or not it swallows touches or not 

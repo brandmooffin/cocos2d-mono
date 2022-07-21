@@ -63,36 +63,6 @@ namespace Box2D.Collision
             }
         }
 
-        /// Get the center of the AABB.
-        [Obsolete("Use the property accessor")]
-#if AGGRESSIVE_INLINING
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] 
-#endif
-        public b2Vec2 GetCenter()
-        {
-            return (Center);
-        }
-
-        /// Get the extents of the AABB (half-widths).
-        [Obsolete("Use the property accessor")]
-#if AGGRESSIVE_INLINING
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] 
-#endif
-        public b2Vec2 GetExtents()
-        {
-            return (Extents);
-        }
-
-        /// Get the perimeter length
-        [Obsolete("Use the property accessor")]
-#if AGGRESSIVE_INLINING
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] 
-#endif
-        public float GetPerimeter()
-        {
-            return (Perimeter);
-        }
-
         /// Combine an AABB into this one.
 #if AGGRESSIVE_INLINING
         [MethodImpl(MethodImplOptions.AggressiveInlining)] 

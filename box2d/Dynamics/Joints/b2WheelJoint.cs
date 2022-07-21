@@ -146,9 +146,10 @@ namespace Box2D.Dynamics.Joints
 
             // Point to line raint
             {
+                var a = d + rA;
                 m_ay = b2Math.b2Mul(qA, m_localYAxisA);
-                m_sAy = b2Math.b2Cross(d + rA, m_ay);
-                m_sBy = b2Math.b2Cross(rB, m_ay);
+                m_sAy = b2Math.b2Cross(ref a, ref m_ay);
+                m_sBy = b2Math.b2Cross(ref rB, ref m_ay);
 
                 m_mass = mA + mB + iA * m_sAy * m_sAy + iB * m_sBy * m_sBy;
 
@@ -164,9 +165,10 @@ namespace Box2D.Dynamics.Joints
             m_gamma = 0.0f;
             if (m_frequencyHz > 0.0f)
             {
+                var a2 = d + rA;
                 m_ax = b2Math.b2Mul(qA, m_localXAxisA);
-                m_sAx = b2Math.b2Cross(d + rA, m_ax);
-                m_sBx = b2Math.b2Cross(rB, m_ax);
+                m_sAx = b2Math.b2Cross(ref a2, ref m_ax);
+                m_sBx = b2Math.b2Cross(ref rB, ref m_ax);
 
                 float invMass = mA + mB + iA * m_sAx * m_sAx + iB * m_sBx * m_sBx;
 
@@ -174,7 +176,7 @@ namespace Box2D.Dynamics.Joints
                 {
                     m_springMass = 1.0f / invMass;
 
-                    float C = b2Math.b2Dot(d, m_ax);
+                    float C = b2Math.b2Dot(ref d, ref m_ax);
 
                     // Frequency
                     float omega = 2.0f * (float)Math.PI * m_frequencyHz;
@@ -264,7 +266,8 @@ namespace Box2D.Dynamics.Joints
 
             // Solve spring raint
             {
-                float Cdot = b2Math.b2Dot(m_ax, vB - vA) + m_sBx * wB - m_sAx * wA;
+                var diff = vB - vA;
+                float Cdot = b2Math.b2Dot(ref m_ax, ref diff) + m_sBx * wB - m_sAx * wA;
                 float impulse = -m_springMass * (Cdot + m_bias + m_gamma * m_springImpulse);
                 m_springImpulse += impulse;
 
@@ -295,7 +298,8 @@ namespace Box2D.Dynamics.Joints
 
             // Solve point to line raint
             {
-                float Cdot = b2Math.b2Dot(m_ay, vB - vA) + m_sBy * wB - m_sAy * wA;
+                var diff = vB - vA;
+                float Cdot = b2Math.b2Dot(ref m_ay, ref diff) + m_sBy * wB - m_sAy * wA;
                 float impulse = -m_mass * Cdot;
                 m_impulse += impulse;
 
@@ -332,7 +336,8 @@ namespace Box2D.Dynamics.Joints
 
             b2Vec2 ay = b2Math.b2Mul(qA, m_localYAxisA);
 
-            float sAy = b2Math.b2Cross(d + rA, ay);
+            var a = d + rA;
+            float sAy = b2Math.b2Cross(ref a, ref ay);
             float sBy = b2Math.b2Cross(ref rB, ref ay);
 
             float C = b2Math.b2Dot(ref d, ref ay);

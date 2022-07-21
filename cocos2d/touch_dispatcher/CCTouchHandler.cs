@@ -61,15 +61,5 @@ namespace Cocos2D
         {
             m_nPriority = nPriority;
         }
-
-        /// <summary>
-        /// allocates a TouchHandler with a delegate and a priority 
-        /// </summary>
-        [Obsolete("Use the CCTouchHandler constructors", true)]
-        public static CCTouchHandler Create(ICCTouchDelegate pDelegate, int nPriority)
-        {
-            var pHandler = new CCTouchHandler(pDelegate, nPriority);
-            return pHandler;
-        }
     }
 }

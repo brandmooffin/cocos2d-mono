@@ -931,7 +931,8 @@ namespace Box2D.Collision
                 // |dot(v, p1 - c)| > dot(|v|, h)
                 b2Vec2 c = node.aabb.Center;
                 b2Vec2 h = node.aabb.Extents;
-                float separation = b2Math.b2Abs(b2Math.b2Dot(v, p1 - c)) - b2Math.b2Dot(ref abs_v, ref h);
+                b2Vec2 diff = p1 - c;
+                float separation = b2Math.b2Abs(b2Math.b2Dot(ref v, ref diff)) - b2Math.b2Dot(ref abs_v, ref h);
                 if (separation > 0.0f)
                 {
                     continue;

@@ -176,7 +176,7 @@ namespace Box2D.Collision.Shapes
 
                     // If this crashes, your polygon is non-convex, has colinear edges,
                     // or the winding order is wrong.
-                    float s = b2Math.b2Cross(edge, r);
+                    float s = b2Math.b2Cross(ref edge, ref r);
                     if (s < 0f)
                     {
                         throw (new InvalidOperationException("ERROR: Please ensure your polygon is convex and has a CCW winding order"));
@@ -195,7 +195,8 @@ namespace Box2D.Collision.Shapes
 
             for (int i = 0; i < m_vertexCount; ++i)
             {
-                float dot = b2Math.b2Dot(Normals[i], pLocal - Vertices[i]);
+                var diff = pLocal - Vertices[i];
+                float dot = b2Math.b2Dot(ref Normals[i], ref diff);
                 if (dot > 0.0f)
                 {
                     return false;
@@ -222,8 +223,9 @@ namespace Box2D.Collision.Shapes
                 // p = p1 + a * d
                 // dot(normal, p - v) = 0
                 // dot(normal, p1 - v) + a * dot(normal, d) = 0
-                float numerator = b2Math.b2Dot(Normals[i], Vertices[i] - p1);
-                float denominator = b2Math.b2Dot(Normals[i], d);
+                var diff = Vertices[i] - p1;
+                float numerator = b2Math.b2Dot(ref Normals[i], ref diff);
+                float denominator = b2Math.b2Dot(ref Normals[i], ref d);
 
                 if (denominator == 0.0f)
                 {

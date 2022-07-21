@@ -154,18 +154,6 @@ namespace Cocos2D
             }
         }
 
-        [Obsolete("Use Label Property")]
-        public void SetString(string label)
-        {
-            Text = label;
-        }
-
-        [Obsolete("Use Label Property")]
-        public string GetString()
-        {
-            return Text;
-        }
-
         #endregion
 
         #region ICCRGBAProtocol Members

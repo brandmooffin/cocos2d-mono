@@ -184,7 +184,7 @@ namespace Box2D.Dynamics.Joints
             {
                 m_impulse *= data.step.dtRatio;
                 vB += m_invMassB * m_impulse;
-                wB += m_invIB * b2Math.b2Cross(m_rB, m_impulse);
+                wB += m_invIB * b2Math.b2Cross(ref m_rB, ref m_impulse);
             }
             else
             {
@@ -214,7 +214,7 @@ namespace Box2D.Dynamics.Joints
             impulse = m_impulse - oldImpulse;
 
             vB += m_invMassB * impulse;
-            wB += m_invIB * b2Math.b2Cross(m_rB, impulse);
+            wB += m_invIB * b2Math.b2Cross(ref m_rB, ref impulse);
 
             m_bodyB.InternalVelocity.v = vB;
             m_bodyB.InternalVelocity.w = wB;

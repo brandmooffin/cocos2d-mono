@@ -202,8 +202,9 @@ namespace Box2D.Dynamics.Joints
             // Compute motor Jacobian and effective mass.
             {
                 m_axis = b2Math.b2Mul(qA, m_localXAxisA);
-                m_a1 = b2Math.b2Cross(d + rA, m_axis);
-                m_a2 = b2Math.b2Cross(rB, m_axis);
+                var a = d + rA;
+                m_a1 = b2Math.b2Cross(ref a, ref m_axis);
+                m_a2 = b2Math.b2Cross(ref rB, ref m_axis);
 
                 m_motorMass = mA + mB + iA * m_a1 * m_a1 + iB * m_a2 * m_a2;
                 if (m_motorMass > 0.0f)
@@ -215,9 +216,9 @@ namespace Box2D.Dynamics.Joints
             // Prismatic constraint.
             {
                 m_perp = b2Math.b2Mul(qA, m_localYAxisA);
-
-                m_s1 = b2Math.b2Cross(d + rA, m_perp);
-                m_s2 = b2Math.b2Cross(rB, m_perp);
+                var a = d + rA;
+                m_s1 = b2Math.b2Cross(ref a, ref m_perp);
+                m_s2 = b2Math.b2Cross(ref rB, ref  m_perp);
 
                 float k11 = mA + mB + iA * m_s1 * m_s1 + iB * m_s2 * m_s2;
                 float k12 = iA * m_s1 + iB * m_s2;
@@ -239,7 +240,7 @@ namespace Box2D.Dynamics.Joints
             // Compute motor and limit terms.
             if (m_enableLimit)
             {
-                float jointTranslation = b2Math.b2Dot(m_axis, d);
+                float jointTranslation = b2Math.b2Dot(ref m_axis, ref d);
                 if (b2Math.b2Abs(m_upperTranslation - m_lowerTranslation) < 2.0f * b2Settings.b2_linearSlop)
                 {
                     m_limitState = b2LimitState.e_equalLimits;
@@ -306,112 +307,115 @@ namespace Box2D.Dynamics.Joints
         }
 
         public override void SolveVelocityConstraints(b2SolverData data)
-{
-    b2Vec2 vA = m_bodyA.InternalVelocity.v;
-    float wA = m_bodyA.InternalVelocity.w;
-    b2Vec2 vB = m_bodyB.InternalVelocity.v;
-    float wB = m_bodyB.InternalVelocity.w;
-
-    float mA = InvertedMassA, mB = InvertedMassB;
-    float iA = InvertedIA, iB = InvertedIB;
-
-    // Solve linear motor constraint.
-    if (m_enableMotor && m_limitState != b2LimitState.e_equalLimits)
-    {
-        float Cdot = b2Math.b2Dot(m_axis, vB - vA) + m_a2 * wB - m_a1 * wA;
-        float impulse = m_motorMass * (m_motorSpeed - Cdot);
-        float oldImpulse = m_motorImpulse;
-        float maxImpulse = data.step.dt * m_maxMotorForce;
-        m_motorImpulse = b2Math.b2Clamp(m_motorImpulse + impulse, -maxImpulse, maxImpulse);
-        impulse = m_motorImpulse - oldImpulse;
-
-        b2Vec2 P = impulse * m_axis;
-        float LA = impulse * m_a1;
-        float LB = impulse * m_a2;
-
-        vA -= mA * P;
-        wA -= iA * LA;
-
-        vB += mB * P;
-        wB += iB * LB;
-    }
-
-    b2Vec2 Cdot1 = new b2Vec2();
-    Cdot1.x = b2Math.b2Dot(m_perp, vB - vA) + m_s2 * wB - m_s1 * wA;
-    Cdot1.y = wB - wA;
-
-    if (m_enableLimit && m_limitState != b2LimitState.e_inactiveLimit)
-    {
-        // Solve prismatic and limit constraint in block form.
-        float Cdot2;
-        Cdot2 = b2Math.b2Dot(m_axis, vB - vA) + m_a2 * wB - m_a1 * wA;
-        b2Vec3 Cdot = new b2Vec3(Cdot1.x, Cdot1.y, Cdot2);
-
-        b2Vec3 f1 = m_impulse;
-        b2Vec3 df =  m_K.Solve33(-Cdot);
-        m_impulse += df;
-
-        if (m_limitState == b2LimitState.e_atLowerLimit)
         {
-            m_impulse.z = Math.Max(m_impulse.z, 0.0f);
+            b2Vec2 vA = m_bodyA.InternalVelocity.v;
+            float wA = m_bodyA.InternalVelocity.w;
+            b2Vec2 vB = m_bodyB.InternalVelocity.v;
+            float wB = m_bodyB.InternalVelocity.w;
+
+            float mA = InvertedMassA, mB = InvertedMassB;
+            float iA = InvertedIA, iB = InvertedIB;
+
+            // Solve linear motor constraint.
+            if (m_enableMotor && m_limitState != b2LimitState.e_equalLimits)
+            {
+                var diff = vB - vA;
+                float Cdot = b2Math.b2Dot(ref m_axis, ref diff) + m_a2 * wB - m_a1 * wA;
+                float impulse = m_motorMass * (m_motorSpeed - Cdot);
+                float oldImpulse = m_motorImpulse;
+                float maxImpulse = data.step.dt * m_maxMotorForce;
+                m_motorImpulse = b2Math.b2Clamp(m_motorImpulse + impulse, -maxImpulse, maxImpulse);
+                impulse = m_motorImpulse - oldImpulse;
+
+                b2Vec2 P = impulse * m_axis;
+                float LA = impulse * m_a1;
+                float LB = impulse * m_a2;
+
+                vA -= mA * P;
+                wA -= iA * LA;
+
+                vB += mB * P;
+                wB += iB * LB;
+            }
+
+            b2Vec2 Cdot1 = new b2Vec2();
+            var diff2 = vB - vA;
+            Cdot1.x = b2Math.b2Dot(ref m_perp, ref diff2) + m_s2 * wB - m_s1 * wA;
+            Cdot1.y = wB - wA;
+
+            if (m_enableLimit && m_limitState != b2LimitState.e_inactiveLimit)
+            {
+                // Solve prismatic and limit constraint in block form.
+                float Cdot2;
+                var diff3 = vB - vA;
+                Cdot2 = b2Math.b2Dot(ref m_axis, ref diff3) + m_a2 * wB - m_a1 * wA;
+                b2Vec3 Cdot = new b2Vec3(Cdot1.x, Cdot1.y, Cdot2);
+
+                b2Vec3 f1 = m_impulse;
+                b2Vec3 df = m_K.Solve33(-Cdot);
+                m_impulse += df;
+
+                if (m_limitState == b2LimitState.e_atLowerLimit)
+                {
+                    m_impulse.z = Math.Max(m_impulse.z, 0.0f);
+                }
+                else if (m_limitState == b2LimitState.e_atUpperLimit)
+                {
+                    m_impulse.z = Math.Min(m_impulse.z, 0.0f);
+                }
+
+                // f2(1:2) = invK(1:2,1:2) * (-Cdot(1:2) - K(1:2,3) * (f2(3) - f1(3))) + f1(1:2)
+                b2Vec2 b = -Cdot1 - (m_impulse.z - f1.z) * (new b2Vec2(m_K.ez.x, m_K.ez.y));
+                b2Vec2 f2r = m_K.Solve22(b) + (new b2Vec2(f1.x, f1.y));
+                m_impulse.x = f2r.x;
+                m_impulse.y = f2r.y;
+
+                df = m_impulse - f1;
+
+                b2Vec2 P = df.x * m_perp + df.z * m_axis;
+                float LA = df.x * m_s1 + df.y + df.z * m_a1;
+                float LB = df.x * m_s2 + df.y + df.z * m_a2;
+
+                vA -= mA * P;
+                wA -= iA * LA;
+
+                vB += mB * P;
+                wB += iB * LB;
+            }
+            else
+            {
+                // Limit is inactive, just solve the prismatic constraint in block form.
+                b2Vec2 df = m_K.Solve22(-Cdot1);
+                m_impulse.x += df.x;
+                m_impulse.y += df.y;
+
+                b2Vec2 P = df.x * m_perp;
+                float LA = df.x * m_s1 + df.y;
+                float LB = df.x * m_s2 + df.y;
+
+                vA -= mA * P;
+                wA -= iA * LA;
+
+                vB += mB * P;
+                wB += iB * LB;
+
+                b2Vec2 Cdot10 = Cdot1;
+                var diff4 = vB - vA;
+                Cdot1.x = b2Math.b2Dot(ref m_perp, ref diff4) + m_s2 * wB - m_s1 * wA;
+                Cdot1.y = wB - wA;
+
+                if (b2Math.b2Abs(Cdot1.x) > 0.01f || b2Math.b2Abs(Cdot1.y) > 0.01f)
+                {
+                    b2Vec2 test = b2Math.b2Mul22(m_K, df);
+                    Cdot1.x += 0.0f;
+                }
+            }
+
+            m_bodyA.InternalVelocity.v = vA;
+            m_bodyA.InternalVelocity.w = wA;
+            m_bodyB.InternalVelocity.v = vB;
+            m_bodyB.InternalVelocity.w = wB;
         }
-        else if (m_limitState == b2LimitState.e_atUpperLimit)
-        {
-            m_impulse.z = Math.Min(m_impulse.z, 0.0f);
-        }
-
-        // f2(1:2) = invK(1:2,1:2) * (-Cdot(1:2) - K(1:2,3) * (f2(3) - f1(3))) + f1(1:2)
-        b2Vec2 b = -Cdot1 - (m_impulse.z - f1.z) * (new b2Vec2(m_K.ez.x, m_K.ez.y));
-        b2Vec2 f2r = m_K.Solve22(b) + (new b2Vec2(f1.x, f1.y));
-        m_impulse.x = f2r.x;
-        m_impulse.y = f2r.y;
-
-        df = m_impulse - f1;
-
-        b2Vec2 P = df.x * m_perp + df.z * m_axis;
-        float LA = df.x * m_s1 + df.y + df.z * m_a1;
-        float LB = df.x * m_s2 + df.y + df.z * m_a2;
-
-        vA -= mA * P;
-        wA -= iA * LA;
-
-        vB += mB * P;
-        wB += iB * LB;
-    }
-    else
-    {
-        // Limit is inactive, just solve the prismatic constraint in block form.
-        b2Vec2 df = m_K.Solve22(-Cdot1);
-        m_impulse.x += df.x;
-        m_impulse.y += df.y;
-
-        b2Vec2 P = df.x * m_perp;
-        float LA = df.x * m_s1 + df.y;
-        float LB = df.x * m_s2 + df.y;
-
-        vA -= mA * P;
-        wA -= iA * LA;
-
-        vB += mB * P;
-        wB += iB * LB;
-
-        b2Vec2 Cdot10 = Cdot1;
-
-        Cdot1.x = b2Math.b2Dot(m_perp, vB - vA) + m_s2 * wB - m_s1 * wA;
-        Cdot1.y = wB - wA;
-
-        if (b2Math.b2Abs(Cdot1.x) > 0.01f || b2Math.b2Abs(Cdot1.y) > 0.01f)
-        {
-            b2Vec2 test = b2Math.b2Mul22(m_K, df);
-            Cdot1.x += 0.0f;
-        }
-    }
-
-    m_bodyA.InternalVelocity.v = vA;
-    m_bodyA.InternalVelocity.w = wA;
-    m_bodyB.InternalVelocity.v = vB;
-    m_bodyB.InternalVelocity.w = wB;
-}
 
         public override bool SolvePositionConstraints(b2SolverData data)
         {
@@ -432,16 +436,19 @@ namespace Box2D.Dynamics.Joints
             b2Vec2 d = cB + rB - cA - rA;
 
             b2Vec2 axis = b2Math.b2Mul(qA, m_localXAxisA);
-            float a1 = b2Math.b2Cross(d + rA, axis);
-            float a2 = b2Math.b2Cross(rB, axis);
+
+            var a = d + rA;
+            float a1 = b2Math.b2Cross(ref a, ref axis);
+            float a2 = b2Math.b2Cross(ref rB, ref axis);
             b2Vec2 perp = b2Math.b2Mul(qA, m_localYAxisA);
 
-            float s1 = b2Math.b2Cross(d + rA, perp);
-            float s2 = b2Math.b2Cross(rB, perp);
+            var a3 = d + rA;
+            float s1 = b2Math.b2Cross(ref a3, ref perp);
+            float s2 = b2Math.b2Cross(ref rB, ref perp);
 
             b2Vec3 impulse;
             b2Vec2 C1 = new b2Vec2();
-            C1.x = b2Math.b2Dot(perp, d);
+            C1.x = b2Math.b2Dot(ref perp, ref d);
             C1.y = aB - aA - m_referenceAngle;
 
             float linearError = b2Math.b2Abs(C1.x);
@@ -451,7 +458,7 @@ namespace Box2D.Dynamics.Joints
             float C2 = 0.0f;
             if (m_enableLimit)
             {
-                float translation = b2Math.b2Dot(axis, d);
+                float translation = b2Math.b2Dot(ref axis, ref d);
                 if (b2Math.b2Abs(m_upperTranslation - m_lowerTranslation) < 2.0f * b2Settings.b2_linearSlop)
                 {
                     // Prevent large angular corrections
@@ -566,7 +573,7 @@ namespace Box2D.Dynamics.Joints
             b2Vec2 d = pB - pA;
             b2Vec2 axis = m_bodyA.GetWorldVector(m_localXAxisA);
 
-            float translation = b2Math.b2Dot(d, axis);
+            float translation = b2Math.b2Dot(ref d, ref axis);
             return translation;
         }
 
@@ -587,7 +594,10 @@ namespace Box2D.Dynamics.Joints
             float wA = bA.AngularVelocity;
             float wB = bB.AngularVelocity;
 
-            float speed = b2Math.b2Dot(d, b2Math.b2Cross(wA, ref axis)) + b2Math.b2Dot(axis, vB + b2Math.b2Cross(wB, ref rB) - vA - b2Math.b2Cross(wA, ref rA));
+            var cross = b2Math.b2Cross(wA, ref axis);
+            var crossDiff = vB + b2Math.b2Cross(wB, ref rB) - vA - b2Math.b2Cross(wA, ref rA);
+
+            float speed = b2Math.b2Dot(ref d, ref cross) + b2Math.b2Dot(ref axis, ref crossDiff);
             return speed;
         }
 

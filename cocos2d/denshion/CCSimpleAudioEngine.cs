@@ -106,14 +106,6 @@ namespace CocosDenshion
             // CCTask.RunAsync(CocosDenshion.CCSimpleAudioEngine.SharedEngine.SaveMediaState); 
             SharedMusic.SaveMediaState();
         }
-        /**
-        @brief  Set the zip file name
-        @param pszZipFileName The relative path of the .zip file
-        */
-        [Obsolete("This is not used in this version of the library")]
-        public static void SetResource(string pszZipFileName)
-        {
-        }
 
         /**
          @brief Preload background music

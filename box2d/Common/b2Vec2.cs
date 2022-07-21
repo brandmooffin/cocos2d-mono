@@ -115,13 +115,6 @@ namespace Box2D.Common
             return (b);
         }
 
-        /// Get the length of this vector (the norm).
-        [Obsolete("Use the property accessor")]
-        public float GetLength()
-        {
-            return (float)Math.Sqrt(x * x + y * y);
-        }
-
         public float Length
         {
             get { return (float) Math.Sqrt(x * x + y * y); }
@@ -135,14 +128,6 @@ namespace Box2D.Common
         public static bool operator !=(b2Vec2 a, b2Vec2 b)
         {
             return a.x != b.x || a.y != b.y;
-        }
-
-        /// Get the length squared. For performance, use this instead of
-        /// b2Vec2::Length (if possible).
-        [Obsolete("Use the property accessor instead")]
-        public float GetLengthSquared()
-        {
-            return x * x + y * y;
         }
 
         public float LengthSquared

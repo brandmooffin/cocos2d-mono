@@ -115,14 +115,6 @@ namespace Cocos2D
     public interface ICCLabelProtocol
     {
         string Text { get; set; }
-
-        // sets a new label using an string
-        [Obsolete("Use Text Property")]
-        void SetString(string label);
-        
-        // returns the string that is rendered
-        [Obsolete("Use Text Property")]
-        string GetString();
     }
 
     /// <summary>
