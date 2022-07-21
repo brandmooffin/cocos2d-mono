@@ -20,6 +20,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./cocos2d-mono.DesktopGL
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ./cocos2d-mono.DesktopGL --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ./cocos2d-mono.DesktopGL --no-build --verbosity normal
