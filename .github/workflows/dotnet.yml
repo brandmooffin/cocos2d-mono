@@ -2,9 +2,9 @@ name: .NET
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "*" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "*" ]
 
 jobs:
   build:
@@ -17,6 +17,8 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 6.0.x
+    - name: Navigate to All
+      run: cd cocos2d-mono.All
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
