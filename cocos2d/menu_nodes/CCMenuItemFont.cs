@@ -68,28 +68,6 @@ namespace Cocos2D
             }
         }
 
-        [Obsolete("Use ItemFontSize")]
-        public uint FontSizeObj
-        {
-            set
-            {
-                m_uFontSize = value;
-                RecreateLabel();
-            }
-            get { return m_uFontSize; }
-        }
-
-        [Obsolete("Use ItemFontName")]
-        public string FontNameObj
-        {
-            set
-            {
-                m_strFontName = value;
-                RecreateLabel();
-            }
-            get { return m_strFontName; }
-        }
-
 		protected virtual bool InitWithString(string value, Action<CCMenuItem> selector)
         {
             //CCAssert( value != NULL && strlen(value) != 0, "Value length must be greater than 0");
