@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore ./cocos2d-mono.UWP
+      run: dotnet restore ./cocos2d-mono.Uwp
     - name: Build
-      run: dotnet build ./cocos2d-mono.UWP --no-restore
+      run: dotnet build ./cocos2d-mono.Uwp --no-restore
     - name: Test
-      run: dotnet test ./cocos2d-mono.UWP --no-build --verbosity normal
+      run: dotnet test ./cocos2d-mono.Uwp --no-build --verbosity normal
