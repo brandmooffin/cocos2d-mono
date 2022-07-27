@@ -6,7 +6,12 @@ Cocos2D-Mono is the premier 2D game development engine based upon the wildly pop
 Cocos2D-Mono focuses more on the MonoGame Framework and removes the limitations from proper XNA which held the original Cocos2D-XNA project back.
 
 # Build Status
-Coming soon!
+
+[![DesktopGL (Windows/Linux/macOS)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/desktopgl_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/desktopgl_build.yml)
+[![Windows](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/windows_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/windows_build.yml)
+[![Android](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/android_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/android_build.yml)
+[![UWP](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/uwp_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/uwp_build.yml)
+[![iOS](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/dotnet-desktop.yml)
 
 # Supported Platforms
 
