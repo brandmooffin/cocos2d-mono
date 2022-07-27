@@ -429,20 +429,6 @@ namespace Cocos2D
             pt.X = Clamp(p.X, from.X, to.X);
             pt.Y = Clamp(p.Y, from.Y, to.Y);
             return pt;
-            //            return CreatePoint(Clamp(p.X, from.X, to.X), Clamp(p.Y, from.Y, to.Y));
-        }
-
-        /** Quickly convert CCSize to a CCPoint
-            @since v0.99.1
-        */
-
-        [Obsolete("Use explicit cast (CCPoint)size.")]
-        public static CCPoint FromSize(CCSize s)
-        {
-            CCPoint pt;
-            pt.X = s.Width;
-            pt.Y = s.Height;
-            return pt;
         }
 
         /**

@@ -384,7 +384,8 @@ namespace Box2D.Dynamics
             }
 
             Force += force;
-            Torque += b2Math.b2Cross(point - Sweep.c, force);
+            var diff = point - Sweep.c;
+            Torque += b2Math.b2Cross(ref diff, ref force);
         }
 
         public virtual void ApplyForceToCenter(b2Vec2 force)
@@ -429,7 +430,8 @@ namespace Box2D.Dynamics
                 SetAwake(true);
             }
             m_linearVelocity += InvertedMass * impulse;
-            m_angularVelocity += InvertedI * b2Math.b2Cross(point - Sweep.c, impulse);
+            var diff = point - Sweep.c;
+            m_angularVelocity += InvertedI * b2Math.b2Cross(ref diff, ref impulse);
         }
 
         public virtual void ApplyAngularImpulse(float impulse)

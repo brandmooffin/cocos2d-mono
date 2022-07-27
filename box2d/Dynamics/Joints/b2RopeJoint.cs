@@ -138,8 +138,8 @@ namespace Box2D.Dynamics.Joints
             }
 
             // Compute effective mass.
-            float crA = b2Math.b2Cross(m_rA, m_u);
-            float crB = b2Math.b2Cross(m_rB, m_u);
+            float crA = b2Math.b2Cross(ref m_rA, ref m_u);
+            float crB = b2Math.b2Cross(ref m_rB, ref m_u);
             float invMass = m_invMassA + m_invIA * crA * crA + m_invMassB + m_invIB * crB * crB;
 
             m_mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
@@ -151,9 +151,9 @@ namespace Box2D.Dynamics.Joints
 
                 b2Vec2 P = m_impulse * m_u;
                 vA -= m_invMassA * P;
-                wA -= m_invIA * b2Math.b2Cross(m_rA, P);
+                wA -= m_invIA * b2Math.b2Cross(ref m_rA, ref P);
                 vB += m_invMassB * P;
-                wB += m_invIB * b2Math.b2Cross(m_rB, P);
+                wB += m_invIB * b2Math.b2Cross(ref m_rB, ref P);
             }
             else
             {
@@ -177,7 +177,8 @@ namespace Box2D.Dynamics.Joints
             b2Vec2 vpA = vA + b2Math.b2Cross(wA, ref m_rA);
             b2Vec2 vpB = vB + b2Math.b2Cross(wB, ref m_rB);
             float C = m_length - m_maxLength;
-            float Cdot = b2Math.b2Dot(m_u, vpB - vpA);
+            var diff = vpB - vpA;
+            float Cdot = b2Math.b2Dot(ref m_u, ref diff);
 
             // Predictive constraint.
             if (C < 0.0f)
@@ -192,9 +193,9 @@ namespace Box2D.Dynamics.Joints
 
             b2Vec2 P = impulse * m_u;
             vA -= m_invMassA * P;
-            wA -= m_invIA * b2Math.b2Cross(m_rA, P);
+            wA -= m_invIA * b2Math.b2Cross(ref m_rA, ref P);
             vB += m_invMassB * P;
-            wB += m_invIB * b2Math.b2Cross(m_rB, P);
+            wB += m_invIB * b2Math.b2Cross(ref m_rB, ref P);
 
             m_bodyA.InternalVelocity.v = vA;
             m_bodyA.InternalVelocity.w = wA;
@@ -225,9 +226,9 @@ namespace Box2D.Dynamics.Joints
     b2Vec2 P = impulse * u;
 
     cA -= m_invMassA * P;
-    aA -= m_invIA * b2Math.b2Cross(rA, P);
+    aA -= m_invIA * b2Math.b2Cross(ref rA, ref P);
     cB += m_invMassB * P;
-    aB += m_invIB * b2Math.b2Cross(rB, P);
+    aB += m_invIB * b2Math.b2Cross(ref rB, ref P);
 
     m_bodyA.InternalPosition.c = cA;
     m_bodyA.InternalPosition.a = aA;

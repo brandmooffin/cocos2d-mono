@@ -450,7 +450,9 @@ namespace Box2D.Collision
             {
                 float separation;
 
-                separation = b2Math.b2Dot(rf.normal, clipPoints2[i].v - rf.v1);
+                b2Vec2 diff = clipPoints2[i].v - rf.v1;
+
+                separation = b2Math.b2Dot(ref rf.normal, ref diff);
 
                 if (separation <= m_radius)
                 {
@@ -486,7 +488,8 @@ namespace Box2D.Collision
 
             for (int i = 0; i < m_polygonB.count; ++i)
             {
-                float s = b2Math.b2Dot(m_normal, m_polygonB.vertices[i] - m_v1);
+                var diff = m_polygonB.vertices[i] - m_v1;
+                float s = b2Math.b2Dot(ref m_normal, ref diff);
                 if (s < axis.separation)
                 {
                     axis.separation = s;
@@ -508,8 +511,11 @@ namespace Box2D.Collision
             {
                 b2Vec2 n = -m_polygonB.normals[i];
 
-                float s1 = b2Math.b2Dot(n, m_polygonB.vertices[i] - m_v1);
-                float s2 = b2Math.b2Dot(n, m_polygonB.vertices[i] - m_v2);
+                var diff = m_polygonB.vertices[i] - m_v1;
+                var diff2 = m_polygonB.vertices[i] - m_v2;
+
+                float s1 = b2Math.b2Dot(ref n, ref diff);
+                float s2 = b2Math.b2Dot(ref n, ref diff2);
                 float s = Math.Min(s1, s2);
 
                 if (s > m_radius)
@@ -524,14 +530,16 @@ namespace Box2D.Collision
                 // Adjacency
                 if (b2Math.b2Dot(ref n, ref perp) >= 0.0f)
                 {
-                    if (b2Math.b2Dot(n - m_upperLimit, m_normal) < -b2Settings.b2_angularSlop)
+                    var upperDiff = n - m_upperLimit;
+                    if (b2Math.b2Dot(ref upperDiff, ref m_normal) < -b2Settings.b2_angularSlop)
                     {
                         continue;
                     }
                 }
                 else
                 {
-                    if (b2Math.b2Dot(n - m_lowerLimit, m_normal) < -b2Settings.b2_angularSlop)
+                    var lowerDiff = n - m_lowerLimit;
+                    if (b2Math.b2Dot(ref lowerDiff, ref m_normal) < -b2Settings.b2_angularSlop)
                     {
                         continue;
                     }

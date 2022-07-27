@@ -332,18 +332,6 @@ namespace Cocos2D
             }
         }
 
-        [Obsolete("Use IsAntialiased property.")]
-        public void SetAntiAliasTexParameters()
-        {
-            IsAntialiased = true;	
-        }
-
-        [Obsolete("Use IsAntialiased property.")]
-        public void SetAliasTexParameters()
-        {
-            IsAntialiased = false;	
-        }
-
         #region Initialization
 
         public bool Init(int pixelsWide, int pixelsHigh)
