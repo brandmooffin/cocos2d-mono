@@ -7,8 +7,11 @@ Cocos2D-Mono focuses more on the MonoGame Framework and removes the limitations 
 
 # Build Status
 
-[![DesktopGL](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/desktopgl_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/desktopgl_build.yml)
+[![DesktopGL (Windows/Linux/macOS)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/desktopgl_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/desktopgl_build.yml)
 [![Windows](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/windows_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/windows_build.yml)
+[![Android](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/android_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/android_build.yml)
+[![UWP](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/uwp_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/uwp_build.yml)
+[![iOS](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/dotnet-desktop.yml)
 
 # Supported Platforms
 
