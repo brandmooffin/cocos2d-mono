@@ -28,6 +28,7 @@ namespace tests
             var pCloseItem = new CCMenuItemImage(TestResource.s_pPathClose, TestResource.s_pPathClose, closeCallback);
             var pMenu = new CCMenu(pCloseItem);
             var s = CCDirector.SharedDirector.WinSize;
+
 #if !XBOX && !OUYA
             TouchEnabled = true;
 #else
@@ -46,7 +47,7 @@ namespace tests
 #else
             CCLabelTTF versionLabel = new CCLabelTTF("v" + this.GetType().Assembly.GetName().Version.ToString(), "arial", 12);
 #endif
-            versionLabel.Position = new CCPoint(versionLabel.ContentSizeInPixels.Width/2f, s.Height - 18f);
+            versionLabel.Position = new CCPoint(versionLabel.ContentSizeInPixels.Width/2f, s.Height - 15f);
             versionLabel.HorizontalAlignment = CCTextAlignment.Left;
             AddChild(versionLabel, 20000);
 #endif
@@ -204,6 +205,18 @@ namespace tests
 
         ~TestController()
         {
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
+
+            var s = CCDirector.SharedDirector.WinSize;
+
+            CCDrawingPrimitives.Begin();
+            CCDrawingPrimitives.DrawSolidRect(CCPoint.Zero, new CCPoint(s.Width, 20), new CCColor4B(Color.SlateGray));
+            CCDrawingPrimitives.DrawSolidRect(new CCPoint(0, s.Height), new CCPoint(s.Width, s.Height - 20), new CCColor4B(Color.SlateGray));
+            CCDrawingPrimitives.End();
         }
 
         public void menuCallback(CCMenuItem pSender)

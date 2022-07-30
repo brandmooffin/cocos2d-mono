@@ -59,8 +59,8 @@ namespace tests
             // Font Item
             CCMenuItemFont item4 = new CCMenuItemFont("I toggle enable items", this.menuCallbackEnable);
 
-            item4.FontSizeObj = 20;
-            item4.FontNameObj = "arial";
+            item4.ItemFontSize = 20;
+            item4.ItemFontName = "arial";
 
             // Label Item (CCLabelBMFont)
             CCLabelBMFont label = new CCLabelBMFont("configuration", "fonts/bitmapFontTest3.fnt");

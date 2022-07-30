@@ -274,7 +274,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ClickAndMoveTest\ClickAndMoveTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClippingNodeTest\ClippingNodeTestScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CocosDenshionTest\CocosDenshionTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)controller.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeviceTest\OrientationTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DrawPrimitivesTest\DrawPrimitivesTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DrawPrimitivesTest\DrawPrimitivesTestScene.cs" />
