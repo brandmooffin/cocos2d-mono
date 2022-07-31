@@ -51,6 +51,12 @@ namespace tests
             versionLabel.HorizontalAlignment = CCTextAlignment.Left;
             AddChild(versionLabel, 20000);
 #endif
+            CCDrawNode draw = new CCDrawNode();
+            AddChild(draw, 10);
+
+            draw.DrawRect(new CCRect(0, 0, s.Width, 20), new CCColor4B(Color.SlateGray));
+            draw.DrawRect(new CCRect(0, s.Height - 20, s.Width, 20), new CCColor4B(Color.SlateGray));
+
             // add menu items for tests
             m_pItemMenu = new CCMenu();
             for (int i = 0; i < (int)(TestCases.TESTS_COUNT); ++i)
@@ -211,12 +217,12 @@ namespace tests
         {
             base.Draw();
 
-            var s = CCDirector.SharedDirector.WinSize;
+            //var s = CCDirector.SharedDirector.WinSize;
 
-            CCDrawingPrimitives.Begin();
-            CCDrawingPrimitives.DrawSolidRect(CCPoint.Zero, new CCPoint(s.Width, 20), new CCColor4B(Color.SlateGray));
-            CCDrawingPrimitives.DrawSolidRect(new CCPoint(0, s.Height), new CCPoint(s.Width, s.Height - 20), new CCColor4B(Color.SlateGray));
-            CCDrawingPrimitives.End();
+            //CCDrawingPrimitives.Begin();
+            //CCDrawingPrimitives.DrawSolidRect(CCPoint.Zero, new CCPoint(s.Width, 20), new CCColor4B(Color.SlateGray));
+            //CCDrawingPrimitives.DrawSolidRect(new CCPoint(0, s.Height), new CCPoint(s.Width, s.Height - 20), new CCColor4B(Color.SlateGray));
+            //CCDrawingPrimitives.End();
         }
 
         public void menuCallback(CCMenuItem pSender)
