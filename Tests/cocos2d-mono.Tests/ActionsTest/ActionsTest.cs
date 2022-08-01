@@ -324,11 +324,11 @@ namespace tests
             var menu = new CCMenu(item1, item2, item3);
 
             menu.Position = new CCPoint(0, 0);
-            item1.Position = new CCPoint(s.Width / 2 - 100, 30);
-            item2.Position = new CCPoint(s.Width / 2, 30);
-            item3.Position = new CCPoint(s.Width / 2 + 100, 30);
+            item1.Position = new CCPoint(s.Width / 2 - 100, 20);
+            item2.Position = new CCPoint(s.Width / 2, 20);
+            item3.Position = new CCPoint(s.Width / 2 + 100, 20);
 
-            AddChild(menu, 1);
+            AddChild(menu, 11);
         }
 
         public override void OnExit()

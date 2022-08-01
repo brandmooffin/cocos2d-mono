@@ -40,14 +40,15 @@ namespace tests
 #endif
 
             pMenu.Position = CCPoint.Zero;
-            pCloseItem.Position = new CCPoint(s.Width - 30, s.Height - 30);
+            pCloseItem.Position = new CCPoint(s.Width - 30, s.Height - 10);
+            pCloseItem.Scale = 0.5f;
 #if !PSM && !WINDOWS_PHONE
 #if NETFX_CORE && !WINDOWS_UWP
             CCLabelTTF versionLabel = new CCLabelTTF("v" + this.GetType().GetAssemblyName().Version.ToString(), "arial", 12);
 #else
-            CCLabelTTF versionLabel = new CCLabelTTF("v" + this.GetType().Assembly.GetName().Version.ToString(), "arial", 12);
+            CCLabelTTF versionLabel = new CCLabelTTF("v" + this.GetType().Assembly.GetName().Version.ToString(), "arial", 24);
 #endif
-            versionLabel.Position = new CCPoint(versionLabel.ContentSizeInPixels.Width/2f, s.Height - 15f);
+            versionLabel.Position = new CCPoint(versionLabel.ContentSizeInPixels.Width/2f, s.Height - 12f);
             versionLabel.HorizontalAlignment = CCTextAlignment.Left;
             AddChild(versionLabel, 20000);
 #endif
@@ -96,7 +97,7 @@ namespace tests
             AddChild(m_pItemMenu);
 
 #if !IOS
-            AddChild(pMenu, 1);
+            AddChild(pMenu, 11);
 #endif
 
             _GamePadDPadDelegate = new CCGamePadDPadDelegate(MyOnGamePadDPadUpdate);
@@ -211,18 +212,6 @@ namespace tests
 
         ~TestController()
         {
-        }
-
-        public override void Draw()
-        {
-            base.Draw();
-
-            //var s = CCDirector.SharedDirector.WinSize;
-
-            //CCDrawingPrimitives.Begin();
-            //CCDrawingPrimitives.DrawSolidRect(CCPoint.Zero, new CCPoint(s.Width, 20), new CCColor4B(Color.SlateGray));
-            //CCDrawingPrimitives.DrawSolidRect(new CCPoint(0, s.Height), new CCPoint(s.Width, s.Height - 20), new CCColor4B(Color.SlateGray));
-            //CCDrawingPrimitives.End();
         }
 
         public void menuCallback(CCMenuItem pSender)

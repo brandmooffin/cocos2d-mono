@@ -524,7 +524,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SpriteTest\SpriteZOrder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SpriteTest\SpriteZVertex.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)test.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)testBasic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)testResource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TextInputTest\TextInputTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TextInputTest\TextInputTestScene.cs" />
