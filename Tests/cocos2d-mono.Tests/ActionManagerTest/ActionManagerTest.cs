@@ -42,7 +42,7 @@ namespace tests
 
             CCMenu menu = new CCMenu(item1, item2, item3);
 
-            menu.Position = (new CCPoint(0, 0));
+            menu.Position = CCPoint.Zero;
             item1.Position = (new CCPoint(s.Width / 2 - 100, 20));
             item2.Position = (new CCPoint(s.Width / 2, 20));
             item3.Position = (new CCPoint(s.Width / 2 + 100, 20));

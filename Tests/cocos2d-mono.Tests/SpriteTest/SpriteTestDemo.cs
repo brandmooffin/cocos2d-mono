@@ -29,17 +29,14 @@ namespace tests
 
             CCSize s = CCDirector.SharedDirector.WinSize;
 
-            CCLabelTTF label = new CCLabelTTF(title(), "arial", 28);
-            AddChild(label, 1);
-            label.Position = new CCPoint(s.Width / 2, s.Height - 50);
+            CCLabelTTF label = new CCLabelTTF(title(), "arial", 24);
+            Parent.AddChild(label, 11);
+            label.Position = new CCPoint(s.Width / 2, s.Height - 10);
 
             string strSubtitle = subtitle();
             if (!string.IsNullOrEmpty(strSubtitle))
             {
-                CCLabelTTF l = new CCLabelTTF(strSubtitle, "arial", 16);
-                //CCLabelTTF l = CCLabelTTF.labelWithString(strSubtitle, "Thonburi", 16);
-                AddChild(l, 1);
-                l.Position = new CCPoint(s.Width / 2, s.Height - 80);
+                label.Text += $" - {strSubtitle}";
             }
 
             CCMenuItemImage item1 = new CCMenuItemImage("Images/b1", "Images/b2", backCallback);
@@ -49,11 +46,15 @@ namespace tests
             CCMenu menu = new CCMenu(item1, item2, item3);
 
             menu.Position = new CCPoint();
-            item1.Position = new CCPoint(s.Width / 2 - 100, 30);
-            item2.Position = new CCPoint(s.Width / 2, 30);
-            item3.Position = new CCPoint(s.Width / 2 + 100, 30);
+            item1.Position = new CCPoint(s.Width / 2 - 100, 20);
+            item2.Position = new CCPoint(s.Width / 2, 20);
+            item3.Position = new CCPoint(s.Width / 2 + 100, 20);
 
-            AddChild(menu, 1); 
+            item1.Scale = 0.5f;
+            item2.Scale = 0.5f;
+            item3.Scale = 0.5f;
+
+            AddChild(menu, 11); 
         }
 
         public void restartCallback(object pSender)

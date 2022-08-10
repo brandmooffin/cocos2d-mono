@@ -71,7 +71,7 @@ namespace tests
             {
             }
 
-            public override void PostSolve(Box2D.Dynamics.Contacts.b2Contact contact, ref b2ContactImpulse impulse)
+            public override void PostSolve(b2Contact contact, ref b2ContactImpulse impulse)
             {
             }
         }
@@ -102,7 +102,7 @@ namespace tests
             addNewSpriteAtPosition(new CCPoint(s.Width / 2, s.Height / 2));
 
             CCLabelTTF label = new CCLabelTTF("Tap screen", "MarkerFelt", 32);
-            AddChild(label, 0);
+            AddChild(label, 1);
             label.Color = new CCColor3B(0, 0, 255);
             label.Position = new CCPoint(s.Width / 2, s.Height - 50);
 
@@ -180,13 +180,12 @@ namespace tests
 
         public void createResetButton()
         {
+            CCSize s = CCDirector.SharedDirector.WinSize;
             CCMenuItemImage res = new CCMenuItemImage("Images/r1", "Images/r2", reset);
-
+            res.Scale = 0.5f;
             CCMenu menu = new CCMenu(res);
 
-            CCSize s = CCDirector.SharedDirector.WinSize;
-
-            menu.Position = new CCPoint(s.Width / 2, 30);
+            menu.Position = new CCPoint(s.Width / 2, 20);
             AddChild(menu, -1);
         }
 

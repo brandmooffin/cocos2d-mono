@@ -4277,6 +4277,90 @@
 /processorParam:TextureFormat=Color
 /build:Images/white-512x512.png
 
+#begin Particles/BoilingFoam.plist
+/copy:Particles/BoilingFoam.plist
+
+#begin Particles/BoilingFoam.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/BoilingFoam.png
+
+#begin Particles/BurstPipe.plist
+/copy:Particles/BurstPipe.plist
+
+#begin Particles/BurstPipe.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/BurstPipe.png
+
+#begin Particles/Comet.plist
+/copy:Particles/Comet.plist
+
+#begin Particles/Comet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/Comet.png
+
+#begin Particles/debian.plist
+/copy:Particles/debian.plist
+
+#begin Particles/ExplodingRing.plist
+/copy:Particles/ExplodingRing.plist
+
+#begin Particles/ExplodingRing.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/ExplodingRing.png
+
+#begin Particles/Flower.plist
+/copy:Particles/Flower.plist
+
+#begin Particles/Galaxy.plist
+/copy:Particles/Galaxy.plist
+
+#begin Particles/LavaFlow.plist
+/copy:Particles/LavaFlow.plist
+
+#begin Particles/LavaFlow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/LavaFlow.png
+
 #begin Particles/particleTexture.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -4288,6 +4372,51 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Particles/particleTexture.png
+
+#begin Particles/PeasTexture.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/PeasTexture.png
+
+#begin Particles/Phoenix.plist
+/copy:Particles/Phoenix.plist
+
+#begin Particles/phoenixLeftWing.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/phoenixLeftWing.png
+
+#begin Particles/SmallSun.plist
+/copy:Particles/SmallSun.plist
+
+#begin Particles/SpinningPeas.plist
+/copy:Particles/SpinningPeas.plist
+
+#begin Particles/Spiral.plist
+/copy:Particles/Spiral.plist
+
+#begin Particles/SpookyPeas.plist
+/copy:Particles/SpookyPeas.plist
+
+#begin Particles/TestPremultipliedAlpha.plist
+/copy:Particles/TestPremultipliedAlpha.plist
+
+#begin Particles/Upsidedown.plist
+/copy:Particles/Upsidedown.plist
 
 #begin Sounds/background.mp3
 /importer:Mp3Importer

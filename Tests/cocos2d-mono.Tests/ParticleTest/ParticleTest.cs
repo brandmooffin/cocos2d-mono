@@ -67,31 +67,31 @@ namespace tests
                 case 18:
                     return new ParallaxParticle();
                 case 19:
-                    return new DemoParticleFromFile("BoilingFoam");
+                    return new DemoParticleFromFile("BoilingFoam.plist");
                 case 20:
-                    return new DemoParticleFromFile("BurstPipe");
+                    return new DemoParticleFromFile("BurstPipe.plist");
                 case 21:
-                    return new DemoParticleFromFile("Comet");
+                    return new DemoParticleFromFile("Comet.plist");
                 case 22:
-                    return new DemoParticleFromFile("debian");
+                    return new DemoParticleFromFile("debian.plist");
                 case 23:
-                    return new DemoParticleFromFile("ExplodingRing");
+                    return new DemoParticleFromFile("ExplodingRing.plist");
                 case 24:
-                    return new DemoParticleFromFile("LavaFlow");
+                    return new DemoParticleFromFile("LavaFlow.plist");
                 case 25:
-                    return new DemoParticleFromFile("SpinningPeas");
+                    return new DemoParticleFromFile("SpinningPeas.plist");
                 case 26:
-                    return new DemoParticleFromFile("SpookyPeas");
+                    return new DemoParticleFromFile("SpookyPeas.plist");
                 case 27:
-                    return new DemoParticleFromFile("Upsidedown");
+                    return new DemoParticleFromFile("Upsidedown.plist");
                 case 28:
-                    return new DemoParticleFromFile("Flower");
+                    return new DemoParticleFromFile("Flower.plist");
                 case 29:
-                    return new DemoParticleFromFile("Spiral");
+                    return new DemoParticleFromFile("Spiral.plist");
                 case 30:
-                    return new DemoParticleFromFile("Galaxy");
+                    return new DemoParticleFromFile("Galaxy.plist");
                 case 31:
-                    return new DemoParticleFromFile("Phoenix");
+                    return new DemoParticleFromFile("Phoenix.plist");
                 case 32:
                     return new RadiusMode1();
                 case 33:
@@ -185,13 +185,15 @@ namespace tests
             TouchEnabled = true;
 
             CCSize s = CCDirector.SharedDirector.WinSize;
-            CCLabelTTF label = new CCLabelTTF(title(), "arial", 28);
+            CCLabelTTF label = new CCLabelTTF(title(), "arial", 24);
             AddChild(label, 100, kLabelTag);
-            label.Position = new CCPoint(s.Width / 2, s.Height - 50);
+            label.Position = new CCPoint(s.Width / 2, s.Height - 10);
 
-            CCLabelTTF tapScreen = new CCLabelTTF(subtitle(), "arial", 20);
-            tapScreen.Position = new CCPoint(s.Width / 2, s.Height - 80);
-            AddChild(tapScreen, 100);
+            if (!string.IsNullOrEmpty(subtitle()))
+            {
+                label.Text += $" - {subtitle()}";
+            }
+
 
             CCMenuItemImage item1 = new CCMenuItemImage(TestResource.s_pPathB1, TestResource.s_pPathB2, backCallback);
             CCMenuItemImage item2 = new CCMenuItemImage(TestResource.s_pPathR1, TestResource.s_pPathR2, restartCallback);
@@ -205,11 +207,15 @@ namespace tests
             CCMenu menu = new CCMenu(item1, item2, item3, item4);
 
             menu.Position = new CCPoint(0, 0);
-            item1.Position = new CCPoint(s.Width / 2 - 100, 30);
-            item2.Position = new CCPoint(s.Width / 2, 30);
-            item3.Position = new CCPoint(s.Width / 2 + 100, 30);
+            item1.Position = new CCPoint(s.Width / 2 - 100, 20);
+            item2.Position = new CCPoint(s.Width / 2, 20);
+            item3.Position = new CCPoint(s.Width / 2 + 100, 20);
             item4.Position = new CCPoint(0, 100);
             item4.AnchorPoint = new CCPoint(0, 0);
+
+            item1.Scale = 0.5f;
+            item2.Scale = 0.5f;
+            item3.Scale = 0.5f;
 
             AddChild(menu, 100);
 
@@ -1289,7 +1295,7 @@ namespace tests
             m_background = null;
 
             var system = new CCParticleSystemQuad();
-            system.InitWithFile("Particles/SpinningPeas");
+            system.InitWithFile("Particles/SpinningPeas.plist");
             system.SetTextureWithRect(CCTextureCache.SharedTextureCache.AddImage("Images/particles"),
                                       new CCRect(0, 0, 32, 32));
             AddChild(system, 10);
@@ -1331,7 +1337,7 @@ namespace tests
             RemoveChild(m_background, true);
             m_background = null;
 
-            CCParticleSystemQuad ignore = new CCParticleSystemQuad("Particles/SmallSun");
+            CCParticleSystemQuad ignore = new CCParticleSystemQuad("Particles/SmallSun.plist");
             //ignore.TotalParticles = 200;
             CCNode parent1 = new CCNode ();
             CCParticleBatchNode parent2 = new CCParticleBatchNode(ignore.Texture);
@@ -1341,15 +1347,15 @@ namespace tests
             {
                 CCNode parent = (i == 0 ? parent1 : parent2);
 
-                CCParticleSystemQuad emitter1 = new CCParticleSystemQuad("Particles/SmallSun");
+                CCParticleSystemQuad emitter1 = new CCParticleSystemQuad("Particles/SmallSun.plist");
                 //emitter1.TotalParticles = 200;
                 emitter1.StartColor = (new CCColor4F(1, 0, 0, 1));
                 emitter1.BlendAdditive = (false);
-                CCParticleSystemQuad emitter2 = new CCParticleSystemQuad("Particles/SmallSun");
+                CCParticleSystemQuad emitter2 = new CCParticleSystemQuad("Particles/SmallSun.plist");
                 //emitter2.TotalParticles = 200;
                 emitter2.StartColor = (new CCColor4F(0, 1, 0, 1));
                 emitter2.BlendAdditive = (false);
-                CCParticleSystemQuad emitter3 = new CCParticleSystemQuad("Particles/SmallSun");
+                CCParticleSystemQuad emitter3 = new CCParticleSystemQuad("Particles/SmallSun.plist");
                 //emitter3.TotalParticles = 200;
                 emitter3.StartColor = (new CCColor4F(0, 0, 1, 1));
                 emitter3.BlendAdditive = (false);
@@ -1430,8 +1436,8 @@ namespace tests
             RemoveChild(m_background, true);
             m_background = null;
 
-            m_emitter = new CCParticleSystemQuad("Particles/LavaFlow");
-            m_emitter.Texture = CCTextureCache.SharedTextureCache.AddImage("Images/fire");
+            m_emitter = new CCParticleSystemQuad("Particles/LavaFlow.plist");
+            m_emitter.Texture = CCTextureCache.SharedTextureCache.AddImage("Images/fire.plist");
             CCParticleBatchNode batch = new CCParticleBatchNode(m_emitter.Texture);
 
             batch.AddChild(m_emitter);
@@ -1479,11 +1485,11 @@ namespace tests
             RemoveChild(m_background, true);
             m_background = null;
 
-            CCParticleSystemQuad emitter1 = new CCParticleSystemQuad("Particles/LavaFlow");
+            CCParticleSystemQuad emitter1 = new CCParticleSystemQuad("Particles/LavaFlow.plist");
             emitter1.StartColor = (new CCColor4F(1, 0, 0, 1));
-            CCParticleSystemQuad emitter2 = new CCParticleSystemQuad("Particles/LavaFlow");
+            CCParticleSystemQuad emitter2 = new CCParticleSystemQuad("Particles/LavaFlow.plist");
             emitter2.StartColor = (new CCColor4F(0, 1, 0, 1));
-            CCParticleSystemQuad emitter3 = new CCParticleSystemQuad("Particles/LavaFlow");
+            CCParticleSystemQuad emitter3 = new CCParticleSystemQuad("Particles/LavaFlow.plist");
             emitter3.StartColor = (new CCColor4F(0, 0, 1, 1));
 
             CCSize s = CCDirector.SharedDirector.WinSize;
@@ -1642,7 +1648,7 @@ namespace tests
 
             for (int i = 0; i < 5; i++)
             {
-                CCParticleSystemQuad particleSystem = new CCParticleSystemQuad("Particles/SpinningPeas");
+                CCParticleSystemQuad particleSystem = new CCParticleSystemQuad("Particles/SpinningPeas.plist");
 
                 particleSystem.Position = (new CCPoint(i * 50, i * 50));
 
@@ -1680,7 +1686,7 @@ namespace tests
 
             for (int i = 0; i < 5; i++)
             {
-                CCParticleSystemQuad particleSystem = new CCParticleSystemQuad("Particles/SpinningPeas");
+                CCParticleSystemQuad particleSystem = new CCParticleSystemQuad("Particles/SpinningPeas.plist");
 
                 particleSystem.PositionType = CCPositionType.Grouped;
                 particleSystem.Position = (new CCPoint(i * 50, i * 50));
@@ -1724,7 +1730,7 @@ namespace tests
 
             for (int i = 0; i < 6; i++)
             {
-                CCParticleSystemQuad particleSystem = new CCParticleSystemQuad("Particles/Spiral");
+                CCParticleSystemQuad particleSystem = new CCParticleSystemQuad("Particles/Spiral.plist");
                 particleSystem.Texture = m_pBatchNode.Texture;
 
                 particleSystem.PositionType = CCPositionType.Grouped;
@@ -1749,7 +1755,7 @@ namespace tests
                 int uRand = CCRandom.Next(nChildrenCount - 1);
                 m_pBatchNode.RemoveChild(m_pBatchNode.Children[uRand], true);
 
-                CCParticleSystemQuad particleSystem = new CCParticleSystemQuad("Particles/Spiral");
+                CCParticleSystemQuad particleSystem = new CCParticleSystemQuad("Particles/Spiral.plist");
                 //add new
 
                 particleSystem.PositionType = CCPositionType.Grouped;
@@ -1898,7 +1904,7 @@ namespace tests
             RemoveChild(m_background, true);
             m_background = null;
 
-            m_emitter = new CCParticleSystemQuad("Particles/BoilingFoam");
+            m_emitter = new CCParticleSystemQuad("Particles/BoilingFoam.plist");
 
             // Particle Designer "normal" blend func causes black halo on premul textures (ignores multiplication)
             //this->emitter.blendFunc = (ccBlendFunc){ GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA };
@@ -1942,7 +1948,7 @@ namespace tests
             RemoveChild(m_background, true);
             m_background = null;
 
-            m_emitter = new CCParticleSystemQuad("Particles/TestPremultipliedAlpha");
+            m_emitter = new CCParticleSystemQuad("Particles/TestPremultipliedAlpha.plist");
             AddChild(m_emitter, 10);
         }
 

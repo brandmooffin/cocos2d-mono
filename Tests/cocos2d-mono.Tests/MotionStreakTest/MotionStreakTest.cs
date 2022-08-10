@@ -78,16 +78,14 @@ namespace tests
 
             CCSize s = CCDirector.SharedDirector.WinSize;
 
-            var label = new CCLabelTTF(title(), "arial", 32);
-            AddChild(label, 0, kTagLabel);
-            label.Position = new CCPoint(s.Width / 2, s.Height - 50);
+            var label = new CCLabelTTF(title(), "arial", 24);
+            Parent.AddChild(label, 11, kTagLabel);
+            label.Position = new CCPoint(s.Width / 2, s.Height - 10);
 
             string subTitle = this.subtitle();
             if (subTitle.Length > 0)
             {
-                var l = new CCLabelTTF(subTitle, "arial", 16);
-                AddChild(l, 1);
-                l.Position = new CCPoint(s.Width / 2, s.Height - 80);
+                label.Text += $" - {subTitle}";
             }
 
             var item1 = new CCMenuItemImage(s_pPathB1, s_pPathB2, backCallback);
@@ -100,8 +98,10 @@ namespace tests
             item1.Position = new CCPoint(s.Width / 2 - item2.ContentSize.Width * 2, item2.ContentSize.Height / 2);
             item2.Position = new CCPoint(s.Width / 2, item2.ContentSize.Height / 2);
             item3.Position = new CCPoint(s.Width / 2 + item2.ContentSize.Width * 2, item2.ContentSize.Height / 2);
-
-            AddChild(menu, 1);
+            item1.Scale = 0.5f;
+            item2.Scale = 0.5f;
+            item3.Scale = 0.5f;
+            AddChild(menu, 11);
 
             var itemMode = new CCMenuItemToggle(modeCallback,
                                                    new CCMenuItemFont("Use High Quality Mode"),

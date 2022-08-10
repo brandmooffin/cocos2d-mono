@@ -43,8 +43,11 @@ namespace tests
             item1.Position = new CCPoint(x / 2 - item2.ContentSize.Width * 2, item2.ContentSize.Height / 2);
             item2.Position = new CCPoint(x / 2, item2.ContentSize.Height / 2);
 			item3.Position = new CCPoint(x / 2 + item2.ContentSize.Width * 2, item2.ContentSize.Height / 2);
+            item1.Scale = 0.5f;
+            item2.Scale = 0.5f;
+            item3.Scale = 0.5f;
 
-            AddChild(menu, 1);
+            AddChild(menu, 11);
             Schedule(step, 1.0f);
         }
 
