@@ -1,5 +1,6 @@
 using System;
 using Cocos2D;
+using Microsoft.Xna.Framework;
 
 namespace tests
 {
@@ -29,16 +30,22 @@ namespace tests
         {
             base.OnEnter();
 
+            var s = CCDirector.SharedDirector.WinSize;
+
+            CCDrawNode draw = new CCDrawNode();
+            AddChild(draw, 10);
+
+            draw.DrawRect(new CCRect(0, s.Height - 20, s.Width, 20), new CCColor4B(Color.SlateGray));
+
             //add the menu item for back to main menu
             CCLabelTTF label = new CCLabelTTF("MainMenu", "arial", 20);
             CCMenuItemLabel pMenuItem = new CCMenuItemLabel(label, MainMenuCallback);
 
             CCMenu pMenu = new CCMenu(pMenuItem);
-            CCSize s = CCDirector.SharedDirector.WinSize;
             pMenu.Position = CCPoint.Zero;
-            pMenuItem.Position = new CCPoint(s.Width - 50, 25);
+            pMenuItem.Position = new CCPoint(50, s.Height - 12f);
 
-            AddChild(pMenu, 1);
+            AddChild(pMenu, 11);
             CCApplication.SharedApplication.GamePadDPadUpdate += _GamePadDPadDelegate;
             CCApplication.SharedApplication.GamePadButtonUpdate += _GamePadButtonDelegate;
         }

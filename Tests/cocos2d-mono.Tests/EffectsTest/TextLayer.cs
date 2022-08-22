@@ -37,9 +37,9 @@ namespace tests
             CCFiniteTimeAction sc2_back = sc2.Reverse();
             tamara.RunAction(new CCRepeatForever((new CCSequence(sc2, sc2_back))));
 
-            var label = new CCLabelTTF(EffectTestScene.effectsList[EffectTestScene.actionIdx], "arial", 32);
+            var label = new CCLabelTTF(EffectTestScene.effectsList[EffectTestScene.actionIdx], "arial", 24);
 
-            label.Position = new CCPoint(CCVisibleRect.Center.X, CCVisibleRect.Top.Y - 80);
+            label.Position = new CCPoint(CCVisibleRect.Center.X, CCVisibleRect.Top.Y - 30);
             AddChild(label);
             label.Tag = EffectTestScene.kTagLabel;
 
@@ -56,7 +56,11 @@ namespace tests
             item3.Position = new CCPoint(CCVisibleRect.Center.X + item2.ContentSize.Width * 2,
                                          CCVisibleRect.Bottom.Y + item2.ContentSize.Height / 2);
 
-            AddChild(menu, 1);
+            item1.Scale = 0.5f;
+            item2.Scale = 0.5f;
+            item3.Scale = 0.5f;
+
+            AddChild(menu, 11);
 
             Schedule(checkAnim);
         }

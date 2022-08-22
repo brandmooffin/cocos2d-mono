@@ -230,9 +230,10 @@ namespace Cocos2D
                         //TODO: for platforms with access to the file system, first check for the existence of the file 
                         return InternalLoad<T>(assetName, path, weakReference);
                     }
-                    catch (ContentLoadException)
+                    catch (ContentLoadException ex)
                     {
                         // try other path
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }

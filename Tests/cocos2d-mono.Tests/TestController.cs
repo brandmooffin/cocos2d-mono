@@ -28,6 +28,7 @@ namespace tests
             var pCloseItem = new CCMenuItemImage(TestResource.s_pPathClose, TestResource.s_pPathClose, closeCallback);
             var pMenu = new CCMenu(pCloseItem);
             var s = CCDirector.SharedDirector.WinSize;
+
 #if !XBOX && !OUYA
             TouchEnabled = true;
 #else
@@ -39,17 +40,24 @@ namespace tests
 #endif
 
             pMenu.Position = CCPoint.Zero;
-            pCloseItem.Position = new CCPoint(s.Width - 30, s.Height - 30);
+            pCloseItem.Position = new CCPoint(s.Width - 30, s.Height - 10);
+            pCloseItem.Scale = 0.5f;
 #if !PSM && !WINDOWS_PHONE
 #if NETFX_CORE && !WINDOWS_UWP
             CCLabelTTF versionLabel = new CCLabelTTF("v" + this.GetType().GetAssemblyName().Version.ToString(), "arial", 12);
 #else
-            CCLabelTTF versionLabel = new CCLabelTTF("v" + this.GetType().Assembly.GetName().Version.ToString(), "arial", 12);
+            CCLabelTTF versionLabel = new CCLabelTTF("v" + this.GetType().Assembly.GetName().Version.ToString(), "arial", 24);
 #endif
-            versionLabel.Position = new CCPoint(versionLabel.ContentSizeInPixels.Width/2f, s.Height - 18f);
+            versionLabel.Position = new CCPoint(versionLabel.ContentSizeInPixels.Width/2f, s.Height - 12f);
             versionLabel.HorizontalAlignment = CCTextAlignment.Left;
             AddChild(versionLabel, 20000);
 #endif
+            CCDrawNode draw = new CCDrawNode();
+            AddChild(draw, 10);
+
+            draw.DrawRect(new CCRect(0, 0, s.Width, 20), new CCColor4B(Color.SlateGray));
+            draw.DrawRect(new CCRect(0, s.Height - 20, s.Width, 20), new CCColor4B(Color.SlateGray));
+
             // add menu items for tests
             m_pItemMenu = new CCMenu();
             for (int i = 0; i < (int)(TestCases.TESTS_COUNT); ++i)
@@ -89,7 +97,7 @@ namespace tests
             AddChild(m_pItemMenu);
 
 #if !IOS
-            AddChild(pMenu, 1);
+            AddChild(pMenu, 11);
 #endif
 
             _GamePadDPadDelegate = new CCGamePadDPadDelegate(MyOnGamePadDPadUpdate);

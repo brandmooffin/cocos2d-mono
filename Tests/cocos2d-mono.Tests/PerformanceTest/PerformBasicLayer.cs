@@ -33,9 +33,13 @@ namespace tests
                 var item1 = new CCMenuItemImage("Images/b1", "Images/b2", backCallback);
                 var item2 = new CCMenuItemImage("Images/r1", "Images/r2", restartCallback);
                 var item3 = new CCMenuItemImage("Images/f1", "Images/f2", nextCallback);
-                item1.Position = new CCPoint(s.Width / 2 - 100, 30);
-                item2.Position = new CCPoint(s.Width / 2, 30);
-                item3.Position = new CCPoint(s.Width / 2 + 100, 30);
+                item1.Position = new CCPoint(s.Width / 2 - 100, 20);
+                item2.Position = new CCPoint(s.Width / 2, 20);
+                item3.Position = new CCPoint(s.Width / 2 + 100, 20);
+
+                item1.Scale = 0.5f;
+                item2.Scale = 0.5f;
+                item3.Scale = 0.5f;
 
                 pMenu.AddChild(item1, PerformanceTestScene.kItemTagBasic);
                 pMenu.AddChild(item2, PerformanceTestScene.kItemTagBasic);

@@ -56,14 +56,16 @@ namespace tests
             //CCSpriteFontCache.RegisterFont("Abduction", 26);
 
             // turn on display FPS
+#if DEBUG
             pDirector.DisplayStats = true;
+#endif
             // set FPS. the default value is 1.0/60 if you don't call this
             pDirector.AnimationInterval = 1.0 / 60;
-            CCSize designSize = new CCSize(480, 320);
+            CCSize designSize = new CCSize(1280, 720);
 
-            if (CCDrawManager.FrameSize.Height > 320)
+            if (CCDrawManager.FrameSize.Height > 720)
             {
-                CCSize resourceSize = new CCSize(960, 640);
+                CCSize resourceSize = new CCSize(1920, 1080);
                 CCContentManager.SharedContentManager.SearchPaths.Add("hd");
                 /*
                 CCContentManager.SharedContentManager.SearchPaths.Add("hd/extensions");
