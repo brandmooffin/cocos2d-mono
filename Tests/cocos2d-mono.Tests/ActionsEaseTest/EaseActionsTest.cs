@@ -34,9 +34,9 @@ namespace tests
             m_kathia.Position = new CCPoint(60, 150);
             m_tamara.Position = new CCPoint(60, 250);
 
-            var label = new CCLabelTTF(title(), "arial", 32);
-            AddChild(label);
-            label.Position = new CCPoint(s.Width / 2, s.Height - 50);
+            CCLabelTTF label = new CCLabelTTF(title(), "arial", 24);
+            Parent.AddChild(label, 11);
+            label.Position = (new CCPoint(s.Width / 2, s.Height - 10));
 
             var item1 = new CCMenuItemImage(TestResource.s_pPathB1, TestResource.s_pPathB2, backCallback);
             var item2 = new CCMenuItemImage(TestResource.s_pPathR1, TestResource.s_pPathR2, restartCallback);
@@ -44,11 +44,15 @@ namespace tests
 
             var menu = new CCMenu(item1, item2, item3);
             menu.Position = CCPoint.Zero;
-            item1.Position = new CCPoint(s.Width / 2 - 100, 30);
-            item2.Position = new CCPoint(s.Width / 2, 30);
-            item3.Position = new CCPoint(s.Width / 2 + 100, 30);
+            item1.Position = (new CCPoint(s.Width / 2 - 100, 20));
+            item2.Position = (new CCPoint(s.Width / 2, 20));
+            item3.Position = (new CCPoint(s.Width / 2 + 100, 20));
 
-            AddChild(menu, 1);
+            item1.Scale = 0.5f;
+            item2.Scale = 0.5f;
+            item3.Scale = 0.5f;
+
+            AddChild(menu, 11);
         }
 
         public void restartCallback(object pSender)

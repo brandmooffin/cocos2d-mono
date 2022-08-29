@@ -4277,6 +4277,90 @@
 /processorParam:TextureFormat=Color
 /build:Images/white-512x512.png
 
+#begin Particles/BoilingFoam.plist
+/copy:Particles/BoilingFoam.plist
+
+#begin Particles/BoilingFoam.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/BoilingFoam.png
+
+#begin Particles/BurstPipe.plist
+/copy:Particles/BurstPipe.plist
+
+#begin Particles/BurstPipe.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/BurstPipe.png
+
+#begin Particles/Comet.plist
+/copy:Particles/Comet.plist
+
+#begin Particles/Comet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/Comet.png
+
+#begin Particles/debian.plist
+/copy:Particles/debian.plist
+
+#begin Particles/ExplodingRing.plist
+/copy:Particles/ExplodingRing.plist
+
+#begin Particles/ExplodingRing.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/ExplodingRing.png
+
+#begin Particles/Flower.plist
+/copy:Particles/Flower.plist
+
+#begin Particles/Galaxy.plist
+/copy:Particles/Galaxy.plist
+
+#begin Particles/LavaFlow.plist
+/copy:Particles/LavaFlow.plist
+
+#begin Particles/LavaFlow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/LavaFlow.png
+
 #begin Particles/particleTexture.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -4288,6 +4372,51 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Particles/particleTexture.png
+
+#begin Particles/PeasTexture.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/PeasTexture.png
+
+#begin Particles/Phoenix.plist
+/copy:Particles/Phoenix.plist
+
+#begin Particles/phoenixLeftWing.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Particles/phoenixLeftWing.png
+
+#begin Particles/SmallSun.plist
+/copy:Particles/SmallSun.plist
+
+#begin Particles/SpinningPeas.plist
+/copy:Particles/SpinningPeas.plist
+
+#begin Particles/Spiral.plist
+/copy:Particles/Spiral.plist
+
+#begin Particles/SpookyPeas.plist
+/copy:Particles/SpookyPeas.plist
+
+#begin Particles/TestPremultipliedAlpha.plist
+/copy:Particles/TestPremultipliedAlpha.plist
+
+#begin Particles/Upsidedown.plist
+/copy:Particles/Upsidedown.plist
 
 #begin Sounds/background.mp3
 /importer:Mp3Importer
@@ -4301,6 +4430,9 @@
 /processorParam:Quality=Best
 /build:Sounds/effect1.wav
 
+#begin TileMaps/arial16.fnt
+/copy:TileMaps/arial16.fnt
+
 #begin TileMaps/fixed-ortho-test2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -4312,6 +4444,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TileMaps/fixed-ortho-test2.png
+
+#begin TileMaps/hexa-test.tmx
+/copy:TileMaps/hexa-test.tmx
+
+#begin TileMaps/hexa-test1.tmx
+/copy:TileMaps/hexa-test1.tmx
 
 #begin TileMaps/hexa-tiles.png
 /importer:TextureImporter
@@ -4349,6 +4487,9 @@
 /processorParam:TextureFormat=Color
 /build:TileMaps/iso-test.png
 
+#begin TileMaps/iso-test01.tmx
+/copy:TileMaps/iso-test01.tmx
+
 #begin TileMaps/iso-test1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -4361,6 +4502,12 @@
 /processorParam:TextureFormat=Color
 /build:TileMaps/iso-test1.png
 
+#begin TileMaps/iso-test1.tmx
+/copy:TileMaps/iso-test1.tmx
+
+#begin TileMaps/iso-test11.tmx
+/copy:TileMaps/iso-test11.tmx
+
 #begin TileMaps/iso-test2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -4372,6 +4519,87 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TileMaps/iso-test2.png
+
+#begin TileMaps/iso-test2.tmx
+/copy:TileMaps/iso-test2.tmx
+
+#begin TileMaps/iso-test22.tmx
+/copy:TileMaps/iso-test22.tmx
+
+#begin TileMaps/iso-test2-uncompressed.tmx
+/copy:TileMaps/iso-test2-uncompressed.tmx
+
+#begin TileMaps/iso-test-bug787.tmx
+/copy:TileMaps/iso-test-bug787.tmx
+
+#begin TileMaps/iso-test-movelayer.tmx
+/copy:TileMaps/iso-test-movelayer.tmx
+
+#begin TileMaps/iso-test-objectgroup.tmx
+/copy:TileMaps/iso-test-objectgroup.tmx
+
+#begin TileMaps/iso-test-vertexz.tmx
+/copy:TileMaps/iso-test-vertexz.tmx
+
+#begin TileMaps/iso-test-zorder.tmx
+/copy:TileMaps/iso-test-zorder.tmx
+
+#begin TileMaps/levelmap.tga
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TileMaps/levelmap.tga
+
+#begin TileMaps/orthogonal-test1.tmx
+/copy:TileMaps/orthogonal-test1.tmx
+
+#begin TileMaps/orthogonal-test1.tsx
+/copy:TileMaps/orthogonal-test1.tsx
+
+#begin TileMaps/orthogonal-test11.tsx
+/copy:TileMaps/orthogonal-test11.tsx
+
+#begin TileMaps/orthogonal-test2.tmx
+/copy:TileMaps/orthogonal-test2.tmx
+
+#begin TileMaps/orthogonal-test3.tmx
+/copy:TileMaps/orthogonal-test3.tmx
+
+#begin TileMaps/orthogonal-test4.tmx
+/copy:TileMaps/orthogonal-test4.tmx
+
+#begin TileMaps/orthogonal-test4-hd.tmx
+/copy:TileMaps/orthogonal-test4-hd.tmx
+
+#begin TileMaps/orthogonal-test5.tmx
+/copy:TileMaps/orthogonal-test5.tmx
+
+#begin TileMaps/orthogonal-test6.tmx
+/copy:TileMaps/orthogonal-test6.tmx
+
+#begin TileMaps/orthogonal-test6-hd.tmx
+/copy:TileMaps/orthogonal-test6-hd.tmx
+
+#begin TileMaps/orthogonal-test-movelayer.tmx
+/copy:TileMaps/orthogonal-test-movelayer.tmx
+
+#begin TileMaps/orthogonal-test-vertexz.tmx
+/copy:TileMaps/orthogonal-test-vertexz.tmx
+
+#begin TileMaps/orthogonal-test-zorder.tmx
+/copy:TileMaps/orthogonal-test-zorder.tmx
+
+#begin TileMaps/ortho-objects.tmx
+/copy:TileMaps/ortho-objects.tmx
+
+#begin TileMaps/ortho-rotation-test.tmx
+/copy:TileMaps/ortho-rotation-test.tmx
 
 #begin TileMaps/ortho-test1.png
 /importer:TextureImporter
@@ -4408,6 +4636,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TileMaps/ortho-test2.png
+
+#begin TileMaps/ortho-tile-property.tmx
+/copy:TileMaps/ortho-tile-property.tmx
+
+#begin TileMaps/test-object-layer.tmx
+/copy:TileMaps/test-object-layer.tmx
 
 #begin TileMaps/tiles.png
 /importer:TextureImporter

@@ -42,10 +42,10 @@ namespace tests
             CCFiniteTimeAction sc2_back = sc2.Reverse();
             tamara.RunAction(new CCRepeatForever ((CCActionInterval)(new CCSequence(sc2, sc2_back))));
 
-            CCLabelTTF label = new CCLabelTTF(title(), "arial", 28);
+            CCLabelTTF label = new CCLabelTTF(title(), "arial", 24);
 
-            label.Position = new CCPoint(CCVisibleRect.Center.X, CCVisibleRect.Top.Y - 80);
-            AddChild(label);
+            label.Position = new CCPoint(CCVisibleRect.Center.X, CCVisibleRect.Top.Y - 10);
+            Parent.AddChild(label, 11);
             label.Tag = EffectAdvanceScene.kTagLabel;
 
             CCMenuItemImage item1 = new CCMenuItemImage("Images/b1", "Images/b2", backCallback);
@@ -60,8 +60,11 @@ namespace tests
             item2.Position = new CCPoint(CCVisibleRect.Center.X, CCVisibleRect.Bottom.Y + item2.ContentSize.Height / 2);
             item3.Position = new CCPoint(CCVisibleRect.Center.X + item2.ContentSize.Width * 2,
                                          CCVisibleRect.Bottom.Y + item2.ContentSize.Height / 2);
+            item1.Scale = 0.5f;
+            item2.Scale = 0.5f;
+            item3.Scale = 0.5f;
 
-            AddChild(menu, 1);
+            AddChild(menu, 11);
         }
 
         public virtual string title()

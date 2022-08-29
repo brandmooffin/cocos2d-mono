@@ -104,7 +104,12 @@ namespace tests.FontTest
             item1.Position = new CCPoint(s.Width / 2 - item2.ContentSize.Width * 2, item2.ContentSize.Height / 2);
             item2.Position = new CCPoint(s.Width / 2, item2.ContentSize.Height / 2);
             item3.Position = new CCPoint(s.Width / 2 + item2.ContentSize.Width * 2, item2.ContentSize.Height / 2);
-            AddChild(menu, 1);
+
+            item1.Scale = 0.5f;
+            item2.Scale = 0.5f;
+            item3.Scale = 0.5f;
+
+            AddChild(menu, 11);
 
             var blockSize = new CCSize(s.Width / 3, 200);
 

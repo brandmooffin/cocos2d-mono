@@ -21,16 +21,16 @@ namespace tests.classes.tests.Box2DTestBet
 
             Box2DView view = Box2DView.viewWithEntryID(entryId);
             AddChild(view, 0, kTagBox2DNode);
-            view.Scale = 10;
+            view.Scale = 5;
             view.AnchorPoint = new CCPoint(0, 0);
-            view.Position = new CCPoint(s.Width / 2, s.Height / 4);
+            view.Position = new CCPoint(s.Width / 2, s.Height / 2);
             //#if (CC_TARGET_PLATFORM == CC_PLATFORM_MARMALADE)
             //    CCLabelBMFont* label = new CCLabelBMFont(view.title().c_str(),  "fonts/arial16.fnt");
             //#else    
-            CCLabelTTF label = new CCLabelTTF(view.title(), "arial", 28);
+            CCLabelTTF label = new CCLabelTTF(view.title(), "arial", 24);
             //#endif
-            AddChild(label, 1);
-            label.Position = new CCPoint(s.Width / 2, s.Height - 50);
+            AddChild(label, 11);
+            label.Position = new CCPoint(s.Width / 2, s.Height - 10);
 
             CCMenuItemImage item1 = new CCMenuItemImage("Images/b1", "Images/b2", backCallback);
             CCMenuItemImage item2 = new CCMenuItemImage("Images/r1", "Images/r2", restartCallback);
@@ -39,11 +39,15 @@ namespace tests.classes.tests.Box2DTestBet
             CCMenu menu = new CCMenu(item1, item2, item3);
 
             menu.Position = CCPoint.Zero;
-            item1.Position = new CCPoint(s.Width / 2 - 100, 30);
-            item2.Position = new CCPoint(s.Width / 2, 30);
-            item3.Position = new CCPoint(s.Width / 2 + 100, 30);
+            item1.Position = (new CCPoint(s.Width / 2 - 100, 20));
+            item2.Position = (new CCPoint(s.Width / 2, 20));
+            item3.Position = (new CCPoint(s.Width / 2 + 100, 20));
 
-            AddChild(menu, 1);
+            item1.Scale = 0.5f;
+            item2.Scale = 0.5f;
+            item3.Scale = 0.5f;
+
+            AddChild(menu, 11);
 
             return true;
         }
