@@ -227,7 +227,14 @@ namespace Cocos2D
                 {
                     string externalTilesetFilename = attributeDict["source"];
 
+                    var isTsxExtension = externalTilesetFilename.ToLower().EndsWith(".tsx");
+
                     externalTilesetFilename = CCFileUtils.FullPathFromRelativeFile(externalTilesetFilename, pTMXMapInfo.TMXFileName);
+
+                    if (isTsxExtension)
+                    {
+                        externalTilesetFilename += ".tsx";
+                    }
 
                     m_uCurrentFirstGID = uint.Parse(attributeDict["firstgid"]);
                     
