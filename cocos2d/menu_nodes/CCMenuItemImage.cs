@@ -8,13 +8,23 @@ namespace Cocos2D
         {
         }
 
+        public CCMenuItemImage(string normalImage)
+            : this(normalImage, normalImage, normalImage, null)
+        {
+        }
+
         public CCMenuItemImage(string normalImage, string selectedImage)
-            :this(normalImage, selectedImage, null, null)
+            :this(normalImage, selectedImage, normalImage, null)
         {
         }
 
         public CCMenuItemImage(string normalImage, string selectedImage, Action<CCMenuItem> selector)
-            :this(normalImage, selectedImage, null, selector)
+            :this(normalImage, selectedImage, normalImage, selector)
+        {
+        }
+
+        public CCMenuItemImage(string normalImage, string selectedImage, string disabledImage)
+            : this(normalImage, selectedImage, disabledImage, null)
         {
         }
 
@@ -36,11 +46,6 @@ namespace Cocos2D
             {
                 DisabledImage = new CCSprite(disabledImage);
             }
-        }
-
-        public CCMenuItemImage(string normalImage, string selectedImage, string disabledImage)
-            : this(normalImage, selectedImage, disabledImage, null)
-        {
         }
 
         public void SetNormalSpriteFrame(CCSpriteFrame frame)
