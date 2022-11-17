@@ -13,7 +13,8 @@
     <description>$description$</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
-    - TileMap fixes
+    - Bump UWP target
+    - CCMenuItemSprite and CCMenuItemImage Improvements
     </releaseNotes>
     <copyright>Copyright © 2022 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
