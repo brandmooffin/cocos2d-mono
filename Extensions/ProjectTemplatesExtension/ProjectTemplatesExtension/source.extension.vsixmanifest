@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="ProjectTemplatesExtension.327cd466-fef6-4389-b1ae-4bc0f776698b" Version="1.6" Language="en-US" Publisher="Cocos2D-Mono Team &amp; Broken Walls Studios" />
+        <Identity Id="ProjectTemplatesExtension.327cd466-fef6-4389-b1ae-4bc0f776698b" Version="1.8" Language="en-US" Publisher="Cocos2D-Mono Team &amp; Broken Walls Studios" />
         <DisplayName>Cocos2D-Mono Project Templates</DisplayName>
         <Description xml:space="preserve">This package contains a set of C# project templates written for the cocos2d-mono library </Description>
         <MoreInfo>https://cocos2d-mono.dev/</MoreInfo>

@@ -12,7 +12,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>1.3.2.0</Version>
+    <Version>1.3.3.0</Version>
     <PackageId>box2d.DesktopGL</PackageId>
     <Company>Broken Walls Studios</Company>
     <Copyright>Copyright ©  2022 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -24,8 +24,8 @@
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>Removed obsolete methods
-Update OpenTK Reference</PackageReleaseNotes>
+    <PackageReleaseNotes>- Bump UWP target
+- CCMenuItemSprite &amp; CCMenuItemImage Improvements</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageIcon>logo-small.png</PackageIcon>
