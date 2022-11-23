@@ -15,7 +15,7 @@ Here are a few simple rules and suggestions to remember when contributing to Coc
 - **DO NOT** reorder type members as it makes it difficult to compare code changes in a PR.
 - **DO** try to follow our [coding style](/docs/contributing/code-guidelines.md) for new code.
 - **DO** give priority to the existing style of the file you're changing.
-- **DO** try to add to the [tests](Tests) when adding new features or fixing bugs.
+- **DO** try to add to the [tests](https://github.com/brandmooffin/cocos2d-mono/tree/master/Tests) when adding new features or fixing bugs.
 - **DO NOT** send PRs for code style changes or make code changes just for the sake of style.
 - **PLEASE** keep a civil and respectful tone when discussing and reviewing contributions.
 - **PLEASE** tell others about Cocos2D-Mono and your contributions via social media.
