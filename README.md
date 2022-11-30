@@ -13,3 +13,11 @@
 [![iOS](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/dotnet-desktop.yml)
 
 </div>
+
+# Getting Started
+
+Check out the [guides](https://cocos2d-mono.dev/docs/category/getting-started)!
+
+# Contributing
+
+Thanks so much for your interest in cocos2d-mono and wanting to contribute to the project! Here's a [guide](https://cocos2d-mono.dev/docs/category/contributing) to help you get started.
