@@ -1,19 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
     <ProjectGuid>{CE272322-EEA8-4CDF-86E9-4FAA85D0BB98}</ProjectGuid>
-    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TemplateGuid>{440aa056-593a-4519-8708-27081dee632f}</TemplateGuid>
     <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0-ios16.1</TargetFramework>
+    <SupportedOSPlatformVersion>15.4</SupportedOSPlatformVersion>
     <RootNamespace>cocos2d_mono.Tests.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>cocos2d-mono.Tests.iOS</AssemblyName>
-    <MonoGamePlatform>iOS</MonoGamePlatform>
-    <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
-    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +21,12 @@
     <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CollectBundleResourcesDependsOn>
+      $(CollectBundleResourcesDependsOn);
+      IncludeContent;
+    </CollectBundleResourcesDependsOn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -61,29 +62,15 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Entitlements.plist" />
-    <InterfaceDefinition Include="LaunchScreen.storyboard" />
     <MonoGameContentReference Include="..\Content\Content.mgcb">
       <Link>Content\Content.mgcb</Link>
     </MonoGameContentReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="Xamarin.iOS" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task">
-      <Version>3.8.0.1641</Version>
-    </PackageReference>
-    <PackageReference Include="MonoGame.Framework.iOS">
-      <Version>3.8.0.1641</Version>
-    </PackageReference>
-    <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.1.303" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.5" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
@@ -130,22 +117,27 @@
     </ImageAsset>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\box2d\box2d.iOS\box2d.iOS.csproj">
       <Project>{8ac4c3cc-9bcd-405c-be0b-5c217a054b78}</Project>
       <Name>box2d.iOS</Name>
       <IsAppExtension>false</IsAppExtension>
       <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\cocos2d\cocos2d.iOS\cocos2d-mono.iOS.csproj">
+    <ProjectReference Include="..\..\..\cocos2d\cocos2d.iOS\cocos2d.iOS.csproj">
       <Project>{e71f3053-056c-4381-9638-048ed73bdff6}</Project>
       <Name>cocos2d-mono.iOS</Name>
       <IsAppExtension>false</IsAppExtension>
       <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
   </ItemGroup>
+  <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
+    <Message Text="Restoring dotnet tools" Importance="High" />
+    <Exec Command="dotnet tool restore" />
+  </Target>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+  </Target>
   <Import Project="..\cocos2d-mono.Tests.projitems" Label="Shared" />
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
