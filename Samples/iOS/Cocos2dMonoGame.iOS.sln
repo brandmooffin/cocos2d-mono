@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cocos2DMonoGame.iOS", "Cocos2DMonoGame.iOS\Cocos2DMonoGame.iOS.csproj", "{9554F207-CAC8-4214-842B-35B4FF37D6E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cocos2DMonoGame.iOS", "Cocos2DMonoGame.iOS\Cocos2DMonoGame.iOS.csproj", "{9554F207-CAC8-4214-842B-35B4FF37D6E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,10 @@ Global
 		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.AppStore|iPhone.Build.0 = AppStore|iPhone
 		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.AppStore|iPhoneSimulator.ActiveCfg = AppStore|iPhoneSimulator
 		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.AppStore|iPhoneSimulator.Build.0 = AppStore|iPhoneSimulator
-		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.Debug|iPhone.ActiveCfg = Debug|iPhone
-		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.Debug|iPhone.Build.0 = Debug|iPhone
-		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
-		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
 		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.Release|iPhone.ActiveCfg = Release|iPhone
 		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.Release|iPhone.Build.0 = Release|iPhone
 		{9554F207-CAC8-4214-842B-35B4FF37D6E5}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator

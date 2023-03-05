@@ -7,14 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TetrisGame.DesktopGL", "Tet
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TetrisGame.Core", "TetrisGame.Core\TetrisGame.Core.shproj", "{94CB04D2-BAAD-4402-88B4-D3CB783CE93D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TetrisGame.Android", "TetrisGame.Android\TetrisGame.Android.csproj", "{68434821-E431-409B-9A9D-4D24EFC863E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TetrisGame.Android", "TetrisGame.Android\TetrisGame.Android.csproj", "{68434821-E431-409B-9A9D-4D24EFC863E6}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		TetrisGame.Core\TetrisGame.Core.projitems*{68434821-e431-409b-9a9d-4d24efc863e6}*SharedItemsImports = 4
-		TetrisGame.Core\TetrisGame.Core.projitems*{94cb04d2-baad-4402-88b4-d3cb783ce93d}*SharedItemsImports = 13
-		TetrisGame.Core\TetrisGame.Core.projitems*{a428e36d-3d82-4ef2-94b1-fb381bccb70a}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -36,5 +31,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8DF839C7-E343-4330-8A19-1FBD0611080E}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		TetrisGame.Core\TetrisGame.Core.projitems*{68434821-e431-409b-9a9d-4d24efc863e6}*SharedItemsImports = 5
+		TetrisGame.Core\TetrisGame.Core.projitems*{94cb04d2-baad-4402-88b4-d3cb783ce93d}*SharedItemsImports = 13
+		TetrisGame.Core\TetrisGame.Core.projitems*{a428e36d-3d82-4ef2-94b1-fb381bccb70a}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

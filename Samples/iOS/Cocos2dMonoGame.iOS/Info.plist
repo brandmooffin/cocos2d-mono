@@ -11,7 +11,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>project.MonoGame.Cocos2DMonoGame.iOS</string>
 	<key>MinimumOSVersion</key>
-	<string>7.0</string>
+	<string>15.4</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
