@@ -82,6 +82,7 @@ namespace tests
 
         protected override void Update(GameTime gameTime)
         {
+#if !IOS
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) {
 #if WINRT || WINDOWS_STOREAPP || WINDOWS_PHONE8 || IOS
@@ -93,7 +94,7 @@ namespace tests
                 Exit();
 #endif
             }
-
+#endif
 
             // TODO: Add your update logic here
 

@@ -1,19 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{8AC4C3CC-9BCD-405C-BE0B-5C217A054B78}</ProjectGuid>
-    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TemplateGuid>{a52b8a63-bc84-4b47-910d-692533484892}</TemplateGuid>
+    <TargetFramework>net6.0-ios16.1</TargetFramework>
+    <SupportedOSPlatformVersion>15.4</SupportedOSPlatformVersion>
     <OutputType>Library</OutputType>
     <RootNamespace>box2d.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>box2d.iOS</AssemblyName>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <Title>box2d for iOS</Title>
+    <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
+    <Version>2.4.0.0</Version>
+    <Description>box2d for iOS</Description>
+    <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
+    <PackageReleaseNotes>    - Support for MonoGame 3.8.1
+    - Migrate .Net 6
+    - Bump minimum iOS version to 15.4</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,27 +40,15 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing.Common" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="Xamarin.iOS" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task">
-      <Version>3.8.0.1641</Version>
-    </PackageReference>
-    <PackageReference Include="MonoGame.Framework.iOS">
-      <Version>3.8.0.1641</Version>
-    </PackageReference>
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.1.303" />
   </ItemGroup>
   <Import Project="..\box2d.projitems" Label="Shared" />
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
+    <Message Text="Restoring dotnet tools" Importance="High" />
+    <Exec Command="dotnet tool restore" />
+  </Target>
 </Project>
