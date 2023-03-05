@@ -6,6 +6,16 @@
     <RootNamespace>box2d.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>box2d.iOS</AssemblyName>
+    <Title>box2d for iOS</Title>
+    <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
+    <Version>2.4.0.0</Version>
+    <Description>box2d for iOS</Description>
+    <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
+    <PackageReleaseNotes>    - Support for MonoGame 3.8.1
+    - Migrate .Net 6
+    - Bump minimum iOS version to 15.4</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,8 +43,8 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task"  Version="3.8.1.303"/>
-    <PackageReference Include="MonoGame.Framework.iOS"  Version="3.8.1.303"/>
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.1.303" />
   </ItemGroup>
   <Import Project="..\box2d.projitems" Label="Shared" />
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

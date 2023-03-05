@@ -545,7 +545,6 @@
     <AndroidAsset Include="Assets\Content\zwoptex\grossini-generic.xnb" />
     <AndroidAsset Include="Assets\Content\zwoptex\grossini.plist.xnb" />
     <AndroidAsset Include="Assets\Content\zwoptex\grossini.xnb" />
-    <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />

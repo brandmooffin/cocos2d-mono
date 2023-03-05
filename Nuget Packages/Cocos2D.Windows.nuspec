@@ -13,17 +13,17 @@
     <description>$description$</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
-    - Bump UWP target
-    - CCMenuItemSprite and CCMenuItemImage Improvements
+    - Support for MonoGame 3.8.1
+    - Migrate .Net 6
     </releaseNotes>
-    <copyright>Copyright © 2022 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
+    <copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
     <dependencies>
       <dependency id="BitMiracle.LibTiff.NET" version="2.4.639" />
-      <dependency id="MonoGame.Framework.WindowsDX" version="3.8.0.1641" />
-      <dependency id="MonoGame.Content.Builder.Task" version="3.8.0.1641" />
+      <dependency id="MonoGame.Framework.WindowsDX" version="3.8.1.303" />
+      <dependency id="MonoGame.Content.Builder.Task" version="3.8.1.303" />
       <dependency id="SharpZipLib" version="1.3.3" />
-      <dependency id="System.Drawing.Common" version="5.0.0" />
+      <dependency id="System.Drawing.Common" version="5.0.3" />
     </dependencies>
   </metadata>
   <files>

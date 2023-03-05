@@ -7,6 +7,17 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>cocos2d-mono.iOS</AssemblyName>
     <BaseIntermediateOutputPath>obj\iOS\Debug</BaseIntermediateOutputPath>
+    <PackageReleaseNotes>    - Support for MonoGame 3.8.1
+    - Migrate .Net 6
+    - Bump minimum iOS version to 15.4</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
+    <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
+    <Version>2.4.0.0</Version>
+    <Description>Cocos2D-Mono for iOS</Description>
+    <Title>Cocos2D-Mono for iOS</Title>
+    <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <PackageTags>mono monogame cocos2d game</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
