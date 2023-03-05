@@ -14,17 +14,19 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.Windows</PackageId>
-    <Version>2.3.12.0</Version>
+    <Version>2.4.0.0</Version>
     <Description>Cocos2D-Mono for Windows (DX)</Description>
-    <Copyright>Copyright © 2022 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
     <Company>Broken Walls Studios</Company>
     <Product>cocos2d-mono for Windows</Product>
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>- Bump UWP target
-- CCMenuItemSprite &amp; CCMenuItemImage Improvements</PackageReleaseNotes>
+    <PackageReleaseNotes>
+		- Support for MonoGame 3.8.1
+		- Migrate .Net 6
+	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageIcon>logo-small.png</PackageIcon>
