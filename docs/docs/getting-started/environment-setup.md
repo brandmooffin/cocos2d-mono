@@ -26,4 +26,4 @@ You should see something similar to the following:
 
 You now have everything you need to start start developing with Cocos2D-Mono
 
-NOTE: Cocos2D-Mono is currently built with MonoGame Framework 3.8 and included as a nuget package, so no need to pull the MonoGame source code! (Unless you want to anyways, then go for it)
+**NOTE:** Cocos2D-Mono is currently built with MonoGame Framework 3.8 and included as a nuget package, so no need to pull the MonoGame source code! (Unless you want to anyways, then go for it)
