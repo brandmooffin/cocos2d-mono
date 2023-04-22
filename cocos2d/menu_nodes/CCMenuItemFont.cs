@@ -12,9 +12,19 @@ namespace Cocos2D
         
 		public CCMenuItemFont (string value, Action<CCMenuItem> selector)
         {
-            InitWithString(value, selector);
+            InitWithString(value, _fontName, (int)_fontSize, selector);
         }
-        
+
+        public CCMenuItemFont(string value, string fontName, Action<CCMenuItem> selector)
+        {
+            InitWithString(value, fontName, (int)_fontSize, selector);
+        }
+
+        public CCMenuItemFont(string value, string fontName, int fontSize, Action<CCMenuItem> selector)
+        {
+            InitWithString(value, fontName, fontSize, selector);
+        }
+
         /// <summary>
         /// Sets the font size for all items.
         /// </summary>
@@ -68,12 +78,12 @@ namespace Cocos2D
             }
         }
 
-		protected virtual bool InitWithString(string value, Action<CCMenuItem> selector)
+		protected virtual bool InitWithString(string value, string fontName, int fontSize, Action<CCMenuItem> selector)
         {
             //CCAssert( value != NULL && strlen(value) != 0, "Value length must be greater than 0");
 
-            m_strFontName = _fontName;
-            m_uFontSize = _fontSize;
+            m_strFontName = fontName;
+            m_uFontSize = (uint)fontSize;
 
             CCLabelTTF label = new CCLabelTTF(value, m_strFontName, m_uFontSize);
             base.InitWithLabel(label, selector);
