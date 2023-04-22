@@ -9,7 +9,7 @@
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>2.4.0.0</Version>
+    <Version>2.4.1.0</Version>
     <Title>box2d for Android</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
     <Description>box2d for Android</Description>
@@ -17,8 +17,11 @@
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageTags>mono monogame cocos2d game</PackageTags>
-    <PackageReleaseNotes>    - Support for MonoGame 3.8.1
-    - Migrate .Net 6</PackageReleaseNotes>
+    <PackageReleaseNotes>    - Add Support to Align Menu Items Left or Right Vertically
+    - Fix support for initializing CCSprite with CCTexture2D
+    - Support Change Text using Property for CCMenuItemFont
+    - Add support for passing in fontname and fontsize for CCMenuItemFont</PackageReleaseNotes>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
