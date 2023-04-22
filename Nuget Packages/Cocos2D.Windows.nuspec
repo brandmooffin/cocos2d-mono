@@ -13,8 +13,10 @@
     <description>$description$</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
-    - Support for MonoGame 3.8.1
-    - Migrate .Net 6
+    - Add Support to Align Menu Items Left or Right Vertically
+    - Fix support for initializing CCSprite with CCTexture2D
+    - Support Change Text using Property for CCMenuItemFont
+    - Add support for passing in fontname and fontsize for CCMenuItemFont
     </releaseNotes>
     <copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>

@@ -1,4 +1,5 @@
 using System;
+using System.Reflection.Emit;
 
 namespace Cocos2D
 {
@@ -64,6 +65,16 @@ namespace Cocos2D
                     }
                 }
                 base.Enabled = value;
+            }
+        }
+
+        public string Text
+        {
+            get { return (m_pLabel as ICCLabelProtocol).Text; }
+            set
+            {
+                (m_pLabel as ICCLabelProtocol).Text = (value);
+                ContentSize = m_pLabel.ContentSize;
             }
         }
 

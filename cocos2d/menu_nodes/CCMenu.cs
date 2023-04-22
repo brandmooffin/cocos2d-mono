@@ -11,6 +11,13 @@ namespace Cocos2D
         Focused
     };
 
+    public enum CCMenuAlignment
+    {
+        Center,
+        Left,
+        Right
+    }
+
     /// <summary>
     /// A CCMenu
     /// Features and Limitation:
@@ -344,12 +351,12 @@ namespace Cocos2D
 
         #region Menu - Alignment
 
-        public void AlignItemsVertically()
+        public void AlignItemsVertically(CCMenuAlignment alignment = CCMenuAlignment.Center)
         {
-            AlignItemsVerticallyWithPadding(kDefaultPadding);
+            AlignItemsVerticallyWithPadding(kDefaultPadding, alignment);
         }
 
-        public void AlignItemsVerticallyWithPadding(float padding)
+        public void AlignItemsVerticallyWithPadding(float padding, CCMenuAlignment alignment = CCMenuAlignment.Center)
         {
             float width = 0f;
             float height = 0f; 
@@ -378,6 +385,19 @@ namespace Cocos2D
                         continue;
                     }
                     pChild.Position = new CCPoint(0, y - pChild.ContentSizeInPixels.Height  / 2.0f);
+
+
+                    if (alignment == CCMenuAlignment.Right)
+                    {
+                        pChild.Position += new CCPoint(width + width / 2 - pChild.ContentSizeInPixels.Width / 2, 0);
+                    }
+
+                    if (alignment == CCMenuAlignment.Left)
+                    {
+                        pChild.Position += new CCPoint(width / 2 + pChild.ContentSizeInPixels.Width / 2, 0);
+                    }
+
+
                     y -= pChild.ContentSizeInPixels.Height  + padding;
                     width = Math.Max(width, pChild.ContentSizeInPixels.Width );
                 }
