@@ -79,7 +79,7 @@ namespace Cocos2D
             RefreshAntialiasSetting ();
         }
 
-        public CCTexture2D(string fileName)
+        public CCTexture2D(string fileName) : this()
         {
             if (!InitWithFile(fileName))
             {
