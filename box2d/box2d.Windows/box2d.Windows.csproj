@@ -13,7 +13,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>1.4.0.0</Version>
+    <Version>2.4.1.0</Version>
     <PackageId>box2d.Windows</PackageId>
     <Company>Broken Walls Studios</Company>
     <Copyright>Copyright ©  2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -25,10 +25,10 @@
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>
-		- Support for MonoGame 3.8.1
-		- Migrate .Net 6
-	</PackageReleaseNotes>
+    <PackageReleaseNotes>    - Add Support to Align Menu Items Left or Right Vertically
+    - Fix support for initializing CCSprite with CCTexture2D
+    - Support Change Text using Property for CCMenuItemFont
+    - Add support for passing in fontname and fontsize for CCMenuItemFont</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageIcon>logo-small.png</PackageIcon>
