@@ -2,7 +2,9 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
+using Android.Widget;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace AppGame.Android
 {
@@ -16,20 +18,20 @@ namespace AppGame.Android
         ScreenOrientation = ScreenOrientation.FullUser,
         ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenSize
     )]
-    public class Activity1 : AndroidGameActivity
+    public class AppActivity : Activity
     {
-        private Game1 _game;
-        private View _view;
-
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+            SetContentView(Resource.Layout.activity_main);
 
-            _game = new Game1();
-            _view = _game.Services.GetService(typeof(View)) as View;
+            Button fab = FindViewById<Button>(Resource.Id.startGameButton);
+            fab.Click += OnStartGameClick;
+        }
 
-            SetContentView(_view);
-            _game.Run();
+        private void OnStartGameClick(object sender, EventArgs eventArgs)
+        {
+            StartActivity(typeof(GameActivity));
         }
     }
 }

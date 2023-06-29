@@ -9,9 +9,9 @@ namespace AppGame.Shared.Scenes
             base.OnEnter();
             var size = CCDirector.SharedDirector.WinSize;
 
-            var highScoreTitleLabel = new CCLabelTTF("Hello World!", "MarkerFelt", 13);
+            var highScoreTitleLabel = new CCLabelTTF("Hello World!", "MarkerFelt", 22);
             highScoreTitleLabel.Color = CCColor3B.White;
-            highScoreTitleLabel.Position = new CCPoint(size.Width - 100, size.Height - 30);
+            highScoreTitleLabel.Position = CCDirector.SharedDirector.WinSize.Center;
             AddChild(highScoreTitleLabel);
 
             ScheduleUpdate();
