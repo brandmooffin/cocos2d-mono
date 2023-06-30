@@ -101,6 +101,9 @@ namespace AppGame.Shared
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if (CCDirector.SharedDirector.IsPaused) {
+                return;
+            }
 #if !__IOS__ && !__TVOS__
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -112,7 +115,9 @@ namespace AppGame.Shared
 #endif
 
             if (IsExiting) {
+#if ANDROID
                 IsExiting = false;
+#endif
                 Console.WriteLine("Attempting to exit game...");
                 ExitGame();
                 return;
@@ -131,6 +136,11 @@ namespace AppGame.Shared
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            if (CCDirector.SharedDirector.IsPaused)
+            {
+                return;
+            }
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
@@ -143,33 +153,29 @@ namespace AppGame.Shared
             Console.WriteLine("Game exiting...");
             // TODO: add your exit code here to restore the device to its per-game environment.
             CCSimpleAudioEngine.SharedEngine.RestoreMediaState();
-            //CCApplication.SharedApplication.Game.Exit();
-            //CCApplication.SharedApplication.Dispose();
 
             Console.WriteLine("Exiting game...");
 
-            // application.Dispose();
-            
-            //CCDirector.SharedDirector.PurgeCachedData();
-
             CCDirector.SharedDirector.PopScene();
+           
             CCDirector.SharedDirector.End();
 
-            //CCSpriteFontCache.SharedInstance.Clear();
-
-            //CCApplication.SharedApplication.Game.Exit();
-            //
-            //GraphicsDevice.Dispose();
-            //graphics.Dispose();
-            //application = null;//.Dispose();
 #if ANDROID
             Game.Activity.Finish();
 #endif
 #if IOS
-            GameViewController.DismissViewController(true, null);
+            var viewController = Services.GetService(typeof(UIViewController)) as UIViewController;
+            var subview = viewController.View;
+
+            var gameWindow = Services.GetService(typeof(UIWindow)) as UIWindow;
+            gameWindow.Subviews[0].RemoveFromSuperview();
+
+            viewController = GameViewController;
+
+            viewController.ViewDidAppear(true);
+
+            // CCDirector.SharedDirector.Pause();
 #endif
-            //Components.Clear();
-            //Exit();
         }
     }
 }

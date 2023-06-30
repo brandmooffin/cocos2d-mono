@@ -27,7 +27,7 @@ namespace AppGame.Shared.Scenes
                 Opacity = 255
             };
 
-            var label = new CCLabelTTF("Hello World!", "gamefont", 72)
+            var label = new CCLabelTTF("Hello", "gamefont", 72)
             {
                 Color = CCColor3B.White,
                 Position = size.Center
@@ -65,6 +65,8 @@ namespace AppGame.Shared.Scenes
 
             RemoveAllChildren();
             RemoveFromParent();
+
+            UnscheduleUpdate();
         }
 
         public override void Update(float gameTime)

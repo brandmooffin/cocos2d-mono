@@ -72,7 +72,6 @@ namespace AppGame.Shared
                     Console.WriteLine("Running with scene...");
                     pDirector.RunWithScene(currentScene);
                 }
-                //pDirector.RunWithScene(IntroLayer.Scene);
             }
             catch (Exception ex)
             {
