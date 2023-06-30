@@ -1,4 +1,5 @@
-﻿#----------------------------- Global Properties ----------------------------#
+
+#----------------------------- Global Properties ----------------------------#
 
 /outputDir:bin/$(Platform)
 /intermediateDir:obj/$(Platform)
@@ -11,6 +12,13 @@
 
 
 #---------------------------------- Content ---------------------------------#
+
+#begin fonts/gamefont-72.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/gamefont-72.spritefont
 
 #begin fonts/MarkerFelt-16.spritefont
 /importer:FontDescriptionImporter
@@ -39,3 +47,16 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/MarkerFelt-64.spritefont
+
+#begin sprites/logo-small.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:sprites/logo-small.png
+

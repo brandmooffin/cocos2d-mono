@@ -1,5 +1,6 @@
-﻿using Foundation;
-using System;
+﻿using AppGame.Shared;
+using AppGame.Shared.Scenes;
+using Foundation;
 using UIKit;
 
 namespace AppGame.iOS
@@ -7,11 +8,11 @@ namespace AppGame.iOS
     [Register("AppDelegate")]
     internal class Program : UIApplicationDelegate
     {
-        private static Game1 game;
+        private static SampleGame game;
 
         internal static void RunGame()
         {
-            game = new Game1();
+            game = new SampleGame(new IntroScene());
             game.Run();
         }
 

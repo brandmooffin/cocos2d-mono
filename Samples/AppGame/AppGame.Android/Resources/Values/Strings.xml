@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">AppGame.Android</string>
-  <string name="start_game">Start Game</string>
+  <string name="intro_game">Intro Game</string>
+	<string name="start_game">Start Game</string>
 </resources>

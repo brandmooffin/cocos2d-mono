@@ -9,6 +9,9 @@
     <Import_RootNamespace>AppGame.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AppDelegate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SampleGame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\InteractionScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\IntroScene.cs" />
   </ItemGroup>
 </Project>

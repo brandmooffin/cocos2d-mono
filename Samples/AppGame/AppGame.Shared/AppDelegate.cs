@@ -1,23 +1,31 @@
-﻿using Cocos2D;
+﻿using AppGame.Shared.Scenes;
+using Cocos2D;
 using CocosDenshion;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace AppGame.Android
+namespace AppGame.Shared
 {
     /// <summary>
-	/// This is your extension of the main Cocos2D application object.
+    /// This is your extension of the main Cocos2D application object.
     /// </summary>
     internal class AppDelegate : CCApplication
     {
-        public AppDelegate(Game game, GraphicsDeviceManager graphics)
+        GraphicsDeviceManager graphics;
+        CCScene currentScene;
+        public AppDelegate(Game game, GraphicsDeviceManager graphics, CCScene currentScene)
             : base(game, graphics)
         {
+            Console.WriteLine("Initializing delegate...");
+            this.graphics = graphics;
             s_pSharedApplication = this;
             //
             // TODO: Set the display orientation that you want for this game.
             // 
             CCDrawManager.InitializeDisplay(game, graphics, DisplayOrientation.Portrait);
+            this.currentScene = currentScene;
         }
 
         /// <summary>
@@ -29,6 +37,7 @@ namespace AppGame.Android
         /// </returns>
         public override bool ApplicationDidFinishLaunching()
         {
+            Console.WriteLine("Launching game...");
             CCSimpleAudioEngine.SharedEngine.SaveMediaState();
 
             CCDirector pDirector = null;
@@ -38,23 +47,32 @@ namespace AppGame.Android
                 // design hardware.
                 //
                 CCDrawManager.SetDesignResolutionSize(480f, 800f, CCResolutionPolicy.ShowAll);
-                CCApplication.SharedApplication.GraphicsDevice.Clear(Color.Black);
+                CCApplication.SharedApplication.GraphicsDevice.Clear(Color.DarkRed);
                 //initialize director
                 pDirector = CCDirector.SharedDirector;
                 pDirector.SetOpenGlView();
 
                 //turn on display FPS
-                pDirector.DisplayStats = false;
+                pDirector.DisplayStats = true;
 
                 // set FPS. the default value is 1.0/60 if you don't call this
-#if WINDOWS_PHONE
-                pDirector.AnimationInterval = 1f / 30f;
-#else
                 pDirector.AnimationInterval = 1.0 / 60;
-#endif
-                CCScene pScene = IntroLayer.Scene;
 
-                pDirector.RunWithScene(pScene);
+                pDirector.ResetSceneStack();
+
+                graphics.ApplyChanges();
+
+                if (pDirector.RunningScene != null)
+                {
+                    Console.WriteLine("Replacing running scene...");
+                    pDirector.ReplaceScene(currentScene);
+                }
+                else
+                {
+                    Console.WriteLine("Running with scene...");
+                    pDirector.RunWithScene(currentScene);
+                }
+                //pDirector.RunWithScene(IntroLayer.Scene);
             }
             catch (Exception ex)
             {
@@ -73,6 +91,8 @@ namespace AppGame.Android
             // TODO: Save the game state and pause your music
             //
             CCDirector.SharedDirector.Pause();
+
+            Console.WriteLine("Pausing game...");
         }
 
         /// <summary>
@@ -85,6 +105,8 @@ namespace AppGame.Android
             // reset the playback of audio
             //
             CCDirector.SharedDirector.ResumeFromBackground();
+
+            Console.WriteLine("Resuming game...");
         }
     }
 }

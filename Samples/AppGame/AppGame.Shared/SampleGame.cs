@@ -1,28 +1,32 @@
 ﻿using Cocos2D;
 using CocosDenshion;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
+using System;
 
-namespace AppGame.Android
+namespace AppGame.Shared
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
-    public class Game1 : Game
+    public class SampleGame : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public Game1()
+        CCApplication application;
+
+        CCScene sceneToLoad;
+
+        public SampleGame(CCScene sceneToLoad)
         {
+            Console.WriteLine("Initializing game & delegate...");
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            this.sceneToLoad = sceneToLoad;
 
             // This is the main Cocos2D connection. The CCApplication is the manager of the
             // nodes that define your game.
             //
-            CCApplication application = new AppDelegate(this, graphics);
+            application = new AppDelegate(this, graphics, sceneToLoad);
             this.Components.Add(application);
         }
 
@@ -35,6 +39,7 @@ namespace AppGame.Android
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            Console.WriteLine("Game initializing...");
 
             base.Initialize();
         }
@@ -45,6 +50,7 @@ namespace AppGame.Android
         /// </summary>
         protected override void LoadContent()
         {
+            Console.WriteLine("Game loading content...");
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -58,6 +64,7 @@ namespace AppGame.Android
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            Console.WriteLine("Game unloading content...");
         }
 
         /// <summary>
@@ -70,8 +77,12 @@ namespace AppGame.Android
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
+                Console.WriteLine("Attempting to exit game...");
                 ExitGame();
+                return;
             }
+
+            Console.WriteLine("Game running...");
 
             // TODO: Add your update logic here
 
@@ -91,11 +102,34 @@ namespace AppGame.Android
             base.Draw(gameTime);
         }
 
-        private void ExitGame()
+        public void ExitGame()
         {
+            Console.WriteLine("Game exiting...");
             // TODO: add your exit code here to restore the device to its per-game environment.
             CCSimpleAudioEngine.SharedEngine.RestoreMediaState();
-            Exit();
+            //CCApplication.SharedApplication.Game.Exit();
+            //CCApplication.SharedApplication.Dispose();
+
+            Console.WriteLine("Exiting game...");
+
+            // application.Dispose();
+            
+            //CCDirector.SharedDirector.PurgeCachedData();
+
+            CCDirector.SharedDirector.PopScene();
+            CCDirector.SharedDirector.End();
+
+            //CCSpriteFontCache.SharedInstance.Clear();
+
+            //CCApplication.SharedApplication.Game.Exit();
+            //
+            //GraphicsDevice.Dispose();
+            //graphics.Dispose();
+            //application = null;//.Dispose();
+
+            Game.Activity.Finish();
+            //Components.Clear();
+            //Exit();
         }
     }
 }

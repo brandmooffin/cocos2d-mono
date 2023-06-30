@@ -1,9 +1,7 @@
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
-using Android.Views;
 using Android.Widget;
-using Microsoft.Xna.Framework;
 using System;
 
 namespace AppGame.Android
@@ -15,7 +13,7 @@ namespace AppGame.Android
         Theme = "@style/Theme.Splash",
         AlwaysRetainTaskState = true,
         LaunchMode = LaunchMode.SingleInstance,
-        ScreenOrientation = ScreenOrientation.FullUser,
+        ScreenOrientation = ScreenOrientation.Portrait,
         ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenSize
     )]
     public class AppActivity : Activity
@@ -25,8 +23,16 @@ namespace AppGame.Android
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.activity_main);
 
-            Button fab = FindViewById<Button>(Resource.Id.startGameButton);
-            fab.Click += OnStartGameClick;
+            Button introGameButton = FindViewById<Button>(Resource.Id.introGameButton);
+            introGameButton.Click += OnIntroGameClick;
+
+            Button startGameButton = FindViewById<Button>(Resource.Id.startGameButton);
+            startGameButton.Click += OnStartGameClick;
+        }
+
+        private void OnIntroGameClick(object sender, EventArgs eventArgs)
+        {
+            StartActivity(typeof(IntroGameActivity));
         }
 
         private void OnStartGameClick(object sender, EventArgs eventArgs)

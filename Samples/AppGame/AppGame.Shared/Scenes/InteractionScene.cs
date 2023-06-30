@@ -1,19 +1,24 @@
 ﻿using Cocos2D;
 using System;
+using System.Collections.Generic;
+using System.Text;
+using static Android.Media.TV.TvContract.Channels;
 
 namespace AppGame.Shared.Scenes
 {
-    public class IntroScene : CCScene
+    public class InteractionScene : CCScene
     {
+        CCLayerColor backgroundLayer;
         public override void OnEnter()
         {
+            TouchEnabled = true;
             Console.WriteLine("Entering scene...");
             base.OnEnter();
 
             Console.WriteLine("Setting up scene...");
             var size = CCDirector.SharedDirector.WinSize;
 
-            var backgroundLayer = new CCLayerColor()
+            backgroundLayer = new CCLayerColor()
             {
                 Color = new CCColor3B(Microsoft.Xna.Framework.Color.Blue),
                 Opacity = 255
@@ -27,13 +32,12 @@ namespace AppGame.Shared.Scenes
 
             var logo = new CCSprite("sprites/logo-small")
             {
-                Position = size.Center + new CCPoint(0, -100),
+                Position = size.Center,
                 Scale = 0.25f
             };
 
             var rotateAction = new CCRepeatForever(new CCRotateBy(0.5f, 15));
             logo.RunAction(rotateAction);
-
 
             backgroundLayer.AddChild(label);
             backgroundLayer.AddChild(logo);
@@ -54,7 +58,19 @@ namespace AppGame.Shared.Scenes
 
         public override void Update(float gameTime)
         {
-          
+
+        }
+
+        public override bool TouchBegan(CCTouch touch)
+        {
+            Console.WriteLine("Touches began...");
+            var logo = new CCSprite("sprites/logo-small")
+            {
+                Position = touch.Location,
+                Scale = 0.25f
+            };
+            backgroundLayer.AddChild(logo);
+            return base.TouchBegan(touch);
         }
     }
 }

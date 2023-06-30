@@ -12,8 +12,8 @@ using System;
 
 namespace AppGame.Android;
 
-[Activity(Label = "GameActivity")]
-public class GameActivity : AndroidGameActivity
+[Activity(Label = "IntroGameActivity")]
+public class IntroGameActivity : AndroidGameActivity
 {
     private SampleGame _game;
     private View _view;
@@ -22,7 +22,7 @@ public class GameActivity : AndroidGameActivity
         Console.WriteLine("Creating game activity...");
         base.OnCreate(savedInstanceState);
 
-        _game = new SampleGame(new InteractionScene());
+        _game = new SampleGame(new IntroScene());
         _view = _game.Services.GetService(typeof(View)) as View;
 
         SetContentView(_view);
@@ -41,13 +41,13 @@ public class GameActivity : AndroidGameActivity
         Console.WriteLine("Destroy activity...");
         base.OnDestroy();
 
-        //CCApplication.SharedApplication.Game.Exit();
-        CCDirector.SharedDirector.End();
-        //CCDirector.SharedDirector.PurgeCachedData();
-
-        //CCApplication.SharedApplication.Dispose();
-
         //_game.Exit();
         //_game.Dispose();
+
+        //CCDirector.SharedDirector.End();
+        // CCDirector.SharedDirector.PurgeCachedData();
+
+        //CCApplication.SharedApplication.Dispose();
+        //CCApplication.SharedApplication.GraphicsDevice.Dispose();
     }
 }
