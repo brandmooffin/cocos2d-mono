@@ -1,4 +1,5 @@
-﻿using AppGame.Shared;
+﻿using System.Diagnostics;
+using AppGame.Shared;
 using AppGame.Shared.Scenes;
 using Foundation;
 using UIKit;
@@ -8,12 +9,16 @@ namespace AppGame.iOS
     [Register("AppDelegate")]
     internal class Program : UIApplicationDelegate
     {
-        private static SampleGame game;
-
+        // private static SampleGame game;
+        public override UIWindow Window
+        {
+            get;
+            set;
+        }
         internal static void RunGame()
         {
-            game = new SampleGame(new IntroScene());
-            game.Run();
+          //  game = new SampleGame(new IntroScene());
+          //  game.Run();
         }
 
         /// <summary>
@@ -26,7 +31,7 @@ namespace AppGame.iOS
 
         public override void FinishedLaunching(UIApplication app)
         {
-            RunGame();
+           // RunGame();
         }
     }
 }

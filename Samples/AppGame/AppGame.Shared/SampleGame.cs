@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using System;
+#if IOS
+using UIKit;
+#endif
 
 namespace AppGame.Shared
 {
@@ -16,6 +19,13 @@ namespace AppGame.Shared
 
         CCScene sceneToLoad;
 
+        public static bool IsExiting = false;
+#if IOS
+
+        UIViewController GameViewController;
+#endif
+
+#if ANDROID
         public SampleGame(CCScene sceneToLoad)
         {
             Console.WriteLine("Initializing game & delegate...");
@@ -29,6 +39,23 @@ namespace AppGame.Shared
             application = new AppDelegate(this, graphics, sceneToLoad);
             this.Components.Add(application);
         }
+#endif
+#if IOS
+        public SampleGame(CCScene sceneToLoad, UIViewController gameViewController)
+        {
+            Console.WriteLine("Initializing game & delegate...");
+            graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            this.sceneToLoad = sceneToLoad;
+            GameViewController = gameViewController;
+
+            // This is the main Cocos2D connection. The CCApplication is the manager of the
+            // nodes that define your game.
+            //
+            application = new AppDelegate(this, graphics, sceneToLoad);
+            this.Components.Add(application);
+        }
+#endif
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -74,9 +101,18 @@ namespace AppGame.Shared
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+#if !__IOS__ && !__TVOS__
             // For Mobile devices, this logic will close the Game when the Back button is pressed
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
+                Console.WriteLine("Attempting to exit game...");
+                ExitGame();
+                return;
+            }
+#endif
+
+            if (IsExiting) {
+                IsExiting = false;
                 Console.WriteLine("Attempting to exit game...");
                 ExitGame();
                 return;
@@ -126,8 +162,12 @@ namespace AppGame.Shared
             //GraphicsDevice.Dispose();
             //graphics.Dispose();
             //application = null;//.Dispose();
-
+#if ANDROID
             Game.Activity.Finish();
+#endif
+#if IOS
+            GameViewController.DismissViewController(true, null);
+#endif
             //Components.Clear();
             //Exit();
         }

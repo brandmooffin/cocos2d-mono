@@ -12,11 +12,6 @@
 	<string>project.MonoGame.Cocos2DMonoGame.iOS</string>
 	<key>MinimumOSVersion</key>
 	<string>15.4</string>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
 	<key>CFBundleName</key>
 	<string>Cocos2DMonoGame.iOS</string>
 	<key>UIRequiresFullScreen</key>
@@ -25,5 +20,11 @@
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>MainStoryboard</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
 </dict>
 </plist>

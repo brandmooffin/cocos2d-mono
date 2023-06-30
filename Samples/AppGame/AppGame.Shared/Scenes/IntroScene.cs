@@ -13,6 +13,14 @@ namespace AppGame.Shared.Scenes
             Console.WriteLine("Setting up scene...");
             var size = CCDirector.SharedDirector.WinSize;
 
+            var pCloseItem = new CCMenuItemImage("sprites/close", "sprites/close", CloseCallback);
+            var pMenu = new CCMenu(pCloseItem)
+            {
+                Position = CCPoint.Zero
+            };
+            pCloseItem.Position = new CCPoint(size.Width - 30, size.Height - 10);
+            pCloseItem.Scale = 0.5f;
+
             var backgroundLayer = new CCLayerColor()
             {
                 Color = new CCColor3B(Microsoft.Xna.Framework.Color.Blue),
@@ -38,9 +46,16 @@ namespace AppGame.Shared.Scenes
             backgroundLayer.AddChild(label);
             backgroundLayer.AddChild(logo);
 
+            backgroundLayer.AddChild(pMenu, 11);
+
             AddChild(backgroundLayer);
 
             ScheduleUpdate();
+        }
+
+        public void CloseCallback(object pSender)
+        {
+            SampleGame.IsExiting = true;
         }
 
         public override void OnExit()
