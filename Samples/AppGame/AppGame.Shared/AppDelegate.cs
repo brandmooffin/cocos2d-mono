@@ -53,7 +53,7 @@ namespace AppGame.Shared
                 pDirector.SetOpenGlView();
 
                 //turn on display FPS
-                pDirector.DisplayStats = true;
+                pDirector.DisplayStats = false;
 
                 // set FPS. the default value is 1.0/60 if you don't call this
                 pDirector.AnimationInterval = 1.0 / 60;

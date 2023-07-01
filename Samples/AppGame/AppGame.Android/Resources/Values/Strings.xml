@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">AppGame.Android</string>
-  <string name="intro_game">Intro Game</string>
-	<string name="start_game">Start Game</string>
+	<string name="app_name">AppGame.Android</string>
+	<string name="app_description">Sample app demonstrating interop with native views and game views</string>
+	<string name="simple_game">Simple Game</string>
+	<string name="interactive_game">Interactive Game</string>
+	<string name="spritesheet_game">Game using Spritesheet</string>
 </resources>

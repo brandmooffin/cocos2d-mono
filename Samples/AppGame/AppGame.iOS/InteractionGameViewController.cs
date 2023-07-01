@@ -26,7 +26,7 @@ public class InteractionGameViewController : UIViewController {
 
         AppWindow = UIApplication.SharedApplication.Delegate.GetWindow();
 
-        var game = new SampleGame(new InteractionScene(), this);
+        var game = new SampleGame(new InteractiveScene(), this);
         game.Run();
     }
 

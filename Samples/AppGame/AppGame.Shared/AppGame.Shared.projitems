@@ -11,7 +11,8 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AppDelegate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SampleGame.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Scenes\InteractionScene.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Scenes\IntroScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\SpritesheetScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\InteractiveScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\SimpleScene.cs" />
   </ItemGroup>
 </Project>

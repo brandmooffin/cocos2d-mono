@@ -29,7 +29,7 @@ public class IntroGameViewController : UIViewController {
 
         AppWindow = UIApplication.SharedApplication.Delegate.GetWindow();
 
-        var game = new SampleGame(new IntroScene(), this);
+        var game = new SampleGame(new SimpleScene(), this);
         game.Run();
     }
 

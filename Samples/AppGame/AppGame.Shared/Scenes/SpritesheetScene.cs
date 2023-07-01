@@ -1,11 +1,9 @@
 ﻿using Cocos2D;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AppGame.Shared.Scenes
 {
-    public class InteractionScene : CCScene
+    public class SpritesheetScene : CCScene
     {
         CCLayerColor backgroundLayer;
         public override void OnEnter()
@@ -39,9 +37,36 @@ namespace AppGame.Shared.Scenes
 
             var logo = new CCSprite("sprites/logo-small")
             {
-                Position = size.Center,
+                Position = size.Center + new CCPoint(0, 200),
                 Scale = 0.25f
             };
+
+            CCSpriteBatchNode BatchNode = new CCSpriteBatchNode("sprites/tileset");
+            CCSprite largeTileSprite = new CCSprite(BatchNode.Texture, new CCRect(0, 0, 96, 96))
+            {
+                Position = size.Center + new CCPoint(-100, -100)
+            };
+
+            CCSprite platformTileSprite = new CCSprite(BatchNode.Texture, new CCRect(96, 0, 96, 32))
+            {
+                Position = size.Center + new CCPoint(-50, -200)
+            };
+
+            CCSprite leftDirtTileSprite = new CCSprite(BatchNode.Texture, new CCRect(96, 32, 96, 32))
+            {
+                Position = size.Center + new CCPoint(0, -100)
+            };
+            CCSprite rightDirtTileSprite = new CCSprite(BatchNode.Texture, new CCRect(96, 32, 96, 32))
+            {
+                Position = size.Center + new CCPoint(0, -100)
+            };
+
+            CCSprite columnTileSprite = new CCSprite(BatchNode.Texture, new CCRect(192, 0, 96, 96))
+            {
+                Position = size.Center + new CCPoint(100, -100)
+            };
+
+
 
             var rotateAction = new CCRepeatForever(new CCRotateBy(0.5f, 15));
             logo.RunAction(rotateAction);
@@ -50,6 +75,13 @@ namespace AppGame.Shared.Scenes
             backgroundLayer.AddChild(logo);
 
             backgroundLayer.AddChild(pMenu, 11);
+
+            backgroundLayer.AddChild(largeTileSprite);
+            backgroundLayer.AddChild(platformTileSprite);
+            backgroundLayer.AddChild(leftDirtTileSprite);
+            backgroundLayer.AddChild(rightDirtTileSprite);
+            backgroundLayer.AddChild(columnTileSprite);
+
 
             AddChild(backgroundLayer);
 
@@ -75,18 +107,6 @@ namespace AppGame.Shared.Scenes
         public override void Update(float gameTime)
         {
 
-        }
-
-        public override bool TouchBegan(CCTouch touch)
-        {
-            Console.WriteLine("Touches began...");
-            var logo = new CCSprite("sprites/logo-small")
-            {
-                Position = touch.Location,
-                Scale = 0.25f
-            };
-            backgroundLayer.AddChild(logo);
-            return base.TouchBegan(touch);
         }
     }
 }

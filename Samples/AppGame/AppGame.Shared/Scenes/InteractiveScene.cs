@@ -3,10 +3,12 @@ using System;
 
 namespace AppGame.Shared.Scenes
 {
-    public class IntroScene : CCScene
+    public class InteractiveScene : CCScene
     {
+        CCLayerColor backgroundLayer;
         public override void OnEnter()
         {
+            TouchEnabled = true;
             Console.WriteLine("Entering scene...");
             base.OnEnter();
 
@@ -18,10 +20,10 @@ namespace AppGame.Shared.Scenes
             {
                 Position = CCPoint.Zero
             };
-            pCloseItem.Position = new CCPoint(size.Width - 30, size.Height - 10);
+            pCloseItem.Position = new CCPoint(size.Width - 30, size.Height - 20);
             pCloseItem.Scale = 0.5f;
 
-            var backgroundLayer = new CCLayerColor()
+            backgroundLayer = new CCLayerColor()
             {
                 Color = new CCColor3B(Microsoft.Xna.Framework.Color.Blue),
                 Opacity = 255
@@ -41,7 +43,6 @@ namespace AppGame.Shared.Scenes
 
             var rotateAction = new CCRepeatForever(new CCRotateBy(0.5f, 15));
             logo.RunAction(rotateAction);
-
 
             backgroundLayer.AddChild(label);
             backgroundLayer.AddChild(logo);
@@ -71,7 +72,19 @@ namespace AppGame.Shared.Scenes
 
         public override void Update(float gameTime)
         {
-          
+
+        }
+
+        public override bool TouchBegan(CCTouch touch)
+        {
+            Console.WriteLine("Touches began...");
+            var logo = new CCSprite("sprites/logo-small")
+            {
+                Position = touch.Location,
+                Scale = 0.25f
+            };
+            backgroundLayer.AddChild(logo);
+            return base.TouchBegan(touch);
         }
     }
 }

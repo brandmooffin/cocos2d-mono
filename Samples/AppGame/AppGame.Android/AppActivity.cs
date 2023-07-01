@@ -2,6 +2,7 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Widget;
+using AppGame.Android.Games;
 using System;
 
 namespace AppGame.Android
@@ -23,21 +24,29 @@ namespace AppGame.Android
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.activity_main);
 
-            Button introGameButton = FindViewById<Button>(Resource.Id.introGameButton);
-            introGameButton.Click += OnIntroGameClick;
+            Button simpleGameButton = FindViewById<Button>(Resource.Id.simpleGameButton);
+            simpleGameButton.Click += OnSimpleGameClick;
 
-            Button startGameButton = FindViewById<Button>(Resource.Id.startGameButton);
-            startGameButton.Click += OnStartGameClick;
+            Button interactiveGameButton = FindViewById<Button>(Resource.Id.interactiveGameButton);
+            interactiveGameButton.Click += OnInteractiveGameClick;
+
+            Button spritesheetGameButton = FindViewById<Button>(Resource.Id.spritesheetGameButton);
+            spritesheetGameButton.Click += OnSpritesheetGameClick;
         }
 
-        private void OnIntroGameClick(object sender, EventArgs eventArgs)
+        private void OnSimpleGameClick(object sender, EventArgs eventArgs)
         {
-            StartActivity(typeof(IntroGameActivity));
+            StartActivity(typeof(SimpleGameActivity));
         }
 
-        private void OnStartGameClick(object sender, EventArgs eventArgs)
+        private void OnInteractiveGameClick(object sender, EventArgs eventArgs)
         {
-            StartActivity(typeof(GameActivity));
+            StartActivity(typeof(InteractiveGameActivity));
+        }
+
+        private void OnSpritesheetGameClick(object sender, EventArgs eventArgs)
+        {
+            StartActivity(typeof(SpritesheetGameActivity));
         }
     }
 }
