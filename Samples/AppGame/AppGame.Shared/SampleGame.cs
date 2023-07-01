@@ -158,8 +158,6 @@ namespace AppGame.Shared
 
             CCDirector.SharedDirector.PopScene();
            
-            CCDirector.SharedDirector.End();
-
 #if ANDROID
             Game.Activity.Finish();
 #endif

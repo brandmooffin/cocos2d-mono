@@ -48,8 +48,6 @@ namespace AppGame.Android.Games
         {
             Console.WriteLine("Destroy activity...");
             base.OnDestroy();
-
-            CCDirector.SharedDirector.End();
         }
     }
 }
