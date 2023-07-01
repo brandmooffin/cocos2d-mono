@@ -2,18 +2,17 @@
 using System.Linq;
 using AppGame.Shared;
 using AppGame.Shared.Scenes;
-using CarPlay;
+using CoreGraphics;
 using Foundation;
-using SpriteKit;
 using UIKit;
 
 namespace AppGame.iOS;
 
-[Register ("IntroGameViewController")]
-public class IntroGameViewController : UIViewController {
+[Register ("SimpleGameViewController")]
+public class SimpleGameViewController : UIViewController {
     UIWindow AppWindow;
 
-    public IntroGameViewController(IntPtr handle) : base(handle)
+    public SimpleGameViewController(IntPtr handle) : base(handle)
     {
     }
 
@@ -31,6 +30,22 @@ public class IntroGameViewController : UIViewController {
 
         var game = new SampleGame(new SimpleScene(), this);
         game.Run();
+
+        var viewController = game.Services.GetService(typeof(UIViewController)) as UIViewController;
+
+        var viewHeight = viewController.View.Frame.Size.Height;
+        var viewWidth = viewController.View.Frame.Size.Width;
+
+        var descriptionLabel = new UILabel(new CGRect(0, viewHeight - 100, viewWidth, 44))
+        {
+            Text = "Simple game with texture and custom font. (This is a native label)",
+            TextColor = UIColor.White,
+            Lines = 2,
+            LineBreakMode = UILineBreakMode.WordWrap,
+            TextAlignment = UITextAlignment.Center,
+            MinimumFontSize = 28.0f
+        };
+        viewController.View.AddSubview(descriptionLabel);
     }
 
     public override void ViewWillAppear(bool animated)

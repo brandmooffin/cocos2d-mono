@@ -1,14 +1,6 @@
 ﻿using System;
-using System.CodeDom.Compiler;
-using System.Diagnostics;
-using System.Reflection.Emit;
-using System.Threading.Tasks;
-using AppGame.Shared;
-using AppGame.Shared.Scenes;
 using CoreGraphics;
 using Foundation;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using UIKit;
 
 namespace AppGame.iOS;
@@ -26,29 +18,40 @@ public class MainViewController : UIViewController
 
         View.BackgroundColor = UIColor.White;
 
-        var StartGameButton = UIButton.FromType(UIButtonType.System);
-        StartGameButton.Frame = new CGRect(20, 200, 280, 44);
-        StartGameButton.SetTitle("Start Game", UIControlState.Normal);
+        var simpleGameButton = UIButton.FromType(UIButtonType.System);
+        simpleGameButton.Frame = new CGRect(20, 200, 280, 44);
+        simpleGameButton.SetTitle("Simple Game", UIControlState.Normal);
 
-        var IntroGameButton = UIButton.FromType(UIButtonType.System);
-        IntroGameButton.Frame = new CGRect(20, 400, 280, 44);
-        IntroGameButton.SetTitle("Intro Game", UIControlState.Normal);
+        var interactiveGameButton = UIButton.FromType(UIButtonType.System);
+        interactiveGameButton.Frame = new CGRect(20, 400, 280, 44);
+        interactiveGameButton.SetTitle("Interactive Game", UIControlState.Normal);
+
+        var spritesheetGameButton = UIButton.FromType(UIButtonType.System);
+        spritesheetGameButton.Frame = new CGRect(20, 600, 280, 44);
+        spritesheetGameButton.SetTitle("Game using spritesheet", UIControlState.Normal);
 
 
-        IntroGameButton.TouchUpInside += (sender, e) => {
-            var introGameStoryboard = UIStoryboard.FromName("IntroGameStoryboard", null);
-            var introGameViewController = introGameStoryboard.InstantiateViewController("IntroGame") as IntroGameViewController;
-            PresentViewController(introGameViewController, true, null);
+        simpleGameButton.TouchUpInside += (sender, e) => {
+            var simpleGameStoryboard = UIStoryboard.FromName("SimpleGameStoryboard", null);
+            var simpleGameViewController = simpleGameStoryboard.InstantiateViewController("SimpleGame") as SimpleGameViewController;
+            PresentViewController(simpleGameViewController, true, null);
         };
 
-        StartGameButton.TouchUpInside += (sender, e) => {
-            var interactionGameStoryboard = UIStoryboard.FromName("InteractionGameStoryboard", null);
-            var interactionGameViewController = interactionGameStoryboard.InstantiateViewController("InteractionGame") as InteractionGameViewController;
-            PresentViewController(interactionGameViewController, true, null);
+        interactiveGameButton.TouchUpInside += (sender, e) => {
+            var interactiveGameStoryboard = UIStoryboard.FromName("InteractiveGameStoryboard", null);
+            var interactiveGameViewController = interactiveGameStoryboard.InstantiateViewController("InteractiveGame") as InteractiveGameViewController;
+            PresentViewController(interactiveGameViewController, true, null);
         };
 
-        View.AddSubview(IntroGameButton);
-        View.AddSubview(StartGameButton);
+        spritesheetGameButton.TouchUpInside += (sender, e) => {
+            var spritesheetGameStoryboard = UIStoryboard.FromName("SpritesheetGameStoryboard", null);
+            var spritesheetGameViewController = spritesheetGameStoryboard.InstantiateViewController("SpritesheetGame") as SpritesheetGameViewController;
+            PresentViewController(spritesheetGameViewController, true, null);
+        };
+
+        View.AddSubview(simpleGameButton);
+        View.AddSubview(interactiveGameButton);
+        View.AddSubview(spritesheetGameButton);
     }
 
     public override void DidReceiveMemoryWarning()

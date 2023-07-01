@@ -29,7 +29,7 @@ namespace AppGame.Android.Games
 
             TextView descriptionTextView = new TextView(this)
             {
-                Text = "Tap on the screen to add a new sprite. Interactive example with custom font. (This is a native label).",
+                Text = "Tap on the screen to add a new sprite. Interactive example with custom font. (This is a native label)",
                 TextSize = 28,
                 Gravity = GravityFlags.Center | GravityFlags.Bottom,
             };

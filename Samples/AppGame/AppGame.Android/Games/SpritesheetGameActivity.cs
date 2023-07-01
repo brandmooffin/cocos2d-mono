@@ -30,7 +30,7 @@ namespace AppGame.Android.Games
 
             TextView descriptionTextView = new TextView(this)
             {
-                Text = "Simple exaple loading sprites from a spritesheet. (This is a native label).",
+                Text = "Simple exaple loading sprites from a spritesheet. (This is a native label)",
                 TextSize = 28,
                 Gravity = GravityFlags.Center | GravityFlags.Bottom,
             };
