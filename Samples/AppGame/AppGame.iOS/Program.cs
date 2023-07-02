@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using AppGame.Shared;
 using AppGame.Shared.Scenes;
 using Foundation;
@@ -9,7 +11,7 @@ namespace AppGame.iOS
     [Register("AppDelegate")]
     internal class Program : UIApplicationDelegate
     {
-        // private static SampleGame game;
+        public static SampleGame Game;
         public override UIWindow Window
         {
             get;
@@ -17,8 +19,17 @@ namespace AppGame.iOS
         }
         internal static void RunGame()
         {
-          //  game = new SampleGame(new IntroScene());
-          //  game.Run();
+            Game = new SampleGame();
+            Game.Run();
+
+            var windowCount = UIApplication.SharedApplication.Windows.Count();
+            if (windowCount > 1)
+            {
+                Console.WriteLine("Multiple windows found...");
+
+                UIApplication.SharedApplication.Windows[1].Hidden = true;
+                UIApplication.SharedApplication.Windows[0].MakeKeyAndVisible();
+            }
         }
 
         /// <summary>
@@ -31,7 +42,7 @@ namespace AppGame.iOS
 
         public override void FinishedLaunching(UIApplication app)
         {
-           // RunGame();
+           RunGame();
         }
     }
 }

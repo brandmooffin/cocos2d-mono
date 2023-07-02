@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using System;
+using AppGame.iOS;
 #if IOS
 using UIKit;
 #endif
@@ -15,14 +16,14 @@ namespace AppGame.Shared
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        CCApplication application;
+        AppDelegate application;
 
         CCScene sceneToLoad;
 
         public static bool IsExiting = false;
 #if IOS
 
-        UIViewController GameViewController;
+        UIViewController AppViewController;
 #endif
 
 #if ANDROID
@@ -41,19 +42,23 @@ namespace AppGame.Shared
         }
 #endif
 #if IOS
-        public SampleGame(CCScene sceneToLoad, UIViewController gameViewController)
+        public SampleGame()
         {
             Console.WriteLine("Initializing game & delegate...");
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            this.sceneToLoad = sceneToLoad;
-            GameViewController = gameViewController;
-
             // This is the main Cocos2D connection. The CCApplication is the manager of the
             // nodes that define your game.
             //
             application = new AppDelegate(this, graphics, sceneToLoad);
             this.Components.Add(application);
+        }
+
+        public void LoadGameScene(CCScene sceneToLoad, UIViewController appViewController) {
+            AppViewController = appViewController;
+            this.sceneToLoad = sceneToLoad;
+
+            application.LoadGameScene(sceneToLoad);
         }
 #endif
 
@@ -123,7 +128,7 @@ namespace AppGame.Shared
                 return;
             }
 
-            Console.WriteLine("Game running...");
+            //Console.WriteLine("Game running...");
 
             // TODO: Add your update logic here
 
@@ -156,23 +161,14 @@ namespace AppGame.Shared
 
             Console.WriteLine("Exiting game...");
 
-            CCDirector.SharedDirector.PopScene();
-           
+            CCDirector.SharedDirector.RunningScene.RemoveAllChildren();
+            CCDirector.SharedDirector.RunningScene.Visible = false;
+
 #if ANDROID
             Game.Activity.Finish();
 #endif
 #if IOS
-            var viewController = Services.GetService(typeof(UIViewController)) as UIViewController;
-            var subview = viewController.View;
-
-            var gameWindow = Services.GetService(typeof(UIWindow)) as UIWindow;
-            gameWindow.Subviews[0].RemoveFromSuperview();
-
-            viewController = GameViewController;
-
-            viewController.ViewDidAppear(true);
-
-            // CCDirector.SharedDirector.Pause();
+            AppViewController.ViewDidAppear(false);
 #endif
         }
     }

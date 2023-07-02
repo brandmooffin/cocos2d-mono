@@ -4,6 +4,7 @@ using CocosDenshion;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace AppGame.Shared
@@ -27,6 +28,34 @@ namespace AppGame.Shared
             CCDrawManager.InitializeDisplay(game, graphics, DisplayOrientation.Portrait);
             this.currentScene = currentScene;
         }
+
+        public AppDelegate(Game game, GraphicsDeviceManager graphics)
+            : base(game, graphics)
+        {
+            Console.WriteLine("Initializing delegate...");
+            this.graphics = graphics;
+            s_pSharedApplication = this;
+            //
+            // TODO: Set the display orientation that you want for this game.
+            // 
+            CCDrawManager.InitializeDisplay(game, graphics, DisplayOrientation.Portrait);
+        }
+
+        public void LoadGameScene(CCScene sceneToLoad) {
+            var pDirector = CCDirector.SharedDirector;
+            currentScene = sceneToLoad;
+            if (pDirector.RunningScene != null)
+            {
+                Console.WriteLine("Replacing running scene...");
+                pDirector.ReplaceScene(currentScene);
+            }
+            else
+            {
+                Console.WriteLine("Running with scene...");
+                pDirector.RunWithScene(currentScene);
+            }
+        }
+
 
         /// <summary>
         ///  Implement CCDirector and CCScene init code here.
@@ -61,16 +90,18 @@ namespace AppGame.Shared
                 pDirector.ResetSceneStack();
 
                 graphics.ApplyChanges();
-
-                if (pDirector.RunningScene != null)
+                if (currentScene != null)
                 {
-                    Console.WriteLine("Replacing running scene...");
-                    pDirector.ReplaceScene(currentScene);
-                }
-                else
-                {
-                    Console.WriteLine("Running with scene...");
-                    pDirector.RunWithScene(currentScene);
+                    if (pDirector.RunningScene != null)
+                    {
+                        Console.WriteLine("Replacing running scene...");
+                        pDirector.ReplaceScene(currentScene);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Running with scene...");
+                        pDirector.RunWithScene(currentScene);
+                    }
                 }
             }
             catch (Exception ex)

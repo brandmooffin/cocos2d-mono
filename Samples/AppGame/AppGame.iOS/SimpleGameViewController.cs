@@ -2,6 +2,7 @@
 using System.Linq;
 using AppGame.Shared;
 using AppGame.Shared.Scenes;
+using Cocos2D;
 using CoreGraphics;
 using Foundation;
 using UIKit;
@@ -10,7 +11,7 @@ namespace AppGame.iOS;
 
 [Register ("SimpleGameViewController")]
 public class SimpleGameViewController : UIViewController {
-    UIWindow AppWindow;
+    UILabel descriptionLabel;
 
     public SimpleGameViewController(IntPtr handle) : base(handle)
     {
@@ -26,17 +27,20 @@ public class SimpleGameViewController : UIViewController {
         base.ViewDidLoad ();
         Console.WriteLine("View did load...");
 
-        AppWindow = UIApplication.SharedApplication.Delegate.GetWindow();
+        var windowCount = UIApplication.SharedApplication.Windows.Count();
+        if (windowCount > 1)
+        {
+            UIApplication.SharedApplication.Windows[1].MakeKeyAndVisible();
+        }
 
-        var game = new SampleGame(new SimpleScene(), this);
-        game.Run();
+        Program.Game.LoadGameScene(new SimpleScene(), this);
 
-        var viewController = game.Services.GetService(typeof(UIViewController)) as UIViewController;
+        var viewController = Program.Game.Services.GetService(typeof(UIViewController)) as UIViewController;
 
         var viewHeight = viewController.View.Frame.Size.Height;
         var viewWidth = viewController.View.Frame.Size.Width;
 
-        var descriptionLabel = new UILabel(new CGRect(0, viewHeight - 100, viewWidth, 44))
+        descriptionLabel = new UILabel(new CGRect(0, viewHeight - 100, viewWidth, 44))
         {
             Text = "Simple game with texture and custom font. (This is a native label)",
             TextColor = UIColor.White,
@@ -62,27 +66,18 @@ public class SimpleGameViewController : UIViewController {
         if (SampleGame.IsExiting)
         {
             SampleGame.IsExiting = false;
-            BecomeFirstResponder();
 
             DismissViewController(true, null);
             RemoveFromParentViewController();
-            ResignFirstResponder();
 
             var windowCount = UIApplication.SharedApplication.Windows.Count();
             if (windowCount > 1) {
                 Console.WriteLine("Multiple windows found...");
-                AppWindow.BecomeKeyWindow();
-                AppWindow.BecomeFirstResponder();
-                UIApplication.SharedApplication.Delegate.SetWindow(AppWindow);
 
-                UIApplication.SharedApplication.Windows.ToList().ForEach(window =>
-                {
-                    if (window != AppWindow)
-                    {
-                        window.WindowScene = null;
-                        window = null;
-                    }
-                });
+                descriptionLabel.RemoveFromSuperview();
+
+                UIApplication.SharedApplication.Windows[1].Hidden = true;
+                UIApplication.SharedApplication.Windows[0].MakeKeyAndVisible();
             }
         }
     }
