@@ -29,10 +29,11 @@ namespace AppGame.Shared.Scenes
                 Opacity = 255
             };
 
-            var label = new CCLabelTTF("Hello", "gamefont", 72)
+            var label = new CCLabelBMFont("Hello", "fonts/bitmapFontTest3.fnt")
             {
                 Color = CCColor3B.White,
-                Position = size.Center
+                Position = size.Center,
+                Scale = 2
             };
 
             var logo = new CCSprite("sprites/logo-small")

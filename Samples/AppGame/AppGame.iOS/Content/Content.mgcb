@@ -13,6 +13,21 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin fonts/bitmapFontTest3.fnt
+/copy:fonts/bitmapFontTest3.fnt
+
+#begin fonts/bitmapFontTest3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fonts/bitmapFontTest3.png
+
 #begin fonts/gamefont-72.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

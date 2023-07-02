@@ -27,15 +27,12 @@ namespace AppGame.Shared.Scenes
                 Opacity = 255
             };
 
-            var label = new CCLabelTTF("Hello", "gamefont", 72)
+            var label = new CCLabelBMFont("Hello", "fonts/bitmapFontTest3.fnt")
             {
                 Color = CCColor3B.White,
-                Position = size.Center
+                Position = size.Center,
+                Scale = 2
             };
-            
-            var label2 = new CCLabelBMFont("Multi line\nCenter", "fonts/bitmapFontTest3.fnt");
-            label2.AnchorPoint = new CCPoint(0.5f, 0.5f);
-            
 
             var logo = new CCSprite("sprites/logo-small")
             {
@@ -48,7 +45,6 @@ namespace AppGame.Shared.Scenes
 
 
             backgroundLayer.AddChild(label);
-            backgroundLayer.AddChild(label2);
             backgroundLayer.AddChild(logo);
 
             backgroundLayer.AddChild(pMenu, 11);
