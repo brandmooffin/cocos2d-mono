@@ -4,8 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using System;
-using AppGame.iOS;
 #if IOS
+using AppGame.iOS;
 using UIKit;
 #endif
 
