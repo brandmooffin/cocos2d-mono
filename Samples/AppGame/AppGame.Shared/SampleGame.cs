@@ -165,6 +165,7 @@ namespace AppGame.Shared
             CCDirector.SharedDirector.RunningScene.Visible = false;
 
 #if ANDROID
+            CCDirector.SharedDirector.PopScene();
             Game.Activity.Finish();
 #endif
 #if IOS
