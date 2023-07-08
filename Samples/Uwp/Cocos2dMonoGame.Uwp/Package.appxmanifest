@@ -38,6 +38,7 @@
         Description="Cocos2DMonoGame.Uwp"
         BackgroundColor="#464646">
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:DefaultTile Square71x71Logo="Assets\SmallTile.png" Wide310x150Logo="Assets\WideTile.png" Square310x310Logo="Assets\LargeTile.png"/>
       </uap:VisualElements>
     </Application>
   </Applications>
