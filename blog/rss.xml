@@ -4,10 +4,25 @@
         <title>Cocos2d-Mono Blog</title>
         <link>https://cocos2d-mono.dev/blog</link>
         <description>Cocos2d-Mono Blog</description>
-        <lastBuildDate>Fri, 21 Apr 2023 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 08 Jul 2023 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[Cocos2D-Mono 2.4.2 is now out!]]></title>
+            <link>https://cocos2d-mono.dev/blog/2.4.2-release</link>
+            <guid>https://cocos2d-mono.dev/blog/2.4.2-release</guid>
+            <pubDate>Sat, 08 Jul 2023 00:00:00 GMT</pubDate>
+            <description><![CDATA[Cocos2D-Mono 2.4.2 is out now! Go check out the release notes to see what's change...or just read below.]]></description>
+            <content:encoded><![CDATA[<p>Cocos2D-Mono 2.4.2 is out now! Go check out the <a href="https://github.com/brandmooffin/cocos2d-mono/releases/tag/2.4.2" target="_blank" rel="noopener noreferrer">release notes</a> to see what's change...or just read below.</p><h2 class="anchor anchorWithStickyNavbar_LWe7" id="whats-changed">What's Changed<a href="#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed">​</a></h2><ul><li>Lowered minimum support for Android to API 21</li><li>Lowered minimum support for iOS 11</li><li>Improved support for narrow screen devices</li><li>Fix for ViewPort positioning in Portrait Mode</li><li>Improved development guides<ul><li>Create a New Project</li><li>Add Content</li></ul></li><li>Fixes and improvements for Project Templates &amp; Samples</li></ul><p><strong>Full Changelog</strong>: <a href="https://github.com/brandmooffin/cocos2d-mono/compare/2.4.1...2.4.2" target="_blank" rel="noopener noreferrer">https://github.com/brandmooffin/cocos2d-mono/compare/2.4.1...2.4.2</a></p><p>NuGet Packages:</p><p><a href="https://www.nuget.org/packages/Cocos2D-Mono.Android/" target="_blank" rel="noopener noreferrer">Cocos2D-Mono.Android</a>
+<a href="https://www.nuget.org/packages/Cocos2D-Mono.DesktopGL/" target="_blank" rel="noopener noreferrer">Cocos2D-Mono.DesktopGL</a>
+<a href="https://www.nuget.org/packages/Cocos2D-Mono.iOS/" target="_blank" rel="noopener noreferrer">Cocos2D-Mono.iOS</a>
+<a href="https://www.nuget.org/packages/Cocos2D-Mono.Uwp/" target="_blank" rel="noopener noreferrer">Cocos2D-Mono.Uwp</a>
+<a href="https://www.nuget.org/packages/Cocos2D-Mono.Windows/" target="_blank" rel="noopener noreferrer">Cocos2D-Mono.Windows</a></p><p><a href="https://marketplace.visualstudio.com/items?itemName=Cocos2D-MonoTeamBrokenWallsStudios.cocos2dmonoprojecttemplates" target="_blank" rel="noopener noreferrer">Visual Studio Project Template Extension</a></p><p>This release sees some great improvements to the library! </p><p>Check it out &amp; stay tuned for more to come!</p>]]></content:encoded>
+            <category>update</category>
+            <category>release</category>
+            <category>2.4.2</category>
+        </item>
         <item>
             <title><![CDATA[Cocos2D-Mono 2.4.1 is now out!]]></title>
             <link>https://cocos2d-mono.dev/blog/2.4.1-release</link>
