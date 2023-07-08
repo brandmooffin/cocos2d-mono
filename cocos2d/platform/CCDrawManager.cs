@@ -91,6 +91,8 @@ namespace Cocos2D
 
         private static bool m_bNeedReinitResources;
 
+        internal static Game m_Game;
+
         public static bool VertexColorEnabled
         {
             get { return m_vertexColorEnabled; }
@@ -323,6 +325,8 @@ namespace Cocos2D
             m_GraphicsDeviceMgr = graphics;
             m_bHasStencilBuffer = (graphics.PreferredDepthStencilFormat == DepthFormat.Depth24Stencil8);
             SetOrientation(supportedOrientations, false);
+
+            m_Game = game;
 
 #if ANDROID || WINDOWS_PHONE
             graphics.IsFullScreen = true;
@@ -1244,7 +1248,12 @@ namespace Cocos2D
             float viewPortW = m_obDesignResolutionSize.Width * m_fScaleX;
             float viewPortH = m_obDesignResolutionSize.Height * m_fScaleY;
 
-            m_obViewPortRect = new CCRect((m_obScreenSize.Width - viewPortW) / 2, (m_obScreenSize.Height - viewPortH) / 2, viewPortW, viewPortH);
+            var clientBoundsX = 0;
+#if ANDROID
+            clientBoundsX = ((AndroidGameWindow)m_Game.Window).ClientBounds.X;
+#endif
+
+            m_obViewPortRect = new CCRect(clientBoundsX + (m_obScreenSize.Width - viewPortW) / 2, (m_obScreenSize.Height - viewPortH) / 2, viewPortW, viewPortH);
 
             m_eResolutionPolicy = resolutionPolicy;
 

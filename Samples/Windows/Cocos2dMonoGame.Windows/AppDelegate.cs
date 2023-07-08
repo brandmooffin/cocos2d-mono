@@ -17,7 +17,7 @@ namespace Cocos2DMonoGame.Windows
             //
             // TODO: Set the display orientation that you want for this game.
             // 
-            CCDrawManager.InitializeDisplay(game, graphics, DisplayOrientation.Portrait);
+            CCDrawManager.InitializeDisplay(game, graphics, DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight);
         }
 
         /// <summary>

@@ -6,14 +6,14 @@
     <FileAlignment>512</FileAlignment>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetFramework>net6.0-android</TargetFramework>
+    <TargetFramework>net6.0-android31.0</TargetFramework>
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
-    <PackageReleaseNotes>    - Add Support to Align Menu Items Left or Right Vertically
-    - Fix support for initializing CCSprite with CCTexture2D
-    - Support Change Text using Property for CCMenuItemFont
-    - Add support for passing in fontname and fontsize for CCMenuItemFont</PackageReleaseNotes>
+    <PackageReleaseNotes>    - Lowered minimum support for Android to API 21
+    - Lowered minimum support for iOS 11
+    - Improved support for narrow screen devices
+    - Fix for ViewPort positioning in Portrait Mode</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.1.0</Version>
+    <Version>2.4.2.0</Version>
     <Title>Cocos2D-Mono for Android</Title>
     <Description>Cocos2D-Mono for Android</Description>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -21,6 +21,7 @@
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
