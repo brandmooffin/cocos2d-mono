@@ -1,19 +1,29 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 ---
 
-# Create Project
+# Create a New Project
 
-## Templates for Visual Studio
+This guide will walk you through building a starter game with Cocos2D-Mono using Windows and Visual Studio 2022.
 
-To make things as easy as possible templates for Visual Studio are provided and can be found [here](https://github.com/brandmooffin/cocos2d-mono/tree/master/ProjectTemplates).
+> This guide will walk you through using one of the Visual Studio Project Templates. You should have one installed before continuing.
 
-There are currently templates available as an extension for Visual Studio 2017, 2019 & 2022 [here](https://marketplace.visualstudio.com/items?itemName=Cocos2D-MonoTeamBrokenWallsStudios.cocos2dmonoprojecttemplates). Additional IDEs will be supported soon!
+Start Visual Studio 2022 and select `Create a new project`.
 
-## Samples
+![Create New Project](../../static/img/vs-create-project.png)
 
-Samples can be found [here](https://github.com/brandmooffin/cocos2d-mono/tree/master/Samples)
+You should see the "Create a new project" dialog pop up. From here, simply search "Cocos2DMono", and then select the Project Template you would like to use (in this case we will be using the DesktopGL Project Template).
 
-## NuGet Packages
+![Template Search](../../static/img/vs-template-search.png)
 
-Cocos2D-Mono is also available as a [NuGet package](https://www.nuget.org/packages?q=cocos2d-mono)
+Next, type in a name for your project. For this tutorial, `MyFirstGame` will be used (note: project names cannot contain spaces). After you have entered the name, click on the ... button next to the Location text field and choose the folder you want to save the project in. Finally, click `Create` to create the project.
+
+![Setup Game](../../static/img/vs-setup-game.png)
+
+If everything went correctly, you should see a project named `MyFirstGame` open up like in the picture below. To run your game, simply press the big Play Button in the toolbar, or press F5.
+
+![First Game](../../static/img/vs-first-game.png)
+
+You should now see your game window running.
+
+![Game Running](../../static/img/vs-game-running.png)

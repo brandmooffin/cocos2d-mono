@@ -17,7 +17,7 @@ namespace Cocos2DMonoGame.iOS
             //
             // TODO: Set the display orientation that you want for this game.
             // 
-            CCDrawManager.InitializeDisplay(game, graphics, DisplayOrientation.Portrait);
+            CCDrawManager.InitializeDisplay(game, graphics, DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Cocos2DMonoGame.iOS
                 // Set your design resolution here, which is the target resolution of your primary
                 // design hardware.
                 //
-                CCDrawManager.SetDesignResolutionSize(480f, 800f, CCResolutionPolicy.ShowAll);
+                CCDrawManager.SetDesignResolutionSize(800, 480, CCResolutionPolicy.ShowAll);
                 CCApplication.SharedApplication.GraphicsDevice.Clear(Color.Black);
                 //initialize director
                 pDirector = CCDirector.SharedDirector;
