@@ -32,6 +32,9 @@ namespace AppGame.Android
 
             Button spritesheetGameButton = FindViewById<Button>(Resource.Id.spritesheetGameButton);
             spritesheetGameButton.Click += OnSpritesheetGameClick;
+
+            Button texturePackerGameButton = FindViewById<Button>(Resource.Id.texturePackerGameButton);
+            texturePackerGameButton.Click += OnTexturePackerGameClick;
         }
 
         private void OnSimpleGameClick(object sender, EventArgs eventArgs)
@@ -47,6 +50,11 @@ namespace AppGame.Android
         private void OnSpritesheetGameClick(object sender, EventArgs eventArgs)
         {
             StartActivity(typeof(SpritesheetGameActivity));
+        }
+
+        private void OnTexturePackerGameClick(object sender, EventArgs eventArgs)
+        {
+            StartActivity(typeof(TexturePackerGameActivity));
         }
     }
 }

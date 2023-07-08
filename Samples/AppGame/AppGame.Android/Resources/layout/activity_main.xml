@@ -39,4 +39,14 @@
         android:layout_centerHorizontal="true"
         android:text="@string/spritesheet_game"
         />
+
+        <Button
+         android:id="@+id/texturePackerGameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spritesheetGameButton"
+        android:layout_centerHorizontal="true"
+        android:text="@string/texture_packer_game"
+        />
+
 </RelativeLayout>

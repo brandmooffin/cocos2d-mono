@@ -32,8 +32,12 @@ public class MainViewController : UIViewController
         interactiveGameButton.SetTitle("Interactive Game", UIControlState.Normal);
 
         var spritesheetGameButton = UIButton.FromType(UIButtonType.System);
-        spritesheetGameButton.Frame = new CGRect(20, 600, 280, 44);
+        spritesheetGameButton.Frame = new CGRect(20, 500, 280, 44);
         spritesheetGameButton.SetTitle("Game using spritesheet", UIControlState.Normal);
+
+        var texturePackerGameButton = UIButton.FromType(UIButtonType.System);
+        texturePackerGameButton.Frame = new CGRect(20, 600, 280, 44);
+        texturePackerGameButton.SetTitle("Game using TexturePacker", UIControlState.Normal);
 
 
         simpleGameButton.TouchUpInside += (sender, e) => {
@@ -54,9 +58,16 @@ public class MainViewController : UIViewController
             PresentViewController(spritesheetGameViewController, true, null);
         };
 
+        texturePackerGameButton.TouchUpInside += (sender, e) => {
+            var texturePackerGameStoryboard = UIStoryboard.FromName("TexturePackerGameStoryboard", null);
+            var texturePackerGameViewController = texturePackerGameStoryboard.InstantiateViewController("TexturePackerGame") as TexturePackerGameViewController;
+            PresentViewController(texturePackerGameViewController, true, null);
+        };
+
         View.AddSubview(simpleGameButton);
         View.AddSubview(interactiveGameButton);
         View.AddSubview(spritesheetGameButton);
+        View.AddSubview(texturePackerGameButton);
     }
 
     public override void DidReceiveMemoryWarning()

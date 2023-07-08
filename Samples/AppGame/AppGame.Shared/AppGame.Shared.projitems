@@ -14,5 +14,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\SpritesheetScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\InteractiveScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\SimpleScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\TexturePackerScene.cs" />
   </ItemGroup>
 </Project>
