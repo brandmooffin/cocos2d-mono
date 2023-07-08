@@ -16,6 +16,11 @@ public class InteractiveGameViewController : UIViewController {
     {
     }
 
+    public InteractiveGameViewController(ObjCRuntime.NativeHandle handle) : base(handle)
+    {
+
+    }
+
 
     public override void ViewDidLoad ()
     {

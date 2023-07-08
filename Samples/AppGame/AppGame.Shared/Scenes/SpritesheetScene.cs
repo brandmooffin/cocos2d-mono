@@ -20,8 +20,7 @@ namespace AppGame.Shared.Scenes
             {
                 Position = CCPoint.Zero
             };
-            pCloseItem.Position = new CCPoint(size.Width - 30, size.Height - 10);
-            pCloseItem.Scale = 0.5f;
+            pCloseItem.Position = new CCPoint(size.Width - pCloseItem.ContentSize.Width / 2, size.Height - pCloseItem.ContentSize.Height / 2);
 
             backgroundLayer = new CCLayerColor()
             {
@@ -32,14 +31,14 @@ namespace AppGame.Shared.Scenes
             var label = new CCLabelBMFont("Hello", "fonts/bitmapFontTest3.fnt")
             {
                 Color = CCColor3B.White,
-                Position = size.Center,
+                Position = new CCPoint(size.Center.X, size.Center.Y + 500),
                 Scale = 2
             };
 
             var logo = new CCSprite("sprites/logo-small")
             {
                 Position = size.Center + new CCPoint(0, 200),
-                Scale = 0.25f
+                Scale = 0.5f
             };
 
             CCSpriteBatchNode BatchNode = new CCSpriteBatchNode("sprites/tileset");

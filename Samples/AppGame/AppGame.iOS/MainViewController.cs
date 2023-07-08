@@ -12,6 +12,11 @@ public class MainViewController : UIViewController
     {
     }
 
+    public MainViewController(ObjCRuntime.NativeHandle handle) : base(handle)
+    {
+
+    }
+
     public override void ViewDidLoad()
     {
         base.ViewDidLoad();

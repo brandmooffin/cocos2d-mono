@@ -15,6 +15,11 @@ public class SpritesheetGameViewController : UIViewController {
     {
     }
 
+    public SpritesheetGameViewController(ObjCRuntime.NativeHandle handle) : base(handle)
+    {
+
+    }
+
     public override void ViewDidLoad ()
     {
         View = new UIView {

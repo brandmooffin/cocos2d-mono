@@ -2,7 +2,6 @@
 using System.Linq;
 using AppGame.Shared;
 using AppGame.Shared.Scenes;
-using Cocos2D;
 using CoreGraphics;
 using Foundation;
 using UIKit;
@@ -15,6 +14,11 @@ public class SimpleGameViewController : UIViewController {
 
     public SimpleGameViewController(IntPtr handle) : base(handle)
     {
+    }
+
+    public SimpleGameViewController(ObjCRuntime.NativeHandle handle) : base(handle)
+    {
+
     }
 
 

@@ -75,7 +75,7 @@ namespace AppGame.Shared
                 // Set your design resolution here, which is the target resolution of your primary
                 // design hardware.
                 //
-                CCDrawManager.SetDesignResolutionSize(480f, 800f, CCResolutionPolicy.ShowAll);
+                CCDrawManager.SetDesignResolutionSize(720, 1280, CCResolutionPolicy.ShowAll);
                 CCApplication.SharedApplication.GraphicsDevice.Clear(Color.DarkRed);
                 //initialize director
                 pDirector = CCDirector.SharedDirector;
