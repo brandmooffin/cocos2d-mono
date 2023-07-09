@@ -6,6 +6,7 @@ namespace AppGame.Shared.Scenes
     public class InteractiveScene : CCScene
     {
         CCLayerColor backgroundLayer;
+        CCTexture2D SampleTexture;
         public override void OnEnter()
         {
             TouchEnabled = true;
@@ -14,6 +15,8 @@ namespace AppGame.Shared.Scenes
 
             Console.WriteLine("Setting up scene...");
             var size = CCDirector.SharedDirector.WinSize;
+
+            SampleTexture = CCTextureCache.SharedTextureCache.AddImage("sprites/SpookyPeas");
 
             var pCloseItem = new CCMenuItemImage("sprites/close", "sprites/close", CloseCallback);
             var pMenu = new CCMenu(pCloseItem)
@@ -78,10 +81,9 @@ namespace AppGame.Shared.Scenes
         public override bool TouchBegan(CCTouch touch)
         {
             Console.WriteLine("Touches began...");
-            var logo = new CCSprite("sprites/logo-small")
+            var logo = new CCSprite(SampleTexture)
             {
-                Position = touch.Location,
-                Scale = 0.5f
+                Position = touch.Location
             };
             backgroundLayer.AddChild(logo);
             return base.TouchBegan(touch);
