@@ -13,7 +13,7 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.DesktopGL</PackageId>
-    <Version>2.4.1.0</Version>
+    <Version>2.4.2.0</Version>
     <Description>Cocos2D-Mono for DesktopGL (OpenGL Desktop Platforms)</Description>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
@@ -22,10 +22,10 @@
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>    - Add Support to Align Menu Items Left or Right Vertically
-    - Fix support for initializing CCSprite with CCTexture2D
-    - Support Change Text using Property for CCMenuItemFont
-    - Add support for passing in fontname and fontsize for CCMenuItemFont</PackageReleaseNotes>
+    <PackageReleaseNotes>    - Lowered minimum support for Android to API 21
+    - Lowered minimum support for iOS 11
+    - Improved support for narrow screen devices
+    - Fix for ViewPort positioning in Portrait Mode</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageIcon>logo-small.png</PackageIcon>
