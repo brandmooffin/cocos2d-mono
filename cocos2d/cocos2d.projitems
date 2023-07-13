@@ -422,6 +422,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventGamePadDPad.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventGamePadStick.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventGamePadTrigger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCFontSpriteFont.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)EmbeddableView\" />

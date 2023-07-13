@@ -256,10 +256,10 @@ namespace Cocos2D
                                          t.ty);
         }
 
-        //public static CCAffineTransform Scale(CCAffineTransform t, float sx, float sy)
-        //{
-        //    return new CCAffineTransform(t.a * sx, t.b * sx, t.c * sy, t.d * sy, t.tx, t.ty);
-        //}
+        public static CCAffineTransform ScaleCopy(CCAffineTransform t, float sx, float sy)
+        {
+            return new CCAffineTransform(t.a * sx, t.b * sx, t.c * sy, t.d * sy, t.tx, t.ty);
+        }
 
         /// <summary>
         /// Concatenate `t2' to `t1' and return the result:

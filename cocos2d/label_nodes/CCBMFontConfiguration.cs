@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework.Content;
 using System.IO;
 using System.Text;
+using static Microsoft.Xna.Framework.Graphics.SpriteFont;
 
 namespace Cocos2D
 {
@@ -12,6 +13,12 @@ namespace Cocos2D
 #endif
     public class CCBMFontConfiguration
     {
+        // Due to a bug in MonoGame's Custom Content loading not being able to recognize properties that are not
+        // marked public we have to leave the Serialized information as variables and not properties.
+        // This is an inconsistency with how XNA works.  Until this bug is fixed this needs to remain as it is.
+        [ContentSerializer]
+        internal int CommonHeight;// { get; set; }
+
         [ContentSerializer]
         internal int m_nCommonHeight;
 
@@ -42,12 +49,46 @@ namespace Cocos2D
             get { return m_pCharacterSet; }
         }
 
+        [ContentSerializer]
+        internal Dictionary<int, CCBMGlyphDef> Glyphs; // { get; set; }
+
+        [ContentSerializer]
+        internal Dictionary<int, CCKerningHashElement> GlyphKernings; // { get; set; }
+
+        internal static CCBMFontConfiguration FontConfigurationWithFile(string fntFile)
+        {
+            try
+            {
+                return CCContentManager.SharedContentManager.Load<CCBMFontConfiguration>(fntFile);
+            }
+            catch (ContentLoadException)
+            {
+                return new CCBMFontConfiguration(fntFile);
+            }
+        }
+
         public CCBMFontConfiguration()
         {
+            Glyphs = new Dictionary<int, CCBMGlyphDef>();
+            CharacterSet = new List<int>();
+            GlyphKernings = new Dictionary<int, CCKerningHashElement>();
         }
+
+        internal CCBMFontConfiguration(string fntFile)
+            : this(CCContentManager.SharedContentManager.Load<string>(fntFile), fntFile)
+        { }
 
         public CCBMFontConfiguration(string data, string fntFile)
         {
+            Glyphs = new Dictionary<int, CCBMGlyphDef>();
+            CharacterSet = new List<int>();
+            GlyphKernings = new Dictionary<int, CCKerningHashElement>();
+
+            GlyphKernings.Clear();
+            Glyphs.Clear();
+
+            CharacterSet = ParseConfigFile(data, fntFile);
+
             InitWithString(data, fntFile);
         }
 
@@ -442,6 +483,41 @@ namespace Cocos2D
         {
             m_pKerningDictionary.Clear();
         }
+
+        #region Nested type: CCBMGlyphDef
+
+        /// <summary>
+        /// CCBMFont definition
+        /// </summary>
+        internal class CCBMGlyphDef
+        {
+            /// <summary>
+            /// ID of the character
+            /// </summary>
+            public int Character { get; set; }
+
+            /// <summary>
+            /// origin and size of the font
+            /// </summary>
+            public CCRect Subrect;
+
+            /// <summary>
+            /// The amount to move the current position after drawing the character (in pixels)
+            /// </summary>
+            public int XAdvance { get; set; }
+
+            /// <summary>
+            /// The X amount the image should be offset when drawing the image (in pixels)
+            /// </summary>
+            public int XOffset { get; set; }
+
+            /// <summary>
+            /// The Y amount the image should be offset when drawing the image (in pixels)
+            /// </summary>
+            public int YOffset { get; set; }
+        }
+
+        #endregion
 
         #region Nested type: ccBMFontDef
 

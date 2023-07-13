@@ -27,7 +27,7 @@ namespace cocos2d.EmbeddableView
             set
             {
                 touchEnabled = value;
-                PlatformUpdateTouchEnabled();
+                //PlatformUpdateTouchEnabled();
             }
         }
 

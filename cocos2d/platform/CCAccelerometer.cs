@@ -150,6 +150,21 @@ namespace Cocos2D
 #endif
         }
 
+        public CCAccelerometer()
+        {
+#if !WINDOWS && !PSM && !XBOX && !OUYA && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
+            try
+            {
+                accelerometer = new Microsoft.Devices.Sensors.Accelerometer();
+            }
+            catch (Exception ex)
+            {
+                CCLog.Log(ex.ToString());
+                CCLog.Log("No accelerometer on platform. CCAccelerometer will default to emulation code.");
+            }
+#endif
+        }
+
         public CCAccelerometer(CCGameView gameView)
         {
             GameView = gameView;

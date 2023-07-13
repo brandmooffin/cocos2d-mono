@@ -146,6 +146,17 @@ namespace Cocos2D
             }
         }
 
+        public CCTexture2D(Texture2D texture, CCSurfaceFormat format, bool premultipliedAlpha = true, bool managed = false)
+           : this()
+        {
+            InitWithTexture(texture, format, premultipliedAlpha, managed);
+        }
+
+        public CCTexture2D(Texture2D texture)
+          : this(texture, (CCSurfaceFormat)texture.Format)
+        {
+        }
+
         public bool IsTextureDefined
         {
             get { return (m_Texture2D != null && !m_Texture2D.IsDisposed); }

@@ -10,6 +10,7 @@ using cocos2d.label_nodes;
 using cocos2d.particle_nodes;
 using cocos2d.Events;
 using cocos2d.Math;
+using cocos2d.support;
 
 namespace cocos2d.EmbeddableView
 {
@@ -97,10 +98,10 @@ namespace cocos2d.EmbeddableView
 
         // Instance properties
 
-        //public CCDirector Director { get; private set; }
+        public CCDirector Director { get; private set; }
         public CCScheduler Scheduler { get; private set; }
         public CCRenderer Renderer { get { return CCDrawManager.Renderer; } }
-       // public CCAudioEngine AudioEngine { get; private set; }
+        //public CCAudioEngine AudioEngine { get; private set; }
         public CCActionManager ActionManager { get; private set; }
 
         public CCContentManager ContentManager { get; private set; }
@@ -111,7 +112,7 @@ namespace cocos2d.EmbeddableView
         public CCTextureCache TextureCache { get; private set; }
         public CCAnimationCache AnimationCache { get; private set; }
 
-       // public CCStats Stats { get; private set; }
+        public CCStats Stats { get; private set; }
 
         public bool DepthTesting
         {
@@ -143,7 +144,7 @@ namespace cocos2d.EmbeddableView
                        // AudioEngine?.ResumeAllEffects();
                     }
 
-                    PlatformUpdatePaused();
+                    //PlatformUpdatePaused();
                 }
             }
         }
@@ -221,7 +222,7 @@ namespace cocos2d.EmbeddableView
         {
             if (!gameStarted)
             {
-                PlatformStartGame();
+                //PlatformStartGame();
                 gameStarted = true;
             }
         }
@@ -229,7 +230,7 @@ namespace cocos2d.EmbeddableView
         public void RunWithScene(CCScene scene)
         {
             StartGame();
-            CCDirector.SharedDirector.RunWithScene(scene);
+            Director.RunWithScene(scene);
         }
 
         void Initialise()
@@ -237,20 +238,20 @@ namespace cocos2d.EmbeddableView
             if (viewInitialised)
                 return;
 
-            PlatformInitialise();
+            //PlatformInitialise();
 
             ActionManager = new CCActionManager();
-            //Director = new CCDirector();
+            Director = CCDirector.SharedDirector; //new CCDirector();
             EventDispatcher = new CCEventDispatcher(this);
-           // AudioEngine = new CCAudioEngine();
+            //AudioEngine = new CCAudioEngine();
             Scheduler = new CCScheduler();
 
             // Latest instance of game view should be setting shared resources
             // Ideally, we should move towards removing these singletons altogetehr
-            // CCAudioEngine.SharedEngine = AudioEngine;
+            //CCAudioEngine.SharedEngine = AudioEngine;
             CCScheduler.SharedScheduler = Scheduler;
 
-            // Stats = new CCStats();
+            Stats = new CCStats();
 
             InitialiseGraphicsDevice();
 
@@ -258,9 +259,9 @@ namespace cocos2d.EmbeddableView
 
             InitialiseRunLoop();
 
-            InitialiseInputHandling();
+            //InitialiseInputHandling();
 
-            // Stats.Initialise();
+            Stats.Initialise();
 
             viewInitialised = true;
 
@@ -273,7 +274,7 @@ namespace cocos2d.EmbeddableView
             presParams.RenderTargetUsage = RenderTargetUsage.PreserveContents;
             presParams.DepthStencilFormat = DepthFormat.Depth24Stencil8;
             presParams.BackBufferFormat = XnaSurfaceFormat.Color;
-            PlatformInitialiseGraphicsDevice(ref presParams);
+            //PlatformInitialiseGraphicsDevice(ref presParams);
 
             // Try to create graphics device with hi-def profile
             try
@@ -286,9 +287,9 @@ namespace cocos2d.EmbeddableView
                 graphicsDevice = new GraphicsDevice(GraphicsAdapter.DefaultAdapter, GraphicsProfile.Reach, presParams);
             }
 
-           // DrawManager = new CCDrawManager(graphicsDevice);
+            //DrawManager = new CCDrawManager(graphicsDevice);
 
-           // CCDrawManager.SharedDrawManager = DrawManager;
+            //CCDrawManager.SharedDrawManager = DrawManager;
 
             graphicsDeviceService = new CCGraphicsDeviceService(graphicsDevice);
         }
@@ -345,56 +346,56 @@ namespace cocos2d.EmbeddableView
 
         ~CCGameView()
         {
-            Dispose(false);
+            //Dispose(false);
         }
 
         public void Dispose()
         {
-            Dispose(true);
+           // Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            // Here we check this == null just in case we are coming from a visual designer
-            // like Visual Studio XAML designer.  This may need to be revisited later
-            // after other platforms and devices have been implemented.
-            if (disposed || this == null)
-                return;
+        //protected override void Dispose(bool disposing)
+        //{
+        //    // Here we check this == null just in case we are coming from a visual designer
+        //    // like Visual Studio XAML designer.  This may need to be revisited later
+        //    // after other platforms and devices have been implemented.
+        //    if (disposed || this == null)
+        //        return;
 
-            PlatformDispose(disposing);
+        //    PlatformDispose(disposing);
 
-            // We can't guarantee when Dispose will be called, so
-            // check if we can safely attempt to dispose of graphics device
-            bool canDisposeGraphics = PlatformCanDisposeGraphicsDevice();
+        //    // We can't guarantee when Dispose will be called, so
+        //    // check if we can safely attempt to dispose of graphics device
+        //    bool canDisposeGraphics = PlatformCanDisposeGraphicsDevice();
 
-            if (disposing)
-            {
-                //if (AudioEngine != null)
-                //{
-                //    AudioEngine.Dispose();
-                //    AudioEngine = null;
-                //}
+        //    if (disposing)
+        //    {
+        //        if (AudioEngine != null)
+        //        {
+        //            AudioEngine.Dispose();
+        //            AudioEngine = null;
+        //        }
 
-                if (graphicsDevice != null && canDisposeGraphics)
-                {
-                    graphicsDevice.Dispose();
-                    graphicsDevice = null;
-                }
-            }
+        //        if (graphicsDevice != null && canDisposeGraphics)
+        //        {
+        //            graphicsDevice.Dispose();
+        //            graphicsDevice = null;
+        //        }
+        //    }
 
-            var serviceProvider = CCContentManager.SharedContentManager.ServiceProvider as GameServiceContainer;
-            serviceProvider.RemoveService(typeof(IGraphicsDeviceService));
+        //    var serviceProvider = CCContentManager.SharedContentManager.ServiceProvider as GameServiceContainer;
+        //    serviceProvider.RemoveService(typeof(IGraphicsDeviceService));
 
-            currentViewInstance = null;
+        //    currentViewInstance = null;
 
-            disposed = true;
+        //    disposed = true;
 
-            // If the graphics context is lost, then it's probably not safe to call
-            // the native view's base Dispose method which would rely on an active context
-            if (canDisposeGraphics)
-                base.Dispose(disposing);
-        }
+        //    // If the graphics context is lost, then it's probably not safe to call
+        //    // the native view's base Dispose method which would rely on an active context
+        //    if (canDisposeGraphics)
+        //        base.Dispose(disposing);
+        //}
 
         // MonoGame maintains static references to the underlying context, and more generally, 
         // there's no guarantee that a previous instance of CCGameView will have been disposed by the GC.
@@ -421,7 +422,7 @@ namespace cocos2d.EmbeddableView
 
         internal void Present()
         {
-            PlatformPresent();
+           // PlatformPresent();
         }
 
         void UpdateViewport()
@@ -488,7 +489,7 @@ namespace cocos2d.EmbeddableView
         {
             CCDrawManager.BeginDraw();
 
-            CCScene runningScene = CCDirector.SharedDirector.RunningScene;
+            CCScene runningScene = Director.RunningScene;
 
             var vp = Viewport;
 
@@ -510,33 +511,33 @@ namespace cocos2d.EmbeddableView
                 }
             }
 
-            //if (Stats.Enabled)
-            //{
-            //    try
-            //    {
-            //        Renderer.PushGroup();
-            //        Renderer.PushViewportGroup(ref defaultViewport);
-            //        Renderer.PushLayerGroup(ref defaultViewMatrix, ref defaultProjMatrix);
+            if (Stats.Enabled)
+            {
+                try
+                {
+                    Renderer.PushGroup();
+                    Renderer.PushViewportGroup(ref defaultViewport);
+                    Renderer.PushLayerGroup(ref defaultViewMatrix, ref defaultProjMatrix);
 
-            //        DrawManager.UpdateStats();
-            //        Stats.Draw(this);
+                    //CCDrawManager.UpdateStats();
+                    Stats.Draw(this);
 
-            //        Renderer.PopLayerGroup();
-            //        Renderer.PopViewportGroup();
-            //        Renderer.PopGroup();
+                    Renderer.PopLayerGroup();
+                    Renderer.PopViewportGroup();
+                    Renderer.PopGroup();
 
-            //        Renderer.VisitRenderQueue();
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        string msg = new System.Text.StringBuilder()
-            //        .AppendLine($"Draw.Stats.Enabled : {e.Message}")
-            //        .AppendLine($"Stack Trace: {e.StackTrace}")
-            //        .ToString();
+                    Renderer.VisitRenderQueue();
+                }
+                catch (Exception e)
+                {
+                    string msg = new System.Text.StringBuilder()
+                    .AppendLine($"Draw.Stats.Enabled : {e.Message}")
+                    .AppendLine($"Stack Trace: {e.StackTrace}")
+                    .ToString();
 
-            //        LogMessage(msg);
-            //    }
-            //}
+                    LogMessage(msg);
+                }
+            }
 
             CCDrawManager.EndDraw();
         }
@@ -587,19 +588,19 @@ namespace cocos2d.EmbeddableView
             {
                 float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                // Stats.UpdateStart();
+                Stats.UpdateStart();
 
-                // SoundEffectInstancePool.Update();
+                //SoundEffectInstancePool.Update();
 
-                if (CCDirector.SharedDirector.NextScene != null)
-                    CCDirector.SharedDirector.SetNextScene();
+                if (Director.NextScene != null)
+                    Director.SetNextScene();
 
                 CCScheduler.SharedScheduler.update(deltaTime);
                 ActionManager?.Update(deltaTime);
 
-                ProcessInput();
+                //ProcessInput();
 
-                // Stats.UpdateEnd(deltaTime);
+                Stats.UpdateEnd(deltaTime);
             }
             catch (Exception e)
             {

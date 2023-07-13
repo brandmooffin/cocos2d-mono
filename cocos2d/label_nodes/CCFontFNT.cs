@@ -212,7 +212,7 @@ namespace cocos2d.label_nodes
                 CCBMFontConfiguration.CCKerningHashElement element;
                 if (Configuration.GlyphKernings.TryGetValue(key, out element))
                 {
-                    ret = element.Amount;
+                    ret = element.amount;
                 }
             }
             return ret;
