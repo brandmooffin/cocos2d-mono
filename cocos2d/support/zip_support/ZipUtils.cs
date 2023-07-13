@@ -28,6 +28,8 @@ using System.Linq;
 using System.Text;
 using WP7Contrib.Communications.Compression;
 using System.IO;
+using ICSharpCode.SharpZipLib.GZip;
+using MonoGame.Framework.Utilities;
 
 namespace Cocos2D
 {
@@ -42,6 +44,79 @@ namespace Cocos2D
 
     public class ZipUtils
     {
+        /// <summary>
+        /// Decompresses the given data stream from its source ZIP or GZIP format.
+        /// </summary>
+        /// <param name="dataBytes"></param>
+        /// <returns></returns>
+        internal static byte[] Inflate(byte[] dataBytes)
+        {
+
+            return Inflate(new MemoryStream(dataBytes));
+        }
+
+        /// <summary>
+        /// Decompresses the given data stream from its source ZIP or GZIP format.
+        /// </summary>
+        /// <param name="dataBytes"></param>
+        /// <returns></returns>
+        internal static byte[] Inflate(Stream dataStream)
+        {
+
+            byte[] outputBytes = null;
+            try
+            {
+                using (var deflateStream = new ZlibStream(dataStream, CompressionMode.Decompress))
+                {
+                    outputBytes = StreamToByteArray(deflateStream);
+                }
+            }
+            catch
+            {
+                try
+                {
+                    dataStream.Seek(0, SeekOrigin.Begin);
+#if !WINDOWS_PHONE
+                    using (var gzipInputStream = new GZipInputStream(dataStream, (int)System.IO.Compression.CompressionMode.Decompress))
+#else
+                    using (var gzipInputStream = new GZipInputStream(dataStream))
+#endif
+                    {
+                        outputBytes = StreamToByteArray(gzipInputStream);
+                    }
+                }
+                catch (Exception exc)
+                {
+                    CCLog.Log("Error decompressing image data: " + exc.Message);
+                }
+            }
+
+
+            return outputBytes;
+        }
+
+        /// <summary>
+        /// Helper to convert a Stream into a byte array.
+        /// </summary>
+        /// <returns>The byte array.</returns>
+        /// <param name="inputStream">Input stream.</param>
+        internal static byte[] StreamToByteArray(Stream inputStream)
+        {
+            if (inputStream == null)
+            {
+                return null;
+            }
+
+            byte[] retBytes = null;
+            using (var memoryStream = new MemoryStream())
+            {
+                inputStream.CopyTo(memoryStream);
+                retBytes = memoryStream.ToArray();
+            }
+
+            return retBytes;
+        }
+
 
         /// <summary>
         /// 	* Inflates either zlib or gzip deflated memory. The inflated memory is

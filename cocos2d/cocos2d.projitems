@@ -385,5 +385,48 @@
     <Compile Include="$(MSBuildThisFileDirectory)touch_dispatcher\ICCStandardTouchDelegate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)touch_dispatcher\ICCTargetedTouchDelegate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)touch_dispatcher\ICCTouchDelegate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\CCGameView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\CCGameView.iOS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\CCGameView.Mobile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderer\CCRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderer\RenderCommands\CCQuadCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderer\RenderCommands\CCRenderCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderer\RenderCommands\CCCustomCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)support\CCStats.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCFontAtlasCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCFontAtlas.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCFont.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCFontFNT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Math\CCGeometry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)particle_nodes\CCParticleSystemCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)predefine\ICCUpdatable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)particle_nodes\CCParticleSystemConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventDispatcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventListenerTouchOneByOne.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventListenerTouchAllAtOnce.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventListenerCustom.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventCustom.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventTouch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventListenerMouse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventMouse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventListenerAccelerometer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventAccelerate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventListenerKeyboard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventKeyboard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventListenerGamePad.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventGamePad.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventGamePadButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventGamePadConnection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventGamePadDPad.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventGamePadStick.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventGamePadTrigger.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)EmbeddableView\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Renderer\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Renderer\RenderCommands\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Events\" />
   </ItemGroup>
 </Project>

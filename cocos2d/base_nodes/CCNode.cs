@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using cocos2d.EmbeddableView;
+using cocos2d.Events;
+using cocos2d.predefine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Cocos2D
@@ -1729,6 +1733,291 @@ namespace Cocos2D
         }
 
         #endregion
+
+        bool transformIsDirty;
+        CCAffineTransform affineLocalTransform;
+
+        public virtual CCAffineTransform AffineLocalTransform
+        {
+            get { if (transformIsDirty) UpdateTransform(); return affineLocalTransform; }
+        }
+
+        public CCAffineTransform AffineWorldTransform
+        {
+            get
+            {
+                CCAffineTransform worldTransform = AffineLocalTransform;
+                CCNode parent = this.Parent;
+                if (parent != null)
+                {
+                    var parentTransform = parent.AffineWorldTransform;
+                    CCAffineTransform.Concat(ref worldTransform, ref parentTransform, out worldTransform);
+                }
+
+                return worldTransform;
+            }
+        }
+
+        CCLayer layer;
+        public virtual CCLayer Layer
+        {
+            get { return layer; }
+            internal set
+            {
+                if (layer != value)
+                {
+                    if (layer != null)
+                    {
+                        layer.LayerVisibleBoundsChanged -=
+                            new CCLayer.LayerVisibleBoundsChangedEventHandler(OnLayerVisibleBoundsChanged);
+                    }
+
+                    layer = value;
+
+                    // All the children should belong to same layer
+                    if (Children != null)
+                    {
+                        foreach (CCNode child in Children)
+                        {
+                            child.Layer = layer;
+                        }
+                    }
+
+                    if (layer != null)
+                    {
+                        layer.LayerVisibleBoundsChanged +=
+                                        new CCLayer.LayerVisibleBoundsChangedEventHandler(OnLayerVisibleBoundsChanged);
+
+                        OnLayerVisibleBoundsChanged(this, null);
+                    }
+
+                    if (layer != null && layer.Scene != null)
+                        this.Scene = layer.Scene;
+                }
+            }
+        }
+
+        CCScene scene;
+        public virtual CCScene Scene
+        {
+            get { return scene; }
+            internal set
+            {
+                if (scene != value)
+                {
+
+                    scene = value;
+
+                    // All the children should belong to same scene
+                    if (Children != null)
+                    {
+                        foreach (CCNode child in Children)
+                        {
+                            child.Scene = scene;
+                        }
+                    }
+
+                    if (scene != null)
+                    {
+
+                        OnSceneViewportChanged(this, null);
+
+                        AddedToScene();
+
+                        AttachActions();
+                        AttachSchedules();
+                    }
+
+                    AttachEvents();
+                }
+            }
+        }
+
+        public virtual CCGameView GameView
+        {
+            get { return Scene != null ? Scene.GameView : null; }
+            protected set { }
+        }
+
+        void OnSceneViewportChanged(object sender, EventArgs e)
+        {
+            if (Scene != null && GameView != null && Camera != null)
+            {
+                ViewportChanged();
+                VisibleBoundsChanged();
+            }
+        }
+
+        void OnLayerVisibleBoundsChanged(object sender, EventArgs e)
+        {
+            if (Scene != null && Camera != null)
+                VisibleBoundsChanged();
+        }
+
+        protected virtual void VisibleBoundsChanged()
+        {
+        }
+
+        protected virtual void ViewportChanged()
+        {
+        }
+
+        protected virtual void AddedToScene()
+        {
+        }
+
+        List<lazySchedule> toBeAddedSchedules;
+        struct lazyAction
+        {
+            public CCAction Action;
+            public CCNode Target;
+            public bool Paused;
+
+            public lazyAction(CCAction action, CCNode target, bool paused = false)
+            {
+                Action = action;
+                Target = target;
+                Paused = paused;
+            }
+        }
+
+        List<lazyAction> toBeAddedActions;                       // The Actions to be added lazily when an ActionManager is not yet available
+
+        struct lazySchedule
+        {
+            public Action<float> Selector;
+            public ICCSelectorProtocol Target;
+            public float Interval;
+            public uint Repeat;
+            public float Delay;
+            public bool Paused;
+            public int Priority;
+            public bool IsPriority;
+
+            public lazySchedule(Action<float> selector, ICCSelectorProtocol target, float interval, uint repeat, float delay, bool paused)
+            {
+                Selector = selector;
+                Target = target;
+                Interval = interval;
+                Repeat = repeat;
+                Delay = delay;
+                Paused = paused;
+                Priority = 0;
+                IsPriority = false;
+            }
+
+            public lazySchedule(ICCSelectorProtocol target, int priority, bool paused)
+            {
+                Selector = null;
+                Target = target;
+                Interval = 0;
+                Repeat = 0;
+                Delay = 0;
+                Paused = paused;
+                Priority = priority;
+                IsPriority = true;
+            }
+
+        }
+
+        internal void AttachActions()
+        {
+            if (toBeAddedActions != null && toBeAddedActions.Count > 0)
+            {
+                var actionManger = ActionManager;
+                foreach (var action in toBeAddedActions)
+                {
+                    ActionManager.AddAction(action.Action, action.Target, action.Paused);
+                }
+
+                toBeAddedActions.Clear();
+                toBeAddedActions = null;
+            }
+        }
+
+        internal void AttachSchedules()
+        {
+            if (toBeAddedSchedules != null && toBeAddedSchedules.Count > 0)
+            {
+                var scheduler = Scheduler;
+                foreach (var schedule in toBeAddedSchedules)
+                {
+                    if (schedule.IsPriority)
+                        scheduler.Schedule(schedule.Target, schedule.Priority, schedule.Paused);
+                    else
+                        scheduler.Schedule(schedule.Selector, schedule.Target, schedule.Interval, schedule.Repeat, schedule.Delay, schedule.Paused);
+                }
+
+                toBeAddedSchedules.Clear();
+                toBeAddedSchedules = null;
+            }
+        }
+
+        List<CCEventListener> toBeAddedListeners;                       // The listeners to be added lazily when an EventDispatcher is not yet available
+        internal virtual CCEventDispatcher EventDispatcher
+        {
+            get { return Scene != null ? Scene.EventDispatcher : null; }
+        }
+
+        internal void AttachEvents()
+        {
+            if (EventDispatcher == null)
+                return;
+
+            if (toBeAddedListeners != null && toBeAddedListeners.Count > 0)
+            {
+                var eventDispatcher = EventDispatcher;
+                foreach (var listener in toBeAddedListeners)
+                {
+                    if (listener.SceneGraphPriority != null)
+                        eventDispatcher.AddEventListener(listener, listener.SceneGraphPriority);
+                    else
+                        eventDispatcher.AddEventListener(listener, listener.FixedPriority, this);
+                }
+
+                toBeAddedListeners.Clear();
+                toBeAddedListeners = null;
+            }
+        }
+
+        #region Unit conversion
+
+        public CCPoint ConvertToWorldspace(CCPoint point)
+        {
+            var transformedPoint = AffineWorldTransform.Transform(point);
+            return transformedPoint;
+
+        }
+
+        public CCRect ConvertToWorldspace(CCRect rect)
+        {
+            var transformedRect = AffineWorldTransform.Transform(rect);
+            return transformedRect;
+
+        }
+
+        public CCPoint WorldToParentspace(CCPoint point)
+        {
+            CCPoint transformedPoint = AffineWorldTransform.Inverse.Transform(point);
+            transformedPoint += BoundingBox.Origin;
+
+            return transformedPoint;
+        }
+
+        public CCPoint ScreenToWorldspace(CCPoint point)
+        {
+            return Layer.ScreenToWorldspace(point);
+        }
+
+        public CCRect VisibleBoundsWorldspace
+        {
+            get
+            {
+                return Layer.VisibleBoundsWorldspace;
+            }
+        }
+
+        #endregion Unit conversion
 
         /*
         void registerScriptHandler(int nHandler)

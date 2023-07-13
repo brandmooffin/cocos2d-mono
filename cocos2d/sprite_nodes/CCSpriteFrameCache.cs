@@ -427,6 +427,9 @@ namespace Cocos2D
 
                 return pSharedSpriteFrameCache;
             }
+            internal set {
+                pSharedSpriteFrameCache = value;
+            }
         }
 
         public static void PurgeSharedSpriteFrameCache()

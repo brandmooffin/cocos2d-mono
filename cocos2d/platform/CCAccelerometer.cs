@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna;
 using Microsoft.Xna.Framework.Input;
 using System.Reflection;
+using cocos2d.EmbeddableView;
 
 namespace Cocos2D
 {
@@ -20,6 +21,120 @@ namespace Cocos2D
         private bool m_bActive;
         private bool m_bEmulation;
 
+        bool enabled = false;
+
+        public CCGameView GameView { get; set; }
+
+        bool Active { get { return m_bActive; } set { m_bActive = value; } }
+        bool Emulating { get { return m_bEmulation; } set { m_bEmulation = value; } }
+
+        public bool Enabled
+        {
+            get { return enabled; }
+
+            set
+            {
+                enabled = value;
+                if (enabled && !Active)
+                {
+#if IOS
+                    try
+                    {
+                        if (accelerometer != null)
+                        {
+                            accelerometer.Start();
+                            Active = true;
+
+                        }
+                        else
+                        {
+                            Active = false;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Active = false;
+                    }
+#elif !WINDOWS && !OUYA && !NETFX_CORE && !MACOS && !WINDOWSGL && !WINDOWSDX
+                    try
+                    {
+                        if(Accelerometer.IsSupported)
+                        {
+                            accelerometer.CurrentValueChanged += accelerometer_CurrentValueChanged;
+                            accelerometer.Start();
+                            Active = true;
+                        }
+                        else
+                        {
+                            Active = false;
+                        }
+                    }
+                    catch (Microsoft.Devices.Sensors.AccelerometerFailedException)
+                    {
+                        Active = false;
+                    }
+
+#elif NETFX_CORE
+                    try
+                    {
+                        if(accelerometer != null)
+                        {
+                            accelerometer.ReadingChanged += accelerometer_ReadingChanged;
+                            Active = true;
+                        }
+                        else
+                        {
+                            Active = false;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Active = false;
+                    }
+#endif
+
+                    if (!Active)
+                    {
+                        Active = true;
+                        Emulating = true;
+                    }
+                    else
+                    {
+                        Emulating = false;
+                    }
+                }
+                else
+                {
+                    if (Active && !Emulating)
+                    {
+#if IOS
+                        if (accelerometer != null)
+                        {
+                            accelerometer.Stop();
+                        }
+#elif !WINDOWS && !OUYA &&!NETFX_CORE && !MACOS && !WINDOWSGL && !WINDOWSDX
+                        if (accelerometer != null)
+                        {
+                            accelerometer.CurrentValueChanged -= accelerometer_CurrentValueChanged;
+                            accelerometer.Stop();
+                        }
+#endif
+#if NETFX_CORE
+                        if (accelerometer != null)
+                        {
+                            accelerometer.ReadingChanged -= accelerometer_ReadingChanged;
+                        }
+#endif
+                    }
+
+                    ResetAccelerometer();
+
+                    Active = false;
+                    Emulating = false;
+                }
+            }
+        }
+
         static CCAccelerometer()
         {
 #if !WINDOWS && !PSM && !XBOX && !OUYA && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
@@ -34,6 +149,30 @@ namespace Cocos2D
             }
 #endif
         }
+
+        public CCAccelerometer(CCGameView gameView)
+        {
+            GameView = gameView;
+
+#if IOS
+            accelerometer = new Microsoft.Devices.Sensors.Accelerometer();//new CoreMotion.CMMotionManager();
+            //accelerometer.AccelerometerUpdateInterval = 60f;
+#elif !WINDOWS && !OUYA && !NETFX_CORE && !MACOS && !WINDOWSGL && !WINDOWSDX
+            try
+            {
+                accelerometer = new Accelerometer();
+            }
+            catch (Exception ex)
+            {
+                CCLog.Log(ex.ToString());
+                CCLog.Log("No accelerometer on platform. CCAccelerometer will default to emulation code.");
+            }
+
+#elif NETFX_CORE
+            accelerometer = Accelerometer.GetDefault();
+#endif
+        }
+
 
         private void ResetAccelerometer()
         {

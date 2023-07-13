@@ -33,14 +33,147 @@ namespace Cocos2D
         public float a, b, c, d;
         public float tx, ty;
 
+        Matrix xnaMatrix;
+
+        #region Properties
+
+        internal Matrix XnaMatrix { get { return xnaMatrix; } }
+
+        public float A
+        {
+            get { return xnaMatrix.M11; }
+            set { xnaMatrix.M11 = value; }
+        }
+
+        public float B
+        {
+            get { return xnaMatrix.M12; }
+            set { xnaMatrix.M12 = value; }
+        }
+
+        public float C
+        {
+            get { return xnaMatrix.M21; }
+            set { xnaMatrix.M21 = value; }
+        }
+
+        public float D
+        {
+            get { return xnaMatrix.M22; }
+            set { xnaMatrix.M22 = value; }
+        }
+
+        public float Tx
+        {
+            get { return xnaMatrix.M41; }
+            set { xnaMatrix.M41 = value; }
+        }
+
+        public float Ty
+        {
+            get { return xnaMatrix.M42; }
+            set { xnaMatrix.M42 = value; }
+        }
+
+        public float Tz
+        {
+            get { return xnaMatrix.M43; }
+            set { xnaMatrix.M43 = value; }
+        }
+
+        public float Scale
+        {
+            set { ScaleX = value; ScaleY = value; }
+        }
+
+        public float ScaleX
+        {
+            get
+            {
+                float a2 = (float)Math.Pow(A, 2);
+                float b2 = (float)Math.Pow(B, 2);
+                return (float)Math.Sqrt(a2 + b2);
+            }
+
+            set
+            {
+                float rotX = RotationY;
+                A = value * (float)Math.Cos(rotX);
+                B = value * (float)Math.Sin(rotX);
+            }
+        }
+
+        public float ScaleY
+        {
+            get
+            {
+                float d2 = (float)Math.Pow(D, 2);
+                float c2 = (float)Math.Pow(C, 2);
+                return (float)Math.Sqrt(d2 + c2);
+            }
+
+            set
+            {
+                double rotY = RotationY;
+
+                C = -value * (float)Math.Sin(rotY);
+                D = value * (float)Math.Cos(rotY);
+            }
+        }
+
+        public float Rotation
+        {
+            set
+            {
+                float rotX = RotationX;
+                float rotY = RotationY;
+
+                float scaleX = ScaleX;
+                float scaleY = ScaleY;
+
+                A = scaleX * (float)Math.Cos(value);
+                B = scaleX * (float)Math.Sin(value);
+                C = -scaleY * (float)Math.Sin(rotY - rotX + value);
+                D = scaleY * (float)Math.Cos(rotY - rotX + value);
+            }
+        }
+
+        public float RotationX
+        {
+            get { return (float)Math.Atan2(B, A); }
+        }
+
+        public float RotationY
+        {
+            get { return (float)Math.Atan2(-C, D); }
+        }
+
+        public CCAffineTransform Inverse
+        {
+            get { return new CCAffineTransform(Matrix.Invert(XnaMatrix)); }
+        }
+
+        //public CCAffineTransform Inverse
+        //{
+        //    get { return new CCAffineTransform(Matrix.Invert(XnaMatrix)); }
+        //}
+
+        #endregion Properties
+
         public CCAffineTransform(float a, float b, float c, float d, float tx, float ty)
         {
+            xnaMatrix = Matrix.Identity;
             this.a = a;
             this.b = b;
             this.c = c;
             this.d = d;
             this.tx = tx;
             this.ty = ty;
+        }
+
+        internal CCAffineTransform(Matrix xnaMatrixIn) : this()
+        {
+            xnaMatrix = xnaMatrixIn;
         }
 
         public static CCPoint Transform(CCPoint point, CCAffineTransform t)
@@ -57,6 +190,52 @@ namespace Cocos2D
             s.Width = (float) ((double) t.a * size.Width + (double) t.c * size.Height);
             s.Height = (float) ((double) t.b * size.Width + (double) t.d * size.Height);
             return s;
+        }
+
+        public void Transform(ref float x, ref float y, ref float z)
+        {
+            Vector3 vector = new Vector3(x, y, z);
+            Vector3.Transform(ref vector, ref xnaMatrix, out vector);
+            x = vector.X;
+            y = vector.Y;
+            z = vector.Z;
+        }
+
+        public void Transform(ref CCV3F_C4B_T2F quadPoint)
+        {
+            var x = quadPoint.Vertices.X;
+            var y = quadPoint.Vertices.Y;
+            var z = quadPoint.Vertices.Z;
+            Transform(ref x, ref y, ref z);
+            quadPoint.Vertices.X = x;
+            quadPoint.Vertices.Y = y;
+            quadPoint.Vertices.Z = z;
+        }
+
+        //public void Transform(ref CCV3F_C4B quadPoint)
+        //{
+        //    var x = quadPoint.Vertices.X;
+        //    var y = quadPoint.Vertices.Y;
+        //    var z = quadPoint.Vertices.Z;
+        //    Transform(ref x, ref y, ref z);
+        //    quadPoint.Vertices.X = x;
+        //    quadPoint.Vertices.Y = y;
+        //    quadPoint.Vertices.Z = z;
+        //}
+
+        public void Transform(ref CCV3F_C4B_T2F_Quad quad)
+        {
+            Transform(ref quad.TopLeft);
+            Transform(ref quad.TopRight);
+            Transform(ref quad.BottomLeft);
+            Transform(ref quad.BottomRight);
+        }
+
+        public CCV3F_C4B_T2F_Quad Transform(CCV3F_C4B_T2F_Quad quad)
+        {
+            Transform(ref quad);
+
+            return quad;
         }
 
         public static CCAffineTransform Translate(CCAffineTransform t, float tx, float ty)
@@ -77,10 +256,10 @@ namespace Cocos2D
                                          t.ty);
         }
 
-        public static CCAffineTransform Scale(CCAffineTransform t, float sx, float sy)
-        {
-            return new CCAffineTransform(t.a * sx, t.b * sx, t.c * sy, t.d * sy, t.tx, t.ty);
-        }
+        //public static CCAffineTransform Scale(CCAffineTransform t, float sx, float sy)
+        //{
+        //    return new CCAffineTransform(t.a * sx, t.b * sx, t.c * sy, t.d * sy, t.tx, t.ty);
+        //}
 
         /// <summary>
         /// Concatenate `t2' to `t1' and return the result:
@@ -97,34 +276,41 @@ namespace Cocos2D
                                          t1.tx * t2.b + t1.ty * t2.d + t2.ty); //ty
         }
 
-        /// <summary>
-        /// Get/set the XNA matrix of this transform. This matrix will assume z=0.
-        /// </summary>
-        public Matrix XnaMatrix
+        public static void Concat(ref CCAffineTransform t1, ref CCAffineTransform t2, out CCAffineTransform tOut)
         {
-            get
-            {
-                Matrix m = Matrix.Identity;
-                m.M11 = a;
-                m.M21 = c;
-                m.M12 = b;
-                m.M22 = d;
-                m.M41 = tx;
-                m.M42 = ty;
-                m.M43 = 0; // Always at Z=0
-                return (m);
-            }
-            set
-            {
-                a = value.M11;
-                c = value.M21;
-                b = value.M12;
-                d = value.M22;
-                tx = value.M41;
-                ty = value.M42;
-                // Ignore z
-            }
+            Matrix concatMatrix;
+            Matrix.Multiply(ref t1.xnaMatrix, ref t2.xnaMatrix, out concatMatrix);
+            tOut = new CCAffineTransform(concatMatrix);
         }
+
+        ///// <summary>
+        ///// Get/set the XNA matrix of this transform. This matrix will assume z=0.
+        ///// </summary>
+        //public Matrix XnaMatrix
+        //{
+        //    get
+        //    {
+        //        Matrix m = Matrix.Identity;
+        //        m.M11 = a;
+        //        m.M21 = c;
+        //        m.M12 = b;
+        //        m.M22 = d;
+        //        m.M41 = tx;
+        //        m.M42 = ty;
+        //        m.M43 = 0; // Always at Z=0
+        //        return (m);
+        //    }
+        //    set
+        //    {
+        //        a = value.M11;
+        //        c = value.M21;
+        //        b = value.M12;
+        //        d = value.M22;
+        //        tx = value.M41;
+        //        ty = value.M42;
+        //        // Ignore z
+        //    }
+        //}
 
         public void Concat(CCAffineTransform m)
         {
@@ -288,14 +474,18 @@ namespace Cocos2D
             ty = MathHelper.Lerp(m1.ty, m2.ty, t);
         }
 
-        public static void Lerp(ref CCAffineTransform m1, ref CCAffineTransform m2, float t, out CCAffineTransform res)
+        //public static void Lerp(ref CCAffineTransform m1, ref CCAffineTransform m2, float t, out CCAffineTransform res)
+        //{
+        //    res.a = MathHelper.Lerp(m1.a, m2.a, t);
+        //    res.b = MathHelper.Lerp(m1.b, m2.b, t);
+        //    res.c = MathHelper.Lerp(m1.c, m2.c, t);
+        //    res.d = MathHelper.Lerp(m1.d, m2.d, t);
+        //    res.tx = MathHelper.Lerp(m1.tx, m2.tx, t);
+        //    res.ty = MathHelper.Lerp(m1.ty, m2.ty, t);
+        //}
+        public void Lerp(CCAffineTransform m1, CCAffineTransform m2, float t)
         {
-            res.a = MathHelper.Lerp(m1.a, m2.a, t);
-            res.b = MathHelper.Lerp(m1.b, m2.b, t);
-            res.c = MathHelper.Lerp(m1.c, m2.c, t);
-            res.d = MathHelper.Lerp(m1.d, m2.d, t);
-            res.tx = MathHelper.Lerp(m1.tx, m2.tx, t);
-            res.ty = MathHelper.Lerp(m1.ty, m2.ty, t);
+            Matrix.Lerp(ref m1.xnaMatrix, ref m2.xnaMatrix, t, out xnaMatrix);
         }
 
         public void Transform(ref float x, ref float y)
@@ -395,5 +585,50 @@ namespace Cocos2D
         {
             return a == t.a && b == t.b && c == t.c && d == t.d && tx == t.tx && ty == t.ty;
         }
+
+        #region Operators
+
+        public static CCAffineTransform operator +(CCAffineTransform affineTransform1, CCAffineTransform affineTransform2)
+        {
+            return new CCAffineTransform(affineTransform1.xnaMatrix + affineTransform2.xnaMatrix);
+        }
+
+        public static CCAffineTransform operator /(CCAffineTransform affineTransform1, CCAffineTransform affineTransform2)
+        {
+            return new CCAffineTransform(affineTransform1.xnaMatrix / affineTransform2.xnaMatrix);
+        }
+
+        public static CCAffineTransform operator /(CCAffineTransform affineTransform, float divider)
+        {
+            return new CCAffineTransform(affineTransform.xnaMatrix / divider);
+        }
+
+        public static bool operator ==(CCAffineTransform affineTransform1, CCAffineTransform affineTransform2)
+        {
+            return affineTransform1.xnaMatrix == affineTransform2.xnaMatrix;
+        }
+
+        public static bool operator !=(CCAffineTransform affineTransform1, CCAffineTransform affineTransform2)
+        {
+            return affineTransform1.xnaMatrix != affineTransform2.xnaMatrix;
+        }
+
+        public static CCAffineTransform operator -(CCAffineTransform affineTransform1, CCAffineTransform affineTransform2)
+        {
+            return new CCAffineTransform(affineTransform1.xnaMatrix - affineTransform2.xnaMatrix);
+        }
+
+        public static CCAffineTransform operator *(CCAffineTransform affinematrix1, CCAffineTransform affinematrix2)
+        {
+            return new CCAffineTransform(affinematrix1.xnaMatrix * affinematrix2.xnaMatrix);
+        }
+
+        public static CCAffineTransform operator -(CCAffineTransform affineTransform1)
+        {
+            Matrix transformedMat = -(affineTransform1.xnaMatrix);
+            return new CCAffineTransform(transformedMat);
+        }
+
+        #endregion Operators
     }
 }

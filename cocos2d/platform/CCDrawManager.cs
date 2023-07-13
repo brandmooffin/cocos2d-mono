@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using cocos2d.Renderer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -88,6 +89,7 @@ namespace Cocos2D
         private static bool m_AllowNonPower2Textures = true;
 
         internal static CCRawList<CCV3F_C4B_T2F> _tmpVertices = new CCRawList<CCV3F_C4B_T2F>();
+        internal static CCRenderer Renderer { get; private set; }
 
         private static bool m_bNeedReinitResources;
 
@@ -1165,6 +1167,11 @@ namespace Cocos2D
         public static void SetViewPort(int x, int y, int width, int height)
         {
             graphicsDevice.Viewport = new Viewport(x, y, width, height);
+        }
+
+        public static void SetViewPort(Viewport viewport)
+        {
+            graphicsDevice.Viewport = viewport;
         }
 
         public static void SetViewPortInPoints(int x, int y, int width, int height)

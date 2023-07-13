@@ -8,6 +8,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Cocos2D
 {
+    public enum GlyphCollection
+    {
+        Dynamic,
+        NEHE,
+        Ascii,
+        Custom
+    };
+
     public partial class CCLabel : CCLabelBMFont
     {
         private struct KerningInfo

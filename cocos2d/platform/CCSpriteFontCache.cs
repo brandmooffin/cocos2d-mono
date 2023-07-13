@@ -21,6 +21,8 @@ namespace Cocos2D
         private static Dictionary<string, FontMapEntry> _loadedFontsMap = new Dictionary<string, FontMapEntry>();
         private static float _fontScale = 1.0f;
 
+        public static CCSpriteFontCache SharedSpriteFontCache { get; internal set; }
+
         public static void RegisterFont(string fontName, params int[] sizes)
         {
             Array.Sort(sizes);
@@ -32,6 +34,19 @@ namespace Cocos2D
             get { return _fontScale; }
             set { _fontScale = value; }
         }
+
+        #region Constructors
+
+        internal CCSpriteFontCache(CCContentManager cm)
+        {
+            FontScale = 1.0f;
+
+            _registeredFonts = new Dictionary<string, int[]>(StringComparer.OrdinalIgnoreCase);
+            _loadedFontsMap = new Dictionary<string, FontMapEntry>();
+            _contentManager = cm;
+        }
+
+        #endregion Constructors
 
         private CCSpriteFontCache()
         {

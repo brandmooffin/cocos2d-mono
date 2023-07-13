@@ -33,6 +33,9 @@ namespace Cocos2D
 {
     public class CCLayer : CCNode, ICCAccelerometerDelegate
     {
+        internal delegate void LayerVisibleBoundsChangedEventHandler(object sender, EventArgs e);
+        internal event LayerVisibleBoundsChangedEventHandler LayerVisibleBoundsChanged;
+
         private bool m_bIsAccelerometerEnabled;
 
         private CCRenderTexture m_pRenderTexture;

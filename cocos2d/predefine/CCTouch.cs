@@ -1,4 +1,5 @@
 using System;
+using CoreVideo;
 
 namespace Cocos2D
 {
@@ -23,6 +24,9 @@ namespace Cocos2D
         private CCPoint m_startPoint;
         private bool m_startPointCaptured;
 
+        internal CCNode Target { get; set; }
+        internal TimeSpan TimeStamp { get; private set; }
+
         public CCTouch()
             : this(0, 0, 0)
         {
@@ -33,6 +37,20 @@ namespace Cocos2D
             m_nId = id;
             m_point = new CCPoint(x, y);
             m_prevPoint = new CCPoint(x, y);
+        }
+
+        internal CCTouch(int id, float x, float y, TimeSpan timeStamp)
+        {
+            m_nId = id;
+            TimeStamp = timeStamp;
+            m_point = new CCPoint(x, y);
+            m_prevPoint = m_point;
+            m_startPoint = m_point;
+        }
+
+        internal CCTouch(int id, CCPoint pos, TimeSpan timeStamp)
+            : this(id, pos.X, pos.Y, timeStamp)
+        {
         }
 
         /** returns the start touch location in OpenGL coordinates */
@@ -108,6 +126,15 @@ namespace Cocos2D
                 m_startPoint = m_point;
                 m_startPointCaptured = true;
             }
+        }
+
+        internal void UpdateTouchInfo(int id, float x, float y, TimeSpan timeStamp)
+        {
+            m_nId = id;
+            m_prevPoint = m_point;
+            m_point.X = x;
+            m_point.Y = y;
+            TimeStamp = timeStamp;
         }
     }
 }

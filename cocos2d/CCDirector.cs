@@ -63,6 +63,8 @@ namespace Cocos2D
         private CCScene m_pNextScene;
         private CCNode m_pNotificationNode;
 
+        internal CCScene NextScene { get { return m_pNextScene; } }
+
         private ICCDirectorDelegate m_pProjectionDelegate;
         private CCScene m_pRunningScene;
         private CCScheduler m_pScheduler;
@@ -1062,7 +1064,7 @@ namespace Cocos2D
             m_bSendCleanupToScene = false;
         }
 
-        protected void SetNextScene()
+        internal void SetNextScene()
         {
             bool runningIsTransition = m_pRunningScene != null && m_pRunningScene.IsTransition;// is CCTransitionScene;
 

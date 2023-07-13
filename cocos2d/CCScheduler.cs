@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using cocos2d.predefine;
 using Cocos2D;
 
 namespace Cocos2D
@@ -211,6 +213,43 @@ namespace Cocos2D
 
         public event Action<Exception> OnUnhandledException;
 
+
+        CCActionManager actionManager;
+
+        #region Properties
+
+        // Gets a value indicating whether the ActionManager is active.
+        // The ActionManager can be stopped from processing actions by calling UnscheduleAll() method.
+        public bool IsActionManagerActive
+        {
+            get
+            {
+
+                if (actionManager != null)
+                {
+                    var target = actionManager;
+
+                    LinkedListNode<ListEntry> next;
+
+                    for (LinkedListNode<ListEntry> node = m_pUpdatesNegList.First; node != null; node = next)
+                    {
+                        next = node.Next;
+                        if (node.Value.Target == target && !node.Value.MarkedForDeletion)
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+        }
+
+
+        internal static CCScheduler SharedScheduler { get; set; }
+
+        #endregion Properties
+
         private void UpdateTarget(ICCSelectorProtocol target, float dt)
         {
             if (OnUnhandledException == null)
@@ -385,7 +424,6 @@ namespace Cocos2D
 
          @since v0.99.3, repeat and delay added in v1.1
          */
-
         public void ScheduleSelector(Action<float> selector, ICCSelectorProtocol target, float interval, uint repeat,
                                      float delay, bool paused)
         {
@@ -441,6 +479,172 @@ namespace Cocos2D
                 }
             }
         }
+
+        /** Schedules the 'update' selector for a given target with a given priority.
+    	     The 'update' selector will be called every frame.
+    	     The lower the priority, the earlier it is called.
+    	     @since v0.99.3
+    	     */
+
+        readonly ConcurrentDictionary<ICCSelectorProtocol, HashTimeEntry> hashForTimers = new ConcurrentDictionary<ICCSelectorProtocol, HashTimeEntry>();
+        readonly ConcurrentDictionary<ICCSelectorProtocol, HashUpdateEntry> hashForUpdates = new ConcurrentDictionary<ICCSelectorProtocol, HashUpdateEntry>();
+
+        // hash used to fetch quickly the list entries for pause,delete,etc
+        readonly LinkedList<ListEntry> updates0List = new LinkedList<ListEntry>();      // list priority == 0
+        readonly LinkedList<ListEntry> updatesNegList = new LinkedList<ListEntry>();    // list of priority < 0
+        readonly LinkedList<ListEntry> updatesPosList = new LinkedList<ListEntry>(); 	// list priority > 0
+
+        public void Schedule(ICCSelectorProtocol targt, int priority, bool paused)
+        {
+            HashUpdateEntry element;
+
+            if (hashForUpdates.TryGetValue(targt, out element))
+            {
+                Debug.Assert(element.Entry.MarkedForDeletion);
+
+                // TODO: check if priority has changed!
+                element.Entry.MarkedForDeletion = false;
+
+                return;
+            }
+
+            // most of the updates are going to be 0, that's way there
+            // is an special list for updates with priority 0
+            if (priority == 0)
+            {
+                AppendIn(updates0List, targt, paused);
+            }
+            else if (priority < 0)
+            {
+                PriorityIn(updatesNegList, targt, priority, paused);
+            }
+            else
+            {
+                PriorityIn(updatesPosList, targt, priority, paused);
+            }
+        }
+
+        public void Schedule(Action<float> selector, ICCSelectorProtocol target, float interval, uint repeat,
+                                     float delay, bool paused)
+        {
+            Debug.Assert(selector != null);
+            Debug.Assert(target != null);
+
+            HashTimeEntry element;
+
+            lock (hashForTimers)
+            {
+                if (!hashForTimers.TryGetValue(target, out element))
+                {
+                    element = new HashTimeEntry { Target = target };
+                    hashForTimers[target] = element;
+
+                    // Is this the 1st element ? Then set the pause level to all the selectors of this target
+                    element.Paused = paused;
+                }
+                else
+                {
+                    if (element != null)
+                    {
+                        Debug.Assert(element.Paused == paused, "CCScheduler.Schedule: All are paused");
+                    }
+                }
+                if (element != null)
+                {
+                    if (element.Timers == null)
+                    {
+                        element.Timers = new List<CCTimer>();
+                    }
+                    else
+                    {
+                        CCTimer[] timers = element.Timers.ToArray();
+                        foreach (var timer in timers)
+                        {
+                            if (timer == null)
+                            {
+                                continue;
+                            }
+                            if (selector == timer.Selector)
+                            {
+                                CCLog.Log(
+                                    "CCSheduler#scheduleSelector. Selector already scheduled. Updating interval from: {0} to {1}",
+                                    timer.Interval, interval);
+                                timer.Interval = interval;
+                                return;
+                            }
+                        }
+                    }
+
+                    element.Timers.Add(new CCTimer(this, target, selector, interval, repeat, delay));
+                }
+            }
+        }
+
+        //void AppendIn(LinkedList<ListEntry> list, ICCUpdatable target, bool paused)
+        //{
+        //    var listElement = new ListEntry
+        //    {
+        //        Target = target,
+        //        Paused = paused,
+        //        MarkedForDeletion = false
+        //    };
+
+        //    list.AddLast(listElement);
+
+        //    // update hash entry for quicker access
+        //    var hashElement = new HashUpdateEntry
+        //    {
+        //        Target = target,
+        //        List = list,
+        //        Entry = listElement
+        //    };
+
+        //    hashForUpdates.TryAdd(target, hashElement);
+        //}
+
+        //void PriorityIn(LinkedList<ListEntry> list, ICCUpdatable target, int priority, bool paused)
+        //{
+        //    var listElement = new ListEntry
+        //    {
+        //        Target = target,
+        //        Priority = priority,
+        //        Paused = paused,
+        //        MarkedForDeletion = false
+        //    };
+
+        //    if (list.First == null)
+        //    {
+        //        list.AddFirst(listElement);
+        //    }
+        //    else
+        //    {
+        //        bool added = false;
+        //        for (LinkedListNode<ListEntry> node = list.First; node != null; node = node.Next)
+        //        {
+        //            if (priority < node.Value.Priority)
+        //            {
+        //                list.AddBefore(node, listElement);
+        //                added = true;
+        //                break;
+        //            }
+        //        }
+
+        //        if (!added)
+        //        {
+        //            list.AddLast(listElement);
+        //        }
+        //    }
+
+        //    // update hash entry for quick access
+        //    var hashElement = new HashUpdateEntry
+        //    {
+        //        Target = target,
+        //        List = list,
+        //        Entry = listElement
+        //    };
+
+        //    hashForUpdates.TryAdd(target, hashElement);
+        //}
 
         /** Schedules the 'update' selector for a given target with a given priority.
     	     The 'update' selector will be called every frame.
@@ -919,6 +1123,7 @@ namespace Cocos2D
             public bool Paused;
             public int Priority;
             public ICCSelectorProtocol Target;
+            public ICCUpdatable _Target;
         }
 
         #endregion

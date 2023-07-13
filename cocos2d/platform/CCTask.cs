@@ -97,7 +97,50 @@ namespace Cocos2D
         {
             return RunAsync(action, null);
         }
-		
+
+        public static object RunAsync(CCScheduler scheduler, Action action, Action<object> taskCompleted = null)
+        {
+#if WINDOWS_PHONE
+            var worker = new BackgroundWorker();
+            
+            worker.DoWork +=
+                (sender, args) =>
+                {
+                    action();
+                };
+
+            if (taskCompleted != null)
+            {
+                worker.RunWorkerCompleted +=
+                    (sender, args) =>
+                    {
+                        //var scheduler = CCApplication.SharedApplication.Scheduler;
+                        scheduler.ScheduleSelector (f => taskCompleted(worker), _taskSelector, 0, 0, 0, false);
+                    };
+            }
+
+            worker.RunWorkerAsync();
+
+            return worker;
+#else
+            var task = new Task(
+                () =>
+                {
+                    action();
+
+                    if (taskCompleted != null)
+                    {
+                        scheduler.ScheduleSelector(f => taskCompleted(null), _taskSelector, 0, 0, 0, false);
+                    }
+                }
+                );
+
+            task.Start();
+
+            return task;
+#endif
+        }
+
         public static object RunAsync(Action action, Action<object> taskCompleted)
         {
 #if WINDOWS_PHONE || XBOX360

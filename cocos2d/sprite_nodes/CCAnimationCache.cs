@@ -20,6 +20,9 @@ namespace Cocos2D
 
                 return s_pSharedAnimationCache;
             }
+            set {
+                s_pSharedAnimationCache = value;
+            }
         }
 
         public static void PurgeSharedAnimationCache()
