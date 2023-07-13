@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CreatePackage>false</CreatePackage>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -44,14 +45,13 @@
     <ConsolePause>false</ConsolePause>
     <DefineConstants>__IOS__;__MOBILE__;__UNIFIED__;IPHONE;IOS;GLES;OPENGL;MONOGAME</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CreatePackage>false</CreatePackage>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\box2d\box2d.iOS\box2d.iOS.csproj">
-      <Project>{8ac4c3cc-9bcd-405c-be0b-5c217a054b78}</Project>
-      <Name>box2d.iOS</Name>
       <IsAppExtension>false</IsAppExtension>
       <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
@@ -59,8 +59,8 @@
   <ItemGroup>
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.1.303" />
-    <PackageReference Include="OpenTK" Version="4.7.7" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="OpenTK" Version="4.7.7" />
   </ItemGroup>
   <Import Project="..\cocos2d.projitems" Label="Shared" />
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

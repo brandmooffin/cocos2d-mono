@@ -423,11 +423,38 @@
     <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventGamePadStick.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\CCEventGamePadTrigger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCFontSpriteFont.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\iPhoneDisplayDeviceDriver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\iPhoneFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\iPhoneOSGameView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\iPhoneOSGraphicsContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Platform\IDisplayDeviceDriver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\DisplayDevice.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\DisplayResolution.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Platform\Factory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Platform\IPlatformFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Input\IJoystickDriver2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Input\IGamePadDriver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Input\IMouseDriver2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Input\IKeyboardDriver2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Graphics\GraphicsContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Graphics\IGraphicsContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\ContextHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Graphics\GraphicsMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Graphics\ColorFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Graphics\GraphicsContextFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Platform\Dummy\DummyGLContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Graphics\GraphicsContextBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Graphics\GraphicsContextException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)EmbeddableView\" />
     <Folder Include="$(MSBuildThisFileDirectory)Renderer\" />
     <Folder Include="$(MSBuildThisFileDirectory)Renderer\RenderCommands\" />
     <Folder Include="$(MSBuildThisFileDirectory)Events\" />
+    <Folder Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\" />
+    <Folder Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Platform\" />
+    <Folder Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Input\" />
+    <Folder Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Graphics\" />
+    <Folder Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Platform\Dummy\" />
   </ItemGroup>
 </Project>
