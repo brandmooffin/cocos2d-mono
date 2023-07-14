@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using cocos2d.EmbeddableView.OpenTK.Platform;
 using MonoGame.OpenGL;
-using OpenTK.Windowing.Common;
 
 namespace cocos2d.EmbeddableView.OpenTK.Graphics
 {

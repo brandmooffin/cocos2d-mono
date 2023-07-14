@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using cocos2d.EmbeddableView.OpenTK.Graphics;
+using cocos2d.EmbeddableView.OpenTK.Platform;
 using MonoGame.OpenGL;
 using OpenGLES;
 
@@ -13,12 +15,12 @@ namespace cocos2d.EmbeddableView.OpenTK
     {
         public override IGraphicsContext CreateGLContext(GraphicsMode mode, IWindowInfo window, IGraphicsContext shareContext, bool directRendering, int major, int minor, GraphicsContextFlags flags)
         {
-            return new iPhoneOS.iPhoneOSGraphicsContext(mode, window, shareContext, major, minor, flags);
+            return new iPhoneOSGraphicsContext(mode, window, shareContext, major, minor, flags);
         }
 
         public override IGraphicsContext CreateGLContext(ContextHandle handle, IWindowInfo window, IGraphicsContext shareContext, bool directRendering, int major, int minor, GraphicsContextFlags flags)
         {
-            return new iPhoneOS.iPhoneOSGraphicsContext(handle, window, shareContext, major, minor, flags);
+            return new iPhoneOSGraphicsContext(handle, window, shareContext, major, minor, flags);
         }
 
         public override GraphicsContext.GetCurrentContextDelegate CreateGetCurrentGraphicsContext()

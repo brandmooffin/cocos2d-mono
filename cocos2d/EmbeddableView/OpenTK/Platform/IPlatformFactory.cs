@@ -1,8 +1,7 @@
 ﻿using System;
-using GameController;
+using cocos2d.EmbeddableView.OpenTK.Graphics;
 using MonoGame.OpenGL;
-using OpenTK.Windowing.Common;
-using OpenTK.Windowing.Desktop;
+using GraphicsContext = cocos2d.EmbeddableView.OpenTK.Graphics.GraphicsContext;
 
 namespace cocos2d.EmbeddableView.OpenTK.Platform
 {
@@ -16,7 +15,7 @@ namespace cocos2d.EmbeddableView.OpenTK.Platform
 
         IGraphicsContext CreateGLContext(ContextHandle handle, IWindowInfo window, IGraphicsContext shareContext, bool directRendering, int major, int minor, GraphicsContextFlags flags);
 
-        OpenTK.GraphicsContext.GetCurrentContextDelegate CreateGetCurrentGraphicsContext();
+        GraphicsContext.GetCurrentContextDelegate CreateGetCurrentGraphicsContext();
 
         OpenTK.Input.IKeyboardDriver2 CreateKeyboardDriver();
 
