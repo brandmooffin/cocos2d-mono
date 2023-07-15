@@ -578,6 +578,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Graphics\Vertices\VertextBufferBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Graphics\Vertices\VertextDeclaration.OpenGL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Graphics\Vertices\VertexElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\OpenTK\Graphics\IGraphicsDeviceService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)EmbeddableView\" />

@@ -66,7 +66,7 @@ namespace cocos2d.EmbeddableView.OpenTK.Platform
 #if IPHONE
             else if (Configuration.RunningOnIOS)
             {
-                Embedded = new iPhoneOS.iPhoneFactory();
+                Embedded = new iPhoneFactory();
             }
 #else
             else if (Egl.Egl.IsSupported)

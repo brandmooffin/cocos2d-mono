@@ -4,7 +4,7 @@ using MonoMac.OpenGL;
 using OpenTK.Graphics.OpenGL;
 #elif GLES
 using Microsoft.Xna.Framework.Graphics;
-using OpenTK.Graphics.ES20;
+using cocos2d.EmbeddableView.OpenTK.Graphics.ES20;
 #endif
 
 namespace cocos2d.EmbeddableView.OpenTK.Graphics.States

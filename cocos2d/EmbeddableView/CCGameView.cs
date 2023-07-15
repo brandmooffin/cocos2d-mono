@@ -1,7 +1,6 @@
 ﻿using System;
 using Cocos2D;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using CocosDenshion;
@@ -11,11 +10,15 @@ using cocos2d.particle_nodes;
 using cocos2d.Events;
 using cocos2d.Math;
 using cocos2d.support;
+using cocos2d.EmbeddableView.OpenTK.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace cocos2d.EmbeddableView
 {
     using XnaSurfaceFormat = Microsoft.Xna.Framework.Graphics.SurfaceFormat;
     using XnaMatrix = Microsoft.Xna.Framework.Matrix;
+    using GraphicsDevice = OpenTK.Graphics.GraphicsDevice;
+    using IGraphicsDeviceService = OpenTK.Graphics.IGraphicsDeviceService;
 
     public enum CCViewResolutionPolicy
     {

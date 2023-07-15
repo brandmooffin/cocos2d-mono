@@ -18,10 +18,10 @@ namespace cocos2d.EmbeddableView.OpenTK
 
         public int Height { get; private set; }
 
-        public Bitmap ToBitmap()
-        {
-            return new Bitmap(Width, Height);
-        }
+        //public Bitmap ToBitmap()
+        //{
+        //    return new Bitmap(Width, Height);
+        //}
 
         public void Dispose()
         { }

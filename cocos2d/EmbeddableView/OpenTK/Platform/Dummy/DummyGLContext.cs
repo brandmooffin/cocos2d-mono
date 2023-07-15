@@ -37,7 +37,7 @@ namespace cocos2d.EmbeddableView.OpenTK.Platform.Dummy
 
         public override void SwapBuffers() { }
 
-        public override void MakeCurrent(MonoGame.OpenGL.IWindowInfo info)
+        public override void MakeCurrent(IWindowInfo info)
         {
             Thread new_thread = Thread.CurrentThread;
             // A context may be current only on one thread at a time.
@@ -70,7 +70,7 @@ namespace cocos2d.EmbeddableView.OpenTK.Platform.Dummy
 
         public override int SwapInterval { get; set; }
 
-        public override void Update(MonoGame.OpenGL.IWindowInfo window)
+        public override void Update(IWindowInfo window)
         { }
 
         public override void LoadAll()

@@ -6,9 +6,9 @@ using GLStencilFunction = MonoMac.OpenGL.StencilFunction;
 using OpenTK.Graphics.OpenGL;
 using GLStencilFunction = OpenTK.Graphics.OpenGL.StencilFunction;
 #elif GLES
+using cocos2d.EmbeddableView.OpenTK.Graphics.ES20;
 using Microsoft.Xna.Framework.Graphics;
-using OpenTK.Graphics.ES20;
-using GLStencilFunction = OpenTK.Graphics.ES20.StencilFunction;
+using GLStencilFunction = cocos2d.EmbeddableView.OpenTK.Graphics.ES20.StencilFunction;
 #endif
 
 namespace cocos2d.EmbeddableView.OpenTK.Graphics.States
