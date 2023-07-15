@@ -41,5 +41,7 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>CFBundleName</key>
 	<string>Cocos2d-Mono Tests</string>
+	<key>UIMainStoryboardFile</key>
+	<string>TestsStoryboard</string>
 </dict>
 </plist>

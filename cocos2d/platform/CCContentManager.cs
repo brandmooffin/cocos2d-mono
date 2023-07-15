@@ -448,6 +448,7 @@ namespace Cocos2D
         public List<string> SearchPaths
         {
             get { return _searchPaths; }
+            set { _searchPaths = value; }
         }
 
         private void CheckDefaultPath(List<string> paths)

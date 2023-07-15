@@ -14,10 +14,10 @@ using OpenTK.Graphics;
 using OpenTK.Input;
 using OpenTK.Platform;
 
-using All = OpenTK.Graphics.ES11.All;
-using ES11 = OpenTK.Graphics.ES11;
-using ES20 = OpenTK.Graphics.ES20;
-using ES30 = OpenTK.Graphics.ES30;
+using All = cocos2d.EmbeddableView.OpenTK.Graphics.ES11.All;
+using ES11 = cocos2d.EmbeddableView.OpenTK.Graphics.ES11;
+using ES20 = cocos2d.EmbeddableView.OpenTK.Graphics.ES20;
+using ES30 = cocos2d.EmbeddableView.OpenTK.Graphics.ES30;
 using cocos2d.EmbeddableView.OpenTK.Platform;
 using cocos2d.EmbeddableView.OpenTK.Graphics;
 using cocos2d.EmbeddableView.OpenTK;

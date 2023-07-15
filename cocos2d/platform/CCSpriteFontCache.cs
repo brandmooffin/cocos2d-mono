@@ -12,6 +12,7 @@ namespace Cocos2D
         {
             public string FontName;
             public float FontSize;
+            public string FontPath;
         }
 
         private static ContentManager _contentManager;
@@ -23,7 +24,7 @@ namespace Cocos2D
 
         public static CCSpriteFontCache SharedSpriteFontCache { get; internal set; }
 
-        public static void RegisterFont(string fontName, params int[] sizes)
+        public void RegisterFont(string fontName, params int[] sizes)
         {
             Array.Sort(sizes);
             _registeredFonts[fontName] = sizes;

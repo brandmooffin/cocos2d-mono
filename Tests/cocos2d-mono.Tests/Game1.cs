@@ -42,8 +42,8 @@ namespace tests
             // Extend battery life under lock.
             //InactiveSleepTime = TimeSpan.FromSeconds(1);
 
-            CCApplication application = new AppDelegate(this, graphics);
-            Components.Add(application);
+            //CCApplication application = new AppDelegate(this, graphics);
+            //Components.Add(application);
 
 #if !WINDOWS_PHONE && !XBOX && !WINRT && !WINDOWSDX && !NETFX_CORE
             //GamerServicesComponent component = new GamerServicesComponent(this);
