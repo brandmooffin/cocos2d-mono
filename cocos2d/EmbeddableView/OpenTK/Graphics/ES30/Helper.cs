@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using OpenTK.Mathematics;
+using OpenTK;
 
 namespace cocos2d.EmbeddableView.OpenTK.Graphics.ES30
 {

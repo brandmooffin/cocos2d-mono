@@ -1,8 +1,8 @@
 ﻿using System;
-using OpenTK.Mathematics;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using OpenTK.Graphics.ES20;
+using OpenTK;
+using Color = System.Drawing.Color;
 
 namespace cocos2d.EmbeddableView.OpenTK.Graphics.ES20
 {

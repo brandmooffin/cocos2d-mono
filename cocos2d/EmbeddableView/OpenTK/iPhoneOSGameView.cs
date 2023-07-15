@@ -10,9 +10,6 @@ using UIKit;
 using ObjCRuntime;
 
 using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Input;
-using OpenTK.Platform;
 
 using All = cocos2d.EmbeddableView.OpenTK.Graphics.ES11.All;
 using ES11 = cocos2d.EmbeddableView.OpenTK.Graphics.ES11;
@@ -22,6 +19,12 @@ using cocos2d.EmbeddableView.OpenTK.Platform;
 using cocos2d.EmbeddableView.OpenTK.Graphics;
 using cocos2d.EmbeddableView.OpenTK;
 using cocos2d.EmbeddableView.OpenTK.Input;
+using INativeWindow = cocos2d.EmbeddableView.OpenTK.INativeWindow;
+using WindowState = cocos2d.EmbeddableView.OpenTK.WindowState;
+using WindowBorder = cocos2d.EmbeddableView.OpenTK.WindowBorder;
+using FrameEventArgs = cocos2d.EmbeddableView.OpenTK.FrameEventArgs;
+using KeyPressEventArgs = cocos2d.EmbeddableView.OpenTK.KeyPressEventArgs;
+using MouseCursor = cocos2d.EmbeddableView.OpenTK.MouseCursor;
 
 namespace cocos2d.EmbeddableView
 {

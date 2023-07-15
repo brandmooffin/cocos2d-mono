@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using OpenTK.Mathematics;
+using OpenTK;
 
 namespace cocos2d.EmbeddableView.OpenTK.Input
 {

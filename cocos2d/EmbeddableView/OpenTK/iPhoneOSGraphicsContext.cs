@@ -5,7 +5,9 @@ using cocos2d.EmbeddableView.OpenTK.Platform;
 using ObjCRuntime;
 using OpenGLES;
 
-using OpenTK.Graphics;
+using GraphicsContextFlags = cocos2d.EmbeddableView.OpenTK.Graphics.GraphicsContextFlags;
+using GraphicsMode = cocos2d.EmbeddableView.OpenTK.Graphics.GraphicsMode;
+using IGraphicsContext = cocos2d.EmbeddableView.OpenTK.Graphics.IGraphicsContext;
 
 namespace cocos2d.EmbeddableView
 {

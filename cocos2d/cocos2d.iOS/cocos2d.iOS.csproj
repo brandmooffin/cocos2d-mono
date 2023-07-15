@@ -60,7 +60,7 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.1.303" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
-    <PackageReference Include="OpenTK" Version="4.7.7" />
+    <PackageReference Include="OpenTK" Version="3.3.3" />
   </ItemGroup>
   <Import Project="..\cocos2d.projitems" Label="Shared" />
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

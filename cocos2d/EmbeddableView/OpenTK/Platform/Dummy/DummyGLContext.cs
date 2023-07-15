@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using cocos2d.EmbeddableView.OpenTK.Graphics;
-using OpenTK.Graphics;
 
 namespace cocos2d.EmbeddableView.OpenTK.Platform.Dummy
 {

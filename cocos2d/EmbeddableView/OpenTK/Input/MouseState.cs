@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace cocos2d.EmbeddableView.OpenTK.Input
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenTK.Windowing.Common;
 
 namespace cocos2d.EmbeddableView.OpenTK.Platform
 {

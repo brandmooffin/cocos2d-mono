@@ -7,7 +7,7 @@ using MonoMac.OpenGL;
 #elif DESKTOPGL
 using OpenTK.Graphics.OpenGL;
 #elif GLES
-using OpenTK.Mathematics;
+using OpenTK;
 #endif
 
 namespace cocos2d.EmbeddableView.OpenTK.Graphics

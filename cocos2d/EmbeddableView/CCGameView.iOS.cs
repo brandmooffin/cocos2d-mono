@@ -7,7 +7,6 @@ using CoreAnimation;
 
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Graphics.ES20;
 using OpenTK.Platform;
 
 using Microsoft.Xna.Framework;
@@ -18,6 +17,8 @@ using SizeF = CoreGraphics.CGSize;
 using OpenGLES;
 using Cocos2D;
 using cocos2d.EmbeddableView.OpenTK;
+using cocos2d.EmbeddableView.OpenTK.Graphics.ES20;
+using FrameEventArgs = cocos2d.EmbeddableView.OpenTK.FrameEventArgs;
 
 namespace cocos2d.EmbeddableView
 {
