@@ -17,7 +17,7 @@ using RectangleF = CoreGraphics.CGRect;
 using SizeF = CoreGraphics.CGSize;
 using OpenGLES;
 using Cocos2D;
-using OpenTK.Windowing.Common;
+using cocos2d.EmbeddableView.OpenTK;
 
 namespace cocos2d.EmbeddableView
 {
@@ -156,7 +156,7 @@ namespace cocos2d.EmbeddableView
             GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferInternalFormat.DepthComponent16, newSize.Width, newSize.Height);
             GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferSlot.DepthAttachment, RenderbufferTarget.Renderbuffer, depthbuffer);
 
-            Threading.BackgroundContext = new OpenGLES.EAGLContext(EAGLContext.API, EAGLContext.ShareGroup);
+            OpenTK.Threading.BackgroundContext = new OpenGLES.EAGLContext(EAGLContext.API, EAGLContext.ShareGroup);
 
             Size = newSize;
 
@@ -296,8 +296,8 @@ namespace cocos2d.EmbeddableView
         internal void RunIteration(NSTimer timer)
         {
             if (timeSource == null) return;
-            if (GL.GetErrorCode() != ErrorCode.NoError)
-                return;
+            //if (GL.GetErrorCode() != ErrorCode.NoError)
+            //    return;
 
             try
             {
@@ -402,7 +402,7 @@ namespace cocos2d.EmbeddableView
                 var location = touch.LocationInView(touch.View);
                 var position = new CCPoint((float)(location.X * Layer.ContentsScale), (float)(location.Y * Layer.ContentsScale));
 
-                var id = touch.Handle.ToInt32();
+                var id = touch.Handle.Handle.ToInt32();
 
                 switch (touch.Phase)
                 {

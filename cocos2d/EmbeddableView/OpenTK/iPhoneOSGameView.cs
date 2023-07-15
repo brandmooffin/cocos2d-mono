@@ -13,12 +13,15 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;
 using OpenTK.Platform;
-using OpenTK.Platform.iPhoneOS;
 
 using All = OpenTK.Graphics.ES11.All;
 using ES11 = OpenTK.Graphics.ES11;
 using ES20 = OpenTK.Graphics.ES20;
 using ES30 = OpenTK.Graphics.ES30;
+using cocos2d.EmbeddableView.OpenTK.Platform;
+using cocos2d.EmbeddableView.OpenTK.Graphics;
+using cocos2d.EmbeddableView.OpenTK;
+using cocos2d.EmbeddableView.OpenTK.Input;
 
 namespace cocos2d.EmbeddableView
 {
@@ -163,7 +166,7 @@ namespace cocos2d.EmbeddableView
         public void Resume()
         {
             displayLink.Paused = false;
-            displayLink.AddToRunLoop(NSRunLoop.Main, NSRunLoop.NSDefaultRunLoopMode);
+            displayLink.AddToRunLoop(NSRunLoop.Main, NSRunLoopMode.Default);
         }
 
         public void Invalidate()
@@ -251,7 +254,7 @@ namespace cocos2d.EmbeddableView
         }
 
         [Export("initWithFrame:")]
-        public iPhoneOSGameView(System.Drawing.RectangleF frame)
+        public iPhoneOSGameView(CGRect frame)
             : base(frame)
         {
             stopwatch = new System.Diagnostics.Stopwatch();
@@ -717,8 +720,8 @@ namespace cocos2d.EmbeddableView
             gl.FramebufferRenderbuffer(All.FramebufferOes, All.ColorAttachment0Oes, All.RenderbufferOes, renderbuffer);
 
             Size newSize = new Size(
-                    (int)Math.Round(eaglLayer.Bounds.Size.Width),
-                    (int)Math.Round(eaglLayer.Bounds.Size.Height));
+                    (int)System.Math.Round(eaglLayer.Bounds.Size.Width),
+                    (int)System.Math.Round(eaglLayer.Bounds.Size.Height));
             Size = newSize;
 
             gl.Viewport(0, 0, newSize.Width, newSize.Height);
@@ -801,8 +804,8 @@ namespace cocos2d.EmbeddableView
             }
 
             var bounds = Bounds;
-            if (AutoResize && (Math.Round(bounds.Width) != Size.Width ||
-                        Math.Round(bounds.Height) != Size.Height))
+            if (AutoResize && (System.Math.Round(bounds.Width) != Size.Width ||
+                        System.Math.Round(bounds.Height) != Size.Height))
             {
                 DestroyFrameBuffer();
                 CreateFrameBuffer();

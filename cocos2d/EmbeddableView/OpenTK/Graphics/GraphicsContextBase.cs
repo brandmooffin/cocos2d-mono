@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using MonoGame.OpenGL;
+using cocos2d.EmbeddableView.OpenTK.Platform;
 
 namespace cocos2d.EmbeddableView.OpenTK.Graphics
 {

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using cocos2d.EmbeddableView.OpenTK;
+using cocos2d.EmbeddableView.OpenTK.Platform;
 using OpenTK.Platform;
 
 namespace cocos2d.EmbeddableView

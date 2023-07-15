@@ -1,5 +1,7 @@
 ﻿using System;
-
+using cocos2d.EmbeddableView.OpenTK;
+using cocos2d.EmbeddableView.OpenTK.Graphics;
+using cocos2d.EmbeddableView.OpenTK.Platform;
 using ObjCRuntime;
 using OpenGLES;
 

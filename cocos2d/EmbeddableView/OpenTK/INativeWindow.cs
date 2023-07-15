@@ -1,9 +1,8 @@
 ﻿using System;
-using MonoGame.OpenGL;
-using OpenTK.Windowing.Common;
 using System.ComponentModel;
 using System.Drawing;
-using Microsoft.Xna.Framework.Input;
+using cocos2d.EmbeddableView.OpenTK.Input;
+using cocos2d.EmbeddableView.OpenTK.Platform;
 
 namespace cocos2d.EmbeddableView.OpenTK
 {

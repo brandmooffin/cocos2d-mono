@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using cocos2d.EmbeddableView.OpenTK.Graphics;
 using cocos2d.EmbeddableView.OpenTK.Platform;
-using MonoGame.OpenGL;
 using OpenGLES;
 
 using OpenTK.Graphics;
 using OpenTK.Windowing.Common;
+
+using IGraphicsContext = cocos2d.EmbeddableView.OpenTK.Graphics.IGraphicsContext;
 
 namespace cocos2d.EmbeddableView.OpenTK
 {
@@ -43,7 +44,7 @@ namespace cocos2d.EmbeddableView.OpenTK
 
         public override IDisplayDeviceDriver CreateDisplayDeviceDriver()
         {
-            return new AndroidDisplayDeviceDriver();
+            return new iPhoneDisplayDeviceDriver();
         }
 
         public override OpenTK.Input.IKeyboardDriver2 CreateKeyboardDriver()
