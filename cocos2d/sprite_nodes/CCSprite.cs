@@ -99,6 +99,15 @@ namespace Cocos2D
             set { SetTextureRect(value, false, value.Size); }
         }
 
+        public CCRect TextureRectInPixels
+        {
+            get { return TextureRect.PointsToPixels(); }
+            set
+            {
+                TextureRect = value.PixelsToPoints();
+            }
+        }
+
         public CCPoint OffsetPosition
         {
             // read only
@@ -319,6 +328,18 @@ namespace Cocos2D
                 // update rect
                 m_bRectRotated = value.IsRotated;
                 SetTextureRect(value.Rect, m_bRectRotated, value.OriginalSize);
+            }
+        }
+
+        public CCSpriteFrame SpriteFrame
+        {
+            get
+            {
+                return DisplayFrame;
+            }
+            set
+            {
+                DisplayFrame = value;
             }
         }
 
@@ -1056,6 +1077,7 @@ namespace Cocos2D
             DisplayFrame = frame.SpriteFrame;
         }
 
+        [Obsolete("This will be removed in a future release. Please use IsSpriteFrameDisplayed instead.")]
         public bool IsFrameDisplayed(CCSpriteFrame pFrame)
         {
             CCRect r = pFrame.Rect;
@@ -1065,6 +1087,11 @@ namespace Cocos2D
                        pFrame.Texture.Name == m_pobTexture.Name &&
                        pFrame.Offset.Equals(m_obUnflippedOffsetPositionFromCenter)
                    );
+        }
+
+        public bool IsSpriteFrameDisplayed(CCSpriteFrame frame)
+        {
+            return IsFrameDisplayed(frame);
         }
 
         protected void UpdateBlendFunc()
