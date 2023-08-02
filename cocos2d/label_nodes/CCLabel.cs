@@ -30,6 +30,7 @@ namespace Cocos2D
         protected float m_FontSize;
         protected bool m_bFontDirty;
 
+        [Obsolete("This will be removed in a future release. Please use SystemFont instead.")]
         public string FontName
         {
             get { return m_FontName; }
@@ -43,7 +44,34 @@ namespace Cocos2D
             }
         }
 
+        [Obsolete("This will be removed in a future release. Please use SystemFontSize instead.")]
         public float FontSize
+        {
+            get { return m_FontSize; }
+            set
+            {
+                if (m_FontSize != value)
+                {
+                    m_FontSize = value;
+                    m_bFontDirty = true;
+                }
+            }
+        }
+
+        public string SystemFont
+        {
+            get { return m_FontName; }
+            set
+            {
+                if (m_FontName != value)
+                {
+                    m_FontName = value;
+                    m_bFontDirty = true;
+                }
+            }
+        }
+
+        public float SystemFontSize
         {
             get { return m_FontSize; }
             set
