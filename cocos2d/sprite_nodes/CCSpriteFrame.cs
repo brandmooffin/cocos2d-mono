@@ -74,7 +74,14 @@ namespace Cocos2D
             set { m_obOriginalSizeInPixels = value; }
         }
 
+        [Obsolete("This will be removed in a future release. Please use ContentSize instead.")]
         public CCSize OriginalSize
+        {
+            get { return m_obOriginalSize; }
+            set { m_obOriginalSize = value; }
+        }
+
+        public CCSize ContentSize
         {
             get { return m_obOriginalSize; }
             set { m_obOriginalSize = value; }
