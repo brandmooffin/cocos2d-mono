@@ -23,8 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-using Microsoft.Xna.Framework;
-
 namespace Cocos2D
 {
     public class CCTransitionFade : CCTransitionScene
@@ -60,7 +58,7 @@ namespace Cocos2D
 
         protected override bool InitWithDuration(float t, CCScene scene)
         {
-            InitWithDuration(t, scene, new CCColor3B(Color.Black));
+            InitWithDuration(t, scene, new CCColor3B(Microsoft.Xna.Framework.Color.Black));
             return true;
         }
 
