@@ -636,6 +636,20 @@ namespace Cocos2D
 
         #endregion
 
+        public virtual bool InitWithSprite(CCSprite sprite, CCRect spriteRect, CCRect capInsets)
+        {
+            Debug.Assert(sprite != null, "Sprite must be not nil");
+
+            CCSpriteBatchNode batchnode = new CCSpriteBatchNode(sprite.Texture, 9);
+            bool pReturn = InitWithBatchNode(batchnode, spriteRect, capInsets);
+            return pReturn;
+        }
+
+        public CCScale9Sprite(CCSprite sprite, CCRect _spriteRect, CCRect capInsets)
+        {
+            InitWithSprite(sprite, _spriteRect, capInsets);
+        }
+
         public CCScale9Sprite(CCRect capInsets)
         {
             InitWithBatchNode(_scale9Image, _spriteRect, capInsets);
