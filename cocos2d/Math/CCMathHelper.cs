@@ -5,6 +5,11 @@ namespace Cocos2D
 {
     public static class CCMathHelper
     {
+        public const float Pi = (float)Math.PI;
+        public const float TwoPi = (float)(Math.PI * 2.0);
+        public const float Pi_2 = (float)(Math.PI / 2.0); // M_PI_2 from Math Constants
+        public const float Pi_4 = (float)(Math.PI / 4.0); // M_PI_4 from Math Constants
+
         private static float _lastSinAngle = 0f;
         private static float _lastSinValue = (float) Math.Sin(0);
         private static float _lastCosAngle = 0f;
@@ -49,6 +54,38 @@ namespace Cocos2D
         public static int Lerp(int value1, int value2, float amount)
         {
             return (int) (value1 + ((value2 - value1) * amount));
+        }
+
+        /// <summary>
+        /// Linearly interpolates between two values.
+        /// </summary>
+        /// <param name="value1">Source value.</param>
+        /// <param name="value2">Source value.</param>
+        /// <param name="amount">Value between 0 and 1 indicating the weight of value2.</param>
+        /// <returns>Interpolated value.</returns> 
+        /// <remarks>This method performs the linear interpolation based on the following formula.
+        /// <c>value1 + (value2 - value1) * amount</c>
+        /// Passing amount a value of 0 will cause value1 to be returned, a value of 1 will cause value2 to be returned.
+        /// </remarks>
+        public static float Lerp(float value1, float value2, float amount)
+        {
+            return value1 + (value2 - value1) * amount;
+        }
+
+        public static float Clamp(float value, float min, float max)
+        {
+            value = (value > max) ? max : value;
+            value = (value < min) ? min : value;
+
+            return value;
+        }
+
+        public static int Clamp(int value, int min, int max)
+        {
+            value = (value > max) ? max : value;
+            value = (value < min) ? min : value;
+
+            return value;
         }
     }
 }

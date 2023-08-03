@@ -8,6 +8,7 @@ namespace Cocos2D
     public class CCParallel : CCActionInterval
     {
         protected CCFiniteTimeAction[] m_pActions;
+        public CCFiniteTimeAction[] Actions { get { return m_pActions; } }
 
         public CCParallel()
         {
@@ -119,6 +120,43 @@ namespace Cocos2D
             for (int i = 0; i < m_pActions.Length; i++)
             {
                 m_pActions[i].Update(time);
+            }
+        }
+    }
+
+    public class CCParallelState : CCFiniteTimeActionState
+    {
+
+        protected CCFiniteTimeAction[] Actions { get; set; }
+
+        protected CCFiniteTimeActionState[] ActionStates { get; set; }
+
+        public CCParallelState(CCParallel action, CCNode target)
+            : base(action, target)
+        {
+            Actions = action.Actions;
+            ActionStates = new CCFiniteTimeActionState[Actions.Length];
+
+            for (int i = 0; i < Actions.Length; i++)
+            {
+                ActionStates[i] = (CCFiniteTimeActionState)Actions[i].StartAction(target);
+            }
+        }
+
+        protected internal override void Stop()
+        {
+            for (int i = 0; i < Actions.Length; i++)
+            {
+                ActionStates[i].Stop();
+            }
+            base.Stop();
+        }
+
+        public override void Update(float time)
+        {
+            for (int i = 0; i < Actions.Length; i++)
+            {
+                ActionStates[i].Update(time);
             }
         }
     }
