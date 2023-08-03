@@ -217,6 +217,26 @@ namespace Cocos2D
             return color;
         }
 
+        public static CCColor4B operator *(CCColor4B p1, CCColor4B p2)
+        {
+            return new CCColor4B((byte)(p1.R * p2.R), (byte)(p1.G * p2.G), (byte)(p1.B * p2.B), (byte)(p1.A * p2.A));
+        }
+
+        public static CCColor4B operator *(CCColor4B p1, float scale)
+        {
+            return new CCColor4B((byte)(p1.R * scale), (byte)(p1.G * scale), (byte)(p1.B * scale), (byte)(p1.A * scale));
+        }
+
+        public static CCColor4B operator *(float scale, CCColor4B p1)
+        {
+            return (p1 * scale);
+        }
+
+        public static CCColor4B operator /(CCColor4B p1, float div)
+        {
+            return new CCColor4B((byte)(p1.R / div), (byte)(p1.G / div), (byte)(p1.B / div), (byte)(p1.A / div));
+        }
+
         public static bool operator ==(CCColor4B p1, CCColor4B p2)
         {
             return p1.R == p2.R && p1.G == p2.G && p1.B == p2.B && p1.A == p2.A;
