@@ -15,6 +15,11 @@ namespace Cocos2D
             m_fDuration = finiteTimeAction.m_fDuration;
         }
 
+        protected CCFiniteTimeAction(float duration)
+        {
+            m_fDuration = duration;
+        }
+
         /// <summary>
         /// Get/set the duration of this action
         /// </summary>
@@ -31,6 +36,11 @@ namespace Cocos2D
         public virtual CCFiniteTimeAction Reverse()
         {
             return null;
+        }
+
+        protected internal override CCActionState StartAction(CCNode target)
+        {
+            return new CCFiniteTimeActionState(this, target);
         }
     }
 

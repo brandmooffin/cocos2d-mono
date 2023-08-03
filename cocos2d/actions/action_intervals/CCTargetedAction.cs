@@ -5,6 +5,8 @@ namespace Cocos2D
         protected CCFiniteTimeAction m_pAction;
         protected CCNode m_pForcedTarget;
 
+        public CCFiniteTimeAction TargetedAction { get { return m_pAction; } }
+
         public CCNode ForcedTarget
         {
             get { return m_pForcedTarget; }
@@ -64,5 +66,36 @@ namespace Cocos2D
         {
             return new CCTargetedAction(m_pForcedTarget, m_pAction.Reverse());
         }
+    }
+
+    public class CCTargetedActionState : CCFiniteTimeActionState
+    {
+        protected CCFiniteTimeAction TargetedAction { get; set; }
+
+        protected CCFiniteTimeActionState ActionState { get; set; }
+
+        protected CCNode ForcedTarget { get; set; }
+
+        public CCTargetedActionState(CCTargetedAction action, CCNode target)
+            : base(action, target)
+        {
+            ForcedTarget = action.ForcedTarget;
+            TargetedAction = action.TargetedAction;
+
+            ActionState = (CCFiniteTimeActionState)TargetedAction.StartAction(ForcedTarget);
+        }
+
+        protected internal override void Stop()
+        {
+            ActionState.Stop();
+            base.Stop();
+        }
+
+        public override void Update(float time)
+        {
+            ActionState.Update(time);
+        }
+
+
     }
 }

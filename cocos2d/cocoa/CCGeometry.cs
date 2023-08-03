@@ -166,6 +166,12 @@ namespace Cocos2D
             }
         }
 
+        public float Angle
+        {
+            get { return (float)Math.Atan2(Y, X); }
+        }
+
+
         /// <summary>
         ///     Normalizes the components of this point (convert to mag 1), and returns the orignial
         ///     magnitude of the vector defined by the XY components of this point.
@@ -1107,6 +1113,23 @@ namespace Cocos2D
 #else
             return (CCRectConverter.CCRectFromString(s));
 #endif
+        }
+    }
+
+    public struct CCPoint2D
+    {
+        public float Length;
+        public float Angle;
+
+        public float X;
+        public float Y;
+
+        public CCPoint2D(float x, float y)
+        {
+            X = x;
+            Y = y;
+            Length = 0.0f;
+            Angle = 0.0f;
         }
     }
 }
