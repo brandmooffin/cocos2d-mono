@@ -14,6 +14,7 @@ namespace Cocos2D
      Opacity/Color propagates into children that conform to the CCRGBAProtocol if cascadeOpacity/cascadeColor is enabled.
      @since v2.1
      */
+    [Obsolete("This class will be removed in future release. It is recommended to use CCNode instead.")]
     public class CCNodeRGBA : CCNode, ICCRGBAProtocol
     {
         protected byte _displayedOpacity;
