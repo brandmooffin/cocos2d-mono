@@ -1,9 +1,5 @@
 ﻿using cocos2d.misc_nodes;
 using Cocos2D;
-using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace cocos2d.actions.action_intervals
 {
