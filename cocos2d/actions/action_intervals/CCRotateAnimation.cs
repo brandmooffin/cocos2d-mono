@@ -1,8 +1,5 @@
 ﻿using Cocos2D;
-using Java.Lang.Annotation;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace cocos2d.actions.action_intervals
 {
