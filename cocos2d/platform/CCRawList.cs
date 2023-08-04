@@ -221,6 +221,15 @@ namespace Cocos2D
             count = 0;
         }
 
+        public void Clear(bool fullClear)
+        {
+            count = 0;
+            if (fullClear)
+            {
+                Free();
+            }
+        }
+
         public void Free()
         {
             if (Elements != null && UseArrayPool)
