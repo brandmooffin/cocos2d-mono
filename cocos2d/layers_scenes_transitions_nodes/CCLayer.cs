@@ -298,6 +298,11 @@ namespace Cocos2D
             return bRet;
         }
 
+        protected override void AddedToScene()
+        {
+            base.AddedToScene();
+        }
+
         public override void OnEnter()
         {
             if(!m_bDidInit) {
