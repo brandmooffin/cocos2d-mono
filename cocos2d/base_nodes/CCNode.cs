@@ -2280,5 +2280,66 @@ namespace Cocos2D
         {
         }
         #endregion
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Dispose of managed resources
+            }
+
+            // Want to stop all actions and timers regardless of whether or not this object was explicitly disposed
+            this.Cleanup();
+
+            // remove all children from this node recursively
+            if (m_pChildrenByTag != null)
+            {
+                m_pChildrenByTag.Clear();
+            }
+
+            CCDirector.SharedDirector.TouchDispatcher.RemoveDelegate(this);
+
+            // Clean up the UserData and UserObject as these may hold references to other CCNodes.
+            UserData = null;
+            UserObject = null;
+
+            if (Children != null && Children.Count > 0)
+            {
+                CCNode[] elements = Children.Elements;
+                foreach (CCNode child in Children.Elements)
+                {
+                    if (child != null)
+                    {
+                        if (!child.m_bCleaned)
+                        {
+                            child.OnExit();
+                        }
+                    }
+                }
+            }
+            CleanUpParentsProperly();
+
+        }
+
+        public void CleanUpParentsProperly()
+        {
+            if (Children != null && Children.Count > 0)
+            {
+                CCNode[] elements = Children.Elements;
+                foreach (CCNode child in Children.Elements)
+                {
+                    child?.CleanUpParentsProperly();
+                }
+                Children.Clear(true);
+            }
+            Parent = null;
+        }
     }
 }
