@@ -74,6 +74,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCBezierBy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCBezierTo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCBlink.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCColorBlendAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCDelayTime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCFadeIn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCFadeOut.cs" />
@@ -81,11 +82,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCJumpBy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCJumpTo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCMoveBy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCMoveFrom.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCMoveTo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCParallel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCRepeat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCRepeatForever.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCReverseTime.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCRotateAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCRotateBy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCRotateTo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCScaleBy.cs" />
@@ -94,9 +97,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCSkewBy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCSkewTo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCSpawn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCSwapAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCTargetedAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCTimerAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCTintBy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\CCTintTo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)actions\action_intervals\ICCRotationAnimationGetter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_progress_timer\CCProgressFromTo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_progress_timer\CCProgressTo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)actions\action_tiled_grid\CCFadeOutBLTiles.cs" />
@@ -116,6 +122,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)base_nodes\CCAtlasNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)base_nodes\CCNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)base_nodes\CCNodeRGBA.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)base_nodes\CCTapNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCCamera.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCContent.cs" />
@@ -260,6 +267,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)misc_nodes\CCParallaxScrollOffset.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)misc_nodes\CCProgressTimer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)misc_nodes\CCRenderTexture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)misc_nodes\CCSwappableNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)particle_nodes\CCParticleBatchNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)particle_nodes\CCParticleExamples.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)particle_nodes\CCParticleSystem.cs" />

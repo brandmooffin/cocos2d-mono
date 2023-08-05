@@ -111,9 +111,10 @@ namespace Cocos2D
             return String.Format("CCPoint : (x={0}, y={1})", X, Y);
         }
 
+        [Obsolete("This will be removed in a future release. Please use DistanceSquared instead.")]
         public float DistanceSQ(ref CCPoint v2)
         {
-            return Sub(ref v2).LengthSQ;
+            return Sub(ref v2).LengthSquared;
         }
 
         public CCPoint Sub(ref CCPoint v2)
@@ -124,11 +125,18 @@ namespace Cocos2D
             return pt;
         }
 
+        [Obsolete("This will be removed in a future release. Please use LengthSquared instead.")]
         public float LengthSQ
         {
             get { return X * X + Y * Y; }
         }
 
+        public float LengthSquared
+        {
+            get { return X * X + Y * Y; }
+        }
+
+        [Obsolete("This will be removed in a future release. Please use LengthSquared instead.")]
         public float LengthSquare
         {
             get { return LengthSQ; }
@@ -157,6 +165,12 @@ namespace Cocos2D
                 return pt;
             }
         }
+
+        public float Angle
+        {
+            get { return (float)Math.Atan2(Y, X); }
+        }
+
 
         /// <summary>
         ///     Normalizes the components of this point (convert to mag 1), and returns the orignial
@@ -429,6 +443,22 @@ namespace Cocos2D
             pt.X = Clamp(p.X, from.X, to.X);
             pt.Y = Clamp(p.Y, from.Y, to.Y);
             return pt;
+        }
+
+        public float DistanceSquared(ref CCPoint v2)
+        {
+            return Sub(ref v2).LengthSquared;
+        }
+
+        public static bool IsNear(CCPoint p1, CCPoint p2, float dist)
+        {
+            return p1.DistanceSquared(ref p2) < dist * dist;
+        }
+
+        /// Returns true if the distance between CCPoint object and p2 is less than dist.
+        public bool IsNear(CCPoint p2, float dist)
+        {
+            return this.DistanceSquared(ref p2) < dist * dist;
         }
 
         /**
@@ -1083,6 +1113,23 @@ namespace Cocos2D
 #else
             return (CCRectConverter.CCRectFromString(s));
 #endif
+        }
+    }
+
+    public struct CCPoint2D
+    {
+        public float Length;
+        public float Angle;
+
+        public float X;
+        public float Y;
+
+        public CCPoint2D(float x, float y)
+        {
+            X = x;
+            Y = y;
+            Length = 0.0f;
+            Angle = 0.0f;
         }
     }
 }

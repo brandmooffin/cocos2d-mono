@@ -43,6 +43,11 @@ namespace Cocos2D
             this.ty = ty;
         }
 
+        internal CCAffineTransform(Matrix xnaMatrixIn) : this()
+        {
+            XnaMatrix = xnaMatrixIn;
+        }
+
         public static CCPoint Transform(CCPoint point, CCAffineTransform t)
         {
             return new CCPoint(
@@ -95,6 +100,15 @@ namespace Cocos2D
                                          t1.c * t2.a + t1.d * t2.c, t1.c * t2.b + t1.d * t2.d, //c,d
                                          t1.tx * t2.a + t1.ty * t2.c + t2.tx, //tx
                                          t1.tx * t2.b + t1.ty * t2.d + t2.ty); //ty
+        }
+
+        public static void Concat(ref CCAffineTransform t1, ref CCAffineTransform t2, out CCAffineTransform tOut)
+        {
+            Matrix concatMatrix;
+            var t1Matrix = t1.XnaMatrix;
+            var t2Matrix = t2.XnaMatrix;
+            Matrix.Multiply(ref t1Matrix, ref t2Matrix, out concatMatrix);
+            tOut = new CCAffineTransform(concatMatrix);
         }
 
         /// <summary>

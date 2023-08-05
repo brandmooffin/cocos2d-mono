@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppGame.Android", "AppGame.Android\AppGame.Android.csproj", "{174C0121-9B92-4CFD-96F1-C8EC0A53154D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppGame.iOS", "AppGame.iOS\AppGame.iOS.csproj", "{8182F0AA-9409-4752-9851-7B2AB1B7DF08}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AppGame.Shared", "AppGame.Shared\AppGame.Shared.shproj", "{E075E54F-60D0-4089-8059-0FAC5FBBAB04}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppGame.iOS.CoreApp", "AppGame.iOS.CoreApp\AppGame.iOS.CoreApp.csproj", "{E70D04D1-AA35-4EB0-8D37-C3ED5A586BA3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{174C0121-9B92-4CFD-96F1-C8EC0A53154D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{174C0121-9B92-4CFD-96F1-C8EC0A53154D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{174C0121-9B92-4CFD-96F1-C8EC0A53154D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{174C0121-9B92-4CFD-96F1-C8EC0A53154D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{174C0121-9B92-4CFD-96F1-C8EC0A53154D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{174C0121-9B92-4CFD-96F1-C8EC0A53154D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8182F0AA-9409-4752-9851-7B2AB1B7DF08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8182F0AA-9409-4752-9851-7B2AB1B7DF08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8182F0AA-9409-4752-9851-7B2AB1B7DF08}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8182F0AA-9409-4752-9851-7B2AB1B7DF08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8182F0AA-9409-4752-9851-7B2AB1B7DF08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8182F0AA-9409-4752-9851-7B2AB1B7DF08}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{E70D04D1-AA35-4EB0-8D37-C3ED5A586BA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E70D04D1-AA35-4EB0-8D37-C3ED5A586BA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E70D04D1-AA35-4EB0-8D37-C3ED5A586BA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E70D04D1-AA35-4EB0-8D37-C3ED5A586BA3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EF0E63FE-D470-4121-B97E-7E2EBBC25315}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		AppGame.Shared\AppGame.Shared.projitems*{174c0121-9b92-4cfd-96f1-c8ec0a53154d}*SharedItemsImports = 5
+		AppGame.Shared\AppGame.Shared.projitems*{8182f0aa-9409-4752-9851-7b2ab1b7df08}*SharedItemsImports = 5
+		AppGame.Shared\AppGame.Shared.projitems*{e075e54f-60d0-4089-8059-0fac5fbbab04}*SharedItemsImports = 13
+		AppGame.Shared\AppGame.Shared.projitems*{e70d04d1-aa35-4eb0-8d37-c3ed5a586ba3}*SharedItemsImports = 5
+	EndGlobalSection
+EndGlobal

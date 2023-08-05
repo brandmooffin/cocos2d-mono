@@ -66,7 +66,7 @@ namespace Cocos2D
 	- Each node has a camera. By default it points to the center of the CCNode.
 	*/
 
-    public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegate, ICCStandardTouchDelegate, ICCKeypadDelegate, ICCKeyboardDelegate, IComparer<CCNode>
+    public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegate, ICCStandardTouchDelegate, ICCKeypadDelegate, ICCKeyboardDelegate, ICCRGBAProtocol, IComparer<CCNode>
     {
         /// <summary>
         /// Use this to determine if a tag has been set on the node.
@@ -105,6 +105,7 @@ namespace Cocos2D
         protected CCGridBase m_pGrid;
         protected CCNode m_pParent;
         protected CCScheduler m_pScheduler;
+        protected CCTouchDispatcher pDispatcher;
 
         protected object m_pUserData;
         protected CCPoint m_obAnchorPoint;
@@ -129,10 +130,93 @@ namespace Cocos2D
         private int m_nTouchPriority;
         private bool m_bGamePadDelegatesInited;
 
+        #region Color & Opacity
+        protected byte _displayedOpacity;
+        protected byte _realOpacity;
+        protected CCColor3B _displayedColor;
+        protected CCColor3B _realColor;
+        protected bool _cascadeColorEnabled;
+        protected bool _cascadeOpacityEnabled;
+
+        public virtual CCColor3B Color
+        {
+            get { return _realColor; }
+            set
+            {
+                _displayedColor = _realColor = value;
+
+                if (_cascadeColorEnabled)
+                {
+                    var parentColor = CCTypes.CCWhite;
+                    var parent = m_pParent as ICCRGBAProtocol;
+                    if (parent != null && parent.CascadeColorEnabled)
+                    {
+                        parentColor = parent.DisplayedColor;
+                    }
+
+                    UpdateDisplayedColor(parentColor);
+                }
+            }
+        }
+
+        public virtual CCColor3B DisplayedColor
+        {
+            get { return _displayedColor; }
+        }
+
+        public virtual byte Opacity
+        {
+            get { return _realOpacity; }
+            set
+            {
+                _displayedOpacity = _realOpacity = value;
+
+                if (_cascadeOpacityEnabled)
+                {
+                    byte parentOpacity = 255;
+                    var pParent = m_pParent as ICCRGBAProtocol;
+                    if (pParent != null && pParent.CascadeOpacityEnabled)
+                    {
+                        parentOpacity = pParent.DisplayedOpacity;
+                    }
+                    UpdateDisplayedOpacity(parentOpacity);
+                }
+            }
+        }
+
+        public virtual byte DisplayedOpacity
+        {
+            get { return _displayedOpacity; }
+        }
+
+        public virtual bool IsOpacityModifyRGB
+        {
+            get { return false; }
+            set { }
+        }
+
+        public virtual bool CascadeColorEnabled
+        {
+            get { return _cascadeColorEnabled; }
+            set { _cascadeColorEnabled = value; }
+        }
+
+        public virtual bool CascadeOpacityEnabled
+        {
+            get { return _cascadeOpacityEnabled; }
+            set { _cascadeOpacityEnabled = value; }
+        }
+        #endregion
+
         public enum CCTouchMode
         {
             AllAtOnce,
             OneByOne
+        }
+
+        public CCNode(CCSize contentSize) : this()
+        {
+            ContentSize = contentSize;
         }
 
         public CCNode()
@@ -150,11 +234,22 @@ namespace Cocos2D
             m_pActionManager = director.ActionManager;
             m_pScheduler = director.Scheduler;
 
+            _displayedOpacity = 255;
+            _realOpacity = 255;
+            _displayedColor = CCTypes.CCWhite;
+            _realColor = CCTypes.CCWhite;
+            _cascadeColorEnabled = false;
+            _cascadeOpacityEnabled = false;
+
         }
 
         public virtual bool Init()
         {
-          return true;
+            _displayedOpacity = _realOpacity = 255;
+            _displayedColor = _realColor = CCTypes.CCWhite;
+            _cascadeOpacityEnabled = _cascadeColorEnabled = false;
+
+            return true;
         }
 
         #region Game State Management
@@ -560,6 +655,15 @@ namespace Cocos2D
             }
         }
 
+        public virtual CCSize ScaledContentSize
+        {
+            get
+            {
+                var sizeToScale = ContentSize;
+                return new CCSize(sizeToScale.Width * ScaleX, sizeToScale.Height * ScaleY);
+            }
+        }
+
         public virtual CCSize ContentSize
         {
             get { return m_obContentSize; }
@@ -644,6 +748,38 @@ namespace Cocos2D
             {
                 var rect = new CCRect(0, 0, m_obContentSize.Width, m_obContentSize.Height);
                 return CCAffineTransform.Transform(rect, NodeToWorldTransform());
+            }
+        }
+
+        // Bounding box after scale/rotation/skew in world space
+        public CCRect BoundingBoxTransformedToWorld
+        {
+            get
+            {
+                CCAffineTransform localTransform = AffineWorldTransform;
+                CCRect worldtransformedBounds = localTransform.Transform(new CCRect(0.0f, 0.0f, ContentSize.Width, ContentSize.Height));
+                return worldtransformedBounds;
+            }
+        }
+
+        public virtual CCAffineTransform AffineLocalTransform
+        {
+            get { if (m_bTransformDirty) return NodeToParentTransform(); return m_sTransform; }
+        }
+
+        public CCAffineTransform AffineWorldTransform
+        {
+            get
+            {
+                CCAffineTransform worldTransform = AffineLocalTransform;
+                CCNode parent = this.Parent;
+                if (parent != null)
+                {
+                    var parentTransform = parent.AffineWorldTransform;
+                    CCAffineTransform.Concat(ref worldTransform, ref parentTransform, out worldTransform);
+                }
+
+                return worldTransform;
             }
         }
 
@@ -1218,6 +1354,38 @@ namespace Cocos2D
             CCDrawManager.PopMatrix();
         }
 
+        public virtual void Visit(ref CCAffineTransform parentWorldTransform)
+        {
+            if (!Visible)
+                return;
+
+            if (m_bTransformDirty)
+                NodeToParentTransform();
+
+
+            var worldTransform = CCAffineTransform.Identity;
+            CCAffineTransform.Concat(ref m_sTransform, ref parentWorldTransform, out worldTransform);
+
+            SortAllChildren();
+
+            VisitRenderer(ref worldTransform);
+
+            if (Children != null)
+            {
+                var elements = Children.Elements;
+                for (int i = 0, N = Children.Count; i < N; ++i)
+                {
+                    var child = elements[i];
+                    if (child != null && child.Visible)
+                        child.Visit(ref worldTransform);
+                }
+            }
+        }
+
+        protected virtual void VisitRenderer(ref CCAffineTransform worldTransform)
+        {
+        }
+
         public void TransformAncestors()
         {
             if (m_pParent != null)
@@ -1255,6 +1423,47 @@ namespace Cocos2D
                 }
             }
         }
+
+        #region Color & Opacity
+        public virtual void UpdateDisplayedColor(CCColor3B parentColor)
+        {
+            _displayedColor.R = (byte)(_realColor.R * parentColor.R / 255.0f);
+            _displayedColor.G = (byte)(_realColor.G * parentColor.G / 255.0f);
+            _displayedColor.B = (byte)(_realColor.B * parentColor.B / 255.0f);
+
+            if (_cascadeColorEnabled)
+            {
+                if (_cascadeOpacityEnabled && m_pChildren != null)
+                {
+                    for (int i = 0, count = m_pChildren.count; i < count; i++)
+                    {
+                        var item = m_pChildren.Elements[i] as ICCRGBAProtocol;
+                        if (item != null)
+                        {
+                            item.UpdateDisplayedColor(_displayedColor);
+                        }
+                    }
+                }
+            }
+        }
+
+        public virtual void UpdateDisplayedOpacity(byte parentOpacity)
+        {
+            _displayedOpacity = (byte)(_realOpacity * parentOpacity / 255.0f);
+
+            if (_cascadeOpacityEnabled && m_pChildren != null)
+            {
+                for (int i = 0, count = m_pChildren.count; i < count; i++)
+                {
+                    var item = m_pChildren.Elements[i] as ICCRGBAProtocol;
+                    if (item != null)
+                    {
+                        item.UpdateDisplayedOpacity(_displayedOpacity);
+                    }
+                }
+            }
+        }
+        #endregion
 
         public virtual void OnEnter()
         {
@@ -1314,6 +1523,8 @@ namespace Cocos2D
                 application.GamePadStickUpdate += m_OnGamePadStickUpdateDelegate;
                 application.GamePadTriggerUpdate += m_OnGamePadTriggerUpdateDelegate;
             }
+
+            AddedToScene();
             /*
             if (m_nScriptHandler)
             {
@@ -1332,6 +1543,10 @@ namespace Cocos2D
                     elements[i].OnEnterTransitionDidFinish();
                 }
             }
+        }
+
+        protected virtual void AddedToScene()
+        {
         }
 
         public virtual void OnExitTransitionDidStart()
@@ -1516,10 +1731,33 @@ namespace Cocos2D
             m_pScheduler.UnscheduleAllForTarget(this);
         }
 
+        public void UnscheduleAll()
+        {
+            UnscheduleAllSelectors();
+        }
+
+        /// <summary>
+        /// This will resume scheduler, actions and register dispatcher
+        /// </summary>
+        public void Resume()
+        {
+            ResumeSchedulerAndActions();
+            RegisterWithTouchDispatcher();
+        }
+
         public void ResumeSchedulerAndActions()
         {
             m_pScheduler.ResumeTarget(this);
             m_pActionManager.ResumeTarget(this);
+        }
+
+        /// <summary>
+        /// This will pause scheduler, actions and unregister dispatcher
+        /// </summary>
+        public void Pause()
+        {
+            PauseSchedulerAndActions();
+            pDispatcher.RemoveDelegate(this);
         }
 
         public void PauseSchedulerAndActions()
@@ -2048,5 +2286,66 @@ namespace Cocos2D
         {
         }
         #endregion
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Dispose of managed resources
+            }
+
+            // Want to stop all actions and timers regardless of whether or not this object was explicitly disposed
+            this.Cleanup();
+
+            // remove all children from this node recursively
+            if (m_pChildrenByTag != null)
+            {
+                m_pChildrenByTag.Clear();
+            }
+
+            CCDirector.SharedDirector.TouchDispatcher.RemoveDelegate(this);
+
+            // Clean up the UserData and UserObject as these may hold references to other CCNodes.
+            UserData = null;
+            UserObject = null;
+
+            if (Children != null && Children.Count > 0)
+            {
+                CCNode[] elements = Children.Elements;
+                foreach (CCNode child in Children.Elements)
+                {
+                    if (child != null)
+                    {
+                        if (!child.m_bCleaned)
+                        {
+                            child.OnExit();
+                        }
+                    }
+                }
+            }
+            CleanUpParentsProperly();
+
+        }
+
+        public void CleanUpParentsProperly()
+        {
+            if (Children != null && Children.Count > 0)
+            {
+                CCNode[] elements = Children.Elements;
+                foreach (CCNode child in Children.Elements)
+                {
+                    child?.CleanUpParentsProperly();
+                }
+                Children.Clear(true);
+            }
+            Parent = null;
+        }
     }
 }
