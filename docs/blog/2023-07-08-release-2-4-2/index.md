@@ -8,14 +8,14 @@ tags: [update, release, 2.4.2]
 Cocos2D-Mono 2.4.2 is out now! Go check out the [release notes](https://github.com/brandmooffin/cocos2d-mono/releases/tag/2.4.2) to see what's change...or just read below.
 
 ## What's Changed
-- Lowered minimum support for Android to API 21
-- Lowered minimum support for iOS 11
-- Improved support for narrow screen devices
-- Fix for ViewPort positioning in Portrait Mode
-- Improved development guides
-  - Create a New Project
-  - Add Content
-- Fixes and improvements for Project Templates & Samples
+    - Lowered minimum support for Android to API 21
+    - Lowered minimum support for iOS 11
+    - Improved support for narrow screen devices
+    - Fix for ViewPort positioning in Portrait Mode
+    - Improved development guides
+      - Create a New Project
+      - Add Content
+    - Fixes and improvements for Project Templates & Samples
 
 
 **Full Changelog**: https://github.com/brandmooffin/cocos2d-mono/compare/2.4.1...2.4.2
