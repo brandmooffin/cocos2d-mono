@@ -1523,6 +1523,8 @@ namespace Cocos2D
                 application.GamePadStickUpdate += m_OnGamePadStickUpdateDelegate;
                 application.GamePadTriggerUpdate += m_OnGamePadTriggerUpdateDelegate;
             }
+
+            AddedToScene();
             /*
             if (m_nScriptHandler)
             {
@@ -1541,6 +1543,10 @@ namespace Cocos2D
                     elements[i].OnEnterTransitionDidFinish();
                 }
             }
+        }
+
+        protected virtual void AddedToScene()
+        {
         }
 
         public virtual void OnExitTransitionDidStart()
