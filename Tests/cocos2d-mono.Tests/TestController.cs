@@ -55,8 +55,8 @@ namespace tests
             CCDrawNode draw = new CCDrawNode();
             AddChild(draw, 10);
 
-            draw.DrawRect(new CCRect(0, 0, s.Width, 20), new CCColor4B(Color.SlateGray));
-            draw.DrawRect(new CCRect(0, s.Height - 20, s.Width, 20), new CCColor4B(Color.SlateGray));
+            draw.DrawRect(new CCRect(0, 0, s.Width, 20), new CCColor4B(Microsoft.Xna.Framework.Color.SlateGray));
+            draw.DrawRect(new CCRect(0, s.Height - 20, s.Width, 20), new CCColor4B(Microsoft.Xna.Framework.Color.SlateGray));
 
             // add menu items for tests
             m_pItemMenu = new CCMenu();
