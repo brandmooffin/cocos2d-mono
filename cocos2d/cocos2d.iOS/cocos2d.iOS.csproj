@@ -7,14 +7,33 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>cocos2d-mono.iOS</AssemblyName>
     <BaseIntermediateOutputPath>obj\iOS\Debug</BaseIntermediateOutputPath>
-    <PackageReleaseNotes>    - Lowered minimum support for Android to API 21
-    - Lowered minimum support for iOS 11
-    - Improved support for narrow screen devices
-    - Fix for ViewPort positioning in Portrait Mode</PackageReleaseNotes>
+    <PackageReleaseNotes>  - Support for AddedToScene for CCLayer
+  - New CCTapNode for supporting TouchOneByOne TouchMode
+  - Support Dispose function for CCNode, CCSprite, CCLayer
+  - New CCActionState
+  - Support Math Operators for CCColor4B
+  - Support for initializing CCScale9Sprite from existing CCSprite
+  - Added ContentSize getter for CCSpriteFrame
+      - Note: OriginalSize will be deprecated in a future release
+  - Added TextureRectInPixels and SpriteFrame Properties for CCSprite
+  - Added IsSpriteFrameDisplayed function for CCSprite
+      - Note: IsFrameDisplayed will be deprecated in a future release
+  - New IsNear function for CCPoint
+  - Added LengthSquared and DistanceSquared functions for CCPoint
+      - Note: DistanceSQ, LengthSQ and LengthSquare will be deprecated in a future release
+  - New CCActions: CCColorBlendAnimation, CCMoveFrom, CCRotateAnimation, CCSwapAction, CCTargetedAction, CCTimerAction
+  - Support for UnscheduleAll for CCNode
+  - Added SystemFont and SystemFontSize property for CCLabel
+      - Note: FontName and FontSize will be deprecated in a future release
+  - Added ScaledContentSize and BoundingBoxTransformedToWorld properties for CCNode
+  - Migrated CCNodeRGBA into CCNode
+      - Note: CCNodeRGBA will be deprecated in a future release
+  - Added Lerp and Clamp functions to CCMathHelper
+  - New Pi properties for CCMathHelper</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.2.0</Version>
+    <Version>2.4.3.0</Version>
     <Description>Cocos2D-Mono for iOS</Description>
     <Title>Cocos2D-Mono for iOS</Title>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -45,9 +64,6 @@
     <DefineConstants>__IOS__;__MOBILE__;__UNIFIED__;IPHONE;IOS;GLES;OPENGL;MONOGAME</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\box2d\box2d.iOS\box2d.iOS.csproj">
       <Project>{8ac4c3cc-9bcd-405c-be0b-5c217a054b78}</Project>

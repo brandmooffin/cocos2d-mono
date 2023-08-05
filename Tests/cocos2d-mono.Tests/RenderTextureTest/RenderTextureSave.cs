@@ -40,7 +40,7 @@ namespace tests
             CCBlendFunc bbf = new CCBlendFunc (CCOGLES.GL_ONE, CCOGLES.GL_ONE_MINUS_SRC_ALPHA);
             m_pBrush.BlendFunc = bbf;
 
-            m_pBrush.Color = new CCColor3B (Color.Red);
+            m_pBrush.Color = new CCColor3B (Microsoft.Xna.Framework.Color.Red);
             m_pBrush.Opacity = 20;
             TouchEnabled = true;
 
