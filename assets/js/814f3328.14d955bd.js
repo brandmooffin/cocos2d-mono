@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[2535],{5641:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Cocos2D-Mono 2.4.2 is now out!","permalink":"/blog/2.4.2-release"},{"title":"Cocos2D-Mono 2.4.1 is now out!","permalink":"/blog/2.4.1-release"},{"title":"Cocos2D-Mono 2.4.0 is now out!","permalink":"/blog/2.4.0-release"}]}')}}]);
