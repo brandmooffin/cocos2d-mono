@@ -9,6 +9,7 @@ using tests.Extensions;
 using tests.classes.tests.Box2DTestBet;
 using Box2D.TestBed;
 using Microsoft.Xna.Framework;
+using cocos2d_mono.Tests.TapTest;
 
 namespace tests
 {
@@ -393,6 +394,9 @@ namespace tests
                         break;
                 case(int)TestCases.TEST_MULTITOUCH:
                     pScene = new MultiTouchTestScene();
+                    break;
+                case (int)TestCases.TEST_TAP:
+                    pScene = new TapTouchTestScene();
                     break;
                 default:
                     break;

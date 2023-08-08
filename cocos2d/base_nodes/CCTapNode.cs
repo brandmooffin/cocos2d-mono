@@ -1,5 +1,7 @@
 ﻿using Cocos2D;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace cocos2d.base_nodes
 {
@@ -20,17 +22,7 @@ namespace cocos2d.base_nodes
             Active = true;
         }
 
-        public bool IsSwallowTouches
-        {
-            set
-            {
-                IsSwallowTouches = value;
-            }
-            get
-            {
-                return IsSwallowTouches;
-            }
-        }
+        public bool IsSwallowTouches { get; set; }
 
         public virtual T Data { get; set; }
 
@@ -46,11 +38,11 @@ namespace cocos2d.base_nodes
             }
         }
 
-        private bool OnTouchBegan(CCTouch touch)
+        public override bool TouchBegan(CCTouch touch)
         {
             try
             {
-                if (this.WorldBoundingBox.ContainsPoint(touch.Location) && this.Visible)
+                if (WorldBoundingBox.ContainsPoint(touch.Location) && this.Visible)
                 {
                     TouchBegan();
                     return true;
@@ -63,7 +55,7 @@ namespace cocos2d.base_nodes
             return false;
         }
 
-        private void OnTouchEnded(CCTouch touch)
+        public override void TouchEnded(CCTouch touch)
         {
             try
             {
@@ -83,7 +75,7 @@ namespace cocos2d.base_nodes
             }
         }
 
-        private void OnTouchMoved(CCTouch touch)
+        public override void TouchMoved(CCTouch touch)
         {
             try
             {
