@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Java.Nio.FileNio.Attributes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -84,6 +85,14 @@ namespace Cocos2D
             if (!InitWithFile(fileName))
             {
                 CCLog.Log("CCTexture2D (string fileName): Problems initializing class");
+            }
+        }
+
+        public CCTexture2D(byte[] data, SurfaceFormat pixelFormat = SurfaceFormat.Color, bool mipMap = false) : this()
+        {
+            if (!InitWithData(data, pixelFormat, mipMap))
+            {
+                CCLog.Log("CCTexture2D: Problems initializing class");
             }
         }
 
