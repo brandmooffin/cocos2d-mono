@@ -17,6 +17,11 @@ namespace Cocos2D
             InitWithAction(pAction, easeFunc);
         }
 
+        public CCEaseCustom(CCFiniteTimeAction pAction, Func<float, float> easeFunc)
+        {
+            InitWithAction(pAction, easeFunc);
+        }
+
         protected CCEaseCustom(CCEaseCustom easeCustom)
             : base(easeCustom)
         {
@@ -24,6 +29,12 @@ namespace Cocos2D
         }
 
         public void InitWithAction(CCActionInterval action, Func<float, float> easeFunc)
+        {
+            base.InitWithAction(action);
+            m_EaseFunc = easeFunc;
+        }
+
+        public void InitWithAction(CCFiniteTimeAction action, Func<float, float> easeFunc)
         {
             base.InitWithAction(action);
             m_EaseFunc = easeFunc;

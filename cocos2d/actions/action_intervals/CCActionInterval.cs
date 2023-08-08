@@ -44,6 +44,11 @@ namespace Cocos2D
             InitWithDuration(actionInterval.m_fDuration);
         }
 
+        protected CCActionInterval(CCFiniteTimeAction actionInterval) : base(actionInterval)
+        {
+            InitWithDuration(actionInterval.Duration);
+        }
+
         public float Elapsed
         {
             get { return m_elapsed; }

@@ -8,6 +8,10 @@ namespace Cocos2D
         {
         }
 
+        public CCEaseIn(CCFiniteTimeAction pAction, float fRate) : base(pAction, fRate)
+        {
+        }
+
         public CCEaseIn(CCEaseIn easeIn) : base(easeIn)
         {
         }

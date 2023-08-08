@@ -2,19 +2,19 @@ namespace Cocos2D
 {
     public class CCActionEase : CCActionInterval
     {
-        protected CCActionInterval m_pInner;
+        protected CCFiniteTimeAction m_pInner;
 
         // This can be taken out once all the classes that extend it have had their constructors created.
         protected CCActionEase()
         {
         }
 
-        public CCActionInterval InnerAction
+        public CCFiniteTimeAction InnerAction
         {
             get { return m_pInner; }
         }
 
-        public CCActionEase(CCActionInterval pAction)
+        public CCActionEase(CCFiniteTimeAction pAction)
         {
             InitWithAction(pAction);
         }
@@ -25,6 +25,16 @@ namespace Cocos2D
         }
 
         protected bool InitWithAction(CCActionInterval pAction)
+        {
+            if (base.InitWithDuration(pAction.Duration))
+            {
+                m_pInner = pAction;
+                return true;
+            }
+            return false;
+        }
+
+        protected bool InitWithAction(CCFiniteTimeAction pAction)
         {
             if (base.InitWithDuration(pAction.Duration))
             {
