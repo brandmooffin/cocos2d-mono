@@ -9,6 +9,11 @@ namespace Cocos2D
             m_fRate = fRate;
         }
 
+        public CCEaseRateAction(CCFiniteTimeAction pAction, float fRate) : base(pAction)
+        {
+            m_fRate = fRate;
+        }
+
         public CCEaseRateAction(CCEaseRateAction easeRateAction) : base(easeRateAction)
         {
             InitWithAction((CCActionInterval) (easeRateAction.m_pInner.Copy()), easeRateAction.m_fRate);

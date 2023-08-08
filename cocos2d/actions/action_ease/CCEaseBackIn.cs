@@ -6,6 +6,10 @@ namespace Cocos2D
         {
         }
 
+        public CCEaseBackIn(CCFiniteTimeAction pAction) : base(pAction)
+        {
+        }
+
         protected CCEaseBackIn(CCEaseBackIn easeBackIn) : base(easeBackIn)
         {
         }

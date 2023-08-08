@@ -1,6 +1,3 @@
-using System;
-using Microsoft.Xna.Framework;
-
 namespace Cocos2D
 {
     public class CCEaseElasticIn : CCEaseElastic
@@ -9,7 +6,15 @@ namespace Cocos2D
         {
         }
 
+        public CCEaseElasticIn(CCFiniteTimeAction pAction) : base(pAction, 0.3f)
+        {
+        }
+
         public CCEaseElasticIn(CCActionInterval pAction, float fPeriod) : base(pAction, fPeriod)
+        {
+        }
+
+        public CCEaseElasticIn(CCFiniteTimeAction pAction, float fPeriod) : base(pAction, fPeriod)
         {
         }
 
