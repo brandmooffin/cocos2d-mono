@@ -437,7 +437,8 @@ namespace Cocos2D
 						);
 				}
 
-				_spriteFrames[pair.Key] = spriteFrame;
+                spriteFrame.TextureFilename = pair.Key;
+                _spriteFrames[pair.Key] = spriteFrame;
 			}
             AutoCreateAliasList();
 		}
