@@ -51,7 +51,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" Visible="false" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Cocos2D-Mono.Android" Version="2.4.3" />
+    <PackageReference Include="Cocos2D-Mono.Android" Version="2.4.4" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.1.303" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.Uwp</id>
-    <version>2.4.3.0</version>
+    <version>2.4.4.0</version>
     <title>cocos2d-mono for UWP</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
@@ -13,29 +13,12 @@
     <description>Cocos2D-Mono for UWP (Windows Universal)</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
-		- Support for AddedToScene for CCLayer
-		- New CCTapNode for supporting TouchOneByOne TouchMode
-		- Support Dispose function for CCNode, CCSprite, CCLayer
-		- New CCActionState
-		- Support Math Operators for CCColor4B
-		- Support for initializing CCScale9Sprite from existing CCSprite
-		- Added ContentSize getter for CCSpriteFrame
-		    - Note: OriginalSize will be deprecated in a future release
-		- Added TextureRectInPixels and SpriteFrame Properties for CCSprite
-		- Added IsSpriteFrameDisplayed function for CCSprite
-		    - Note: IsFrameDisplayed will be deprecated in a future release
-		- New IsNear function for CCPoint
-		- Added LengthSquared and DistanceSquared functions for CCPoint
-		    - Note: DistanceSQ, LengthSQ and LengthSquare will be deprecated in a future release
-		- New CCActions: CCColorBlendAnimation, CCMoveFrom, CCRotateAnimation, CCSwapAction, CCTargetedAction, CCTimerAction
-		- Support for UnscheduleAll for CCNode
-		- Added SystemFont and SystemFontSize property for CCLabel
-		    - Note: FontName and FontSize will be deprecated in a future release
-		- Added ScaledContentSize and BoundingBoxTransformedToWorld properties for CCNode
-		- Migrated CCNodeRGBA into CCNode
-		    - Note: CCNodeRGBA will be deprecated in a future release
-		- Added Lerp and Clamp functions to CCMathHelper
-		- New Pi properties for CCMathHelper
+    - New Test TapTouchTest for CCTapNode
+    - Fixes for CCTapNode
+    - Support for initializing CCEaseActions with CCFiniteAction
+    - Support for initializing CCScale9Sprite with CCSpriteFrame
+    - Add new constructor for CCTexture2D to support data byte array
+    - Add TextureFilename property for CCSpriteFrame
     </releaseNotes>
     <copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
