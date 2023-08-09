@@ -96,6 +96,8 @@ namespace Cocos2D
             set { m_pobTexture = value; }
         }
 
+        public string TextureFilename { get; set; }
+
         #endregion
 
         public CCSpriteFrame() { }
@@ -162,6 +164,8 @@ namespace Cocos2D
             m_obOriginalSizeInPixels = originalSize;
             m_obOriginalSize = m_obOriginalSizeInPixels.PixelsToPoints();
             m_bRotated = rotated;
+
+            TextureFilename = m_strTextureFilename;
 
             return true;
         }

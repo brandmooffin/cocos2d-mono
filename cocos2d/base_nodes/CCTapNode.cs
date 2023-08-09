@@ -5,9 +5,9 @@ namespace cocos2d.base_nodes
 {
     public class CCTapNode<T> : CCNode, IDisposable
     {
-        public delegate void TapHandler(T data, CCNode node);
+        public delegate void TapHandler(T data, CCNode node, CCPoint tapLocation);
         public event TapHandler OnTapped;
-        public delegate void TouchBeginHandler(T data, CCNode node);
+        public delegate void TouchBeginHandler(T data, CCNode node, CCPoint touchLocation);
         public event TouchBeginHandler OnTouchBegin;
         private bool _active;
         protected bool _disposed { get; private set; }
@@ -18,19 +18,11 @@ namespace cocos2d.base_nodes
             IsSwallowTouches = isSwallowTouches;
 
             Active = true;
+
+            Init();
         }
 
-        public bool IsSwallowTouches
-        {
-            set
-            {
-                IsSwallowTouches = value;
-            }
-            get
-            {
-                return IsSwallowTouches;
-            }
-        }
+        public bool IsSwallowTouches { get; set; }
 
         public virtual T Data { get; set; }
 
@@ -46,13 +38,13 @@ namespace cocos2d.base_nodes
             }
         }
 
-        private bool OnTouchBegan(CCTouch touch)
+        public override bool TouchBegan(CCTouch touch)
         {
             try
             {
-                if (this.WorldBoundingBox.ContainsPoint(touch.Location) && this.Visible)
+                if ((Data as CCNode).WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
                 {
-                    TouchBegan();
+                    TouchBegan(touch.Location);
                     return true;
                 }
             }
@@ -63,13 +55,13 @@ namespace cocos2d.base_nodes
             return false;
         }
 
-        private void OnTouchEnded(CCTouch touch)
+        public override void TouchEnded(CCTouch touch)
         {
             try
             {
-                if (this.WorldBoundingBox.ContainsPoint(touch.Location) && this.Visible)
+                if ((Data as CCNode).WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
                 {
-                    Tapped();
+                    Tapped(touch.Location);
                 }
                 else
                 {
@@ -83,11 +75,11 @@ namespace cocos2d.base_nodes
             }
         }
 
-        private void OnTouchMoved(CCTouch touch)
+        public override void TouchMoved(CCTouch touch)
         {
             try
             {
-                if (this.WorldBoundingBox.ContainsPoint(touch.Location) && this.Visible)
+                if ((Data as CCNode).WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
                 {
                     DragInside(touch.Location);
                 }
@@ -117,9 +109,9 @@ namespace cocos2d.base_nodes
             ContentSize = newContentSize;
         }
 
-        protected virtual void Tapped()
+        protected virtual void Tapped(CCPoint tapLocation)
         {
-            OnTapped?.Invoke(Data, this);
+            OnTapped?.Invoke(Data, this, tapLocation);
         }
 
         protected virtual void ReleasedOutside()
@@ -127,9 +119,9 @@ namespace cocos2d.base_nodes
 
         }
 
-        protected virtual void TouchBegan()
+        protected virtual void TouchBegan(CCPoint touchLocation)
         {
-            OnTouchBegin?.Invoke(Data, this);
+            OnTouchBegin?.Invoke(Data, this, touchLocation);
         }
 
         protected virtual void DragInside(CCPoint position)

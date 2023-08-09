@@ -660,6 +660,25 @@ namespace Cocos2D
             Init();
         }
 
+        public CCScale9Sprite(CCSpriteFrame spriteFrame, CCRect capInsets)
+        {
+            InitWithSpriteFrame(spriteFrame, capInsets);
+        }
+        public CCScale9Sprite(CCSpriteFrame spriteFrame)
+        {
+            InitWithSpriteFrame(spriteFrame);
+        }
+
+        public CCScale9Sprite(string spriteFrameName, CCRect capInsets)
+        {
+            InitWithSpriteFrameName(spriteFrameName, capInsets);
+        }
+
+        public CCScale9Sprite(string alias)
+        {
+            InitWithSpriteFrameName(alias);
+        }
+
         protected void UpdateCapInset()
         {
             CCRect insets;

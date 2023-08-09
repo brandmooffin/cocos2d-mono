@@ -1,10 +1,12 @@
-using System;
-
 namespace Cocos2D
 {
     public class CCEaseSineOut : CCActionEase
     {
         public CCEaseSineOut(CCActionInterval pAction) : base(pAction)
+        {
+        }
+
+        public CCEaseSineOut(CCFiniteTimeAction pAction) : base(pAction)
         {
         }
 

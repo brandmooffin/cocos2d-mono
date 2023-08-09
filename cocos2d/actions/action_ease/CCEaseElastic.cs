@@ -9,7 +9,17 @@ namespace Cocos2D
             InitWithAction(pAction);
         }
 
+        public CCEaseElastic(CCFiniteTimeAction pAction) : base(pAction)
+        {
+            InitWithAction(pAction);
+        }
+
         public CCEaseElastic(CCActionInterval pAction, float fPeriod) : base(pAction)
+        {
+            m_fPeriod = fPeriod;
+        }
+
+        public CCEaseElastic(CCFiniteTimeAction pAction, float fPeriod) : base(pAction)
         {
             m_fPeriod = fPeriod;
         }

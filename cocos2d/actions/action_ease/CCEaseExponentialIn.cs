@@ -1,10 +1,12 @@
-using System;
-
 namespace Cocos2D
 {
     public class CCEaseExponentialIn : CCActionEase
     {
         public CCEaseExponentialIn(CCActionInterval pAction) : base(pAction)
+        {
+        }
+
+        public CCEaseExponentialIn(CCFiniteTimeAction pAction) : base(pAction)
         {
         }
 

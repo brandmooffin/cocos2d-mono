@@ -87,6 +87,14 @@ namespace Cocos2D
             }
         }
 
+        public CCTexture2D(byte[] data, SurfaceFormat pixelFormat = SurfaceFormat.Color, bool mipMap = false) : this()
+        {
+            if (!InitWithData(data, pixelFormat, mipMap))
+            {
+                CCLog.Log("CCTexture2D: Problems initializing class");
+            }
+        }
+
         public bool IsTextureDefined
         {
             get { return (m_Texture2D != null && !m_Texture2D.IsDisposed); }

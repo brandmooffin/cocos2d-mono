@@ -2,11 +2,11 @@
 
 namespace cocos2d.actions.action_intervals
 {
-    public class ColorBlendAnimation : CCFiniteTimeAction
+    public class CCColorBlendAnimation : CCFiniteTimeAction
     {
         public readonly CCColor3B EndColor;
 
-        public ColorBlendAnimation(float duration, CCColor3B endColor) : base(duration)
+        public CCColorBlendAnimation(float duration, CCColor3B endColor) : base(duration)
         {
             this.EndColor = endColor;
         }
@@ -30,7 +30,7 @@ namespace cocos2d.actions.action_intervals
             readonly int sumG;
             readonly int sumB;
 
-            public ColorBlendState(ColorBlendAnimation action, CCNode target) : base(action, target)
+            public ColorBlendState(CCColorBlendAnimation action, CCNode target) : base(action, target)
             {
                 _startColor = target.Color;
 

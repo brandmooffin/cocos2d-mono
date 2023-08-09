@@ -1,11 +1,12 @@
-using System;
-using Microsoft.Xna.Framework;
-
 namespace Cocos2D
 {
     public class CCEaseSineIn : CCActionEase
     {
         public CCEaseSineIn(CCActionInterval pAction) : base(pAction)
+        {
+        }
+
+        public CCEaseSineIn(CCFiniteTimeAction pAction) : base(pAction)
         {
         }
 
