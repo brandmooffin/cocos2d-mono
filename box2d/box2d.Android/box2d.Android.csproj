@@ -9,7 +9,7 @@
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>2.4.3.0</Version>
+    <Version>2.4.4.0</Version>
     <Title>box2d for Android</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
     <Description>box2d for Android</Description>
@@ -18,30 +18,13 @@
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <PackageReleaseNotes>
-		- Support for AddedToScene for CCLayer
-		- New CCTapNode for supporting TouchOneByOne TouchMode
-		- Support Dispose function for CCNode, CCSprite, CCLayer
-		- New CCActionState
-		- Support Math Operators for CCColor4B
-		- Support for initializing CCScale9Sprite from existing CCSprite
-		- Added ContentSize getter for CCSpriteFrame
-		    - Note: OriginalSize will be deprecated in a future release
-		- Added TextureRectInPixels and SpriteFrame Properties for CCSprite
-		- Added IsSpriteFrameDisplayed function for CCSprite
-		    - Note: IsFrameDisplayed will be deprecated in a future release
-		- New IsNear function for CCPoint
-		- Added LengthSquared and DistanceSquared functions for CCPoint
-		    - Note: DistanceSQ, LengthSQ and LengthSquare will be deprecated in a future release
-		- New CCActions: CCColorBlendAnimation, CCMoveFrom, CCRotateAnimation, CCSwapAction, CCTargetedAction, CCTimerAction
-		- Support for UnscheduleAll for CCNode
-		- Added SystemFont and SystemFontSize property for CCLabel
-		    - Note: FontName and FontSize will be deprecated in a future release
-		- Added ScaledContentSize and BoundingBoxTransformedToWorld properties for CCNode
-		- Migrated CCNodeRGBA into CCNode
-		    - Note: CCNodeRGBA will be deprecated in a future release
-		- Added Lerp and Clamp functions to CCMathHelper
-		- New Pi properties for CCMathHelper
-		</PackageReleaseNotes>
+		- New Test TapTouchTest for CCTapNode
+		- Fixes for CCTapNode
+		- Support for initializing CCEaseActions with CCFiniteAction
+		- Support for initializing CCScale9Sprite with CCSpriteFrame
+		- Add new constructor for CCTexture2D to support data byte array
+		- Add TextureFilename property for CCSpriteFrame
+	</PackageReleaseNotes>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
   </PropertyGroup>
