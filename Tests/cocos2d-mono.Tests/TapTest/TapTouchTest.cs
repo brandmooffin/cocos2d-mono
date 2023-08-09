@@ -1,41 +1,34 @@
 ﻿using cocos2d.base_nodes;
 using Cocos2D;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using tests;
 
 namespace cocos2d_mono.Tests.TapTest
 {
     public class TapTouchTestLayer : CCTapNode<CCLayer>
     {
-        private CCColor3B[] s_TouchColors = new CCColor3B[]
-        {
-            CCColor3B.Yellow,
-            CCColor3B.Blue,
-            CCColor3B.Green,
-            CCColor3B.Red,
-            CCColor3B.Magenta,
-            CCColor3B.Gray,
-            CCColor3B.Orange,
-            CCColor3B.White
-        };
-
-        private static Dictionary<int, TouchPoint> s_dic = new Dictionary<int, TouchPoint>();
-
         public override bool Init()
         {
             if (base.Init())
             {
+                Data = new CCLayer();
+                
                 OnTapped += Layer_OnTapped;
                 return true;
             }
             return false;
         }
 
-        private void Layer_OnTapped(CCLayer data, CCNode node)
+        private void Layer_OnTapped(CCLayer layer, CCNode node, CCPoint tapLocation)
         {
-            throw new NotImplementedException();
+            RemoveAllChildren();
+
+            TouchPoint touchPoint = TouchPoint.TouchPointWithParent(this);
+            CCPoint location = tapLocation;
+
+            touchPoint.SetTouchPos(location);
+            touchPoint.SetTouchColor(CCColor3B.Yellow);
+
+            AddChild(touchPoint);
         }
 
         public override void RegisterWithTouchDispatcher()
@@ -43,55 +36,6 @@ namespace cocos2d_mono.Tests.TapTest
             base.RegisterWithTouchDispatcher();
             CCDirector.SharedDirector.TouchDispatcher.AddStandardDelegate(this, 0);
         }
-
-        //public override void TouchesBegan(List<CCTouch> touches)
-        //{
-        //    foreach (var item in touches)
-        //    {
-        //        CCTouch touch = (item);
-        //        TouchPoint touchPoint = TouchPoint.TouchPointWithParent(this);
-        //        CCPoint location = touch.Location;
-
-        //        touchPoint.SetTouchPos(location);
-        //        touchPoint.SetTouchColor(s_TouchColors[touch.Id % s_TouchColors.Length]);
-
-        //        AddChild(touchPoint);
-        //        s_dic.Add(touch.Id, touchPoint);
-        //    }
-        //}
-
-        //public override void TouchesMoved(List<CCTouch> touches)
-        //{
-        //    foreach (var item in touches)
-        //    {
-        //        CCTouch touch = item;
-        //        if (s_dic.ContainsKey(touch.Id))
-        //        {
-        //            TouchPoint pTP = s_dic[touch.Id];
-        //            CCPoint location = touch.Location;
-        //            pTP.SetTouchPos(location);
-        //        }
-        //    }
-        //}
-
-        //public override void TouchesEnded(List<CCTouch> touches)
-        //{
-        //    foreach (var item in touches)
-        //    {
-        //        CCTouch touch = item;
-        //        if (s_dic.ContainsKey(touch.Id))
-        //        {
-        //            TouchPoint pTP = s_dic[touch.Id];
-        //            RemoveChild(pTP, true);
-        //            s_dic.Remove(touch.Id);
-        //        }
-        //    }
-        //}
-
-        //public override void TouchesCancelled(List<CCTouch> touches)
-        //{
-        //    TouchesEnded(touches);
-        //}
 
     }
 
