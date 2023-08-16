@@ -15,5 +15,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\InteractiveScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\SimpleScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\TexturePackerScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\SimpleOverlayScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buttons\ContinueButton.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Buttons\" />
   </ItemGroup>
 </Project>

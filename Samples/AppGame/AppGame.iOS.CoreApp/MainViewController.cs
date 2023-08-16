@@ -28,6 +28,10 @@ namespace AppGame.iOS.CoreApp
             simpleGameButton.Frame = new CGRect(20, 200, 280, 44);
             simpleGameButton.SetTitle("Simple Game", UIControlState.Normal);
 
+            var simpleOverlayGameButton = UIButton.FromType(UIButtonType.System);
+            simpleOverlayGameButton.Frame = new CGRect(20, 300, 280, 44);
+            simpleOverlayGameButton.SetTitle("Simple Overlay Game", UIControlState.Normal);
+
             var interactiveGameButton = UIButton.FromType(UIButtonType.System);
             interactiveGameButton.Frame = new CGRect(20, 400, 280, 44);
             interactiveGameButton.SetTitle("Interactive Game", UIControlState.Normal);
@@ -46,6 +50,11 @@ namespace AppGame.iOS.CoreApp
                 PresentViewController(simpleGameViewController, true, null);
             };
 
+            simpleOverlayGameButton.TouchUpInside += (sender, e) => {
+                var simpleOverlyaGameViewController = new SimpleOverlayGameViewController();
+                PresentViewController(simpleOverlyaGameViewController, true, null);
+            };
+
             interactiveGameButton.TouchUpInside += (sender, e) => {
                 var interactiveGameViewController = new InteractiveGameViewController();
                 PresentViewController(interactiveGameViewController, true, null);
@@ -62,6 +71,7 @@ namespace AppGame.iOS.CoreApp
             };
 
             View.AddSubview(simpleGameButton);
+            View.AddSubview(simpleOverlayGameButton);
             View.AddSubview(interactiveGameButton);
             View.AddSubview(spritesheetGameButton);
             View.AddSubview(texturePackerGameButton);
