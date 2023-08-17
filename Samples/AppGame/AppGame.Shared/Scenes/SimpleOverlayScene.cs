@@ -7,6 +7,7 @@ namespace AppGame.Shared.Scenes
 	public class SimpleOverlayScene : CCScene
     {
         CCSize ScreenSize;
+        CCSprite logo;
         public override void OnEnter()
         {
             Console.WriteLine("Entering scene...");
@@ -34,7 +35,7 @@ namespace AppGame.Shared.Scenes
                 Position = new CCPoint(ScreenSize.Center.X, ScreenSize.Center.Y + 500)
             };
 
-            var logo = new CCSprite("sprites/logo-small")
+            logo = new CCSprite("sprites/logo-small")
             {
                 Position = ScreenSize.Center,
                 Scale = 0.5f
@@ -48,10 +49,10 @@ namespace AppGame.Shared.Scenes
 
             AddChild(backgroundLayer, -1);
 
-            var descriptionLabel = new CCLabelTTF("This is a sample label\nthat is using MarkerFelt\n", "MarkerFelt", 22)
+            var descriptionLabel = new CCLabel("Test with multi\nlines and different\ncharacters\n複数行と異なる文字でテストする\nマルチでテストする\n行と異なる", "Arial", 22)
             {
                 Color = CCColor3B.White,
-                Position = new CCPoint(ScreenSize.Center.X, ScreenSize.Center.Y - 450)
+                Position = new CCPoint(ScreenSize.Center.X + 100, ScreenSize.Center.Y - 450)
             };
 
             AddChild(descriptionLabel);
@@ -60,6 +61,13 @@ namespace AppGame.Shared.Scenes
             AddChild(continueButton);
 
             ScheduleUpdate();
+
+            Schedule(changeSpriteOpacity, 0.05f);
+        }
+
+        public void changeSpriteOpacity(float dt)
+        {
+            logo.Opacity -= 5;
         }
 
         public void CloseCallback(object pSender)
