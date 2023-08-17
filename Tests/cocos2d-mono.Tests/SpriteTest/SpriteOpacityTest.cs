@@ -16,10 +16,10 @@ namespace cocos2d_mono.Tests.SpriteTest
             };
             AddChild(opacitySprite);
 
-            Schedule(flipSprites, 0.05f);
+            Schedule(changeSpriteOpacity, 0.05f);
         }
 
-        public void flipSprites(float dt)
+        public void changeSpriteOpacity(float dt)
         {
             opacitySprite.Opacity -= 2;
         }
