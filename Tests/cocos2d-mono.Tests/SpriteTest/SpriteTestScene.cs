@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Cocos2D;
+using cocos2d_mono.Tests.SpriteTest;
 
 namespace tests
 {
@@ -39,7 +36,7 @@ namespace tests
         }
 
         static int sceneIdx = -1;
-        static int MAX_LAYER = 48;
+        static int MAX_LAYER = 49;
 
         public static CCLayer createSpriteTestLayer(int nIndex)
         {
@@ -93,15 +90,16 @@ namespace tests
                 case 45: return new SpriteOffsetAnchorFlip();
                 case 46: return new SpriteBatchNodeOffsetAnchorFlip();
                 case 47: return new SpriteMaskTest();
+                case 48: return new SpriteOpacityTest();
 
-                //case 47: return new SpriteBatchNodeReorderSameIndex();
-                //case 48: return new SpriteBatchNodeReorderOneChild();
-                //case 49: return new NodeSort();
-                //case 50: return new SpriteSkewNegativeScaleChildren();
-                //case 51: return new SpriteBatchNodeSkewNegativeScaleChildren();
-                //case 52: return new SpriteDoubleResolution();
-                //case 53: return new SpriteBatchBug1217();
-                //case 54: return new AnimationCacheFile();
+                    //case 47: return new SpriteBatchNodeReorderSameIndex();
+                    //case 48: return new SpriteBatchNodeReorderOneChild();
+                    //case 49: return new NodeSort();
+                    //case 50: return new SpriteSkewNegativeScaleChildren();
+                    //case 51: return new SpriteBatchNodeSkewNegativeScaleChildren();
+                    //case 52: return new SpriteDoubleResolution();
+                    //case 53: return new SpriteBatchBug1217();
+                    //case 54: return new AnimationCacheFile();
             }
 
             return null;
