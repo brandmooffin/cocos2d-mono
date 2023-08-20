@@ -3,6 +3,8 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Widget;
 using AppGame.Android.Games;
+using AppGame.Shared;
+using Microsoft.Xna.Framework;
 using System;
 
 namespace AppGame.Android
@@ -17,11 +19,18 @@ namespace AppGame.Android
         ScreenOrientation = ScreenOrientation.Portrait,
         ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenSize
     )]
-    public class AppActivity : Activity
+    public class AppActivity : AndroidGameActivity
     {
+        public static SampleGame Game;
+
         protected override void OnCreate(Bundle bundle)
         {
+
             base.OnCreate(bundle);
+
+            Game = new SampleGame();
+            Game.Run();
+
             SetContentView(Resource.Layout.activity_main);
 
             Button simpleGameButton = FindViewById<Button>(Resource.Id.simpleGameButton);

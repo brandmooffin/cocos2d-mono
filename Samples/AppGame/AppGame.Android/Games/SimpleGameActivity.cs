@@ -2,10 +2,8 @@ using Android.App;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using AppGame.Shared;
 using AppGame.Shared.Scenes;
 using AndroidGraphics = Android.Graphics;
-using Cocos2D;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -15,18 +13,17 @@ namespace AppGame.Android.Games
     [Activity(Label = "IntroGameActivity")]
     public class SimpleGameActivity : AndroidGameActivity
     {
-        private SampleGame _game;
         private View _view;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Console.WriteLine("Creating game activity...");
             base.OnCreate(savedInstanceState);
 
-            _game = new SampleGame(new SimpleScene());
-            _view = _game.Services.GetService(typeof(View)) as View;
+            _view = AppActivity.Game.Services.GetService(typeof(View)) as View;
 
             SetContentView(_view);
-            _game.Run();
+
+            AppActivity.Game.LoadGameScene(new SimpleScene(), this);
 
             TextView descriptionTextView = new TextView(this)
             {
@@ -44,9 +41,15 @@ namespace AppGame.Android.Games
             base.OnBackPressed();
         }
 
+        public void PrepareForDestroy()
+        {
+            ((ViewGroup)_view.Parent).RemoveView(_view);
+        }
+
         protected override void OnDestroy()
         {
             Console.WriteLine("Destroy activity...");
+            PrepareForDestroy();
             base.OnDestroy();
         }
     }

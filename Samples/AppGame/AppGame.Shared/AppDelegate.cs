@@ -29,18 +29,6 @@ namespace AppGame.Shared
             this.currentScene = currentScene;
         }
 
-        public AppDelegate(Game game, GraphicsDeviceManager graphics)
-            : base(game, graphics)
-        {
-            Console.WriteLine("Initializing delegate...");
-            this.graphics = graphics;
-            s_pSharedApplication = this;
-            //
-            // TODO: Set the display orientation that you want for this game.
-            // 
-            CCDrawManager.InitializeDisplay(game, graphics, DisplayOrientation.Portrait);
-        }
-
         public void LoadGameScene(CCScene sceneToLoad) {
             var pDirector = CCDirector.SharedDirector;
             currentScene = sceneToLoad;

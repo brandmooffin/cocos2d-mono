@@ -3,9 +3,7 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using AndroidGraphics = Android.Graphics;
-using AppGame.Shared;
 using AppGame.Shared.Scenes;
-using Cocos2D;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -14,18 +12,16 @@ namespace AppGame.Android.Games
     [Activity(Label = "InteractiveGameActivity")]
     public class InteractiveGameActivity : AndroidGameActivity
     {
-        private SampleGame _game;
         private View _view;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Console.WriteLine("Creating interactive game activity...");
             base.OnCreate(savedInstanceState);
 
-            _game = new SampleGame(new InteractiveScene());
-            _view = _game.Services.GetService(typeof(View)) as View;
+            AppActivity.Game.LoadGameScene(new InteractiveScene(), this);
+            _view = AppActivity.Game.Services.GetService(typeof(View)) as View;
 
             SetContentView(_view);
-            _game.Run();
 
             TextView descriptionTextView = new TextView(this)
             {
@@ -43,9 +39,15 @@ namespace AppGame.Android.Games
             base.OnBackPressed();
         }
 
+        public void PrepareForDestroy()
+        {
+            ((ViewGroup)_view.Parent).RemoveView(_view);
+        }
+
         protected override void OnDestroy()
         {
             Console.WriteLine("Destroy activity...");
+            PrepareForDestroy();
             base.OnDestroy();
         }
     }
