@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Cocos2D;
+using cocos2d_mono.Tests.LabelTest;
 
 namespace tests
 {
     public class AtlasTestScene : TestScene
     {
         static int sceneIdx = -1;
-        static readonly int MAX_LAYER = 30;//31;
+        static readonly int MAX_LAYER = 32;
 
         protected override void NextTestCase()
         {
@@ -88,6 +85,7 @@ namespace tests
                 case 28: return new LabelBMFontHDMemoryLeak3();
                 case 29: return new LabelBMFontHDMemoryLeak4();
                 case 30: return (new ScrollViewLabelTest());
+                case 31: return new SystemLabelTest();
                 default:
                     break;
             }

@@ -95,6 +95,8 @@ namespace Cocos2D
 
             m_pNodes.Clear();
             m_pNodes.Add(new ivec3() { x = 1, y = 1, z = m_nWidth - 2 });
+
+            m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, m_nWidth, m_nHeight, true);
         }
 
         public CCLabel()
@@ -306,6 +308,7 @@ namespace Cocos2D
 					InitializeFont (FontName, FontSize, value);
 					base.Text = value;
 				}
+                SetString(value, false);
 			}
 		}
 
