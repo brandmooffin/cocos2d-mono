@@ -308,6 +308,7 @@ namespace Cocos2D
 					InitializeFont (FontName, FontSize, value);
 					base.Text = value;
 				}
+                SetString(value, false);
 			}
 		}
 
