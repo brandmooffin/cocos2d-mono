@@ -1,5 +1,4 @@
 ﻿using Cocos2D;
-using System.Reflection.Emit;
 
 namespace cocos2d_mono.Tests.LabelTest
 {

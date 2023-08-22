@@ -13,7 +13,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.4.4.0</Version>
+    <Version>2.4.4.1</Version>
     <PackageId>box2d.Windows</PackageId>
     <Company>Broken Walls Studios</Company>
     <Copyright>Copyright ©  2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -32,6 +32,7 @@
 		- Support for initializing CCScale9Sprite with CCSpriteFrame
 		- Add new constructor for CCTexture2D to support data byte array
 		- Add TextureFilename property for CCSpriteFrame
+		- Fixes for System Font
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
