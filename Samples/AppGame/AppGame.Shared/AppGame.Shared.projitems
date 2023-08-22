@@ -17,8 +17,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\TexturePackerScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\SimpleOverlayScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buttons\ContinueButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\NestingScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\BackgroundLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\MessageBoxLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layers\GameLayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Buttons\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Layers\" />
   </ItemGroup>
 </Project>
