@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using System;
+#if ANDROID
+using Android.App;
+#endif
 #if IOS
 using AppGame.iOS;
 using UIKit;
@@ -27,21 +30,8 @@ namespace AppGame.Shared
 #endif
 
 #if ANDROID
-        public SampleGame(CCScene sceneToLoad)
-        {
-            Console.WriteLine("Initializing game & delegate...");
-            graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            this.sceneToLoad = sceneToLoad;
-
-            // This is the main Cocos2D connection. The CCApplication is the manager of the
-            // nodes that define your game.
-            //
-            application = new AppDelegate(this, graphics, sceneToLoad);
-            this.Components.Add(application);
-        }
+        Activity AppViewActivity;
 #endif
-#if IOS
         public SampleGame()
         {
             Console.WriteLine("Initializing game & delegate...");
@@ -54,6 +44,15 @@ namespace AppGame.Shared
             this.Components.Add(application);
         }
 
+#if ANDROID
+        public void LoadGameScene(CCScene sceneToLoad, Activity appViewActivity) {
+            AppViewActivity = appViewActivity;
+            this.sceneToLoad = sceneToLoad;
+
+            application.LoadGameScene(sceneToLoad);
+        }
+#endif
+#if IOS
         public void LoadGameScene(CCScene sceneToLoad, UIViewController appViewController) {
             AppViewController = appViewController;
             this.sceneToLoad = sceneToLoad;
@@ -165,8 +164,7 @@ namespace AppGame.Shared
             CCDirector.SharedDirector.RunningScene.Visible = false;
 
 #if ANDROID
-            CCDirector.SharedDirector.PopScene();
-            Game.Activity.Finish();
+            AppViewActivity.Finish();
 #endif
 #if IOS
             AppViewController.ViewDidAppear(false);
