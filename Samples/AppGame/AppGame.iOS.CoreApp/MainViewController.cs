@@ -28,22 +28,35 @@ namespace AppGame.iOS.CoreApp
             simpleGameButton.Frame = new CGRect(20, 200, 280, 44);
             simpleGameButton.SetTitle("Simple Game", UIControlState.Normal);
 
+            var simpleOverlayGameButton = UIButton.FromType(UIButtonType.System);
+            simpleOverlayGameButton.Frame = new CGRect(20, 250, 280, 44);
+            simpleOverlayGameButton.SetTitle("Simple Overlay Game", UIControlState.Normal);
+
             var interactiveGameButton = UIButton.FromType(UIButtonType.System);
-            interactiveGameButton.Frame = new CGRect(20, 400, 280, 44);
+            interactiveGameButton.Frame = new CGRect(20, 300, 280, 44);
             interactiveGameButton.SetTitle("Interactive Game", UIControlState.Normal);
 
             var spritesheetGameButton = UIButton.FromType(UIButtonType.System);
-            spritesheetGameButton.Frame = new CGRect(20, 500, 280, 44);
+            spritesheetGameButton.Frame = new CGRect(20, 350, 280, 44);
             spritesheetGameButton.SetTitle("Game using spritesheet", UIControlState.Normal);
 
             var texturePackerGameButton = UIButton.FromType(UIButtonType.System);
-            texturePackerGameButton.Frame = new CGRect(20, 600, 280, 44);
+            texturePackerGameButton.Frame = new CGRect(20, 400, 280, 44);
             texturePackerGameButton.SetTitle("Game using TexturePacker", UIControlState.Normal);
+
+            var nestingGameButton = UIButton.FromType(UIButtonType.System);
+            nestingGameButton.Frame = new CGRect(20, 450, 280, 44);
+            nestingGameButton.SetTitle("Game using Nesting Layers", UIControlState.Normal);
 
 
             simpleGameButton.TouchUpInside += (sender, e) => {
                 var simpleGameViewController = new SimpleGameViewController();
                 PresentViewController(simpleGameViewController, true, null);
+            };
+
+            simpleOverlayGameButton.TouchUpInside += (sender, e) => {
+                var simpleOverlyaGameViewController = new SimpleOverlayGameViewController();
+                PresentViewController(simpleOverlyaGameViewController, true, null);
             };
 
             interactiveGameButton.TouchUpInside += (sender, e) => {
@@ -61,10 +74,17 @@ namespace AppGame.iOS.CoreApp
                 PresentViewController(texturePackerGameViewController, true, null);
             };
 
+            nestingGameButton.TouchUpInside += (sender, e) => {
+                var nestingGameViewController = new NestingGameViewController();
+                PresentViewController(nestingGameViewController, true, null);
+            };
+
             View.AddSubview(simpleGameButton);
+            View.AddSubview(simpleOverlayGameButton);
             View.AddSubview(interactiveGameButton);
             View.AddSubview(spritesheetGameButton);
             View.AddSubview(texturePackerGameButton);
+            View.AddSubview(nestingGameButton);
         }
 
         public override void DidReceiveMemoryWarning()

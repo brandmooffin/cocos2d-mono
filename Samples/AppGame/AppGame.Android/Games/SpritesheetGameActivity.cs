@@ -1,10 +1,8 @@
 using Android.App;
 using Android.OS;
 using Android.Views;
-using AppGame.Shared;
 using AppGame.Shared.Scenes;
 using AndroidGraphics = Android.Graphics;
-using Cocos2D;
 using Microsoft.Xna.Framework;
 using System;
 using Android.Widget;
@@ -15,18 +13,16 @@ namespace AppGame.Android.Games
     [Activity(Label = "SpritesheetGameActivity")]
     public class SpritesheetGameActivity : AndroidGameActivity
     {
-        private SampleGame _game;
         private View _view;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Console.WriteLine("Creating spritesheet game activity...");
             base.OnCreate(savedInstanceState);
 
-            _game = new SampleGame(new SpritesheetScene());
-            _view = _game.Services.GetService(typeof(View)) as View;
+            AppActivity.Game.LoadGameScene(new SpritesheetScene(), this);
+            _view = AppActivity.Game.Services.GetService(typeof(View)) as View;
 
             SetContentView(_view);
-            _game.Run();
 
             TextView descriptionTextView = new TextView(this)
             {
@@ -44,9 +40,15 @@ namespace AppGame.Android.Games
             base.OnBackPressed();
         }
 
+        public void PrepareForDestroy()
+        {
+            ((ViewGroup)_view.Parent).RemoveView(_view);
+        }
+
         protected override void OnDestroy()
         {
             Console.WriteLine("Destroy activity...");
+            PrepareForDestroy();
             base.OnDestroy();
         }
     }
