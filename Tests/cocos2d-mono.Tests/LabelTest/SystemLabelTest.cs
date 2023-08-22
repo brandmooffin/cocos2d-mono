@@ -1,4 +1,5 @@
 ﻿using Cocos2D;
+using System.Reflection.Emit;
 
 namespace cocos2d_mono.Tests.LabelTest
 {
@@ -49,6 +50,11 @@ namespace cocos2d_mono.Tests.LabelTest
             AddChild(largeSystemLabel);
             
             smallAdjustDimensionSystemLabel.Dimensions = new CCSize(smallAdjustDimensionSystemLabel.Dimensions.Width, smallAdjustDimensionSystemLabel.ContentSize.Height + 200);
+
+            smallAdjustDimensionSystemLabel.PositionX += 20;
+            smallAdjustDimensionSystemLabel.Text = "Changing text";
+
+            smallAdjustDimensionSystemLabel.Dimensions = new CCSize(smallAdjustDimensionSystemLabel.Dimensions.Width, smallAdjustDimensionSystemLabel.ContentSize.Height + 20);
         }
         public override string title()
         {
