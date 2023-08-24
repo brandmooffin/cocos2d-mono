@@ -9,7 +9,7 @@
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>2.4.4.2</Version>
+    <Version>2.4.4.3</Version>
     <Title>box2d for Android</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
     <Description>box2d for Android</Description>
@@ -26,6 +26,10 @@
 		- Add TextureFilename property for CCSpriteFrame
 		- Fixes for System Font
 		- Adjust Label ContentSize on Text Change
+		- Updated CCTapNode implementation
+		- Fixes for CCLabel with new lines
+		- Fixes for SineIn and SineOut
+		- Updated tests
 	</PackageReleaseNotes>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>

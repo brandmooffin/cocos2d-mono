@@ -8,7 +8,7 @@
     <AssemblyName>box2d.iOS</AssemblyName>
     <Title>box2d for iOS</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.4.2</Version>
+    <Version>2.4.4.3</Version>
     <Description>box2d for iOS</Description>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
@@ -22,6 +22,10 @@
 		- Add TextureFilename property for CCSpriteFrame
 		- Fixes for System Font
 		- Adjust Label ContentSize on Text Change
+		- Updated CCTapNode implementation
+		- Fixes for CCLabel with new lines
+		- Fixes for SineIn and SineOut
+		- Updated tests
 	</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

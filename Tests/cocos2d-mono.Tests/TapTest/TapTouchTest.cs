@@ -11,7 +11,10 @@ namespace cocos2d_mono.Tests.TapTest
             if (base.Init())
             {
                 Data = new CCLayer();
-                
+
+                CCDirector director = CCDirector.SharedDirector;
+                ContentSize = director.WinSize;
+
                 OnTapped += Layer_OnTapped;
                 return true;
             }
