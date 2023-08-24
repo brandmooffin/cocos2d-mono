@@ -12,10 +12,7 @@ namespace AppGame.Shared.Buttons
         {
             if (base.Init())
             {
-                Data = new CCLayer()
-                {
-                    ContentSize = new CCSize(200, 200)
-                };
+                ContentSize = new CCSize(200, 200);
 
                 OnTapped += Layer_OnTapped;
 
