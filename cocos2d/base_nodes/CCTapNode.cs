@@ -18,7 +18,6 @@ namespace cocos2d.base_nodes
             IsSwallowTouches = isSwallowTouches;
 
             Active = true;
-
             Init();
         }
 
@@ -42,7 +41,7 @@ namespace cocos2d.base_nodes
         {
             try
             {
-                if ((Data as CCNode).WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
+                if (WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
                 {
                     TouchBegan(touch.Location);
                     return true;
@@ -59,7 +58,7 @@ namespace cocos2d.base_nodes
         {
             try
             {
-                if ((Data as CCNode).WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
+                if (WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
                 {
                     Tapped(touch.Location);
                 }
@@ -79,7 +78,7 @@ namespace cocos2d.base_nodes
         {
             try
             {
-                if ((Data as CCNode).WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
+                if (WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
                 {
                     DragInside(touch.Location);
                 }

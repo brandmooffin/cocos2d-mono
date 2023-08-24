@@ -74,12 +74,12 @@ namespace Cocos2D
 
         public static float SineOut(float time)
         {
-            return (float) Math.Sin(time * MathHelper.TwoPi);
+            return (float) Math.Sin(time * MathHelper.PiOver2);
         }
 
         public static float SineIn(float time)
         {
-            return -1f * (float)Math.Cos(time * MathHelper.TwoPi) + 1f;
+            return -1f * (float)Math.Cos(time * MathHelper.PiOver2) + 1f;
         }
 
         public static float SineInOut(float time)
