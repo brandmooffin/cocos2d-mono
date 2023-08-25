@@ -686,7 +686,10 @@ namespace Cocos2D
                         }
 
                         multiline_string.Append(last_word);
-                        multiline_string.Append('\n');
+                        for (int k = 0; k < justSkipped; k++)
+                        {
+                            multiline_string.Append('\n');
+                        }
 
 #if XBOX || XBOX360
                         last_word.Length = 0;
@@ -906,7 +909,10 @@ namespace Cocos2D
                 for (int i = 0; i < str_len; i++)
                 {
                     var characterSprite = GetChildByTag(i);
-                    characterSprite.PositionY += yOffset;
+                    if (characterSprite != null)
+                    {
+                        characterSprite.PositionY += yOffset;
+                    }
                 }
             }
         }

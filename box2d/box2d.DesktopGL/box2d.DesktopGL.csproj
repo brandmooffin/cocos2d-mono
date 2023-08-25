@@ -12,7 +12,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.4.4.2</Version>
+    <Version>2.4.4.3</Version>
     <PackageId>box2d.DesktopGL</PackageId>
     <Company>Broken Walls Studios</Company>
     <Copyright>Copyright ©  2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -33,6 +33,10 @@
 		- Add TextureFilename property for CCSpriteFrame
 		- Fixes for System Font
 		- Adjust Label ContentSize on Text Change
+		- Updated CCTapNode implementation
+		- Fixes for CCLabel with new lines
+		- Fixes for SineIn and SineOut
+		- Updated tests
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
