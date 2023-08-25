@@ -19,7 +19,7 @@ namespace AppGame.Shared.Buttons
                 ButtonLabel = new CCLabelTTF("Continue", "MarkerFelt", 22)
                 {
                     Color = CCColor3B.White,
-                    Position = new CCPoint(Data.ContentSize.Center.X, Data.ContentSize.Center.Y)
+                    Position = new CCPoint(ContentSize.Center.X, ContentSize.Center.Y)
                 };
 
                 AddChild(ButtonLabel);

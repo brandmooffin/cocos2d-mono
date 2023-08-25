@@ -48,7 +48,7 @@ namespace cocos2d_mono.Tests.LabelTest
             AddChild(mediumSystemLabel);
             AddChild(largeSystemLabel);
             
-            smallAdjustDimensionSystemLabel.Dimensions = new CCSize(500, smallAdjustDimensionSystemLabel.ContentSize.Height + 200);
+            smallAdjustDimensionSystemLabel.Dimensions = new CCSize(500, 0);
             string text = "Thank you for visiting the cocos2d-mono tests\nPlease help us by donating to our project\nYou can find us at cocos2d-mono.dev\n\n\nThank you!\nDon't forget to contribute to cocos2d-x\nWithout them this project would not exist.";
             smallAdjustDimensionSystemLabel.Text = text;
         }

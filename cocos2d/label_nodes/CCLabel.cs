@@ -308,9 +308,9 @@ namespace Cocos2D
 					InitializeFont (FontName, FontSize, value);
 					base.Text = value;
 				}
-                SetString(value, false);
-			}
-		}
+                UpdateLabel();
+            }
+        }
 
 
         private static string GetFontKey(string fontName, float fontSize)
