@@ -1,5 +1,4 @@
-﻿using System;
-using AppGame.Shared.Buttons;
+﻿using AppGame.Shared.Buttons;
 using Cocos2D;
 
 namespace AppGame.Shared.Scenes
@@ -49,8 +48,9 @@ namespace AppGame.Shared.Scenes
 
             AddChild(backgroundLayer, -1);
 
-            var descriptionLabel = new CCLabel("Test with multi\nlines and different\ncharacters\n複数行と異なる文字でテストする\nマルチでテストする\n行と異なる", "Arial", 22)
+            var descriptionLabel = new CCLabel("Test with multi\nlines and different characters 複数行と異なる文字でテストする マルチでテストする 行と異なる", "Arial", 22)
             {
+                Dimensions = new CCSize(ScreenSize.Width - 40, 0),
                 Color = CCColor3B.White,
                 Position = new CCPoint(ScreenSize.Center.X + 100, ScreenSize.Center.Y - 450)
             };
