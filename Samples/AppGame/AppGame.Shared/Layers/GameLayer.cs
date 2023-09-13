@@ -40,6 +40,8 @@ namespace AppGame.Shared.Layers
                     Position = touch.Location
                 };
                 AddChild(logo);
+
+                RunAction(new CCSequence(new CCDelayTime(0.3f), new CCRepeat(new CCSequence(new CCMoveBy(0.025f, new CCPoint(10, 0)), new CCMoveBy(0.05f, new CCPoint(-20, 0)), new CCMoveBy(0.025f, new CCPoint(10, 0))), 3)));
                 return true;
             }
             return false;

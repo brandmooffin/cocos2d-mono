@@ -191,6 +191,28 @@ namespace Cocos2D
             }
         }
 
+        CCSize contentSize;
+        public override CCSize ContentSize
+        {
+            get { return contentSize; }
+            set
+            {
+                if (base.ContentSize != CCSize.Zero)
+                {
+                    ScaleToUsingOriginalContentSize(value);
+                }
+
+                contentSize = value;
+                base.ContentSize = originalContentSize;
+            }
+        }
+
+        CCSize originalContentSize;
+        public CCSize OriginalContentSize
+        {
+            get { return originalContentSize; }
+        }
+
         /// <summary>
         /// Scales the sprite to have the given size.
         /// </summary>
@@ -198,6 +220,16 @@ namespace Cocos2D
         public virtual void ScaleTo(CCSize size)
         {
             CCSize content = ContentSize;
+            float sx = size.Width / content.Width;
+            float sy = size.Height / content.Height;
+            base.ScaleX = sx;
+            base.ScaleY = sy;
+            SetBatchNodeDirty();
+        }
+
+        public virtual void ScaleToUsingOriginalContentSize(CCSize size)
+        {
+            CCSize content = OriginalContentSize;
             float sx = size.Width / content.Width;
             float sy = size.Height / content.Height;
             base.ScaleX = sx;
@@ -685,7 +717,7 @@ namespace Cocos2D
         {
             m_bRectRotated = rotated;
 
-            ContentSize = untrimmedSize;
+            ContentSize = originalContentSize = untrimmedSize;
             SetVertexRect(value);
             SetTextureCoords(value);
 

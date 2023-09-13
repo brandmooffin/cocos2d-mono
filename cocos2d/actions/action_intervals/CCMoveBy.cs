@@ -52,8 +52,11 @@ namespace Cocos2D
 
         protected internal override void StartWithTarget(CCNode target)
         {
-            base.StartWithTarget(target);
-            m_previousPosition = m_startPosition = target.Position;
+            if (target != null)
+            {
+                base.StartWithTarget(target);
+                m_previousPosition = m_startPosition = target.Position;
+            }
         }
 
         public override void Update(float time)
