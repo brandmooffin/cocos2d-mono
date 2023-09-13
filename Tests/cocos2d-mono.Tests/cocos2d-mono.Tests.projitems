@@ -275,6 +275,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ClippingNodeTest\ClippingNodeTestScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CocosDenshionTest\CocosDenshionTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\SystemLabelTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SpriteTest\SpriteContentSize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SpriteTest\SpriteOpacityTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TapTest\TapTouchTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestController.cs" />

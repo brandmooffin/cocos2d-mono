@@ -42,7 +42,7 @@ namespace AppGame.Shared.Scenes
             s.Position = new CCPoint(x, y);
             CCLog.Log("... setPosition");
 
-            s.ContentSize = new CCSize(14 * 16, 10 * 16);
+            s.ContentSize = new CCSize(14 * 32, 10 * 32);
             CCLog.Log("... setContentSize");
 
             
