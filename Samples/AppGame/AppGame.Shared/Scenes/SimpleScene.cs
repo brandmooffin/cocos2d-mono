@@ -26,7 +26,7 @@ namespace AppGame.Shared.Scenes
                 Opacity = 255
             };
 
-            var label = new CCLabelBMFont("Hello", "fonts/bitmapFontTest3.fnt")
+            var label = new CCLabel("Tap Here\nMessageBox Layer", "Arial", 24)
             {
                 Color = CCColor3B.White,
                 Position = new CCPoint(size.Center.X, size.Center.Y + 500),
@@ -41,6 +41,8 @@ namespace AppGame.Shared.Scenes
 
             var rotateAction = new CCRepeatForever(new CCRotateBy(0.5f, 15));
             logo.RunAction(rotateAction);
+
+            logo.ContentSize = new CCSize(logo.ContentSize.Width, logo.ContentSize.Height);
 
 
             backgroundLayer.AddChild(label);

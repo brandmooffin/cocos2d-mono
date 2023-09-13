@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cocos2D;
+using tests.Extensions;
 
 namespace tests
 {
@@ -52,6 +53,7 @@ namespace tests
         ACTION_ActionCatmullRomStacked,
         ACTION_ActionCardinalSplineStacked,
         ACTION_PARALLEL,
+        ACTION_MULTIPLE_SEQUENCE_LAYER,
         ACTION_LAYER_COUNT
     };
 
@@ -206,6 +208,9 @@ namespace tests
                     break;
                 case (int)ActionTest.ACTION_PARALLEL:
                     pLayer = new ActionParallel();
+                    break;
+                case (int)ActionTest.ACTION_MULTIPLE_SEQUENCE_LAYER:
+                    pLayer = new ActionMultipleSequence();
                     break;
                 default:
                     break;
@@ -2242,4 +2247,89 @@ namespace tests
         }
     }
 
+    public class ActionMultipleSequence : ActionsDemo
+    {
+        public override void OnEnter()
+        {
+            base.OnEnter();
+
+            var s = CCDirector.SharedDirector.WinSize;
+
+            m_tamara.ScaleX = 2.5f;
+            m_tamara.ScaleY = -1.0f;
+            m_tamara.Position = new CCPoint(100, 70);
+            m_tamara.Opacity = 128;
+
+            m_grossini.Rotation = 120;
+            m_grossini.Position = new CCPoint(s.Width / 2, s.Height / 2);
+            m_grossini.Color = new CCColor3B(255, 0, 0);
+
+            m_kathia.Position = new CCPoint(s.Width - 100, s.Height / 2);
+            m_kathia.Color = new CCColor3B(0, 0, 255); // ccTypes.ccBLUE
+
+            var backgroundLayer = new BackgroundLayer()
+            {
+                Color = new CCColor3B(Microsoft.Xna.Framework.Color.Blue),
+                Opacity = 255,
+                TouchPriority = -10,
+                TouchEnabled = true
+            };
+
+            AddChild(backgroundLayer);
+        }
+
+        public override void OnExit()
+        {
+            base.OnExit();
+        }
+
+        public override string subtitle()
+        {
+            return "Multiple Sequence Transformation";
+        }
+    };
+
+    public class BackgroundLayer : CCLayer
+    {
+        CCLabel label;
+        CCTexture2D SampleTexture;
+        public override void OnEnter()
+        {
+            TouchEnabled = true;
+            TouchMode = CCTouchMode.OneByOne;
+            TouchPriority = -1;
+            base.OnEnter();
+
+            var size = CCDirector.SharedDirector.WinSize;
+            SampleTexture = CCTextureCache.SharedTextureCache.AddImage("Images/SpookyPeas");
+
+            label = new CCLabel("Tap Here\nBackground Layer", "Arial", 24)
+            {
+                Color = CCColor3B.White,
+                Position = new CCPoint(size.Center.X, size.Center.Y),
+                Scale = 2
+            };
+
+
+            AddChild(label);
+        }
+
+        public override bool TouchBegan(CCTouch touch)
+        {
+            Console.WriteLine("Touches began...");
+            if (label.WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
+            {
+                var logo = new CCSprite(SampleTexture)
+                {
+                    Position = touch.Location,
+                    Scale = 3
+                };
+                AddChild(logo);
+
+                RunAction(new CCSequence(new CCDelayTime(0.3f), new CCRepeat(new CCSequence(new CCMoveBy(0.025f, new CCPoint(10, 0)), new CCMoveBy(0.05f, new CCPoint(-20, 0)), new CCMoveBy(0.025f, new CCPoint(10, 0))), 3)));
+                return true;
+            }
+            return false;
+        }
+    }
 }

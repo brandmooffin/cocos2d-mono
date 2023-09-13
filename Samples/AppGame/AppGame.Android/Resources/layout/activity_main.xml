@@ -49,4 +49,12 @@
         android:text="@string/texture_packer_game"
         />
 
+     <Button
+         android:id="@+id/nestingGameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/texturePackerGameButton"
+        android:layout_centerHorizontal="true"
+        android:text="@string/nesting_game"
+        />
 </RelativeLayout>

@@ -44,6 +44,9 @@ namespace AppGame.Android
 
             Button texturePackerGameButton = FindViewById<Button>(Resource.Id.texturePackerGameButton);
             texturePackerGameButton.Click += OnTexturePackerGameClick;
+
+            Button nestingGameButton = FindViewById<Button>(Resource.Id.nestingGameButton);
+            nestingGameButton.Click += OnNestingGameClick;
         }
 
         private void OnSimpleGameClick(object sender, EventArgs eventArgs)
@@ -64,6 +67,11 @@ namespace AppGame.Android
         private void OnTexturePackerGameClick(object sender, EventArgs eventArgs)
         {
             StartActivity(typeof(TexturePackerGameActivity));
+        }
+
+        private void OnNestingGameClick(object sender, EventArgs eventArgs)
+        {
+            StartActivity(typeof(NestingGameActivity));
         }
     }
 }
