@@ -652,11 +652,6 @@ namespace Cocos2D
 
                     skip += justSkipped;
 
-                    if (!characterSprite.Visible)
-                    {
-                        continue;
-                    }
-
                     if (i >= stringLength)
                     {
                         break;
