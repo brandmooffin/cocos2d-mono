@@ -130,6 +130,8 @@ namespace Cocos2D
         private int m_nTouchPriority;
         private bool m_bGamePadDelegatesInited;
 
+        private bool m_initialized = false;
+
         #region Color & Opacity
         protected byte _displayedOpacity;
         protected byte _realOpacity;
@@ -1524,7 +1526,12 @@ namespace Cocos2D
                 application.GamePadTriggerUpdate += m_OnGamePadTriggerUpdateDelegate;
             }
 
-            AddedToScene();
+            if (!m_initialized)
+            {
+                AddedToScene();
+            }
+
+            m_initialized = true;
             /*
             if (m_nScriptHandler)
             {
