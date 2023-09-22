@@ -8,7 +8,7 @@
     <AssemblyName>box2d.iOS</AssemblyName>
     <Title>box2d for iOS</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.4.4</Version>
+    <Version>2.4.4.5</Version>
     <Description>box2d for iOS</Description>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
@@ -26,6 +26,8 @@
 		- Fixes for CCLabel with new lines
 		- Fixes for SineIn and SineOut
 		- Updated tests
+		- Support adjusting CCSprite ContentSize
+        - Fix for CCLayer running CCActions
 	</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
