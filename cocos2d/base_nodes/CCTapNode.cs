@@ -44,7 +44,7 @@ namespace cocos2d.base_nodes
                 if (WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
                 {
                     TouchBegan(touch.Location);
-                    return true;
+                    return IsSwallowTouches;
                 }
             }
             catch (Exception ex)
