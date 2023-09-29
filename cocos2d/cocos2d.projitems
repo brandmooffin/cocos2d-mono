@@ -121,7 +121,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)actions\CCActionManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)base_nodes\CCAtlasNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)base_nodes\CCNode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)base_nodes\CCNodeRGBA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)base_nodes\CCTapNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCCamera.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCConfiguration.cs" />
