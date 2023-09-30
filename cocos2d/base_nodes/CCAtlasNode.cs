@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Cocos2D
 {
-    public class CCAtlasNode : CCNodeRGBA, ICCTextureProtocol
+    public class CCAtlasNode : CCNode, ICCTextureProtocol
     {
         protected bool m_bIsOpacityModifyRGB;
 

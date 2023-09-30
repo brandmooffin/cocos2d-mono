@@ -326,7 +326,7 @@ namespace tests
 
 #region RoundRectPrimitive
 
-    public class RoundRectPrimitive : CCNodeRGBA
+    public class RoundRectPrimitive : CCNode
     {
         // This comes from https://cocos2dxna.codeplex.com/discussions/568573#post1309173
         // This class does not work with the transform.
