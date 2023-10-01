@@ -9,25 +9,14 @@
     <TargetFramework>net6.0-android31.0</TargetFramework>
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-		- New Test TapTouchTest for CCTapNode
-		- Fixes for CCTapNode
-		- Support for initializing CCEaseActions with CCFiniteAction
-		- Support for initializing CCScale9Sprite with CCSpriteFrame
-		- Add new constructor for CCTexture2D to support data byte array
-		- Add TextureFilename property for CCSpriteFrame
-		- Fixes for System Font
-		- Adjust Label ContentSize on Text Change
-		- Updated CCTapNode implementation
-		- Fixes for CCLabel with new lines
-		- Fixes for SineIn and SineOut
-		- Updated tests
-		- Support adjusting CCSprite ContentSize
-		- Fix for CCLayer running CCActions
-		- Fix CCLabel Resize when not visible
-		- Call AddedToScene on initialize only
+		- Maintain CCSprite scale when changing SpriteFrame
+		- Fix BitmapFont not loading in Android Tests
+		- CCNodeRGBA is officially gone! Use CCNode instead
+		- Implement IsSwallowTouches for CCTapNode
+		- Removed CCActionState from certain CCActions and aligned them with existing CCActions
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.4.6</Version>
+    <Version>2.4.5</Version>
     <Title>Cocos2D-Mono for Android</Title>
     <Description>Cocos2D-Mono for Android</Description>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
