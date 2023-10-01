@@ -348,6 +348,7 @@ namespace Cocos2D
             }
             set
             {
+                float currentScale = Scale;
                 m_obUnflippedOffsetPositionFromCenter = value.Offset;
 
                 CCTexture2D pNewTexture = value.Texture;
@@ -360,6 +361,8 @@ namespace Cocos2D
                 // update rect
                 m_bRectRotated = value.IsRotated;
                 SetTextureRect(value.Rect, m_bRectRotated, value.OriginalSize);
+
+                Scale = currentScale;
             }
         }
 
