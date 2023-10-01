@@ -20,7 +20,7 @@ namespace Cocos2D
      * Based upon: http://fancyratstudios.com/2010/02/programming/progresstimer-for-cocos2d/
      */
 
-    public class CCProgressTimer : CCNodeRGBA
+    public class CCProgressTimer : CCNode
     {
         private const int kProgressTextureCoordsCount = 4;
         //kProgressTextureCoords holds points {0,1} {0,0} {1,0} {1,1} we can represent it as bits

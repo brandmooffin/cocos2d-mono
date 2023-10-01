@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Cocos2D
 {
-    public class CCMotionStreak : CCNodeRGBA, ICCTextureProtocol
+    public class CCMotionStreak : CCNode, ICCTextureProtocol
     {
         protected bool m_bFastMode;
         protected bool m_bStartingPositionInitialized;
