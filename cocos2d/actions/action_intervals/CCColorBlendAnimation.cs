@@ -1,10 +1,18 @@
 ﻿using Cocos2D;
+using System;
 
 namespace cocos2d.actions.action_intervals
 {
     public class CCColorBlendAnimation : CCFiniteTimeAction
     {
         public readonly CCColor3B EndColor;
+
+        CCColor3B _startColor;
+        CCColor3B _interpolateColor;
+
+        int sumR;
+        int sumG;
+        int sumB;
 
         public CCColorBlendAnimation(float duration, CCColor3B endColor) : base(duration)
         {
@@ -16,42 +24,27 @@ namespace cocos2d.actions.action_intervals
             throw new System.NotImplementedException();
         }
 
-        protected internal override CCActionState StartAction(CCNode target)
+        protected internal override void StartWithTarget(CCNode target)
         {
-            return new ColorBlendState(this, target);
+            _startColor = target.Color;
+
+            var endColor = EndColor;
+
+            sumR = endColor.R - _startColor.R;
+            sumG = endColor.G - _startColor.G;
+            sumB = endColor.B - _startColor.B;
+
+            _interpolateColor = new CCColor3B(_startColor.R, _startColor.G, _startColor.B);
         }
 
-        internal class ColorBlendState : CCFiniteTimeActionState
+        public override void Update(float time)
         {
-            readonly CCColor3B _startColor;
-            CCColor3B _interpolateColor;
-
-            readonly int sumR;
-            readonly int sumG;
-            readonly int sumB;
-
-            public ColorBlendState(CCColorBlendAnimation action, CCNode target) : base(action, target)
+            if (Target != null)
             {
-                _startColor = target.Color;
-
-                var endColor = action.EndColor;
-
-                sumR = endColor.R - _startColor.R;
-                sumG = endColor.G - _startColor.G;
-                sumB = endColor.B - _startColor.B;
-
-                _interpolateColor = new CCColor3B(_startColor.R, _startColor.G, _startColor.B);
-            }
-
-            public override void Update(float time)
-            {
-                if (Target != null)
-                {
-                    _interpolateColor.R = (byte)(_startColor.R + (int)(sumR * time));
-                    _interpolateColor.G = (byte)(_startColor.G + (int)(sumG * time));
-                    _interpolateColor.B = (byte)(_startColor.B + (int)(sumB * time));
-                    Target.Color = _interpolateColor;
-                }
+                _interpolateColor.R = (byte)(_startColor.R + (int)(sumR * time));
+                _interpolateColor.G = (byte)(_startColor.G + (int)(sumG * time));
+                _interpolateColor.B = (byte)(_startColor.B + (int)(sumB * time));
+                Target.Color = _interpolateColor;
             }
         }
     }

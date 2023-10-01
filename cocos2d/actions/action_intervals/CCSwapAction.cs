@@ -5,8 +5,6 @@ namespace cocos2d.actions.action_intervals
 {
     public class CCSwapAction : CCParallel
     {
-        public new CCFiniteTimeAction[] Actions { get; protected set; }
-
         #region Constructors
         public CCSwapAction(CCSwappableNode fistCard, CCSwappableNode secondCard, float duration = 0.5f) : base(new CCFiniteTimeAction[0])
         {
@@ -65,25 +63,17 @@ namespace cocos2d.actions.action_intervals
         }
         #endregion Constructors
 
-        protected internal override CCActionState StartAction(CCNode target)
+        protected internal override void StartWithTarget(CCNode target)
         {
-            return new CCSwapState(this, target);
-        }
-
-
-    }
-
-    public class CCSwapState : CCParallelState
-    {
-        public CCSwapState(CCSwapAction action, CCNode target) : base(action, target)
-        {
-            Actions = action.Actions;
-            ActionStates = new CCFiniteTimeActionState[Actions.Length];
-
             for (int i = 0; i < Actions.Length; i++)
             {
-                ActionStates[i] = new CCTargetedActionState((CCTargetedAction)Actions[i], target);
+                var actionDuration = Actions[i].Duration;
+                if (actionDuration < Duration)
+                {
+                    Actions[i] = new CCSequence(Actions[i], new CCDelayTime(Duration - actionDuration));
+                }
             }
         }
+
     }
 }
