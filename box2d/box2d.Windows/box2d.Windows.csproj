@@ -13,7 +13,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.4.5</Version>
+    <Version>2.4.5.1</Version>
     <PackageId>box2d.Windows</PackageId>
     <Company>Broken Walls Studios</Company>
     <Copyright>Copyright ©  2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -31,6 +31,8 @@
 		- CCNodeRGBA is officially gone! Use CCNode instead
 		- Implement IsSwallowTouches for CCTapNode
 		- Removed CCActionState from certain CCActions and aligned them with existing CCActions
+		- Reset vertex for CCDrawNode on Clear
+        - Maintain CCSprite Scale on TextureRect changes
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>

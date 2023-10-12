@@ -8,17 +8,19 @@
     <AssemblyName>box2d.iOS</AssemblyName>
     <Title>box2d for iOS</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.5</Version>
+    <Version>2.4.5.1</Version>
     <Description>box2d for iOS</Description>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageReleaseNotes>
-        - Maintain CCSprite scale when changing SpriteFrame
-        - Fix BitmapFont not loading in Android Tests
-        - CCNodeRGBA is officially gone! Use CCNode instead
-        - Implement IsSwallowTouches for CCTapNode
-        - Removed CCActionState from certain CCActions and aligned them with existing CCActions
+		- Maintain CCSprite scale when changing SpriteFrame
+		- Fix BitmapFont not loading in Android Tests
+		- CCNodeRGBA is officially gone! Use CCNode instead
+		- Implement IsSwallowTouches for CCTapNode
+		- Removed CCActionState from certain CCActions and aligned them with existing CCActions
+		- Reset vertex for CCDrawNode on Clear
+		- Maintain CCSprite Scale on TextureRect changes
 	</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
