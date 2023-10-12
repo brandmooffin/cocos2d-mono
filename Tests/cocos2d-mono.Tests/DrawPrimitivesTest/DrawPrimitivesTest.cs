@@ -156,6 +156,10 @@ namespace tests
     #region Draw Primitives
     public class DrawPrimitivesTest : BaseDrawNodeTest
     {
+        public override string title()
+        {
+            return "Draw Primitive Demo";
+        }
         public override void Draw()
         {
             base.Draw();
@@ -255,6 +259,10 @@ namespace tests
     #region Draw Node
     public class DrawNodeTest : BaseDrawNodeTest
     {
+        public override string title()
+        {
+            return "Draw Node Demo";
+        }
         public override bool Init()
         {
             base.Init();
@@ -318,7 +326,6 @@ namespace tests
 
             draw.DrawSegment(new CCPoint(10, s.Height / 2), new CCPoint(s.Width / 2, s.Height / 2), 40,
                              new CCColor4F(1, 0, 1, 0.5f));
-
             return true;
         }
     }
