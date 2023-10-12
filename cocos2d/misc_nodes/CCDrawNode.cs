@@ -342,7 +342,7 @@ namespace Cocos2D
 
         public virtual void Clear()
         {
-            m_pVertices.Clear();
+            m_pVertices = new CCRawList<VertexPositionColor>(512);
             m_bDirty = true;
             _toDraw = null;
         }
