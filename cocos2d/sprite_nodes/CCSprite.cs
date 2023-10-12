@@ -96,7 +96,14 @@ namespace Cocos2D
         public CCRect TextureRect
         {
             get { return m_obRect; }
-            set { SetTextureRect(value, false, value.Size); }
+            set {
+                float currentScale = Scale;
+
+                // update rect
+                SetTextureRect(value, false, value.Size);
+
+                Scale = currentScale;
+            }
         }
 
         public CCRect TextureRectInPixels
