@@ -74,10 +74,44 @@ namespace Cocos2D
             }
         }
 
+        bool halfTexelOffset;
+        public bool HalfTexelOffset
+        {
+            get { return halfTexelOffset; }
+            set
+            {
+                if (halfTexelOffset != value)
+                {
+                    halfTexelOffset = value;
+                    m_bTransformDirty = true;
+                }
+            }
+        }
+
         public CCV3F_C4B_T2F_Quad Quad
         {
             // read only
             get { return m_sQuad; }
+        }
+
+        CCSize untrimmedSizeInPixels;
+        protected internal CCSize UntrimmedSizeInPixels
+        {
+            get
+            {
+                if (untrimmedSizeInPixels == CCSize.Zero)
+                    return TextureRectInPixels.Size;
+                return untrimmedSizeInPixels;
+            }
+
+            set
+            {
+                if (untrimmedSizeInPixels != value)
+                {
+                    untrimmedSizeInPixels = value;
+                    m_bTransformDirty = true;
+                }
+            }
         }
 
 
@@ -198,26 +232,15 @@ namespace Cocos2D
             }
         }
 
-        CCSize contentSize;
         public override CCSize ContentSize
         {
-            get { return contentSize; }
+            get { return base.ContentSize; }
             set
             {
-                if (base.ContentSize != CCSize.Zero)
-                {
-                    ScaleToUsingOriginalContentSize(value);
-                }
-
-                contentSize = value;
-                base.ContentSize = originalContentSize;
+                base.ContentSize = value;
+                m_bTransformDirty = true;
+                UpdateSpriteTextureQuads();
             }
-        }
-
-        CCSize originalContentSize;
-        public CCSize OriginalContentSize
-        {
-            get { return originalContentSize; }
         }
 
         /// <summary>
@@ -227,16 +250,6 @@ namespace Cocos2D
         public virtual void ScaleTo(CCSize size)
         {
             CCSize content = ContentSize;
-            float sx = size.Width / content.Width;
-            float sy = size.Height / content.Height;
-            base.ScaleX = sx;
-            base.ScaleY = sy;
-            SetBatchNodeDirty();
-        }
-
-        public virtual void ScaleToUsingOriginalContentSize(CCSize size)
-        {
-            CCSize content = OriginalContentSize;
             float sx = size.Width / content.Width;
             float sy = size.Height / content.Height;
             base.ScaleX = sx;
@@ -368,6 +381,7 @@ namespace Cocos2D
                 // update rect
                 m_bRectRotated = value.IsRotated;
                 SetTextureRect(value.Rect, m_bRectRotated, value.OriginalSize);
+                UntrimmedSizeInPixels = m_obContentSize.PointsToPixels();
 
                 Scale = currentScale;
             }
@@ -727,7 +741,7 @@ namespace Cocos2D
         {
             m_bRectRotated = rotated;
 
-            ContentSize = originalContentSize = untrimmedSize;
+            ContentSize = untrimmedSize;
             SetVertexRect(value);
             SetTextureCoords(value);
 
@@ -1151,6 +1165,128 @@ namespace Cocos2D
             {
                 m_sBlendFunc = CCBlendFunc.AlphaBlend;
                 IsOpacityModifyRGB = true;
+            }
+        }
+
+        protected override void VisitRenderer(ref CCAffineTransform worldTransform)
+        {
+            if (m_bTransformDirty)
+                UpdateSpriteTextureQuads();
+        }
+
+        void UpdateSpriteTextureQuads()
+        {
+            if (!Visible)
+            {
+                
+                m_sQuad.BottomRight.Vertices = m_sQuad.TopLeft.Vertices
+                    = m_sQuad.TopRight.Vertices = m_sQuad.BottomLeft.Vertices = CCVertex3F.Zero;
+            }
+            else
+            {
+                CCPoint relativeOffset = m_obUnflippedOffsetPositionFromCenter;
+
+                if (FlipX)
+                {
+                    relativeOffset.X = -relativeOffset.X;
+                }
+                if (FlipY)
+                {
+                    relativeOffset.Y = -relativeOffset.Y;
+                }
+
+                CCPoint centerPoint = UntrimmedSizeInPixels.Center + relativeOffset;
+                CCPoint subRectOrigin;
+                subRectOrigin.X = centerPoint.X - TextureRectInPixels.Size.Width / 2.0f;
+                subRectOrigin.Y = centerPoint.Y - TextureRectInPixels.Size.Height / 2.0f;
+
+                CCRect subRectRatio = CCRect.Zero;
+
+                if (UntrimmedSizeInPixels.Width > 0 && UntrimmedSizeInPixels.Height > 0)
+                {
+                    subRectRatio = new CCRect(
+                        subRectOrigin.X / UntrimmedSizeInPixels.Width,
+                        subRectOrigin.Y / UntrimmedSizeInPixels.Height,
+                        TextureRectInPixels.Size.Width / UntrimmedSizeInPixels.Width,
+                        TextureRectInPixels.Size.Height / UntrimmedSizeInPixels.Height);
+                }
+
+                // Atlas: Vertex
+                float x1 = subRectRatio.Origin.X * ContentSize.Width;
+                float y1 = subRectRatio.Origin.Y * ContentSize.Height;
+                float x2 = x1 + (subRectRatio.Size.Width * ContentSize.Width);
+                float y2 = y1 + (subRectRatio.Size.Height * ContentSize.Height);
+
+                // Don't set z-value: The node's transform will be set to include z offset
+                m_sQuad.BottomLeft.Vertices = new CCVertex3F(x1, y1, 0);
+                m_sQuad.BottomRight.Vertices = new CCVertex3F(x2, y1, 0);
+                m_sQuad.TopLeft.Vertices = new CCVertex3F(x1, y2, 0);
+                m_sQuad.TopRight.Vertices = new CCVertex3F(x2, y2, 0);
+
+                if (Texture == null)
+                {
+                    return;
+                }
+
+                float atlasWidth = Texture.PixelsWide;
+                float atlasHeight = Texture.PixelsHigh;
+
+                float left, right, top, bottom;
+                float offsetW = HalfTexelOffset ? 0.5f / atlasWidth : 0.0f;
+                float offsetH = HalfTexelOffset ? 0.5f / atlasHeight : 0.0f;
+
+                if (IsTextureRectRotated)
+                {
+                    left = TextureRectInPixels.Origin.X / atlasWidth + offsetW;
+                    right = (TextureRectInPixels.Origin.X + TextureRectInPixels.Size.Height) / atlasWidth - offsetW;
+                    top = TextureRectInPixels.Origin.Y / atlasHeight + offsetH;
+                    bottom = (TextureRectInPixels.Origin.Y + TextureRectInPixels.Size.Width) / atlasHeight - offsetH;
+
+                    if (FlipX)
+                    {
+                        CCMacros.CCSwap(ref top, ref bottom);
+                    }
+
+                    if (FlipY)
+                    {
+                        CCMacros.CCSwap(ref left, ref right);
+                    }
+
+                    m_sQuad.BottomLeft.TexCoords.U = left;
+                    m_sQuad.BottomLeft.TexCoords.V = top;
+                    m_sQuad.BottomRight.TexCoords.U = left;
+                    m_sQuad.BottomRight.TexCoords.V = bottom;
+                    m_sQuad.TopLeft.TexCoords.U = right;
+                    m_sQuad.TopLeft.TexCoords.V = top;
+                    m_sQuad.TopRight.TexCoords.U = right;
+                    m_sQuad.TopRight.TexCoords.V = bottom;
+                }
+                else
+                {
+                    left = TextureRectInPixels.Origin.X / atlasWidth + offsetW;
+                    right = (TextureRectInPixels.Origin.X + TextureRectInPixels.Size.Width) / atlasWidth - offsetW;
+                    top = TextureRectInPixels.Origin.Y / atlasHeight + offsetH;
+                    bottom = (TextureRectInPixels.Origin.Y + TextureRectInPixels.Size.Height) / atlasHeight - offsetH;
+
+                    if (FlipX)
+                    {
+                        CCMacros.CCSwap(ref left, ref right);
+                    }
+
+                    if (FlipY)
+                    {
+                        CCMacros.CCSwap(ref top, ref bottom);
+                    }
+
+                    m_sQuad.BottomLeft.TexCoords.U = left;
+                    m_sQuad.BottomLeft.TexCoords.V = bottom;
+                    m_sQuad.BottomRight.TexCoords.U = right;
+                    m_sQuad.BottomRight.TexCoords.V = bottom;
+                    m_sQuad.TopLeft.TexCoords.U = left;
+                    m_sQuad.TopLeft.TexCoords.V = top;
+                    m_sQuad.TopRight.TexCoords.U = right;
+                    m_sQuad.TopRight.TexCoords.V = top;
+                }
             }
         }
     }

@@ -15,10 +15,12 @@
 		- Implement IsSwallowTouches for CCTapNode
 		- Removed CCActionState from certain CCActions and aligned them with existing CCActions
 		- Reset vertex for CCDrawNode on Clear
-        - Maintain CCSprite Scale on TextureRect changes
+		- Maintain CCSprite Scale on TextureRect changes
+		- Fixes for CCSprite ContentSize setter
+		- Fixes for CCParallel
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.5.1</Version>
+    <Version>2.4.5.2</Version>
     <Title>Cocos2D-Mono for Android</Title>
     <Description>Cocos2D-Mono for Android</Description>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
