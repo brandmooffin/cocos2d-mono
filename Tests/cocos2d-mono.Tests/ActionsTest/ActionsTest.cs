@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using cocos2d.actions.action_intervals;
+using cocos2d.misc_nodes;
 using Cocos2D;
 using tests.Extensions;
 
@@ -54,6 +56,7 @@ namespace tests
         ACTION_ActionCardinalSplineStacked,
         ACTION_PARALLEL,
         ACTION_MULTIPLE_SEQUENCE_LAYER,
+        ACTION_SWAP,
         ACTION_LAYER_COUNT
     };
 
@@ -208,6 +211,9 @@ namespace tests
                     break;
                 case (int)ActionTest.ACTION_PARALLEL:
                     pLayer = new ActionParallel();
+                    break;
+                case (int)ActionTest.ACTION_SWAP:
+                    pLayer = new ActionSwap();
                     break;
                 case (int)ActionTest.ACTION_MULTIPLE_SEQUENCE_LAYER:
                     pLayer = new ActionMultipleSequence();
@@ -2244,6 +2250,52 @@ namespace tests
         public override string subtitle()
         {
             return "Sequence: Move + Rotate + Scale + RemoveSelf";
+        }
+    }
+
+    public class ActionSwap : ActionsDemo
+    {
+        CCSwappableNode firstNode = new CCSwappableNode();
+        CCSwappableNode secondNode = new CCSwappableNode();
+        public override string title()
+        {
+            return ("CCSwap Test");
+        }
+        public override string subtitle()
+        {
+            return ("Tamara - parallel move to and fade in.");
+        }
+        public override void OnEnter()
+        {
+            base.OnEnter();
+
+            centerSprites(3);
+
+            var s = CCDirector.SharedDirector.WinSize;
+
+            firstNode = new CCSwappableNode()
+            {
+                CurrentTargetPosition = new CCPoint(s.Width / 2 - 80, s.Height / 2),
+            };
+
+            secondNode = new CCSwappableNode()
+            {
+                CurrentTargetPosition = new CCPoint(s.Width / 2 - 180, s.Height / 2 - 180),
+            };
+
+            CCLog.Log($"First Node: {firstNode.CurrentTargetPosition}");
+            CCLog.Log($"Second Node: {secondNode.CurrentTargetPosition}");
+
+            RunAction(new CCSwapAction(firstNode, secondNode));
+
+            ScheduleUpdate();
+        }
+
+        public override void Update(float dt)
+        {
+            CCLog.Log($"First Node: {firstNode.CurrentTargetPosition}"); 
+            CCLog.Log($"Second Node: {secondNode.CurrentTargetPosition}");
+            base.Update(dt);
         }
     }
 
