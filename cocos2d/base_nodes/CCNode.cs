@@ -1749,7 +1749,10 @@ namespace Cocos2D
         public void Resume()
         {
             ResumeSchedulerAndActions();
-            RegisterWithTouchDispatcher();
+            if (m_bTouchEnabled)
+            {
+                RegisterWithTouchDispatcher();
+            }
         }
 
         public void ResumeSchedulerAndActions()
@@ -1764,7 +1767,10 @@ namespace Cocos2D
         public void Pause()
         {
             PauseSchedulerAndActions();
-            pDispatcher.RemoveDelegate(this);
+            if (pDispatcher != null)
+            {
+                pDispatcher.RemoveDelegate(this);
+            }
         }
 
         public void PauseSchedulerAndActions()
