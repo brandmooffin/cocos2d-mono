@@ -79,6 +79,7 @@ namespace Cocos2D
                 if (m_FontSize != value)
                 {
                     m_FontSize = value;
+                    m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
                     m_bFontDirty = true;
                 }
             }
