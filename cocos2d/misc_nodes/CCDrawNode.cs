@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -10,7 +11,10 @@ namespace Cocos2D
     public class CCDrawNode : CCNode
     {
         private CCRawList<VertexPositionColor> m_pVertices;
+        CCRawList<CCV3F_C4B> triangleVertices;
+        CCRawList<CCV3F_C4B> lineVertices;
         private CCBlendFunc m_sBlendFunc;
+        CCRect verticeBounds;
         private bool m_bDirty;
 
         public CCDrawNode()
@@ -24,13 +28,41 @@ namespace Cocos2D
             set { m_sBlendFunc = value; }
         }
 
+        public override CCSize ContentSize
+        {
+            get
+            {
+                UpdateContextSize();
+                return base.ContentSize;
+            }
+            set
+            {
+                base.ContentSize = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the bounding rectangle of the vertices to be drawn.
+        /// </summary>
+        /// <value>The bounding rectangle</value>
+        public CCRect BoundingRect
+        {
+            get
+            {
+                UpdateContextSize();
+                return verticeBounds;
+            }
+        }
+
         public override bool Init()
         {
             base.Init();
 
             m_sBlendFunc = CCBlendFunc.AlphaBlend;
             m_pVertices = new CCRawList<VertexPositionColor>(512);
-
+            triangleVertices = new CCRawList<CCV3F_C4B>(512);
+            lineVertices = new CCRawList<CCV3F_C4B>(512);
+            verticeBounds = CCRect.Zero;
             return true;
         }
 
@@ -334,7 +366,173 @@ namespace Cocos2D
                     m_pVertices.Add(new VertexPositionColor(outer1, fillColor)); //__t(n0)
                 }
             }
+            m_bDirty = true;
+        }
 
+        public void DrawLine(CCPoint from, CCPoint to, float lineWidth = 1, CCLineCap lineCap = CCLineCap.Butt)
+        {
+            DrawLine(from, to, lineWidth, new CCColor4B(Color.R, Color.G, Color.B, Opacity));
+        }
+        public void DrawLine(CCPoint from, CCPoint to, CCColor4B color, CCLineCap lineCap = CCLineCap.Butt)
+        {
+            DrawLine(from, to, 1, color);
+        }
+
+        public void DrawLine(CCPoint from, CCPoint to, float lineWidth, CCColor4B color, CCLineCap lineCap = CCLineCap.Butt)
+        {
+            System.Diagnostics.Debug.Assert(lineWidth >= 0, "Invalid value specified for lineWidth : value is negative");
+            if (lineWidth <= 0)
+                return;
+
+            var cl = color;
+
+            var a = from;
+            var b = to;
+
+            var normal = CCPoint.Normalize(a - b);
+            if (lineCap == CCLineCap.Square)
+            {
+                var nr = normal * lineWidth;
+                a += nr;
+                b -= nr;
+            }
+
+            var n = CCPoint.PerpendicularCounterClockwise(normal);
+
+            var nw = n * lineWidth;
+            var v0 = b - nw;
+            var v1 = b + nw;
+            var v2 = a - nw;
+            var v3 = a + nw;
+
+            // Triangles from beginning to end
+            AddTriangleVertex(new CCV3F_C4B(v1, cl));
+            AddTriangleVertex(new CCV3F_C4B(v2, cl));
+            AddTriangleVertex(new CCV3F_C4B(v0, cl));
+
+            AddTriangleVertex(new CCV3F_C4B(v1, cl));
+            AddTriangleVertex(new CCV3F_C4B(v2, cl));
+            AddTriangleVertex(new CCV3F_C4B(v3, cl));
+
+            if (lineCap == CCLineCap.Round)
+            {
+                var mb = (float)Math.Atan2(v1.Y - b.Y, v1.X - b.X);
+                var ma = (float)Math.Atan2(v2.Y - a.Y, v2.X - a.X);
+
+                // Draw rounded line caps
+                DrawSolidArc(a, lineWidth, -ma, -MathHelper.Pi, color);
+                DrawSolidArc(b, lineWidth, -mb, -MathHelper.Pi, color);
+            }
+
+            m_bDirty = true;
+        }
+
+        // Used for drawing line caps
+        public void DrawSolidArc(CCPoint pos, float radius, float startAngle, float sweepAngle, CCColor4B color)
+        {
+            var cl = color;
+
+            int segments = (int)(10 * (float)Math.Sqrt(radius));  //<- Let's try to guess at # segments for a reasonable smoothness
+
+            float theta = -sweepAngle / (segments - 1);// MathHelper.Pi * 2.0f / segments;
+            float tangetial_factor = (float)Math.Tan(theta);   //calculate the tangential factor 
+
+            float radial_factor = (float)Math.Cos(theta);   //calculate the radial factor 
+
+            float x = radius * (float)Math.Cos(-startAngle);   //we now start at the start angle
+            float y = radius * (float)Math.Sin(-startAngle);
+
+            var verticeCenter = new CCV3F_C4B(pos, cl);
+            var vert1 = new CCV3F_C4B(CCVertex3F.Zero, cl);
+            float tx = 0;
+            float ty = 0;
+
+            for (int i = 0; i < segments - 1; i++)
+            {
+                AddTriangleVertex(verticeCenter);
+
+                vert1.Vertices.X = x + pos.X;
+                vert1.Vertices.Y = y + pos.Y;
+                AddTriangleVertex(vert1); // output vertex
+
+                //calculate the tangential vector 
+                //remember, the radial vector is (x, y) 
+                //to get the tangential vector we flip those coordinates and negate one of them 
+                tx = -y;
+                ty = x;
+
+                //add the tangential vector 
+                x += tx * tangetial_factor;
+                y += ty * tangetial_factor;
+
+                //correct using the radial factor 
+                x *= radial_factor;
+                y *= radial_factor;
+
+                vert1.Vertices.X = x + pos.X;
+                vert1.Vertices.Y = y + pos.Y;
+                AddTriangleVertex(vert1); // output vertex
+            }
+
+            m_bDirty = true;
+        }
+
+        private void UpdateContextSize()
+        {
+            if (!m_bDirty)
+                return;
+
+            m_bDirty = false;
+
+            var numTVerts = triangleVertices.Count;
+            var numLVerts = lineVertices.Count;
+
+            if (numTVerts == 0 && numLVerts == 0)
+                return;
+
+            var size = base.ContentSize;
+            var minX = float.MaxValue;
+            var minY = float.MaxValue;
+            var maxX = float.MinValue;
+            var maxY = float.MinValue;
+
+            CCV3F_C4B vert;
+
+            var x = 0.0f;
+            var y = 0.0f;
+
+            for (int v = 0; v < numTVerts; v++)
+            {
+                vert = triangleVertices[v];
+                x = vert.Vertices.X;
+                y = vert.Vertices.Y;
+                minX = Math.Min(x, minX);
+                minY = Math.Min(y, minY);
+                maxX = Math.Max(x, maxX);
+                maxY = Math.Max(y, maxY);
+            }
+
+            for (int v = 0; v < numLVerts; v++)
+            {
+                vert = lineVertices[v];
+                x = vert.Vertices.X;
+                y = vert.Vertices.Y;
+                minX = Math.Min(x, minX);
+                minY = Math.Min(y, minY);
+                maxX = Math.Max(x, maxX);
+                maxY = Math.Max(y, maxY);
+            }
+
+            verticeBounds.Origin.X = minX;
+            verticeBounds.Origin.Y = minY;
+            verticeBounds.Size.Width = maxX - minX;
+            verticeBounds.Size.Height = maxY - minY;
+            base.ContentSize = verticeBounds.Size;
+        }
+
+        public void AddTriangleVertex(CCV3F_C4B triangleVertex)
+        {
+            triangleVertices.Add(triangleVertex);
             m_bDirty = true;
         }
 
