@@ -11,10 +11,7 @@ namespace Cocos2D
     public class CCDrawNode : CCNode
     {
         private CCRawList<VertexPositionColor> m_pVertices;
-        CCRawList<CCV3F_C4B> triangleVertices;
-        CCRawList<CCV3F_C4B> lineVertices;
         private CCBlendFunc m_sBlendFunc;
-        CCRect verticeBounds;
         private bool m_bDirty;
 
         public CCDrawNode()
@@ -28,41 +25,12 @@ namespace Cocos2D
             set { m_sBlendFunc = value; }
         }
 
-        public override CCSize ContentSize
-        {
-            get
-            {
-                UpdateContextSize();
-                return base.ContentSize;
-            }
-            set
-            {
-                base.ContentSize = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets the bounding rectangle of the vertices to be drawn.
-        /// </summary>
-        /// <value>The bounding rectangle</value>
-        public CCRect BoundingRect
-        {
-            get
-            {
-                UpdateContextSize();
-                return verticeBounds;
-            }
-        }
-
         public override bool Init()
         {
             base.Init();
 
             m_sBlendFunc = CCBlendFunc.AlphaBlend;
             m_pVertices = new CCRawList<VertexPositionColor>(512);
-            triangleVertices = new CCRawList<CCV3F_C4B>(512);
-            lineVertices = new CCRawList<CCV3F_C4B>(512);
-            verticeBounds = CCRect.Zero;
             return true;
         }
 
@@ -406,13 +374,13 @@ namespace Cocos2D
             var v3 = a + nw;
 
             // Triangles from beginning to end
-            AddTriangleVertex(new CCV3F_C4B(v1, cl));
-            AddTriangleVertex(new CCV3F_C4B(v2, cl));
-            AddTriangleVertex(new CCV3F_C4B(v0, cl));
+            m_pVertices.Add(new VertexPositionColor(v1, cl));
+            m_pVertices.Add(new VertexPositionColor(v2, cl));
+            m_pVertices.Add(new VertexPositionColor(v0, cl));
 
-            AddTriangleVertex(new CCV3F_C4B(v1, cl));
-            AddTriangleVertex(new CCV3F_C4B(v2, cl));
-            AddTriangleVertex(new CCV3F_C4B(v3, cl));
+            m_pVertices.Add(new VertexPositionColor(v1, cl));
+            m_pVertices.Add(new VertexPositionColor(v2, cl));
+            m_pVertices.Add(new VertexPositionColor(v3, cl));
 
             if (lineCap == CCLineCap.Round)
             {
@@ -449,11 +417,11 @@ namespace Cocos2D
 
             for (int i = 0; i < segments - 1; i++)
             {
-                AddTriangleVertex(verticeCenter);
+                m_pVertices.Add(new VertexPositionColor(pos, cl));
 
                 vert1.Vertices.X = x + pos.X;
                 vert1.Vertices.Y = y + pos.Y;
-                AddTriangleVertex(vert1); // output vertex
+                m_pVertices.Add(new VertexPositionColor(Vector3.Zero, cl));
 
                 //calculate the tangential vector 
                 //remember, the radial vector is (x, y) 
@@ -471,68 +439,10 @@ namespace Cocos2D
 
                 vert1.Vertices.X = x + pos.X;
                 vert1.Vertices.Y = y + pos.Y;
-                AddTriangleVertex(vert1); // output vertex
+                
+                m_pVertices.Add(new VertexPositionColor(new Vector3(vert1.Vertices.X, vert1.Vertices.Y, 0), cl));
             }
 
-            m_bDirty = true;
-        }
-
-        private void UpdateContextSize()
-        {
-            if (!m_bDirty)
-                return;
-
-            m_bDirty = false;
-
-            var numTVerts = triangleVertices.Count;
-            var numLVerts = lineVertices.Count;
-
-            if (numTVerts == 0 && numLVerts == 0)
-                return;
-
-            var size = base.ContentSize;
-            var minX = float.MaxValue;
-            var minY = float.MaxValue;
-            var maxX = float.MinValue;
-            var maxY = float.MinValue;
-
-            CCV3F_C4B vert;
-
-            var x = 0.0f;
-            var y = 0.0f;
-
-            for (int v = 0; v < numTVerts; v++)
-            {
-                vert = triangleVertices[v];
-                x = vert.Vertices.X;
-                y = vert.Vertices.Y;
-                minX = Math.Min(x, minX);
-                minY = Math.Min(y, minY);
-                maxX = Math.Max(x, maxX);
-                maxY = Math.Max(y, maxY);
-            }
-
-            for (int v = 0; v < numLVerts; v++)
-            {
-                vert = lineVertices[v];
-                x = vert.Vertices.X;
-                y = vert.Vertices.Y;
-                minX = Math.Min(x, minX);
-                minY = Math.Min(y, minY);
-                maxX = Math.Max(x, maxX);
-                maxY = Math.Max(y, maxY);
-            }
-
-            verticeBounds.Origin.X = minX;
-            verticeBounds.Origin.Y = minY;
-            verticeBounds.Size.Width = maxX - minX;
-            verticeBounds.Size.Height = maxY - minY;
-            base.ContentSize = verticeBounds.Size;
-        }
-
-        public void AddTriangleVertex(CCV3F_C4B triangleVertex)
-        {
-            triangleVertices.Add(triangleVertex);
             m_bDirty = true;
         }
 
