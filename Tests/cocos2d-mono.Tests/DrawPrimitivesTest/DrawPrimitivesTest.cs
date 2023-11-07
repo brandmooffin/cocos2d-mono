@@ -326,6 +326,11 @@ namespace tests
 
             draw.DrawSegment(new CCPoint(10, s.Height / 2), new CCPoint(s.Width / 2, s.Height / 2), 40,
                              new CCColor4F(1, 0, 1, 0.5f));
+            
+            draw.DrawLine(new CCPoint(s.Width / 2, s.Height / 2),
+                new CCPoint(s.Width / 2 - 100, s.Height / 2),
+                CCColor4B.Yellow, CCLineCap.Round);
+            
             return true;
         }
     }

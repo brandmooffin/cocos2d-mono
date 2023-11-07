@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -30,7 +29,6 @@ namespace Cocos2D
 
             m_sBlendFunc = CCBlendFunc.AlphaBlend;
             m_pVertices = new CCRawList<VertexPositionColor>(512);
-
             return true;
         }
 
@@ -333,6 +331,114 @@ namespace Cocos2D
                     m_pVertices.Add(new VertexPositionColor(outer0, fillColor)); //__t(n0)
                     m_pVertices.Add(new VertexPositionColor(outer1, fillColor)); //__t(n0)
                 }
+            }
+            m_bDirty = true;
+        }
+
+        public void DrawLine(CCPoint from, CCPoint to, float lineWidth = 1, CCLineCap lineCap = CCLineCap.Butt)
+        {
+            DrawLine(from, to, lineWidth, new CCColor4B(Color.R, Color.G, Color.B, Opacity));
+        }
+        public void DrawLine(CCPoint from, CCPoint to, CCColor4B color, CCLineCap lineCap = CCLineCap.Butt)
+        {
+            DrawLine(from, to, 1, color);
+        }
+
+        public void DrawLine(CCPoint from, CCPoint to, float lineWidth, CCColor4B color, CCLineCap lineCap = CCLineCap.Butt)
+        {
+            System.Diagnostics.Debug.Assert(lineWidth >= 0, "Invalid value specified for lineWidth : value is negative");
+            if (lineWidth <= 0)
+                return;
+
+            var cl = color;
+
+            var a = from;
+            var b = to;
+
+            var normal = CCPoint.Normalize(a - b);
+            if (lineCap == CCLineCap.Square)
+            {
+                var nr = normal * lineWidth;
+                a += nr;
+                b -= nr;
+            }
+
+            var n = CCPoint.PerpendicularCounterClockwise(normal);
+
+            var nw = n * lineWidth;
+            var v0 = b - nw;
+            var v1 = b + nw;
+            var v2 = a - nw;
+            var v3 = a + nw;
+
+            // Triangles from beginning to end
+            m_pVertices.Add(new VertexPositionColor(v1, cl));
+            m_pVertices.Add(new VertexPositionColor(v2, cl));
+            m_pVertices.Add(new VertexPositionColor(v0, cl));
+
+            m_pVertices.Add(new VertexPositionColor(v1, cl));
+            m_pVertices.Add(new VertexPositionColor(v2, cl));
+            m_pVertices.Add(new VertexPositionColor(v3, cl));
+
+            if (lineCap == CCLineCap.Round)
+            {
+                var mb = (float)Math.Atan2(v1.Y - b.Y, v1.X - b.X);
+                var ma = (float)Math.Atan2(v2.Y - a.Y, v2.X - a.X);
+
+                // Draw rounded line caps
+                DrawSolidArc(a, lineWidth, -ma, -MathHelper.Pi, color);
+                DrawSolidArc(b, lineWidth, -mb, -MathHelper.Pi, color);
+            }
+
+            m_bDirty = true;
+        }
+
+        // Used for drawing line caps
+        public void DrawSolidArc(CCPoint pos, float radius, float startAngle, float sweepAngle, CCColor4B color)
+        {
+            var cl = color;
+
+            int segments = (int)(10 * (float)Math.Sqrt(radius));  //<- Let's try to guess at # segments for a reasonable smoothness
+
+            float theta = -sweepAngle / (segments - 1);// MathHelper.Pi * 2.0f / segments;
+            float tangetial_factor = (float)Math.Tan(theta);   //calculate the tangential factor 
+
+            float radial_factor = (float)Math.Cos(theta);   //calculate the radial factor 
+
+            float x = radius * (float)Math.Cos(-startAngle);   //we now start at the start angle
+            float y = radius * (float)Math.Sin(-startAngle);
+
+            var verticeCenter = new CCV3F_C4B(pos, cl);
+            var vert1 = new CCV3F_C4B(CCVertex3F.Zero, cl);
+            float tx = 0;
+            float ty = 0;
+
+            for (int i = 0; i < segments - 1; i++)
+            {
+                m_pVertices.Add(new VertexPositionColor(pos, cl));
+
+                vert1.Vertices.X = x + pos.X;
+                vert1.Vertices.Y = y + pos.Y;
+                m_pVertices.Add(new VertexPositionColor(Vector3.Zero, cl));
+
+                //calculate the tangential vector 
+                //remember, the radial vector is (x, y) 
+                //to get the tangential vector we flip those coordinates and negate one of them 
+                tx = -y;
+                ty = x;
+
+                //add the tangential vector 
+                x += tx * tangetial_factor;
+                y += ty * tangetial_factor;
+
+                //correct using the radial factor 
+                x *= radial_factor;
+                y *= radial_factor;
+
+                vert1.Vertices.X = x + pos.X;
+                vert1.Vertices.Y = y + pos.Y;
+                
+                m_pVertices.Add(new VertexPositionColor(new Vector3(vert1.Vertices.X, vert1.Vertices.Y, 0), cl));
             }
 
             m_bDirty = true;
