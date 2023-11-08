@@ -72,7 +72,22 @@ namespace Cocos2D
 
         private float GetFontHeight()
         {
-            return (_fontMetrix.Bottom - _fontMetrix.Top) + _paint.Descent(); // / _fontScaleFactor + 1f;
+            float lineHeight = 0;
+
+            if (_fontMetrix == null)
+                return 0;
+
+            // Get the ascent from the font, already scaled for the font's size
+            lineHeight += (float)Math.Abs(_fontMetrix.Ascent);
+
+            // Get the descent from the font, already scaled for the font's size
+            lineHeight += (float)_fontMetrix.Descent;
+
+            // Get the leading from the font, already scaled for the font's size
+            //lineHeight += font.LeadingMetric;
+
+            return lineHeight;
+            //return (_fontMetrix.Bottom - _fontMetrix.Top) + _paint.Descent(); // / _fontScaleFactor + 1f;
         }
 
         private CCSize GetMeasureString(string text)
