@@ -389,7 +389,7 @@ namespace Cocos2D
 
 			CTFont nativeFont;
 			// convert to 96 Dpi to be consistent with Windows
-			var dpiSize = emSize * dpiScale;
+			var dpiSize = emSize; //* dpiScale;
 
 			var ext = System.IO.Path.GetExtension(familyName);
 			if (!String.IsNullOrEmpty(ext) && ext.ToLower() == ".ttf")

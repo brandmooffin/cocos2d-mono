@@ -33,6 +33,14 @@ using Microsoft.Xna.Framework;
 
 namespace Cocos2D
 {
+
+    public enum CCLineCap
+    {
+        Butt,
+        Round,
+        Square,
+    }
+
     /// <summary>
     /// RGB color composed of bytes 3 bytes
     /// @since v0.8
@@ -58,6 +66,7 @@ namespace Cocos2D
         public static readonly CCColor3B Orange = new CCColor3B(255, 127, 0);
         //! Gray Color (166,166,166)
         public static readonly CCColor3B Gray = new CCColor3B(166, 166, 166);
+        public static readonly CCColor3B DarkGray = new CCColor3B(128, 128, 128);
 
         /*
         public CCColor3B()
@@ -138,6 +147,10 @@ namespace Cocos2D
         public static readonly CCColor4B Orange = new CCColor4B(255, 127, 0, 255);
         //! Gray Color (166,166,166)
         public static readonly CCColor4B Gray = new CCColor4B(166, 166, 166, 255);
+        public static readonly CCColor4B LightGray = new CCColor4B(211, 211, 211, 255);
+        public static readonly CCColor4B AliceBlue = new CCColor4B(240, 248, 255, 255);
+        public static readonly CCColor4B Aquamarine = new CCColor4B(127, 255, 212, 255);
+        public static readonly CCColor4B Transparent = new CCColor4B(0, 0, 0, 0);
 
         public byte R;
         public byte G;
@@ -759,6 +772,46 @@ namespace Cocos2D
         /// tex coords (2F)
         /// </summary>
         public CCTex2F TexCoords;
+    }
+
+    /// <summary>
+    /// a Point with a vertex point and a color 4B
+    /// </summary>
+    public struct CCV3F_C4B : IVertexType
+    {
+        public static readonly VertexDeclaration VertexDeclaration;
+
+        public CCVertex3F Vertices;
+        public CCColor4B Colors;
+
+        VertexDeclaration IVertexType.VertexDeclaration
+        {
+            get { return VertexDeclaration; }
+        }
+
+        public CCV3F_C4B(CCVertex3F position, CCColor4B color)
+        {
+            this.Vertices = position;
+            Colors = color;
+        }
+
+        public CCV3F_C4B(CCPoint position, CCColor4B color)
+        {
+            this.Vertices = CCVertex3F.Zero;
+            this.Vertices.X = position.X;
+            this.Vertices.Y = position.Y;
+            Colors = color;
+        }
+
+        static CCV3F_C4B()
+        {
+            var elements = new VertexElement[]
+                {
+                    new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+                    new VertexElement(12, VertexElementFormat.Color, VertexElementUsage.Color, 0),
+                };
+            VertexDeclaration = new VertexDeclaration(elements);
+        }
     }
 
     /// <summary>

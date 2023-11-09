@@ -4,14 +4,14 @@ namespace cocos2d.misc_nodes
 {
     public class CCSwappableNode : CCNode
     {
-        private CCPoint _currentTargetPos;
-        public virtual CCPoint CurrentTargetPos
+        private CCPoint _currentTargetPosition;
+        public virtual CCPoint CurrentTargetPosition
         {
             get
             {
-                if (_currentTargetPos != default(CCPoint))
+                if (_currentTargetPosition != default(CCPoint))
                 {
-                    return _currentTargetPos;
+                    return _currentTargetPosition;
                 }
                 else
                 {
@@ -20,7 +20,7 @@ namespace cocos2d.misc_nodes
             }
             set
             {
-                _currentTargetPos = value;
+                _currentTargetPosition = value;
             }
         }
 

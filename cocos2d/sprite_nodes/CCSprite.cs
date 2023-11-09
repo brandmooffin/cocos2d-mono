@@ -1176,117 +1176,108 @@ namespace Cocos2D
 
         void UpdateSpriteTextureQuads()
         {
-            if (!Visible)
+            CCPoint relativeOffset = m_obUnflippedOffsetPositionFromCenter;
+
+            if (FlipX)
             {
-                
-                m_sQuad.BottomRight.Vertices = m_sQuad.TopLeft.Vertices
-                    = m_sQuad.TopRight.Vertices = m_sQuad.BottomLeft.Vertices = CCVertex3F.Zero;
+                relativeOffset.X = -relativeOffset.X;
             }
-            else
+            if (FlipY)
             {
-                CCPoint relativeOffset = m_obUnflippedOffsetPositionFromCenter;
+                relativeOffset.Y = -relativeOffset.Y;
+            }
+
+            CCPoint centerPoint = UntrimmedSizeInPixels.Center + relativeOffset;
+            CCPoint subRectOrigin;
+            subRectOrigin.X = centerPoint.X - TextureRectInPixels.Size.Width / 2.0f;
+            subRectOrigin.Y = centerPoint.Y - TextureRectInPixels.Size.Height / 2.0f;
+
+            CCRect subRectRatio = CCRect.Zero;
+
+            if (UntrimmedSizeInPixels.Width > 0 && UntrimmedSizeInPixels.Height > 0)
+            {
+                subRectRatio = new CCRect(
+                    subRectOrigin.X / UntrimmedSizeInPixels.Width,
+                    subRectOrigin.Y / UntrimmedSizeInPixels.Height,
+                    TextureRectInPixels.Size.Width / UntrimmedSizeInPixels.Width,
+                    TextureRectInPixels.Size.Height / UntrimmedSizeInPixels.Height);
+            }
+
+            // Atlas: Vertex
+            float x1 = subRectRatio.Origin.X * ContentSize.Width;
+            float y1 = subRectRatio.Origin.Y * ContentSize.Height;
+            float x2 = x1 + (subRectRatio.Size.Width * ContentSize.Width);
+            float y2 = y1 + (subRectRatio.Size.Height * ContentSize.Height);
+
+            // Don't set z-value: The node's transform will be set to include z offset
+            m_sQuad.BottomLeft.Vertices = new CCVertex3F(x1, y1, 0);
+            m_sQuad.BottomRight.Vertices = new CCVertex3F(x2, y1, 0);
+            m_sQuad.TopLeft.Vertices = new CCVertex3F(x1, y2, 0);
+            m_sQuad.TopRight.Vertices = new CCVertex3F(x2, y2, 0);
+
+            if (Texture == null)
+            {
+                return;
+            }
+
+            float atlasWidth = Texture.PixelsWide;
+            float atlasHeight = Texture.PixelsHigh;
+
+            float left, right, top, bottom;
+            float offsetW = HalfTexelOffset ? 0.5f / atlasWidth : 0.0f;
+            float offsetH = HalfTexelOffset ? 0.5f / atlasHeight : 0.0f;
+
+            if (IsTextureRectRotated)
+            {
+                left = TextureRectInPixels.Origin.X / atlasWidth + offsetW;
+                right = (TextureRectInPixels.Origin.X + TextureRectInPixels.Size.Height) / atlasWidth - offsetW;
+                top = TextureRectInPixels.Origin.Y / atlasHeight + offsetH;
+                bottom = (TextureRectInPixels.Origin.Y + TextureRectInPixels.Size.Width) / atlasHeight - offsetH;
 
                 if (FlipX)
                 {
-                    relativeOffset.X = -relativeOffset.X;
+                    CCMacros.CCSwap(ref top, ref bottom);
                 }
+
                 if (FlipY)
                 {
-                    relativeOffset.Y = -relativeOffset.Y;
+                    CCMacros.CCSwap(ref left, ref right);
                 }
 
-                CCPoint centerPoint = UntrimmedSizeInPixels.Center + relativeOffset;
-                CCPoint subRectOrigin;
-                subRectOrigin.X = centerPoint.X - TextureRectInPixels.Size.Width / 2.0f;
-                subRectOrigin.Y = centerPoint.Y - TextureRectInPixels.Size.Height / 2.0f;
+                m_sQuad.BottomLeft.TexCoords.U = left;
+                m_sQuad.BottomLeft.TexCoords.V = top;
+                m_sQuad.BottomRight.TexCoords.U = left;
+                m_sQuad.BottomRight.TexCoords.V = bottom;
+                m_sQuad.TopLeft.TexCoords.U = right;
+                m_sQuad.TopLeft.TexCoords.V = top;
+                m_sQuad.TopRight.TexCoords.U = right;
+                m_sQuad.TopRight.TexCoords.V = bottom;
+            }
+            else
+            {
+                left = TextureRectInPixels.Origin.X / atlasWidth + offsetW;
+                right = (TextureRectInPixels.Origin.X + TextureRectInPixels.Size.Width) / atlasWidth - offsetW;
+                top = TextureRectInPixels.Origin.Y / atlasHeight + offsetH;
+                bottom = (TextureRectInPixels.Origin.Y + TextureRectInPixels.Size.Height) / atlasHeight - offsetH;
 
-                CCRect subRectRatio = CCRect.Zero;
-
-                if (UntrimmedSizeInPixels.Width > 0 && UntrimmedSizeInPixels.Height > 0)
+                if (FlipX)
                 {
-                    subRectRatio = new CCRect(
-                        subRectOrigin.X / UntrimmedSizeInPixels.Width,
-                        subRectOrigin.Y / UntrimmedSizeInPixels.Height,
-                        TextureRectInPixels.Size.Width / UntrimmedSizeInPixels.Width,
-                        TextureRectInPixels.Size.Height / UntrimmedSizeInPixels.Height);
+                    CCMacros.CCSwap(ref left, ref right);
                 }
 
-                // Atlas: Vertex
-                float x1 = subRectRatio.Origin.X * ContentSize.Width;
-                float y1 = subRectRatio.Origin.Y * ContentSize.Height;
-                float x2 = x1 + (subRectRatio.Size.Width * ContentSize.Width);
-                float y2 = y1 + (subRectRatio.Size.Height * ContentSize.Height);
-
-                // Don't set z-value: The node's transform will be set to include z offset
-                m_sQuad.BottomLeft.Vertices = new CCVertex3F(x1, y1, 0);
-                m_sQuad.BottomRight.Vertices = new CCVertex3F(x2, y1, 0);
-                m_sQuad.TopLeft.Vertices = new CCVertex3F(x1, y2, 0);
-                m_sQuad.TopRight.Vertices = new CCVertex3F(x2, y2, 0);
-
-                if (Texture == null)
+                if (FlipY)
                 {
-                    return;
+                    CCMacros.CCSwap(ref top, ref bottom);
                 }
 
-                float atlasWidth = Texture.PixelsWide;
-                float atlasHeight = Texture.PixelsHigh;
-
-                float left, right, top, bottom;
-                float offsetW = HalfTexelOffset ? 0.5f / atlasWidth : 0.0f;
-                float offsetH = HalfTexelOffset ? 0.5f / atlasHeight : 0.0f;
-
-                if (IsTextureRectRotated)
-                {
-                    left = TextureRectInPixels.Origin.X / atlasWidth + offsetW;
-                    right = (TextureRectInPixels.Origin.X + TextureRectInPixels.Size.Height) / atlasWidth - offsetW;
-                    top = TextureRectInPixels.Origin.Y / atlasHeight + offsetH;
-                    bottom = (TextureRectInPixels.Origin.Y + TextureRectInPixels.Size.Width) / atlasHeight - offsetH;
-
-                    if (FlipX)
-                    {
-                        CCMacros.CCSwap(ref top, ref bottom);
-                    }
-
-                    if (FlipY)
-                    {
-                        CCMacros.CCSwap(ref left, ref right);
-                    }
-
-                    m_sQuad.BottomLeft.TexCoords.U = left;
-                    m_sQuad.BottomLeft.TexCoords.V = top;
-                    m_sQuad.BottomRight.TexCoords.U = left;
-                    m_sQuad.BottomRight.TexCoords.V = bottom;
-                    m_sQuad.TopLeft.TexCoords.U = right;
-                    m_sQuad.TopLeft.TexCoords.V = top;
-                    m_sQuad.TopRight.TexCoords.U = right;
-                    m_sQuad.TopRight.TexCoords.V = bottom;
-                }
-                else
-                {
-                    left = TextureRectInPixels.Origin.X / atlasWidth + offsetW;
-                    right = (TextureRectInPixels.Origin.X + TextureRectInPixels.Size.Width) / atlasWidth - offsetW;
-                    top = TextureRectInPixels.Origin.Y / atlasHeight + offsetH;
-                    bottom = (TextureRectInPixels.Origin.Y + TextureRectInPixels.Size.Height) / atlasHeight - offsetH;
-
-                    if (FlipX)
-                    {
-                        CCMacros.CCSwap(ref left, ref right);
-                    }
-
-                    if (FlipY)
-                    {
-                        CCMacros.CCSwap(ref top, ref bottom);
-                    }
-
-                    m_sQuad.BottomLeft.TexCoords.U = left;
-                    m_sQuad.BottomLeft.TexCoords.V = bottom;
-                    m_sQuad.BottomRight.TexCoords.U = right;
-                    m_sQuad.BottomRight.TexCoords.V = bottom;
-                    m_sQuad.TopLeft.TexCoords.U = left;
-                    m_sQuad.TopLeft.TexCoords.V = top;
-                    m_sQuad.TopRight.TexCoords.U = right;
-                    m_sQuad.TopRight.TexCoords.V = top;
-                }
+                m_sQuad.BottomLeft.TexCoords.U = left;
+                m_sQuad.BottomLeft.TexCoords.V = bottom;
+                m_sQuad.BottomRight.TexCoords.U = right;
+                m_sQuad.BottomRight.TexCoords.V = bottom;
+                m_sQuad.TopLeft.TexCoords.U = left;
+                m_sQuad.TopLeft.TexCoords.V = top;
+                m_sQuad.TopRight.TexCoords.U = right;
+                m_sQuad.TopRight.TexCoords.V = top;
             }
         }
     }

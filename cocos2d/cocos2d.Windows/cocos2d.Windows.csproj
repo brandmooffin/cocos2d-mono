@@ -14,7 +14,7 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.Windows</PackageId>
-    <Version>2.4.5.2</Version>
+    <Version>2.4.5.3</Version>
     <Description>Cocos2D-Mono for Windows (DX)</Description>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
@@ -33,6 +33,12 @@
 		- Maintain CCSprite Scale on TextureRect changes
 		- Fixes for CCSprite ContentSize setter
 		- Fixes for CCParallel
+		- Fixed issue with CCNode Pause and Resume
+		- Fixed visibility issue with CCSprite
+		- Enhancements for DrawSegment
+		- Add DrawLine function
+		- Additional colors like CCColor3B.DarkGray
+		- Font improvements for Android and iOS
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>

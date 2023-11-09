@@ -12,7 +12,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.4.5.2</Version>
+    <Version>2.4.5.3</Version>
     <PackageId>box2d.DesktopGL</PackageId>
     <Company>Broken Walls Studios</Company>
     <Copyright>Copyright ©  2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -34,6 +34,12 @@
 		- Maintain CCSprite Scale on TextureRect changes
 		- Fixes for CCSprite ContentSize setter
 		- Fixes for CCParallel
+		- Fixed issue with CCNode Pause and Resume
+		- Fixed visibility issue with CCSprite
+		- Enhancements for DrawSegment
+		- Add DrawLine function
+		- Additional colors like CCColor3B.DarkGray
+		- Font improvements for Android and iOS
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
