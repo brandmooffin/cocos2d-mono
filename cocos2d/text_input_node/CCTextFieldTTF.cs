@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 namespace Cocos2D
 {
 	public delegate void CCTextFieldTTFDelegate(object sender, ref string text, ref bool canceled);
@@ -79,49 +80,41 @@ namespace Cocos2D
 
         public void Edit(string title, string defaultText)
         {
-#if !WINDOWS_PHONE && !XBOX && !PSM
-            //if (!m_bReadOnly && !Guide.IsVisible)
-            //{
-            //    var canceled = false;
-            //    var text = Text;
+            if (!m_bReadOnly)
+            {
+                var canceled = false;
+                var text = Text;
 
-            //    DoBeginEditing(ref text, ref canceled);
+                DoBeginEditing(ref text, ref canceled);
 
-            //    if (!canceled)
-            //    {
-            //        m_pGuideShowHandle = Guide.BeginShowKeyboardInput(
-            //            Microsoft.Xna.Framework.PlayerIndex.One, title, defaultText, Text, InputHandler, null
-            //            );
-            //    }
-            //}
+                if (!canceled)
+                {
+#if (ANDROID && ANDROID31_0_OR_GREATER) || __IOS__
+
+                    Task.Run(async () =>
+                    {
+                        var newText = await Microsoft.Xna.Framework.Input.KeyboardInput.Show(title, defaultText);
+
+                        if (newText != null && Text != newText)
+                        {
+                            canceled = false;
+
+                            ScheduleOnce(
+                                time =>
+                                {
+                                    DoEndEditing(ref newText, ref canceled);
+
+                                    if (!canceled)
+                                    {
+                                        Text = newText;
+                                    }
+                                }, 0);
+                        }
+                    });
 #endif
-        }
+                }
+            }
 
-        private void InputHandler(IAsyncResult result)
-        {
-#if !WINDOWS_PHONE && !XBOX && !PSM
-            //var newText = Guide.EndShowKeyboardInput(result);
-
-            //m_pGuideShowHandle = null;
-
-            //if (newText != null && Text != newText)
-            //{
-            //    bool canceled = false;
-
-            //    ScheduleOnce(
-            //        time =>
-            //        {
-            //            DoEndEditing(ref newText, ref canceled);
-
-            //            if (!canceled)
-            //            {
-            //                Text = newText;
-            //            }
-            //        },
-            //        0
-            //        );
-            //}
-#endif
         }
 
         protected virtual void DoBeginEditing(ref string newText, ref bool canceled)
