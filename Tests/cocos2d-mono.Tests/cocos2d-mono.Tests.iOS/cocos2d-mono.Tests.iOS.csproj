@@ -9,7 +9,7 @@
     <RootNamespace>cocos2d_mono.Tests.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>cocos2d-mono.Tests.iOS</AssemblyName>
-	<CheckEolWorkloads>false</CheckEolWorkloads>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
