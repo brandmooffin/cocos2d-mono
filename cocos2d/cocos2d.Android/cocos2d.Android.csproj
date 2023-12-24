@@ -10,24 +10,10 @@
     <TargetFramework>net6.0-android31.0</TargetFramework>
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-		- Maintain CCSprite scale when changing SpriteFrame
-		- Fix BitmapFont not loading in Android Tests
-		- CCNodeRGBA is officially gone! Use CCNode instead
-		- Implement IsSwallowTouches for CCTapNode
-		- Removed CCActionState from certain CCActions and aligned them with existing CCActions
-		- Reset vertex for CCDrawNode on Clear
-		- Maintain CCSprite Scale on TextureRect changes
-		- Fixes for CCSprite ContentSize setter
-		- Fixes for CCParallel
-		- Fixed issue with CCNode Pause and Resume
-		- Fixed visibility issue with CCSprite
-		- Enhancements for DrawSegment
-		- Add DrawLine function
-		- Additional colors like CCColor3B.DarkGray
-		- Font improvements for Android and iOS
+      - Implemented CCTextField for all platforms
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.5.4</Version>
+    <Version>2.4.6</Version>
     <Title>Cocos2D-Mono for Android</Title>
     <Description>Cocos2D-Mono for Android</Description>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
