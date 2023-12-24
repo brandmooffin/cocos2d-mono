@@ -6,6 +6,7 @@
     <RootNamespace>cocos2d_mono.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>cocos2d-mono.iOS</AssemblyName>
+	<CheckEolWorkloads>false</CheckEolWorkloads>
     <BaseIntermediateOutputPath>obj\iOS\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
 		- Maintain CCSprite scale when changing SpriteFrame
