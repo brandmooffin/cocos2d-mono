@@ -1,4 +1,7 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 namespace Cocos2D
 {
@@ -15,6 +18,9 @@ namespace Cocos2D
 
         public event CCTextFieldTTFDelegate BeginEditing;
         public event CCTextFieldTTFDelegate EndEditing;
+
+        private bool beginKeyboardEditing = false;
+        private bool canEdit = false;
 
         public bool ReadOnly
         {
@@ -71,6 +77,10 @@ namespace Cocos2D
                               CCVerticalTextAlignment vAlignment)
         {
             InitWithString(text, fontName, fontSize, dimensions, hAlignment, vAlignment);
+
+#if DESKTOPGL
+            ScheduleUpdate();
+#endif
         }
 
         public void Edit()
@@ -111,6 +121,8 @@ namespace Cocos2D
                                 }, 0);
                         }
                     });
+#else
+                    beginKeyboardEditing = true;
 #endif
                 }
             }
@@ -142,6 +154,11 @@ namespace Cocos2D
 #endif
                 m_pGuideShowHandle = null;
             }
+
+#if DESKTOPGL
+            beginKeyboardEditing = false;
+
+#endif
         }
 
         private void CheckTouchState()
@@ -188,6 +205,9 @@ namespace Cocos2D
             {
                 return true;
             }
+#if DESKTOPGL
+            EndEdit();
+#endif
             return false;
         }
 
@@ -208,6 +228,178 @@ namespace Cocos2D
         public override void TouchCancelled(CCTouch pTouch)
         {
             //nothing
+        }
+
+        public override void Update(float dt)
+        {
+            if (beginKeyboardEditing)
+            {
+                HandleKeyboardInput();
+            }
+            base.Update(dt);
+        }
+
+        private Keys[] IgnoredKeys = new Keys[] { 
+            Keys.RightShift, Keys.LeftShift, Keys.CapsLock, Keys.Enter, Keys.End, Keys.OemClear,
+            Keys.Attn, Keys.Left, Keys.Right, Keys.Apps, Keys.BrowserBack, Keys.BrowserFavorites, Keys.BrowserHome,
+            Keys.BrowserForward, Keys.BrowserRefresh, Keys.BrowserSearch, Keys.BrowserStop, Keys.ChatPadGreen,
+            Keys.ChatPadOrange, Keys.Crsel, Keys.D0, Keys.D1, Keys.D2, Keys.D5, Keys.D3, Keys.D4, Keys.D6,
+            Keys.D7, Keys.D8, Keys.D9, Keys.Down, Keys.EraseEof, Keys.Escape, Keys.Execute, Keys.F1, Keys.F2,
+            Keys.Exsel, Keys.F3, Keys.F10, Keys.F11, Keys.F12, Keys.F13, Keys.F14, Keys.F15, Keys.F16, Keys.F17,
+            Keys.F18, Keys.F19, Keys.F20, Keys.F21, Keys.F22, Keys.F23, Keys.F24, Keys.F4, Keys.F5, Keys.F6, Keys.F7, Keys.F8, Keys.F9,
+            Keys.Help, Keys.Home, Keys.ImeConvert, Keys.ImeNoConvert, Keys.Kana, Keys.Kanji, Keys.LaunchApplication1, Keys.LaunchApplication2,
+            Keys.LaunchMail, Keys.LeftAlt, Keys.LeftControl, Keys.LeftWindows, Keys.MediaNextTrack, Keys.MediaPlayPause, Keys.MediaStop,
+            Keys.MediaPreviousTrack, Keys.None, Keys.NumLock, Keys.OemCopy, Keys.OemEnlW, Keys.Pa1, Keys.PageDown, Keys.PageUp, Keys.Pause, Keys.Print,
+            Keys.Play, Keys.PrintScreen, Keys.RightAlt, Keys.RightControl, Keys.ProcessKey, Keys.RightWindows, Keys.Scroll, Keys.Select, Keys.SelectMedia,
+            Keys.Sleep, Keys.Tab, Keys.Up, Keys.VolumeDown, Keys.VolumeUp, Keys.VolumeMute, Keys.Zoom
+        };
+        private Keys[] AlteredKeys = new Keys[] { 
+            Keys.OemComma, Keys.OemSemicolon, Keys.OemQuestion, 
+            Keys.OemBackslash, Keys.OemCloseBrackets, Keys.OemPlus,
+            Keys.OemMinus, Keys.OemPeriod, Keys.OemOpenBrackets, Keys.OemPipe,
+            Keys.OemQuotes, Keys.OemTilde
+        };
+
+        public void HandleKeyboardInput()
+        {
+            var currentKeyboardState = CCInputState.Instance.CurrentKeyboardStates.FirstOrDefault();
+            if (currentKeyboardState != null)
+            {
+                var pressedKeyCount = currentKeyboardState.GetPressedKeyCount();
+                if (pressedKeyCount > 0 && canEdit)
+                {
+                    var pressedKeys = currentKeyboardState.GetPressedKeys();
+                    var isHoldingShift = pressedKeys.Any(p => p == Keys.LeftShift || p == Keys.RightShift);
+
+                    pressedKeys.ToList().ForEach(p =>
+                    {
+                        if (p == Keys.Back || p == Keys.Delete)
+                        {
+                            Text = Text.Substring(0, Text.Length - 1);
+                            canEdit = false;
+                            return;
+                        }
+
+                        var keyChar = (char)p;
+
+                        if (IgnoredKeys.Any(ignoredKey => p == ignoredKey))
+                        {
+                            return;
+                        }
+
+                        if (AlteredKeys.Any(alteredKey => p == alteredKey))
+                        {
+                            var alteredKeyToAdd = "";
+                            switch(p)
+                            {
+                                case Keys.OemComma:
+                                    alteredKeyToAdd = ",";
+                                    if (isHoldingShift)
+                                    {
+                                        alteredKeyToAdd = "<";
+                                    }
+                                    break;
+                                case Keys.OemSemicolon:
+                                    alteredKeyToAdd = ";";
+                                    if (isHoldingShift)
+                                    {
+                                        alteredKeyToAdd = ":";
+                                    }
+                                    break;
+                                case Keys.OemQuestion:
+                                    alteredKeyToAdd = "/";
+                                    if (isHoldingShift)
+                                    {
+                                        alteredKeyToAdd = "?";
+                                    }
+                                    break;
+                                case Keys.OemBackslash:
+                                case Keys.OemPipe:
+                                    alteredKeyToAdd = "\\";
+                                    if (isHoldingShift)
+                                    {
+                                        alteredKeyToAdd = "|";
+                                    }
+                                    break;
+                                case Keys.OemCloseBrackets:
+                                    alteredKeyToAdd = "]";
+                                    if (isHoldingShift)
+                                    {
+                                        alteredKeyToAdd = "}";
+                                    }
+                                    break;
+                                case Keys.OemPlus:
+                                    alteredKeyToAdd = "=";
+                                    if (isHoldingShift)
+                                    {
+                                        alteredKeyToAdd = "+";
+                                    }
+                                    break;
+                                case Keys.OemMinus:
+                                    alteredKeyToAdd = "-";
+                                    if (isHoldingShift)
+                                    {
+                                        alteredKeyToAdd = "_";
+                                    }
+                                    break;
+                                case Keys.OemPeriod:
+                                    alteredKeyToAdd = ".";
+                                    if (isHoldingShift)
+                                    {
+                                        alteredKeyToAdd = ">";
+                                    }
+                                    break;
+                                case Keys.OemOpenBrackets:
+                                    alteredKeyToAdd = "[";
+                                    if (isHoldingShift)
+                                    {
+                                        alteredKeyToAdd = "{";
+                                    }
+                                    break;
+                                case Keys.OemQuotes:
+                                    alteredKeyToAdd = "'";
+                                    if (isHoldingShift)
+                                    {
+                                        alteredKeyToAdd = "\"";
+                                    }
+                                    break;
+                                case Keys.OemTilde:
+                                    alteredKeyToAdd = "`";
+                                    if (isHoldingShift)
+                                    {
+                                        alteredKeyToAdd = "~";
+                                    }
+                                    break;
+                            }
+
+                            Text += alteredKeyToAdd;
+                            canEdit = false;
+                            return;
+                        }
+
+                        var keyToAdd = keyChar.ToString().ToLower();
+                        if (currentKeyboardState.CapsLock)
+                        {
+                            keyToAdd = keyToAdd.ToUpper();
+                            if (isHoldingShift)
+                            {
+                                keyToAdd = keyToAdd.ToLower();
+                            }
+                        } else if (isHoldingShift)
+                        {
+                            keyToAdd = keyToAdd.ToUpper();
+                        }
+
+                        Text += keyToAdd;
+                        canEdit = false;
+                    });
+
+                } 
+                else if (pressedKeyCount == 0 || (pressedKeyCount == 1 && (currentKeyboardState.IsKeyDown(Keys.LeftShift) || currentKeyboardState.IsKeyDown(Keys.RightShift))))
+                {
+                    canEdit = true;
+                }
+            }
         }
     }
 }
