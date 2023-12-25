@@ -26,6 +26,10 @@ jobs:
       with:
         fetch-depth: 0
 
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'microsoft'
+        java-version: '11'
     # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v2
