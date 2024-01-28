@@ -282,6 +282,11 @@ namespace Cocos2D
             return fontConfig;
         }
 
+        ~CCLabel()
+        {
+            Dispose();
+        }
+
         public override void Draw()
         {
             if (m_bFontDirty)

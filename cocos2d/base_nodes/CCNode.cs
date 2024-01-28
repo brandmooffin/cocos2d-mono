@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Java.Lang.Ref;
 using Microsoft.Xna.Framework.Input;
 
 namespace Cocos2D
@@ -1133,6 +1134,8 @@ namespace Cocos2D
 
                     // set parent nil at the end
                     node.Parent = null;
+
+                    node.Dispose();
                 }
 
                 m_pChildren.Clear();
@@ -1175,6 +1178,8 @@ namespace Cocos2D
                     CCDirector.SharedDirector.TouchDispatcher.RearrangeAllHandlersUponTouch();
                 }
             }
+
+            child.Dispose();
         }
         #endregion
 
