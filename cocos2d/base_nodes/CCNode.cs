@@ -1133,6 +1133,8 @@ namespace Cocos2D
 
                     // set parent nil at the end
                     node.Parent = null;
+
+                    node.Dispose();
                 }
 
                 m_pChildren.Clear();
@@ -1175,6 +1177,8 @@ namespace Cocos2D
                     CCDirector.SharedDirector.TouchDispatcher.RearrangeAllHandlersUponTouch();
                 }
             }
+
+            child.Dispose();
         }
         #endregion
 

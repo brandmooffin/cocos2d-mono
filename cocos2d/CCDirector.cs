@@ -77,12 +77,12 @@ namespace Cocos2D
         private uint m_uDrawCount;
         private float m_fAccumUpdate;
         
-        private CCLabelAtlas m_pFPSLabel;
-        private CCLabelAtlas m_pUpdateTimeLabel;
-        private CCLabelAtlas m_pDrawTimeLabel;
-        private CCLabelAtlas m_pDrawsLabel;
-        private CCLabelAtlas m_pMemoryLabel;
-        private CCLabelAtlas m_pGCLabel;
+        private CCLabel m_pFPSLabel;
+        private CCLabel m_pUpdateTimeLabel;
+        private CCLabel m_pDrawTimeLabel;
+        private CCLabel m_pDrawsLabel;
+        private CCLabel m_pMemoryLabel;
+        private CCLabel m_pGCLabel;
 
         // Stopwatch for measure the time.
         Stopwatch m_pStopwatch;
@@ -1131,31 +1131,25 @@ namespace Cocos2D
 
                 try
                 {
-                    m_pFPSLabel = new CCLabelAtlas();
-                    m_pFPSLabel.SetIgnoreContentScaleFactor(true);
-                    m_pFPSLabel.InitWithString("00.0", texture, 12, 32, '.');
+                    m_pFPSLabel = new CCLabel("00.0", "arial", 12);
+                    m_pFPSLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
 
-                    m_pUpdateTimeLabel = new CCLabelAtlas();
-                    m_pUpdateTimeLabel.SetIgnoreContentScaleFactor(true);
-                    m_pUpdateTimeLabel.InitWithString("0.000", texture, 12, 32, '.');
+                    m_pUpdateTimeLabel = new CCLabel("00.0", "arial", 12);
+                    m_pUpdateTimeLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
 
-                    m_pDrawTimeLabel = new CCLabelAtlas();
-                    m_pDrawTimeLabel.SetIgnoreContentScaleFactor(true);
-                    m_pDrawTimeLabel.InitWithString("0.000", texture, 12, 32, '.');
+                    m_pDrawTimeLabel = new CCLabel("00.0", "arial", 12);
+                    m_pDrawTimeLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
 
-                    m_pDrawsLabel = new CCLabelAtlas();
-                    m_pDrawsLabel.SetIgnoreContentScaleFactor(true);
-                    m_pDrawsLabel.InitWithString("000", texture, 12, 32, '.');
+                    m_pDrawsLabel = new CCLabel("00.0", "arial", 12);
+                    m_pDrawsLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
 
-                    m_pMemoryLabel = new CCLabelAtlas();
-                    m_pMemoryLabel.SetIgnoreContentScaleFactor(true);
-                    m_pMemoryLabel.InitWithString("0", texture, 12, 32, '.');
+                    m_pMemoryLabel = new CCLabel("00.0", "arial", 12);
                     m_pMemoryLabel.Color = new CCColor3B(0, 0, 255);
+                    m_pMemoryLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
 
-                    m_pGCLabel = new CCLabelAtlas();
-                    m_pGCLabel.SetIgnoreContentScaleFactor(true);
-                    m_pGCLabel.InitWithString("0", texture, 12, 32, '.');
+                    m_pGCLabel = new CCLabel("00.0", "arial", 12);
                     m_pGCLabel.Color = new CCColor3B(255, 0, 0);
+                    m_pGCLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
                 }
                 catch (Exception ex)
                 {
@@ -1177,12 +1171,12 @@ namespace Cocos2D
             m_pMemoryLabel.Scale = factor;
             m_pGCLabel.Scale = factor;
 
-            m_pMemoryLabel.Position = new CCPoint(0, 85 * factor) + pos;
-            m_pGCLabel.Position = new CCPoint(0, 68 * factor) + pos;
-            m_pDrawsLabel.Position = new CCPoint(0, 51 * factor) + pos;
-            m_pUpdateTimeLabel.Position = new CCPoint(0, 34 * factor) + pos;
-            m_pDrawTimeLabel.Position = new CCPoint(0, 17 * factor) + pos;
-            m_pFPSLabel.Position = pos;
+            m_pMemoryLabel.Position = new CCPoint(0, 97 * factor) + pos;
+            m_pGCLabel.Position = new CCPoint(0, 80 * factor) + pos;
+            m_pDrawsLabel.Position = new CCPoint(0, 63 * factor) + pos;
+            m_pUpdateTimeLabel.Position = new CCPoint(0, 46 * factor) + pos;
+            m_pDrawTimeLabel.Position = new CCPoint(0, 29 * factor) + pos;
+            m_pFPSLabel.Position = new CCPoint(0, 12 * factor) + pos;
         }
 
         private WeakReference _wk = new WeakReference(new object());
@@ -1207,17 +1201,20 @@ namespace Cocos2D
                 {
                     if (m_fAccumDt > CCMacros.CCDirectorStatsUpdateIntervalInSeconds)
                     {
-                        m_pFPSLabel.Text = (String.Format("{0:00.0}", m_uDrawCount / m_fAccumDt));
+                        m_pFPSLabel.Text = (String.Format("FPS: {0:00.0}", m_uDrawCount / m_fAccumDt));
 
-                        m_pUpdateTimeLabel.Text = (String.Format("{0:0.000}", m_fAccumUpdate / m_uUpdateCount));
-                        m_pDrawTimeLabel.Text = (String.Format("{0:0.000}", m_fAccumDraw / m_uDrawCount));
-                        m_pDrawsLabel.Text = (String.Format("{0:000}", CCDrawManager.DrawCount));
+                        m_pUpdateTimeLabel.Text = (String.Format("Update: {0:0.000}", m_fAccumUpdate / m_uUpdateCount));
+                        m_pDrawTimeLabel.Text = (String.Format("Draw: {0:0.000}", m_fAccumDraw / m_uDrawCount));
+                        m_pDrawsLabel.Text = (String.Format("Draws: {0:000}", CCDrawManager.DrawCount));
 
                         m_fAccumDt = m_fAccumDraw = m_fAccumUpdate = 0;
                         m_uDrawCount = m_uUpdateCount = 0;
 
-                        m_pMemoryLabel.Text = String.Format("{0}", GC.GetTotalMemory(false) / 1024);
-                        m_pGCLabel.Text = String.Format("{0}", _GCCount);
+                        Process currentProcess = System.Diagnostics.Process.GetCurrentProcess();
+                        long totalBytesOfMemoryUsed = currentProcess.WorkingSet64;
+
+                        m_pMemoryLabel.Text = String.Format("Memory: {0}", totalBytesOfMemoryUsed / 1024);
+                        m_pGCLabel.Text = String.Format("GC: {0}", _GCCount);
                     }
             
                     m_pDrawsLabel.Visit();
