@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using Java.Lang.Ref;
 using Microsoft.Xna.Framework.Input;
 
 namespace Cocos2D
