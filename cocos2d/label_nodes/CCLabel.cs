@@ -261,7 +261,7 @@ namespace Cocos2D
                         var fontDef = new CCBMFontConfiguration.CCBMFontDef()
                         {
                             charID = chars[i],
-                            rect = new CCRect(region.x, region.y, region.width, region.height),
+                            rect = new CCRect(region.x + 0.55f, region.y, region.width, region.height),
                             xOffset = minX, // + (int)Math.Ceiling(info.A),
                             yOffset = minY,
                             xAdvance = (int)Math.Ceiling(info.A + info.B + info.C)
@@ -280,6 +280,11 @@ namespace Cocos2D
             m_bTextureDirty = true;
 
             return fontConfig;
+        }
+
+        ~CCLabel()
+        {
+            Dispose();
         }
 
         public override void Draw()

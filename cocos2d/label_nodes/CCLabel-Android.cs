@@ -18,6 +18,43 @@ namespace Cocos2D
         private static Paint.FontMetrics _fontMetrix;
         private static float _fontScaleFactor;
 
+        public void Dispose()
+        {
+            if (_dataHandle.IsAllocated)
+            {
+                _dataHandle.Free();
+            }
+
+            if (_bitmap != null)
+            {
+                _bitmap.Dispose();
+            }
+
+            if (_paint != null)
+            {
+                _paint.Dispose();
+            }
+
+            if (_canvas != null)
+            {
+                _canvas.Dispose();
+            }
+
+            _data = null;
+
+            _bitmap = null;
+
+            _paint = null;
+
+            _dataHandle = new GCHandle();
+
+            _fontMetrix = null;
+
+            _fontScaleFactor = 0;
+
+            _canvas = null;
+        }
+
         private void CreateFont(string fontName, float fontSize, CCRawList<char> charset)
         {
             if (_paint == null)
