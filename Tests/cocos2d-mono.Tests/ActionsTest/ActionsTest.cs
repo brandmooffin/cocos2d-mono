@@ -604,9 +604,9 @@ namespace tests
         {
             base.OnEnter();
 
-            m_tamara.RemoveFromParentAndCleanup(true);
-            m_grossini.RemoveFromParentAndCleanup(true);
-            m_kathia.RemoveFromParentAndCleanup(true);
+            m_tamara.RemoveFromParent();
+            m_grossini.RemoveFromParent();
+            m_kathia.RemoveFromParent();
 
             var s = CCDirector.SharedDirector.WinSize;
 
@@ -655,9 +655,9 @@ namespace tests
 
             base.OnEnter();
 
-            m_tamara.RemoveFromParentAndCleanup(true);
-            m_grossini.RemoveFromParentAndCleanup(true);
-            m_kathia.RemoveFromParentAndCleanup(true);
+            m_tamara.RemoveFromParent();
+            m_grossini.RemoveFromParent();
+            m_kathia.RemoveFromParent();
 
 			// Get window size so that we can center the box layer
 			var winSize = CCDirector.SharedDirector.WinSize;
@@ -1082,7 +1082,7 @@ namespace tests
 
             var action = new CCSequence(
                 new CCMoveBy (2.0f, new CCPoint(200, 0)),
-                new CCCallFuncND(removeFromParentAndCleanup, true)
+                new CCCallFuncND(removeFromParent, true)
                 );
 
             m_grossini.RunAction(action);
@@ -1098,10 +1098,10 @@ namespace tests
             return "CallFuncND + removeFromParentAndCleanup. Grossini dissapears in 2s";
         }
 
-        private void removeFromParentAndCleanup(CCNode pSender, object data)
+        private void removeFromParent(CCNode pSender, object data)
         {
             var bCleanUp = (bool) data;
-            m_grossini.RemoveFromParentAndCleanup(bCleanUp);
+            m_grossini.RemoveFromParent(bCleanUp);
         }
     }
 

@@ -1456,7 +1456,7 @@ namespace tests
         private void switchRender(float dt)
         {
             bool usingBatch = (m_emitter.BatchNode != null);
-            m_emitter.RemoveFromParentAndCleanup(false);
+            m_emitter.RemoveFromParent();
 
             CCNode newParent = (usingBatch ? m_pParent2 : m_pParent1);
             newParent.AddChild(m_emitter);
