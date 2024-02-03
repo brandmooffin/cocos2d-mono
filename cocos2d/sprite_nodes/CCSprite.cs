@@ -1043,7 +1043,7 @@ namespace Cocos2D
             base.RemoveChild(child, cleanup);
         }
 
-        public override void RemoveAllChildrenWithCleanup(bool cleanup)
+        public override void RemoveAllChildren(bool cleanup = true)
         {
             if (m_pobBatchNode != null)
             {
@@ -1055,7 +1055,7 @@ namespace Cocos2D
                 }
             }
 
-            base.RemoveAllChildrenWithCleanup(cleanup);
+            base.RemoveAllChildren(cleanup);
 
             m_bHasChildren = false;
         }

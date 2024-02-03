@@ -38,7 +38,7 @@ namespace tests
         {
             Unschedule((shouldNotLeak));
             var sublayer = (CCLayer) GetChildByTag(CocosNodeTestStaticLibrary.kTagSprite1);
-            sublayer.RemoveAllChildrenWithCleanup(true);
+            sublayer.RemoveAllChildren();
         }
 
         public override string title()

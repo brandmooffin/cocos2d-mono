@@ -55,10 +55,10 @@ namespace Cocos2D
             base.RemoveChild(child, cleanup);
         }
 
-        public override void RemoveAllChildrenWithCleanup(bool cleanup)
+        public override void RemoveAllChildren(bool cleanup = true)
         {
             m_pParallaxArray.Clear();
-            base.RemoveAllChildrenWithCleanup(cleanup);
+            base.RemoveAllChildren(cleanup);
         }
 
         private CCPoint AbsolutePosition()

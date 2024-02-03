@@ -186,7 +186,7 @@ namespace Cocos2D
                     return;
                 }
 
-                RemoveAllChildrenWithCleanup(true);
+                RemoveAllChildren();
                 _container = value;
 
                 _container.IgnoreAnchorPointForPosition = false;

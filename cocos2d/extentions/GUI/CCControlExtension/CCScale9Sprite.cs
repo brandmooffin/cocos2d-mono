@@ -248,10 +248,10 @@ namespace Cocos2D
             var color = Color;
 
             // Release old sprites
-            RemoveAllChildrenWithCleanup(true);
+            RemoveAllChildren();
 
             _scale9Image = batchnode;
-            _scale9Image.RemoveAllChildrenWithCleanup(true);
+            _scale9Image.RemoveAllChildren();
 
             _capInsets = capInsets;
             _spriteFrameRotated = rotated;
