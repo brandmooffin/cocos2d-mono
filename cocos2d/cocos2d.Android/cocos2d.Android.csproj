@@ -10,11 +10,10 @@
     <TargetFramework>net6.0-android31.0</TargetFramework>
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-		- Improvements for reducing line artifacts on CCLabels
-		- Memory and performance improvements cleaning up and disposing unmanaged resources
+		- Streamline usage for RemoveFromParent, RemoveChild and RemoveAllChildren
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.6.1</Version>
+    <Version>2.4.6.2</Version>
     <Title>Cocos2D-Mono for Android</Title>
     <Description>Cocos2D-Mono for Android</Description>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
