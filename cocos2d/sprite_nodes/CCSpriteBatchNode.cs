@@ -199,7 +199,7 @@ namespace Cocos2D
             RemoveChild((m_pChildren[index]), doCleanup);
         }
 
-        public override void RemoveAllChildrenWithCleanup(bool cleanup)
+        public override void RemoveAllChildren(bool cleanup = true)
         {
             // Invalidate atlas index. issue #569
             // useSelfRender should be performed on all descendants. issue #1216
@@ -209,7 +209,7 @@ namespace Cocos2D
                 elements[i].BatchNode = null;
             }
 
-            base.RemoveAllChildrenWithCleanup(cleanup);
+            base.RemoveAllChildren(cleanup);
 
             m_pobDescendants.Clear();
             m_pobTextureAtlas.RemoveAllQuads();
