@@ -257,11 +257,15 @@ namespace Cocos2D
                         SetRegionData(region, data, w);
 
                         var info = GetKerningInfo(chars[i]);
+                        var regionX = region.x + 0.015f;
+#if ANDROID
+                        regionX = region.x + 0.55f;
+#endif
 
                         var fontDef = new CCBMFontConfiguration.CCBMFontDef()
                         {
                             charID = chars[i],
-                            rect = new CCRect(region.x + 0.55f, region.y, region.width, region.height),
+                            rect = new CCRect(regionX, region.y, region.width, region.height),
                             xOffset = minX, // + (int)Math.Ceiling(info.A),
                             yOffset = minY,
                             xAdvance = (int)Math.Ceiling(info.A + info.B + info.C)

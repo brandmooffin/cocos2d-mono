@@ -1294,26 +1294,6 @@ namespace Cocos2D
         public override void OnExit()
         {
             base.OnExit();
-
-            Dispose();
         }
-
-        public void Dispose()
-        {
-            // Dispose CCTexture2D
-            if (m_pobTexture != null)
-            {
-                m_pobTexture.Dispose();
-                m_pobTexture = null;
-            }
-
-            // Dispose CCSpriteBatchNode
-            if (m_pobBatchNode != null)
-            {
-                m_pobBatchNode.Dispose();
-                m_pobBatchNode = null;
-            }
-        }
-
     }
 }

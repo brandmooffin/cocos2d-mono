@@ -9,12 +9,16 @@
 	<CheckEolWorkloads>false</CheckEolWorkloads>
     <BaseIntermediateOutputPath>obj\iOS\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-		- Streamline usage for RemoveFromParent, RemoveChild and RemoveAllChildren
+		- iOS Font Texture Improvements
+		- Fix for DisplayStats on iOS
+		- Fix for CCTexture being disposed too early
+		- Implement Line Break Modes for CCLabelBMFont and CCLabel
+		- Added support for more delimiters in Labels
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.6.2</Version>
+    <Version>2.4.6.3</Version>
     <Description>Cocos2D-Mono for iOS</Description>
     <Title>Cocos2D-Mono for iOS</Title>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
