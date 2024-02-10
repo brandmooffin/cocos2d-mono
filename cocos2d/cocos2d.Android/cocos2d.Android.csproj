@@ -10,10 +10,14 @@
     <TargetFramework>net6.0-android31.0</TargetFramework>
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-		- Streamline usage for RemoveFromParent, RemoveChild and RemoveAllChildren
+		- iOS Font Texture Improvements
+		- Fix for DisplayStats on iOS
+		- Fix for CCTexture being disposed too early
+		- Implement Line Break Modes for CCLabelBMFont and CCLabel
+		- Added support for more delimiters in Labels
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.6.2</Version>
+    <Version>2.4.6.3</Version>
     <Title>Cocos2D-Mono for Android</Title>
     <Description>Cocos2D-Mono for Android</Description>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>

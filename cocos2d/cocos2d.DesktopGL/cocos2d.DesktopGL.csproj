@@ -13,7 +13,7 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.DesktopGL</PackageId>
-    <Version>2.4.6.2</Version>
+    <Version>2.4.6.3</Version>
     <Description>Cocos2D-Mono for DesktopGL (OpenGL Desktop Platforms)</Description>
     <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
@@ -23,7 +23,11 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-		- Streamline usage for RemoveFromParent, RemoveChild and RemoveAllChildren
+		- iOS Font Texture Improvements
+		- Fix for DisplayStats on iOS
+		- Fix for CCTexture being disposed too early
+		- Implement Line Break Modes for CCLabelBMFont and CCLabel
+		- Added support for more delimiters in Labels
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
