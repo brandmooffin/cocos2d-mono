@@ -215,7 +215,7 @@ namespace tests.FontTest
                                               blockSize, CCTextAlignment.Right,
                                               SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
 #else
-            var top = new CCLabel(pFont,"Arial", 24);
+            var top = new CCLabel(pFont,"Arial-BOLDMT", 40);
 
 			var left = new CCLabel("alignment left", pFont, fontSize,
 			                                 blockSize, CCTextAlignment.Left,
@@ -234,7 +234,7 @@ namespace tests.FontTest
             right.AnchorPoint = CCPoint.AnchorMiddle;
 
             float yMax = s.Height / 2f + 50f;
-			top.Position = new CCPoint(s.Width / 2f, s.Height - 50f);
+			top.Position = new CCPoint(s.Width / 2f, s.Height - 80f);
 			left.Position = new CCPoint(s.Width/3f, yMax - 50);
 			center.Position = new CCPoint(s.Width/2f, yMax - 50);
 			right.Position = new CCPoint(s.Width * 2f/3f, yMax - 50);
