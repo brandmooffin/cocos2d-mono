@@ -688,8 +688,10 @@ namespace Cocos2D
                 NotificationNode.Visit();
             }
 
-            if(m_bDisplayStats)
+            if (m_bDisplayStats)
+            {
                 ShowStats();
+            }
 
             CCDrawManager.PopMatrix();
 
@@ -1210,13 +1212,11 @@ namespace Cocos2D
                         m_fAccumDt = m_fAccumDraw = m_fAccumUpdate = 0;
                         m_uDrawCount = m_uUpdateCount = 0;
 
-                        Process currentProcess = System.Diagnostics.Process.GetCurrentProcess();
-                        long totalBytesOfMemoryUsed = currentProcess.WorkingSet64;
 
-                        m_pMemoryLabel.Text = String.Format("Memory: {0}", totalBytesOfMemoryUsed / 1024);
+                        m_pMemoryLabel.Text = String.Format("Memory: {0}", GC.GetTotalMemory(false) / 1024);
                         m_pGCLabel.Text = String.Format("GC: {0}", _GCCount);
                     }
-            
+
                     m_pDrawsLabel.Visit();
                     m_pFPSLabel.Visit();
                     m_pUpdateTimeLabel.Visit();

@@ -13,7 +13,7 @@ namespace Cocos2D
 
         public static Dictionary<string, CCBMFontConfiguration> s_pConfigurations = new Dictionary<string, CCBMFontConfiguration>();
 
-        protected bool m_bLineBreakWithoutSpaces;
+        protected bool m_bLineBreakWithoutSpaces = true;
         protected CCTextAlignment m_pHAlignment = CCTextAlignment.Center;
         protected CCVerticalTextAlignment m_pVAlignment = CCVerticalTextAlignment.Top;
         protected CCBMFontConfiguration m_pConfiguration;
@@ -718,6 +718,38 @@ namespace Cocos2D
 
                     // Whitespace.
                     if (Char.IsWhiteSpace(character))
+                    {
+                        last_word.Append(character);
+                        multiline_string.Append(last_word);
+#if XBOX || XBOX360
+                        last_word.Length = 0;
+#else
+                        last_word.Clear();
+#endif
+                        start_word = false;
+                        startOfWord = -1;
+                        i++;
+                        continue;
+                    }
+
+                    // comma.
+                    if (character.Equals(','))
+                    {
+                        last_word.Append(character);
+                        multiline_string.Append(last_word);
+#if XBOX || XBOX360
+                        last_word.Length = 0;
+#else
+                        last_word.Clear();
+#endif
+                        start_word = false;
+                        startOfWord = -1;
+                        i++;
+                        continue;
+                    }
+
+                    // Special japanese comma.
+                    if (character.Equals('、'))
                     {
                         last_word.Append(character);
                         multiline_string.Append(last_word);

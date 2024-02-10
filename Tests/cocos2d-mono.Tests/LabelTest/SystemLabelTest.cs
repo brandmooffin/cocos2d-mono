@@ -9,6 +9,7 @@ namespace cocos2d_mono.Tests.LabelTest
         CCLabel largeSystemLabel;
         CCLabel smallAdjustDimensionSystemLabel;
         CCLabel multiLineSystemLabel;
+        CCLabel japaneseSystemLabel;
 
         public SystemLabelTest()
         {
@@ -42,11 +43,18 @@ namespace cocos2d_mono.Tests.LabelTest
                 Position = new CCPoint(s.Center.X, s.Center.Y + 125)
             };
 
+            japaneseSystemLabel = new CCLabel("矢印の色がセルの背景色と同じの場合、それがたどる方向です。", "Arial", 32)
+            {
+                Position = new CCPoint(s.Center.X, s.Center.Y + 300),
+                Dimensions = new CCSize(400, 0)
+            };
+
             AddChild(smallSystemLabel);
             AddChild(smallAdjustDimensionSystemLabel);
             AddChild(multiLineSystemLabel);
             AddChild(mediumSystemLabel);
             AddChild(largeSystemLabel);
+            AddChild(japaneseSystemLabel);
             
             smallAdjustDimensionSystemLabel.Dimensions = new CCSize(500, 0);
             string text = "Thank you for visiting the cocos2d-mono tests\nPlease help us by donating to our project\nYou can find us at cocos2d-mono.dev\n\n\nThank you!\nDon't forget to contribute to cocos2d-x\nWithout them this project would not exist.";
