@@ -120,6 +120,10 @@ namespace Cocos2D
                 if (m_bLineBreakWithoutSpaces)
                 {
                     LineBreakMode = CCTextLineBreakMode.CharacterBreak;
+                } 
+                else
+                {
+                    LineBreakMode = CCTextLineBreakMode.SmartBreak;
                 }
             }
         }
