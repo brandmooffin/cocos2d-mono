@@ -13,7 +13,8 @@ namespace Cocos2D
 
         public static Dictionary<string, CCBMFontConfiguration> s_pConfigurations = new Dictionary<string, CCBMFontConfiguration>();
 
-        protected bool m_bLineBreakWithoutSpaces = true;
+
+        protected bool m_bLineBreakWithoutSpaces;
         protected CCTextAlignment m_pHAlignment = CCTextAlignment.Center;
         protected CCVerticalTextAlignment m_pVAlignment = CCVerticalTextAlignment.Top;
         protected CCBMFontConfiguration m_pConfiguration;
@@ -24,6 +25,7 @@ namespace Cocos2D
         protected CCSize m_tDimensions;
         protected CCSprite m_pReusedChar;
         protected bool m_bLabelDirty;
+        protected CCTextLineBreakMode m_pLineBreakMode = CCTextLineBreakMode.SmartBreak;
 
         public override CCPoint AnchorPoint
         {
@@ -114,8 +116,26 @@ namespace Cocos2D
             {
                 m_bLineBreakWithoutSpaces = value;
                 m_bLabelDirty = true;
+
+                if (m_bLineBreakWithoutSpaces)
+                {
+                    LineBreakMode = CCTextLineBreakMode.CharacterBreak;
+                }
             }
         }
+
+        public CCTextLineBreakMode LineBreakMode
+        {
+            get { return m_pLineBreakMode; }
+            set
+            {
+                if (m_pLineBreakMode != value)
+                {
+                    m_pLineBreakMode = value;
+                    m_bLabelDirty = true;
+                }
+            }
+        }   
 
         public string FntFile
         {
@@ -645,7 +665,7 @@ namespace Cocos2D
                     CCSprite characterSprite;
                     int justSkipped = 0;
 
-                    while ((characterSprite = (CCSprite) GetChildByTag(j + skip + justSkipped)) == null)
+                    while ((characterSprite = (CCSprite)GetChildByTag(j + skip + justSkipped)) == null)
                     {
                         justSkipped++;
                     }
@@ -716,40 +736,11 @@ namespace Cocos2D
                         }
                     }
 
-                    // Whitespace.
-                    if (Char.IsWhiteSpace(character))
-                    {
-                        last_word.Append(character);
-                        multiline_string.Append(last_word);
-#if XBOX || XBOX360
-                        last_word.Length = 0;
-#else
-                        last_word.Clear();
-#endif
-                        start_word = false;
-                        startOfWord = -1;
-                        i++;
-                        continue;
-                    }
-
-                    // comma.
-                    if (character.Equals(','))
-                    {
-                        last_word.Append(character);
-                        multiline_string.Append(last_word);
-#if XBOX || XBOX360
-                        last_word.Length = 0;
-#else
-                        last_word.Clear();
-#endif
-                        start_word = false;
-                        startOfWord = -1;
-                        i++;
-                        continue;
-                    }
-
-                    // Special japanese comma.
-                    if (character.Equals('、'))
+                    // Whitespace, comma, or dash. special japanese delimiter characters ・、:;, 。.-
+                    if (Char.IsWhiteSpace(character) 
+                        || character.Equals(',') || character.Equals('-') || character.Equals('・')
+                        || character.Equals('、') || character.Equals('・') || character.Equals('。')
+                        || character.Equals(':') || character.Equals(';'))
                     {
                         last_word.Append(character);
                         multiline_string.Append(last_word);
@@ -767,66 +758,152 @@ namespace Cocos2D
                     // Out of bounds.
                     if (GetLetterPosXRight(characterSprite) - startOfLine > m_tDimensions.Width)
                     {
-                        if (!m_bLineBreakWithoutSpaces)
+                        switch(m_pLineBreakMode)
                         {
-                            last_word.Append(character);
+                            case CCTextLineBreakMode.SmartBreak:
+                                last_word.Append(character);
 
-                            int len = multiline_string.Length;
-                            while (len > 0 && Char.IsWhiteSpace(multiline_string[len - 1]))
-                            {
-                                len--;
-                                multiline_string.Remove(len, 1);
-                            }
+                                int len = multiline_string.Length;
+                                while (len > 0 && Char.IsWhiteSpace(multiline_string[len - 1]))
+                                {
+                                    len--;
+                                    multiline_string.Remove(len, 1);
+                                }
 
-                            if (multiline_string.Length > 0)
-                            {
-                                multiline_string.Append('\n');
-                            }
+                                if (multiline_string.Length > 0)
+                                {
+                                    multiline_string.Append('\n');
+                                }
 
-                            line++;
-                            start_line = false;
-                            startOfLine = -1;
-                            i++;
-                        }
-                        else
-                        {
-                            int len = last_word.Length;
-                            while (len > 0 && Char.IsWhiteSpace(last_word[len - 1]))
-                            {
-                                len--;
-                                last_word.Remove(len, 1);
-                            }
+                                int previousCharacterIndex = 1;
+                                var characterSprite2 = (CCSprite)GetChildByTag(j - skip - justSkipped - previousCharacterIndex);
+                                bool applyCharacterBreak = false;
+                                while (GetLetterPosXRight(characterSprite2) - startOfLine > m_tDimensions.Width && last_word.Length > 1)
+                                {
+                                    applyCharacterBreak = true;
 
-                            multiline_string.Append(last_word);
-                            multiline_string.Append('\n');
+                                    //len = multiline_string.Length;
+
+                                    //last_word.Insert(0, multiline_string[len - 1]);
+                                    //multiline_string.Remove(len - 1, 1);
+
+                                    previousCharacterIndex++;
+                                    characterSprite2 = (CCSprite)GetChildByTag(j - skip - justSkipped - previousCharacterIndex);
+                                    i++;
+                                }
+
+                                if (applyCharacterBreak)
+                                {
+                                    len = last_word.Length;
+                                    while (len > 0 && Char.IsWhiteSpace(last_word[len - 1]))
+                                    {
+                                        len--;
+                                        last_word.Remove(len, 1);
+                                    }
+
+                                    multiline_string.Append(last_word);
+                                    multiline_string.Append('\n');
 
 #if XBOX || XBOX360
                             last_word.Length = 0;
 #else
-                            last_word.Clear();
+                                    last_word.Clear();
 #endif
 
-                            start_word = false;
-                            start_line = false;
-                            startOfWord = -1;
-                            startOfLine = -1;
-                            line++;
+                                    start_word = false;
+                                    start_line = false;
+                                    startOfWord = -1;
+                                    startOfLine = -1;
+                                    line++;
 
-                            if (i >= stringLength)
+                                    if (i >= stringLength)
+                                        break;
+
+                                    if (startOfWord == 0)
+                                    {
+                                        startOfWord = GetLetterPosXLeft(characterSprite);
+                                        start_word = true;
+                                    }
+                                    if (startOfLine == 0)
+                                    {
+                                        startOfLine = startOfWord;
+                                        start_line = true;
+                                    }
+
+                                    j--;
+                                    continue;
+                                }
+
+
+                                line++;
+                                start_line = false;
+                                startOfLine = -1;
+                                i++;
                                 break;
+                            case CCTextLineBreakMode.CharacterBreak:
+                                len = last_word.Length;
+                                while (len > 0 && Char.IsWhiteSpace(last_word[len - 1]))
+                                {
+                                    len--;
+                                    last_word.Remove(len, 1);
+                                }
 
-                            if (startOfWord == 0)
-                            {
-                                startOfWord = GetLetterPosXLeft(characterSprite);
-                                start_word = true;
-                            }
-                            if (startOfLine == 0)
-                            {
-                                startOfLine = startOfWord;
-                                start_line = true;
-                            }
+                                multiline_string.Append(last_word);
+                                multiline_string.Append('\n');
 
-                            j--;
+#if XBOX || XBOX360
+                            last_word.Length = 0;
+#else
+                                last_word.Clear();
+#endif
+
+                                start_word = false;
+                                start_line = false;
+                                startOfWord = -1;
+                                startOfLine = -1;
+                                line++;
+
+                                if (i >= stringLength)
+                                    break;
+
+                                if (startOfWord == 0)
+                                {
+                                    startOfWord = GetLetterPosXLeft(characterSprite);
+                                    start_word = true;
+                                }
+                                if (startOfLine == 0)
+                                {
+                                    startOfLine = startOfWord;
+                                    start_line = true;
+                                }
+
+                                j--;
+                                break;
+                            case CCTextLineBreakMode.WordBreak:
+                                last_word.Append(character);
+
+                                len = multiline_string.Length;
+                                while (len > 0 && Char.IsWhiteSpace(multiline_string[len - 1]))
+                                {
+                                    len--;
+                                    multiline_string.Remove(len, 1);
+                                }
+
+                                if (multiline_string.Length > 0)
+                                {
+                                    multiline_string.Append('\n');
+                                }
+
+                                line++;
+                                start_line = false;
+                                startOfLine = -1;
+                                i++;
+
+                                break;
+                            case CCTextLineBreakMode.NoBreak:
+                                last_word.Append(character);
+                                i++;
+                                break;
                         }
 
                         continue;
