@@ -10,7 +10,7 @@
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>2.4.6.3</Version>
+    <Version>2.4.6.4</Version>
     <Title>box2d for Android</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
     <Description>box2d for Android</Description>
@@ -19,11 +19,7 @@
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <PackageReleaseNotes>
-		- iOS Font Texture Improvements
-		- Fix for DisplayStats on iOS
-		- Fix for CCTexture being disposed too early
-		- Implement Line Break Modes for CCLabelBMFont and CCLabel
-		- Added support for more delimiters in Labels
+		- Fix issue with CCLabel Crashing
 	</PackageReleaseNotes>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
