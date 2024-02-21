@@ -1,0 +1,79 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C53ED140-8A2D-4F96-99D3-794FDBECAAA2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>cocos2d_mono.Tests.Core.Windows</RootNamespace>
+    <AssemblyName>cocos2d-mono.Tests.Core.Windows</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MonoGamePlatform>Windows</MonoGamePlatform>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\Core\Windows</OutputPath>
+    <IntermediateOutputPath>obj\Debug\Core\Windows</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Debug\Core\Windows</BaseIntermediateOutputPath>
+    <DefineConstants>TRACE;DEBUG;WINDOWS; WINDOWSDX</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\Core\Windows</OutputPath>
+    <IntermediateOutputPath>obj\Release\Core\Windows</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Release\Core\Windows</BaseIntermediateOutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <PackageId>Cocos2D-Mono.Tests.Core.Windows</PackageId>
+    <Copyright>Copyright © 2021 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Version>2.3.8.0</Version>
+    <Product>Cocos2D-Mono Tests for Core Windows</Product>
+    <Company>Broken Walls Studios</Company>
+    <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
+    <Description>Cocos2D-Mono Tests for Core Windows (DX)</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.manifest" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="..\Content\Content.mgcb">
+      <Link>Content\Content.mgcb</Link>
+    </MonoGameContentReference>
+    <ProjectReference Include="..\..\..\box2d\box2d.Windows\box2d.Windows.csproj">
+      <Project>{18aafe9f-27fd-4b00-9aac-14612319ea91}</Project>
+      <Name>box2d.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\cocos2d\cocos2d.Core.Windows\cocos2d.Core.Windows.csproj">
+      <Project>{01382ad1-179c-4322-91c4-e4fac0ca6c84}</Project>
+      <Name>cocos2d.Core.Windows</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
+  </ItemGroup>
+  <Import Project="..\cocos2d-mono.Tests.projitems" Label="Shared" />
+</Project>
