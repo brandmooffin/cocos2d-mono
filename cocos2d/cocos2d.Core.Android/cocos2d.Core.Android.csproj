@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <RootNamespace>cocos2d_mono.Core.Android</RootNamespace>
-    <AssemblyName>Cocos2D</AssemblyName>
+    <AssemblyName>cocos2d_mono.Core.Android</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <CheckEolWorkloads>false</CheckEolWorkloads>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
