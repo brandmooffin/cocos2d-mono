@@ -85,17 +85,6 @@ namespace Cocos2D
             item3.Scale = 0.5f;
 
             AddChild(menu, 11);
-
-            //ScheduleOnce(addSprite, 2);
-        }
-
-        private void addSprite(float dt)
-        {
-            CCScene pScene = new CCScene();
-            CCLayer pLayer = new TestController();
-
-            pScene.AddChild(pLayer);
-            CCDirector.SharedDirector.ReplaceScene(pScene);
         }
 
         public void restartCallback(object pSender)

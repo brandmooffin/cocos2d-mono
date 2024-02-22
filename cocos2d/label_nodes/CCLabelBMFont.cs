@@ -309,6 +309,8 @@ namespace Cocos2D
             {
                 s_pConfigurations.Clear();
             }
+
+            CCLabel.m_pData = null;
         }
 
         public static void PurgeCachedData()

@@ -278,7 +278,6 @@ namespace Cocos2D
                     else
                     {
                         CCLog.Log("Texture atlas is full");
-                        IncreaseAtlasCapacity();
                     }
                 }
             }
@@ -352,7 +351,7 @@ namespace Cocos2D
         private static int m_nWidth;
         private static int m_nHeight;
         private static int m_nDepth;
-        private static int[] m_pData;
+        public static int[] m_pData;
 
         private static int Fit(int index, int width, int height)
         {
