@@ -146,16 +146,8 @@ namespace Cocos2D
             InitializeFont(fontName, fontSize, text);
 			m_FontName = fontName;
 			m_FontSize = fontSize;
-            try
-            {
-                return base.InitWithString(text, GetFontKey(fontName, fontSize), dimensions.PointsToPixels(), hAlignment, vAlignment, CCPoint.Zero, m_pTexture);
-            }
-            catch (Exception ex)
-            {
-                CCLog.Log(ex.ToString());
-                m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
-                return base.InitWithString(text, GetFontKey(fontName, fontSize), dimensions.PointsToPixels(), hAlignment, vAlignment, CCPoint.Zero, m_pTexture);
-            }
+               
+            return base.InitWithString(text, GetFontKey(fontName, fontSize), dimensions.PointsToPixels(), hAlignment, vAlignment, CCPoint.Zero, m_pTexture);
         }
 
         private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset)
@@ -359,7 +351,7 @@ namespace Cocos2D
         private static int m_nWidth;
         private static int m_nHeight;
         private static int m_nDepth;
-        private static int[] m_pData;
+        public static int[] m_pData;
 
         private static int Fit(int index, int width, int height)
         {

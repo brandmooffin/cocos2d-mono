@@ -62,6 +62,11 @@ namespace Cocos2D
             }
         }
 
+        public CCMenuItem SelectedItem
+        {
+            get { return m_pSelectedItem; }
+        }
+
         /// <summary>
         /// Handles the button press event to track which focused menu item will get the activation
         /// </summary>
