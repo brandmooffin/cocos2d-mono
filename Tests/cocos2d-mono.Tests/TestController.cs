@@ -156,6 +156,14 @@ namespace tests
             base.OnEnter();
             CCApplication.SharedApplication.GamePadDPadUpdate += _GamePadDPadDelegate;
             CCApplication.SharedApplication.GamePadButtonUpdate += _GamePadButtonDelegate;
+
+            //ScheduleOnce(addSprite, 2);
+        }
+
+        private void addSprite(float dt)
+        {
+            TestScene pScene = new AtlasTestScene();
+            pScene.runThisTest();
         }
 
         private bool _aButtonWasPressed = false;
