@@ -17,8 +17,8 @@ jobs:
         with:
           dotnet-version: 6.0.x
       - name: Restore dependencies
-        run: dotnet restore ./cocos2d-mono.Core.DesktopGL/cocos2d-mono.Core.DesktopGL.sln
+        run: dotnet restore ./cocos2d-mono.DesktopGL/cocos2d-mono.Core.DesktopGL.sln
       - name: Build
-        run: dotnet build ./cocos2d-mono.Core.DesktopGL/cocos2d-mono.Core.DesktopGL.sln --no-restore
+        run: dotnet build ./cocos2d-mono.DesktopGL/cocos2d-mono.Core.DesktopGL.sln --no-restore
       - name: Test
-        run: dotnet test ./cocos2d-mono.Core.DesktopGL/cocos2d-mono.Core.DesktopGL.sln --no-build --verbosity normal
+        run: dotnet test ./cocos2d-mono.DesktopGL/cocos2d-mono.Core.DesktopGL.sln --no-build --verbosity normal
