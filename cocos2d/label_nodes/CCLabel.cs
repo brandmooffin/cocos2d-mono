@@ -155,6 +155,7 @@ namespace Cocos2D
                 CCLog.Log(ex.ToString());
                 m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
                 return base.InitWithString(text, GetFontKey(fontName, fontSize), dimensions.PointsToPixels(), hAlignment, vAlignment, CCPoint.Zero, m_pTexture);
+                return base.InitWithString(text, GetFontKey(fontName, fontSize), dimensions.PointsToPixels(), hAlignment, vAlignment, CCPoint.Zero, m_pTexture, m_pConfiguration);
             }
         }
 

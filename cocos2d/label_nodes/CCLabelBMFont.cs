@@ -346,6 +346,13 @@ namespace Cocos2D
             return InitWithString(null, null, new CCSize(kCCLabelAutomaticWidth, 0), CCTextAlignment.Left, CCVerticalTextAlignment.Top, CCPoint.Zero, null);
         }
 
+        protected virtual bool InitWithString(string text, string fntFile, CCSize dimensions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment,
+                                              CCPoint imageOffset, CCTexture2D texture, CCBMFontConfiguration configuration)
+        {
+            m_pConfiguration = configuration;
+            return InitWithString(text, fntFile, dimensions, hAlignment, vAlignment, CCPoint.Zero, texture);
+        }
+
         protected virtual bool InitWithString(string theString, string fntFile, CCSize dimentions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment,
                                               CCPoint imageOffset, CCTexture2D texture)
         {
@@ -782,7 +789,7 @@ namespace Cocos2D
                                 int previousCharacterIndex = 1;
                                 var characterSprite2 = (CCSprite)GetChildByTag(j - skip - justSkipped - previousCharacterIndex);
                                 bool applyCharacterBreak = false;
-                                while (GetLetterPosXRight(characterSprite2) - startOfLine > m_tDimensions.Width && last_word.Length > 1)
+                                while (characterSprite2 != null && GetLetterPosXRight(characterSprite2) - startOfLine > m_tDimensions.Width && last_word.Length > 1)
                                 {
                                     applyCharacterBreak = true;
 
