@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{01382AD1-179C-4322-91C4-E4FAC0CA6C84}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>cocos2d_mono.Core.DesktopGL</RootNamespace>
+    <AssemblyName>cocos2d_mono.Core.DesktopGL</AssemblyName>
+    <TargetFramework>net6.0</TargetFramework>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <PackageId>Cocos2D-Mono.Core.DesktopGL</PackageId>
+    <Version>2.4.6.4</Version>
+    <Description>Cocos2D-Mono for Core DesktopGL (OpenGL Desktop Platforms)</Description>
+    <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
+    <Company>Broken Walls Studios</Company>
+    <Product>cocos2d-mono for Core DesktopGL</Product>
+    <PackageTags>mono monogame cocos2d game</PackageTags>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReleaseNotes>
+		- Fix issue with CCLabel Crashing
+	</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
+    <PackageIcon>logo-small.png</PackageIcon>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Title>Cocos2D-Mono.Core.DesktopGL</Title>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Core\DesktopGL\Debug\</OutputPath>
+    <IntermediateOutputPath>obj\Core\DesktopGL\Debug</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Core\DesktopGL\Debug</BaseIntermediateOutputPath>
+    <DefineConstants>TRACE;DEBUG;WINDOWSGL;OPENGL;MONOGAME;DESKTOPGL;LINUX</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Core\DesktopGL\Release\</OutputPath>
+    <IntermediateOutputPath>obj\Core\DesktopGL\Release</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Core\DesktopGL\Release</BaseIntermediateOutputPath>
+    <DefineConstants>TRACE;DEBUG;WINDOWSGL;OPENGL;MONOGAME;DESKTOPGL;LINUX</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <PackageReference Include="OpenTK" Version="4.4.0" />
+    <PackageReference Include="SharpZipLib" Version="1.3.3" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\box2d\box2d.DesktopGL\box2d.DesktopGL.csproj">
+      <Project>{18aafe9f-27fd-4b00-9aac-14612319ea91}</Project>
+      <Name>box2d.DesktopGL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Logos\logo-small.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  <Import Project="..\cocos2d.projitems" Label="Shared" />
+</Project>

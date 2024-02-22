@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>cocos2d_mono.Core.Android</RootNamespace>
+    <AssemblyName>cocos2d_mono.Core.Android</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
+	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetFramework>net6.0-android31.0</TargetFramework>
+    <BaseIntermediateOutputPath>obj\Core\Android\Debug</BaseIntermediateOutputPath>
+    <PackageReleaseNotes>
+        - Fix issue with CCLabel Crashing
+	</PackageReleaseNotes>
+    <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
+    <Version>2.4.6.4</Version>
+    <Title>Cocos2D-Mono for Core Android</Title>
+    <Description>Cocos2D-Mono for Core Android</Description>
+    <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
+    <PackageTags>mono monogame cocos2d game</PackageTags>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Core\Android\Debug\</OutputPath>
+    <IntermediateOutputPath>obj\Core\Android\Debug</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Core\Android\Debug</BaseIntermediateOutputPath>
+    <DefineConstants>TRACE;DEBUG;ANDROID;OPENGL;GLES;MONOGAME</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Core\Android\Release\</OutputPath>
+    <IntermediateOutputPath>obj\Core\Android\Release</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Core\Android\Release</BaseIntermediateOutputPath>
+    <DefineConstants>TRACE;ANDROID;OPENGL;GLES;MONOGAME</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\box2d\box2d.Android\box2d.Android.csproj">
+      <Project>{c0146e28-b1e0-4f07-8407-8411753500ea}</Project>
+      <Name>box2d.Android</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.Android" Version="3.8.1.303" />
+    <PackageReference Include="OpenTK" Version="4.7.7" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+  </ItemGroup>
+  <Import Project="..\cocos2d.projitems" Label="Shared" Condition="Exists('..\cocos2d.projitems')" />
+</Project>

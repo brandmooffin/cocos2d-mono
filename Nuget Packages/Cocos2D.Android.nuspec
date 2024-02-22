@@ -15,7 +15,7 @@
     <releaseNotes>
       - Fix issue with CCLabel Crashing
     </releaseNotes>
-    <copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
+    <copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
     <dependencies>
       <group targetFramework="net6.0-android31.0">

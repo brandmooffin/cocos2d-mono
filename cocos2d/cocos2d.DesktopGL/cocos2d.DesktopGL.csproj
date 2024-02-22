@@ -4,8 +4,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{01382AD1-179C-4322-91C4-E4FAC0CA6C84}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Cocos2D</RootNamespace>
-    <AssemblyName>Cocos2D</AssemblyName>
+    <RootNamespace>cocos2d_mono.DesktopGL</RootNamespace>
+    <AssemblyName>cocos2d_mono.DesktopGL</AssemblyName>
     <TargetFramework>net6.0</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
