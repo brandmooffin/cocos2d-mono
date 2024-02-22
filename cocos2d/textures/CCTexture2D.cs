@@ -827,13 +827,16 @@ namespace Cocos2D
 #else
                         var methodInfo = typeof(CCTexture2D).GetMethods(BindingFlags.Public | BindingFlags.Instance).First(m => m.Name == "InitWithRawData" && m.IsGenericMethod && m.GetParameters().Length == 7);
 #endif
-                        var genericMethod = methodInfo.MakeGenericMethod(m_CacheInfo.Data.GetType().GetElementType());
-                        genericMethod.Invoke(this, new object[]
+                        if (methodInfo != null)
                         {
+                            var genericMethod = methodInfo.MakeGenericMethod(m_CacheInfo.Data.GetType().GetElementType());
+                            genericMethod.Invoke(this, new object[]
+                            {
                             m_CacheInfo.Data,
-                            m_ePixelFormat, m_uPixelsWide, m_uPixelsHigh, 
+                            m_ePixelFormat, m_uPixelsWide, m_uPixelsHigh,
                             m_bHasPremultipliedAlpha, m_bHasMipmaps, m_tContentSize
-                        });
+                            });
+                        }
 
                         //                    InitWithRawData((byte[])m_CacheInfo.Data, m_ePixelFormat, m_uPixelsWide, m_uPixelsHigh,
                         //                                    m_bHasPremultipliedAlpha, m_bHasMipmaps, m_tContentSize);

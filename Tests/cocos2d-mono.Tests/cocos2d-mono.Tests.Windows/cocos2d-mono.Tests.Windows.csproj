@@ -20,9 +20,9 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Windows\Debug\</OutputPath>
-    <IntermediateOutputPath>obj\Windows\Debug</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\Windows\Debug</BaseIntermediateOutputPath>
+    <OutputPath>bin\Debug\Windows</OutputPath>
+    <IntermediateOutputPath>obj\Debug\Windows</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Debug\Windows</BaseIntermediateOutputPath>
     <DefineConstants>TRACE;DEBUG;WINDOWS; WINDOWSDX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -31,9 +31,9 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Windows\Release\</OutputPath>
-    <IntermediateOutputPath>obj\Windows\Release</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\Windows\Release</BaseIntermediateOutputPath>
+    <OutputPath>bin\Release\Windows</OutputPath>
+    <IntermediateOutputPath>obj\Release\Windows</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Release\Windows</BaseIntermediateOutputPath>
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -41,7 +41,7 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <PackageId>Cocos2D-Mono.Tests.Windows (DX)</PackageId>
+    <PackageId>Cocos2D-Mono.Tests.Windows</PackageId>
     <Copyright>Copyright © 2021 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Version>2.3.8.0</Version>
     <Product>Cocos2D-Mono Tests for Windows</Product>

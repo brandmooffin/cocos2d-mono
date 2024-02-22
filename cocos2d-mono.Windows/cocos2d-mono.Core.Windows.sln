@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "box2d.Windows", "..\box2d\box2d.Windows\box2d.Windows.csproj", "{F0F33689-AED5-4D53-9BE7-8E8F9306CF26}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "box2d", "..\box2d\box2d.shproj", "{02F4E1C8-8A0D-49DE-9B39-A966E126ACC3}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "cocos2d", "..\cocos2d\cocos2d.shproj", "{AFED60A6-F61D-4C4E-BB3B-20FFDA06B990}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cocos2d.Core.Windows", "..\cocos2d\cocos2d.Core.Windows\cocos2d.Core.Windows.csproj", "{E3CF514A-3539-4F29-9E16-0AEA2EDEF311}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\box2d\box2d.projitems*{02f4e1c8-8a0d-49de-9b39-a966e126acc3}*SharedItemsImports = 13
+		..\cocos2d\cocos2d.projitems*{afed60a6-f61d-4c4e-bb3b-20ffda06b990}*SharedItemsImports = 13
+		..\cocos2d\cocos2d.projitems*{e3cf514a-3539-4f29-9e16-0aea2edef311}*SharedItemsImports = 5
+		..\box2d\box2d.projitems*{f0f33689-aed5-4d53-9be7-8e8f9306cf26}*SharedItemsImports = 5
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F0F33689-AED5-4D53-9BE7-8E8F9306CF26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0F33689-AED5-4D53-9BE7-8E8F9306CF26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0F33689-AED5-4D53-9BE7-8E8F9306CF26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0F33689-AED5-4D53-9BE7-8E8F9306CF26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3CF514A-3539-4F29-9E16-0AEA2EDEF311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3CF514A-3539-4F29-9E16-0AEA2EDEF311}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3CF514A-3539-4F29-9E16-0AEA2EDEF311}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3CF514A-3539-4F29-9E16-0AEA2EDEF311}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B626777C-71C4-45E2-8F37-9620159D3A4E}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup>
+    <TargetFramework>net6.0-ios16.1</TargetFramework>
+    <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
+    <OutputType>Library</OutputType>
+    <RootNamespace>cocos2d_mono.Core.iOS</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>cocos2d-mono.Core.iOS</AssemblyName>
+	<CheckEolWorkloads>false</CheckEolWorkloads>
+    <BaseIntermediateOutputPath>obj\Core\iOS\Debug</BaseIntermediateOutputPath>
+    <PackageReleaseNotes>
+		- Fix issue with TextureAtlas Data not purging
+		- Core libs! These libraries only contain the MonoGame framework library, the Content Builder is not included.
+	</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
+    <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
+    <Version>2.4.7</Version>
+    <Description>Cocos2D-Mono for Core iOS</Description>
+    <Title>Cocos2D-Mono for Core iOS</Title>
+    <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <PackageTags>mono monogame cocos2d game</PackageTags>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Core\iOS\Debug\</OutputPath>
+    <IntermediateOutputPath>obj\Core\iOS\Debug</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Core\iOS\Debug</BaseIntermediateOutputPath>
+    <DefineConstants>DEBUG;__IOS__;__MOBILE__;__UNIFIED__;IPHONE;IOS;GLES;OPENGL;MONOGAME</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Core\iOS\Release\</OutputPath>
+    <IntermediateOutputPath>obj\Core\iOS\Release</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Core\iOS\Release</BaseIntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <DefineConstants>__IOS__;__MOBILE__;__UNIFIED__;IPHONE;IOS;GLES;OPENGL;MONOGAME</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\box2d\box2d.iOS\box2d.iOS.csproj">
+      <Project>{8ac4c3cc-9bcd-405c-be0b-5c217a054b78}</Project>
+      <Name>box2d.iOS</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.1.303" />
+    <PackageReference Include="OpenTK" Version="4.7.7" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+  </ItemGroup>
+  <Import Project="..\cocos2d.projitems" Label="Shared" />
+</Project>
