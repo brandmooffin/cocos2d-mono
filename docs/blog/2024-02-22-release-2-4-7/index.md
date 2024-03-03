@@ -31,6 +31,12 @@ NuGet Packages:
 [Cocos2D-Mono.Uwp](https://www.nuget.org/packages/Cocos2D-Mono.Uwp/)
 [Cocos2D-Mono.Windows](https://www.nuget.org/packages/Cocos2D-Mono.Windows/)
 
+[Cocos2D-Mono.Core.Android](https://www.nuget.org/packages/Cocos2D-Mono.Core.Android/)
+[Cocos2D-Mono.Core.DesktopGL](https://www.nuget.org/packages/Cocos2D-Mono.Core.DesktopGL/)
+[Cocos2D-Mono.Core.iOS](https://www.nuget.org/packages/Cocos2D-Mono.Core.iOS/)
+[Cocos2D-Mono.Core.Uwp](https://www.nuget.org/packages/Cocos2D-Mono.Core.Uwp/)
+[Cocos2D-Mono.Core.Windows](https://www.nuget.org/packages/Cocos2D-Mono.Core.Windows/)
+
 [Visual Studio Project Template Extension](https://marketplace.visualstudio.com/items?itemName=Cocos2D-MonoTeamBrokenWallsStudios.cocos2dmonoprojecttemplates)
 
 ## Core Library
