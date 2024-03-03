@@ -9,14 +9,13 @@
     <AssemblyName>box2d.iOS</AssemblyName>
     <Title>box2d for iOS</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.7</Version>
+    <Version>2.4.7.1</Version>
     <Description>box2d for iOS</Description>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageReleaseNotes>
-		- Fix issue with TextureAtlas Data not purging
-		- Core libs! These libraries only contain the MonoGame framework library, the Content Builder is not included.
+		- CCLabel improvements for Android and iOS
 	</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

@@ -259,14 +259,20 @@ namespace Cocos2D
 
                         var info = GetKerningInfo(chars[i]);
                         var regionX = region.x + 0.015f;
+                        var regionWidth = region.width;
 #if ANDROID
                         regionX = region.x + 0.55f;
+#endif
+
+#if IOS
+                        regionX = region.x + 0.33f;
+                        regionWidth -= 1;
 #endif
 
                         var fontDef = new CCBMFontConfiguration.CCBMFontDef()
                         {
                             charID = chars[i],
-                            rect = new CCRect(regionX, region.y, region.width, region.height),
+                            rect = new CCRect(regionX, region.y, regionWidth, region.height),
                             xOffset = minX, // + (int)Math.Ceiling(info.A),
                             yOffset = minY,
                             xAdvance = (int)Math.Ceiling(info.A + info.B + info.C)
@@ -285,11 +291,6 @@ namespace Cocos2D
             m_bTextureDirty = true;
 
             return fontConfig;
-        }
-
-        ~CCLabel()
-        {
-            Dispose();
         }
 
         public override void Draw()

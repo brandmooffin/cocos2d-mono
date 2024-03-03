@@ -11,6 +11,10 @@
     <AssemblyName>cocos2d-mono.Tests.iOS</AssemblyName>
     <CheckEolWorkloads>false</CheckEolWorkloads>
   </PropertyGroup>
+  <PropertyGroup>
+      <MtouchLink>SdkOnly</MtouchLink>
+      <MtouchExtraArgs>$(MtouchExtraArgs) --weak-framework=NewsstandKit</MtouchExtraArgs>
+    </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
