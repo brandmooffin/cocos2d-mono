@@ -10,11 +10,10 @@
     <TargetFramework>net6.0-android31.0</TargetFramework>
     <BaseIntermediateOutputPath>obj\Core\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-		- Fix issue with CCLabel Crashing- Fix issue with TextureAtlas Data not purging
-		- Core libs! These libraries only contain the MonoGame framework library, the Content Builder is not included.
+		- CCLabel improvements for Android and iOS
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.7</Version>
+    <Version>2.4.7.1</Version>
     <Title>Cocos2D-Mono for Core Android</Title>
     <Description>Cocos2D-Mono for Core Android</Description>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
