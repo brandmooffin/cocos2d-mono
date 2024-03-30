@@ -604,4 +604,38 @@ namespace tests
         }
     }
     #endregion
+
+    #region Draw Line
+    public class DrawLineTest : BaseDrawNodeTest
+    {
+        public override string title()
+        {
+            return "Draw Line Demo";
+        }
+        public override bool Init()
+        {
+            base.Init();
+
+            CCSize s = CCDirector.SharedDirector.WinSize;
+
+            CCDrawNode draw = new CCDrawNode();
+            AddChild(draw, 10);
+
+
+            draw.DrawLine(new CCPoint(s.Width / 2, s.Height / 2),
+                new CCPoint(s.Width / 2 - 100, s.Height / 2), 5,
+                CCColor4B.Yellow, CCLineCap.Round);
+
+            draw.DrawLine(new CCPoint(s.Width / 2, s.Height / 2 + 100),
+                new CCPoint(s.Width / 2 - 100, s.Height / 2 + 100), 5,
+                CCColor4B.Yellow, CCLineCap.Butt);
+
+            draw.DrawLine(new CCPoint(s.Width / 2, s.Height / 2 + 200),
+    new CCPoint(s.Width / 2 - 100, s.Height / 2 + 200), 5,
+    CCColor4B.Yellow, CCLineCap.Square);
+
+            return true;
+        }
+    }
+    #endregion
 }
