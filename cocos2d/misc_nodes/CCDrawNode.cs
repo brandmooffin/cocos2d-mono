@@ -8,6 +8,8 @@ namespace Cocos2D
 {
     public class CCDrawNode : CCNode
     {
+        const int DefaultBufferSize = 512;
+
         private CCRawList<VertexPositionColor> m_pVertices;
         private CCBlendFunc m_sBlendFunc;
         private bool m_bDirty;
@@ -28,7 +30,7 @@ namespace Cocos2D
             base.Init();
 
             m_sBlendFunc = CCBlendFunc.AlphaBlend;
-            m_pVertices = new CCRawList<VertexPositionColor>(512);
+            m_pVertices = new CCRawList<VertexPositionColor>(DefaultBufferSize);
             return true;
         }
 
@@ -419,7 +421,7 @@ namespace Cocos2D
 
                 vert1.Vertices.X = x + pos.X;
                 vert1.Vertices.Y = y + pos.Y;
-                m_pVertices.Add(new VertexPositionColor(Vector3.Zero, cl));
+                m_pVertices.Add(new VertexPositionColor(new Vector3(vert1.Vertices.X, vert1.Vertices.Y, vert1.Vertices.Z), cl));
 
                 //calculate the tangential vector 
                 //remember, the radial vector is (x, y) 
@@ -437,7 +439,7 @@ namespace Cocos2D
 
                 vert1.Vertices.X = x + pos.X;
                 vert1.Vertices.Y = y + pos.Y;
-                
+
                 m_pVertices.Add(new VertexPositionColor(new Vector3(vert1.Vertices.X, vert1.Vertices.Y, 0), cl));
             }
 
@@ -448,9 +450,10 @@ namespace Cocos2D
 
         public virtual void Clear()
         {
-            m_pVertices = new CCRawList<VertexPositionColor>(512);
+            m_pVertices = new CCRawList<VertexPositionColor>(DefaultBufferSize);
             m_bDirty = true;
             _toDraw = null;
+            base.ContentSize = CCSize.Zero;
         }
 
         public bool FilterPrimitivesByAlpha
