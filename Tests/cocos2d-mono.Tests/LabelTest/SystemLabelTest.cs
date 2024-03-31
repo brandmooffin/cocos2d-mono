@@ -50,6 +50,8 @@ namespace cocos2d_mono.Tests.LabelTest
                 LineBreakMode = CCTextLineBreakMode.SmartBreak
             };
 
+            japaneseSystemLabel.SystemFontSpacing = 10;
+
             AddChild(smallSystemLabel);
             AddChild(smallAdjustDimensionSystemLabel);
             AddChild(multiLineSystemLabel);

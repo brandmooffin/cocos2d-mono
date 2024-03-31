@@ -28,6 +28,7 @@ namespace Cocos2D
 
         protected string m_FontName;
         protected float m_FontSize;
+        protected int m_FontSpacing;
         protected bool m_bFontDirty;
 
         [Obsolete("This will be removed in a future release. Please use SystemFont instead.")]
@@ -79,6 +80,20 @@ namespace Cocos2D
                 if (m_FontSize != value)
                 {
                     m_FontSize = value;
+                    m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
+                    m_bFontDirty = true;
+                }
+            }
+        }
+
+        public int SystemFontSpacing
+        {
+            get { return m_FontSpacing; }
+            set
+            {
+                if (m_FontSpacing != value)
+                {
+                    m_FontSpacing = value;
                     m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
                     m_bFontDirty = true;
                 }
@@ -181,6 +196,11 @@ namespace Cocos2D
                 {
                     chars.Add(ch);
                 }
+                else if (fontConfig.m_pFontDefDictionary.ContainsKey(ch))
+                {
+                    var fontDef = fontConfig.m_pFontDefDictionary[ch];
+                    fontDef.xAdvance = fontDef.xKern + m_FontSpacing;
+                }
             }
 
             if (chars.Count == 0)
@@ -237,9 +257,6 @@ namespace Cocos2D
                     w = Math.Max(maxX - minX + 1, 1);
                     h = Math.Max(maxY - minY + 1, 1);
 
-                    //maxX = minX + w;
-                    //maxY = minY + h;
-
                     int index = 0;
                     for (int y = minY; y <= maxY; y++)
                     {
@@ -273,9 +290,10 @@ namespace Cocos2D
                         {
                             charID = chars[i],
                             rect = new CCRect(regionX, region.y, regionWidth, region.height),
-                            xOffset = minX, // + (int)Math.Ceiling(info.A),
+                            xOffset = minX,
                             yOffset = minY,
-                            xAdvance = (int)Math.Ceiling(info.A + info.B + info.C)
+                            xKern = (int)Math.Ceiling(info.A + info.B + info.C),
+                            xAdvance = (int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing
                         };
 
                         fontConfig.CharacterSet.Add(chars[i]);
