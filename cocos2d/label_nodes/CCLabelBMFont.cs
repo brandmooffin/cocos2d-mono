@@ -472,12 +472,18 @@ namespace Cocos2D
 
             int quantityOfLines = 1;
 
-            if (String.IsNullOrEmpty(m_sString))
+            if (string.IsNullOrEmpty(m_sString))
             {
                 return;
             }
 
             int stringLen = m_sString.Length;
+
+            if (m_pConfiguration == null)
+            {
+                CCLog.Log("CCLabelBMFont: Configuration not found");
+                return;
+            }
 
             var charSet = m_pConfiguration.CharacterSet;
             if (charSet.Count == 0)
@@ -521,8 +527,19 @@ namespace Cocos2D
 
                 kerningAmount = this.KerningAmountForFirst(prev, c);
 
+                if (m_pConfiguration.m_pFontDefDictionary == null)
+                {
+                    throw new InvalidOperationException("Font definition dictionary is null.");
+                }
+
                 // unichar is a short, and an int is needed on HASH_FIND_INT
                 if (!m_pConfiguration.m_pFontDefDictionary.TryGetValue(c, out fontDef))
+                {
+                    CCLog.Log("cocos2d::CCLabelBMFont: characer not found {0}", (int) c);
+                    continue;
+                }
+
+                if (fontDef == null)
                 {
                     CCLog.Log("cocos2d::CCLabelBMFont: characer not found {0}", (int) c);
                     continue;
@@ -545,23 +562,15 @@ namespace Cocos2D
                 }
                 else
                 {
-                    // New Sprite ? Set correct color, opacity, etc...
-                    //if( false )
-                    //{
-                    //    /* WIP: Doesn't support many features yet.
-                    //     But this code is super fast. It doesn't create any sprite.
-                    //     Ideal for big labels.
-                    //     */
-                    //    fontChar = m_pReusedChar;
-                    //    fontChar.BatchNode = null;
-                    //    hasSprite = false;
-                    //}
-                    //else
+                    if (m_pobTextureAtlas == null || m_pobTextureAtlas.Texture == null)
                     {
-                        fontChar = new CCSprite();
-                        fontChar.InitWithTexture(m_pobTextureAtlas.Texture, rect);
-                        AddChild(fontChar, i, i);
+                        continue;
                     }
+
+
+                    fontChar = new CCSprite();
+                    fontChar.InitWithTexture(m_pobTextureAtlas.Texture, rect);
+                    AddChild(fontChar, i, i);
 
                     // Apply label properties
                     fontChar.IsOpacityModifyRGB = m_bIsOpacityModifyRGB;

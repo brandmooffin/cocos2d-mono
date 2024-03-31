@@ -466,6 +466,11 @@ namespace Cocos2D
             public int xAdvance;
 
             /// <summary>
+            /// The amount to move the current position after drawing the character (in pixels) based on kern info
+            /// </summary>
+            public int xKern;
+
+            /// <summary>
             /// The X amount the image should be offset when drawing the image (in pixels)
             /// </summary>
             public int xOffset;
