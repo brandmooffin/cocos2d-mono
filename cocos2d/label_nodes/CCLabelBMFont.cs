@@ -486,7 +486,7 @@ namespace Cocos2D
             }
 
             var charSet = m_pConfiguration.CharacterSet;
-            if (charSet.Count == 0)
+            if (charSet == null || charSet.Count == 0)
             {
                 throw (new InvalidOperationException(
                     "Can not compute the size of the font because the character set is empty."));
@@ -547,6 +547,12 @@ namespace Cocos2D
 
                 rect = fontDef.rect;
                 rect = rect.PixelsToPoints();
+
+                if (m_tImageOffset == null)
+                {
+                    CCLog.Log("cocos2d::CCLabelBMFont: m_tImageOffset is null");
+                    continue; // Or handle accordingly
+                }
 
                 rect.Origin.X += m_tImageOffset.X;
                 rect.Origin.Y += m_tImageOffset.Y;
