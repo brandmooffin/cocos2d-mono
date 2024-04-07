@@ -165,7 +165,7 @@ namespace Cocos2D
             return base.InitWithString(text, GetFontKey(fontName, fontSize), dimensions.PointsToPixels(), hAlignment, vAlignment, CCPoint.Zero, m_pTexture);
         }
 
-        private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset)
+        private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset, bool retry = false)
         {
             if (m_pData == null)
             {
@@ -302,6 +302,12 @@ namespace Cocos2D
                     else
                     {
                         CCLog.Log("Texture atlas is full");
+                        if (!retry)
+                        {
+                            m_pData = null;
+                            s_pConfigurations.Remove(fontKey);
+                            return InitializeFont(fontName, fontSize, charset, true);
+                        }
                     }
                 }
             }
