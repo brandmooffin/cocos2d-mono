@@ -10,12 +10,11 @@
     <TargetFramework>net6.0-android31.0</TargetFramework>
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-		- Fixes for Creating Fonts
-		- Fixes for Round Line Cap
-		- SystemFontSpacing for character spacing
+		- Improvements reusing TextureAtlas
+		- Fixes for Create Charater Bitmap Fonts
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.7.2</Version>
+    <Version>2.4.7.3</Version>
     <Title>Cocos2D-Mono for Android</Title>
     <Description>Cocos2D-Mono for Android</Description>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>

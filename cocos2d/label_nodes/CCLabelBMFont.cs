@@ -460,177 +460,184 @@ namespace Cocos2D
 
         public void CreateFontChars()
         {
-            int nextFontPositionX = 0;
-            int nextFontPositionY = 0;
-            char prev = (char) 255;
-            int kerningAmount = 0;
-
-            CCSize tmpSize = CCSize.Zero;
-
-            int longestLine = 0;
-            int totalHeight = 0;
-
-            int quantityOfLines = 1;
-
-            if (string.IsNullOrEmpty(m_sString))
+            try
             {
-                return;
-            }
+                int nextFontPositionX = 0;
+                int nextFontPositionY = 0;
+                char prev = (char)255;
+                int kerningAmount = 0;
 
-            int stringLen = m_sString.Length;
+                CCSize tmpSize = CCSize.Zero;
 
-            if (m_pConfiguration == null)
-            {
-                CCLog.Log("CCLabelBMFont: Configuration not found");
-                return;
-            }
+                int longestLine = 0;
+                int totalHeight = 0;
 
-            var charSet = m_pConfiguration.CharacterSet;
-            if (charSet == null || charSet.Count == 0)
-            {
-                throw (new InvalidOperationException(
-                    "Can not compute the size of the font because the character set is empty."));
-            }
+                int quantityOfLines = 1;
 
-            for (int i = 0; i < stringLen - 1; ++i)
-            {
-                if (m_sString[i] == '\n')
+                if (string.IsNullOrEmpty(m_sString))
                 {
-                    quantityOfLines++;
-                }
-            }
-
-            totalHeight = m_pConfiguration.m_nCommonHeight * quantityOfLines;
-            nextFontPositionY = 0 -
-                                (m_pConfiguration.m_nCommonHeight - m_pConfiguration.m_nCommonHeight * quantityOfLines);
-
-            CCBMFontConfiguration.CCBMFontDef fontDef = null;
-            CCRect rect;
-
-            for (int i = 0; i < stringLen; i++)
-            {
-                char c = m_sString[i];
-
-                if (c == '\n')
-                {
-                    nextFontPositionX = 0;
-                    nextFontPositionY -= m_pConfiguration.m_nCommonHeight;
-                    continue;
+                    return;
                 }
 
-                if (charSet.IndexOf(c) == -1)
+                int stringLen = m_sString.Length;
+
+                if (m_pConfiguration == null)
                 {
-                    CCLog.Log("Cocos2D.CCLabelBMFont: Attempted to use character not defined in this bitmap: {0}",
-                              (int) c);
-                    continue;
+                    CCLog.Log("CCLabelBMFont: Configuration not found");
+                    return;
                 }
 
-                kerningAmount = this.KerningAmountForFirst(prev, c);
-
-                if (m_pConfiguration.m_pFontDefDictionary == null)
+                var charSet = m_pConfiguration.CharacterSet;
+                if (charSet == null || charSet.Count == 0)
                 {
-                    throw new InvalidOperationException("Font definition dictionary is null.");
+                    throw (new InvalidOperationException(
+                        "Can not compute the size of the font because the character set is empty."));
                 }
 
-                // unichar is a short, and an int is needed on HASH_FIND_INT
-                if (!m_pConfiguration.m_pFontDefDictionary.TryGetValue(c, out fontDef))
+                for (int i = 0; i < stringLen - 1; ++i)
                 {
-                    CCLog.Log("cocos2d::CCLabelBMFont: characer not found {0}", (int) c);
-                    continue;
-                }
-
-                if (fontDef == null)
-                {
-                    CCLog.Log("cocos2d::CCLabelBMFont: characer not found {0}", (int) c);
-                    continue;
-                }
-
-                rect = fontDef.rect;
-                rect = rect.PixelsToPoints();
-
-                if (m_tImageOffset == null)
-                {
-                    CCLog.Log("cocos2d::CCLabelBMFont: m_tImageOffset is null");
-                    continue; // Or handle accordingly
-                }
-
-                rect.Origin.X += m_tImageOffset.X;
-                rect.Origin.Y += m_tImageOffset.Y;
-
-                CCSprite fontChar;
-
-                //bool hasSprite = true;
-                fontChar = (CCSprite) (GetChildByTag(i));
-                if (fontChar != null)
-                {
-                    // Reusing previous Sprite
-                    fontChar.Visible = true;
-                }
-                else
-                {
-                    if (m_pobTextureAtlas == null || m_pobTextureAtlas.Texture == null)
+                    if (m_sString[i] == '\n')
                     {
+                        quantityOfLines++;
+                    }
+                }
+
+                totalHeight = m_pConfiguration.m_nCommonHeight * quantityOfLines;
+                nextFontPositionY = 0 -
+                                    (m_pConfiguration.m_nCommonHeight - m_pConfiguration.m_nCommonHeight * quantityOfLines);
+
+                CCBMFontConfiguration.CCBMFontDef fontDef = null;
+                CCRect rect;
+
+                for (int i = 0; i < stringLen; i++)
+                {
+                    char c = m_sString[i];
+
+                    if (c == '\n')
+                    {
+                        nextFontPositionX = 0;
+                        nextFontPositionY -= m_pConfiguration.m_nCommonHeight;
                         continue;
                     }
 
+                    if (charSet.IndexOf(c) == -1)
+                    {
+                        CCLog.Log("Cocos2D.CCLabelBMFont: Attempted to use character not defined in this bitmap: {0}",
+                                  (int)c);
+                        continue;
+                    }
 
-                    fontChar = new CCSprite();
-                    fontChar.InitWithTexture(m_pobTextureAtlas.Texture, rect);
-                    AddChild(fontChar, i, i);
+                    kerningAmount = this.KerningAmountForFirst(prev, c);
 
-                    // Apply label properties
-                    fontChar.IsOpacityModifyRGB = m_bIsOpacityModifyRGB;
+                    if (m_pConfiguration.m_pFontDefDictionary == null)
+                    {
+                        throw new InvalidOperationException("Font definition dictionary is null.");
+                    }
 
-                    // Color MUST be set before opacity, since opacity might change color if OpacityModifyRGB is on
-                    fontChar.UpdateDisplayedColor(m_tDisplayedColor);
-                    fontChar.UpdateDisplayedOpacity(m_cDisplayedOpacity);
+                    // unichar is a short, and an int is needed on HASH_FIND_INT
+                    if (!m_pConfiguration.m_pFontDefDictionary.TryGetValue(c, out fontDef))
+                    {
+                        CCLog.Log("cocos2d::CCLabelBMFont: characer not found {0}", (int)c);
+                        continue;
+                    }
+
+                    if (fontDef == null)
+                    {
+                        CCLog.Log("cocos2d::CCLabelBMFont: characer not found {0}", (int)c);
+                        continue;
+                    }
+
+                    rect = fontDef.rect;
+                    rect = rect.PixelsToPoints();
+
+                    if (m_tImageOffset == null)
+                    {
+                        CCLog.Log("cocos2d::CCLabelBMFont: m_tImageOffset is null");
+                        continue; // Or handle accordingly
+                    }
+
+                    rect.Origin.X += m_tImageOffset.X;
+                    rect.Origin.Y += m_tImageOffset.Y;
+
+                    CCSprite fontChar;
+
+                    //bool hasSprite = true;
+                    fontChar = (CCSprite)(GetChildByTag(i));
+                    if (fontChar != null)
+                    {
+                        // Reusing previous Sprite
+                        fontChar.Visible = true;
+                    }
+                    else
+                    {
+                        if (m_pobTextureAtlas == null || m_pobTextureAtlas.Texture == null)
+                        {
+                            continue;
+                        }
+
+
+                        fontChar = new CCSprite();
+                        fontChar.InitWithTexture(m_pobTextureAtlas.Texture, rect);
+                        AddChild(fontChar, i, i);
+
+                        // Apply label properties
+                        fontChar.IsOpacityModifyRGB = m_bIsOpacityModifyRGB;
+
+                        // Color MUST be set before opacity, since opacity might change color if OpacityModifyRGB is on
+                        fontChar.UpdateDisplayedColor(m_tDisplayedColor);
+                        fontChar.UpdateDisplayedOpacity(m_cDisplayedOpacity);
+                    }
+
+                    // updating previous sprite
+                    fontChar.SetTextureRect(rect, false, rect.Size);
+
+                    // See issue 1343. cast( signed short + unsigned integer ) == unsigned integer (sign is lost!)
+                    int yOffset = m_pConfiguration.m_nCommonHeight - fontDef.yOffset;
+                    var fontPos =
+                        new CCPoint(
+                            (float)nextFontPositionX + fontDef.xOffset + fontDef.rect.Size.Width * 0.5f + kerningAmount,
+                            (float)nextFontPositionY + yOffset - rect.Size.Height * 0.5f * CCMacros.CCContentScaleFactor());
+                    fontChar.Position = fontPos.PixelsToPoints();
+
+                    // update kerning
+                    nextFontPositionX += fontDef.xAdvance + kerningAmount;
+                    prev = c;
+
+                    if (longestLine < nextFontPositionX)
+                    {
+                        longestLine = nextFontPositionX;
+                    }
+
+                    //if (! hasSprite)
+                    //{
+                    //  UpdateQuadFromSprite(fontChar, i);
+                    //}
                 }
 
-                // updating previous sprite
-                fontChar.SetTextureRect(rect, false, rect.Size);
-
-                // See issue 1343. cast( signed short + unsigned integer ) == unsigned integer (sign is lost!)
-                int yOffset = m_pConfiguration.m_nCommonHeight - fontDef.yOffset;
-                var fontPos =
-                    new CCPoint(
-                        (float) nextFontPositionX + fontDef.xOffset + fontDef.rect.Size.Width * 0.5f + kerningAmount,
-                        (float) nextFontPositionY + yOffset - rect.Size.Height * 0.5f * CCMacros.CCContentScaleFactor());
-                fontChar.Position = fontPos.PixelsToPoints();
-
-                // update kerning
-                nextFontPositionX += fontDef.xAdvance + kerningAmount;
-                prev = c;
-
-                if (longestLine < nextFontPositionX)
+                // If the last character processed has an xAdvance which is less that the width of the characters image, then we need
+                // to adjust the width of the string to take this into account, or the character will overlap the end of the bounding
+                // box
+                if (fontDef.xAdvance < fontDef.rect.Size.Width)
                 {
-                    longestLine = nextFontPositionX;
+                    tmpSize.Width = longestLine + fontDef.rect.Size.Width - fontDef.xAdvance;
                 }
+                else
+                {
+                    tmpSize.Width = longestLine;
+                }
+                tmpSize.Height = totalHeight;
 
-                //if (! hasSprite)
-                //{
-                //  UpdateQuadFromSprite(fontChar, i);
-                //}
+                tmpSize = new CCSize(
+                    m_tDimensions.Width > 0 ? m_tDimensions.Width : tmpSize.Width,
+                    m_tDimensions.Height > 0 ? m_tDimensions.Height : tmpSize.Height
+                    );
+
+                ContentSize = tmpSize.PixelsToPoints();
             }
-
-            // If the last character processed has an xAdvance which is less that the width of the characters image, then we need
-            // to adjust the width of the string to take this into account, or the character will overlap the end of the bounding
-            // box
-            if (fontDef.xAdvance < fontDef.rect.Size.Width)
+            catch (Exception ex)
             {
-                tmpSize.Width = longestLine + fontDef.rect.Size.Width - fontDef.xAdvance;
+                CCLog.Log("Exception: {0}", ex);
             }
-            else
-            {
-                tmpSize.Width = longestLine;
-            }
-            tmpSize.Height = totalHeight;
-
-            tmpSize = new CCSize(
-                m_tDimensions.Width > 0 ? m_tDimensions.Width : tmpSize.Width,
-                m_tDimensions.Height > 0 ? m_tDimensions.Height : tmpSize.Height
-                );
-
-            ContentSize = tmpSize.PixelsToPoints();
         }
 
         public virtual void SetString(string newString, bool needUpdateLabel)
