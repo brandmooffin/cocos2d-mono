@@ -170,7 +170,7 @@ namespace Cocos2D
         {
             if (m_pData == null)
             {
-                InitializeTTFAtlas((int)(1024 * (fontSize/12)), (int)(1024 * (fontSize / 12)));
+                InitializeTTFAtlas((int)(1024 * (fontSize/24)), (int)(1024 * (fontSize / 24)));
             }
 
             if (String.IsNullOrEmpty(charset))
