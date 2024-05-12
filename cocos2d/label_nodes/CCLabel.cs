@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -23,8 +24,8 @@ namespace Cocos2D
             public float C;
         }
 
-        public static CCTexture2D m_pTexture;
-        protected static bool m_bTextureDirty = true;
+        public CCTexture2D m_pTexture;
+        protected bool m_bTextureDirty = true;
 
         protected string m_FontName;
         protected float m_FontSize;
@@ -100,7 +101,7 @@ namespace Cocos2D
             }
         }
 
-        public static void InitializeTTFAtlas(int width, int height)
+        public void InitializeTTFAtlas(int width, int height)
         {
             m_nWidth = width;
             m_nHeight = height;
@@ -165,11 +166,11 @@ namespace Cocos2D
             return base.InitWithString(text, GetFontKey(fontName, fontSize), dimensions.PointsToPixels(), hAlignment, vAlignment, CCPoint.Zero, m_pTexture);
         }
 
-        private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset, bool retry = false)
+        private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset)
         {
             if (m_pData == null)
             {
-                InitializeTTFAtlas(1024, 1024);
+                InitializeTTFAtlas((int)(1024 * (fontSize/12)), (int)(1024 * (fontSize / 12)));
             }
 
             if (String.IsNullOrEmpty(charset))
@@ -302,12 +303,6 @@ namespace Cocos2D
                     else
                     {
                         CCLog.Log("Texture atlas is full");
-                        if (!retry)
-                        {
-                            m_pData = null;
-                            s_pConfigurations.Remove(fontKey);
-                            return InitializeFont(fontName, fontSize, charset, true);
-                        }
                     }
                 }
             }
@@ -334,22 +329,24 @@ namespace Cocos2D
             base.Draw();
         }
 
-		public override string Text {
-			get {
-				return base.Text;
-			}
-			set {
-				if (m_sInitialString != value)
-				{
-					InitializeFont (FontName, FontSize, value);
-					base.Text = value;
-				}
-                UpdateLabel();
+        public override string Text
+        {
+            get
+            {
+                return base.Text;
+            }
+            set
+            {
+                if (m_sInitialString != value)
+                {
+                    InitializeFont(FontName, FontSize, value);
+                    base.Text = value;
+                }
             }
         }
 
 
-        private static string GetFontKey(string fontName, float fontSize)
+        private string GetFontKey(string fontName, float fontSize)
         {
             return String.Format("ttf-{0}-{1}", fontName, fontSize);
         }
@@ -371,14 +368,14 @@ namespace Cocos2D
             public int height;
         }
 
-        private static CCRawList<ivec3> m_pNodes = new CCRawList<ivec3>();
-        private static int m_nUsed;
-        private static int m_nWidth;
-        private static int m_nHeight;
-        private static int m_nDepth;
-        public static int[] m_pData;
+        private CCRawList<ivec3> m_pNodes = new CCRawList<ivec3>();
+        private int m_nUsed;
+        private int m_nWidth;
+        private int m_nHeight;
+        private int m_nDepth;
+        public int[] m_pData;
 
-        private static int Fit(int index, int width, int height)
+        private int Fit(int index, int width, int height)
         {
             var node = m_pNodes[index];
 
@@ -413,7 +410,7 @@ namespace Cocos2D
             return y;
         }
 
-        private static void Merge()
+        private void Merge()
         {
             var nodes = m_pNodes.Elements;
             for (int i = 0, count = m_pNodes.Count; i < count - 1; ++i)
@@ -428,7 +425,7 @@ namespace Cocos2D
             }
         }
 
-        public static ivec4 AllocateRegion(int width, int height)
+        public ivec4 AllocateRegion(int width, int height)
         {
             ivec3 node, prev;
             ivec4 region = new ivec4() { x = 0, y = 0, width = width, height = height };
@@ -505,7 +502,7 @@ namespace Cocos2D
             return region;
         }
 
-        public static void SetRegionData(ivec4 region, int[] data, int stride)
+        public void SetRegionData(ivec4 region, int[] data, int stride)
         {
             var x = region.x;
             var y = region.y;
