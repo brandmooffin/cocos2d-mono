@@ -11,7 +11,7 @@ namespace Cocos2D
     {
         public const int kCCLabelAutomaticWidth = -1;
 
-        public static Dictionary<string, CCBMFontConfiguration> s_pConfigurations = new Dictionary<string, CCBMFontConfiguration>();
+        public Dictionary<string, CCBMFontConfiguration> s_pConfigurations = new Dictionary<string, CCBMFontConfiguration>();
 
 
         protected bool m_bLineBreakWithoutSpaces;
@@ -303,17 +303,17 @@ namespace Cocos2D
 
         #endregion
 
-        public static void FNTConfigRemoveCache()
+        public void FNTConfigRemoveCache()
         {
             if (s_pConfigurations != null)
             {
                 s_pConfigurations.Clear();
             }
 
-            CCLabel.m_pData = null;
+            //CCLabel.m_pData = null;
         }
 
-        public static void PurgeCachedData()
+        public void PurgeCachedData()
         {
             FNTConfigRemoveCache();
         }
@@ -1067,7 +1067,7 @@ namespace Cocos2D
         }
 
 
-        public static CCBMFontConfiguration FNTConfigLoadFile(string file)
+        public CCBMFontConfiguration FNTConfigLoadFile(string file)
         {
             CCBMFontConfiguration pRet;
 
@@ -1080,7 +1080,7 @@ namespace Cocos2D
             return pRet;
         }
 
-        public static CCBMFontConfiguration FNTConfigLoadFile(string fntName, Stream src)
+        public CCBMFontConfiguration FNTConfigLoadFile(string fntName, Stream src)
         {
             CCBMFontConfiguration pRet;
 
