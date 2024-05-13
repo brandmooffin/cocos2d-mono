@@ -12,7 +12,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.4.7.3</Version>
+    <Version>2.4.7.4</Version>
     <PackageId>box2d.DesktopGL</PackageId>
     <Company>Broken Walls Studios</Company>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -25,8 +25,8 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-		- Improvements reusing TextureAtlas
-		- Fixes for Create Charater Bitmap Fonts
+		- Add null checks for CCScheduler
+		- Improve reliability for CCLabel textures
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>

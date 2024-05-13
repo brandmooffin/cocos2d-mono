@@ -242,135 +242,126 @@ namespace Cocos2D
 
                 LinkedListNode<ListEntry> next;
 
-                // updates with priority < 0
-                //foreach (ListEntry entry in _updatesNegList)
-                for (LinkedListNode<ListEntry> node = m_pUpdatesNegList.First; node != null; node = next)
+                // Null checks on lists before iterating
+                if (m_pUpdatesNegList != null)
                 {
-                    next = node.Next;
-                    if (!node.Value.Paused && !node.Value.MarkedForDeletion)
+                    for (LinkedListNode<ListEntry> node = m_pUpdatesNegList.First; node != null; node = next)
                     {
-                        UpdateTarget(node.Value.Target, dt);
-                    }
-                }
-
-                // updates with priority == 0
-                //foreach (ListEntry entry in _updates0List)
-                for (LinkedListNode<ListEntry> node = m_pUpdates0List.First; node != null; node = next)
-                {
-                    next = node.Next;
-                    if (!node.Value.Paused && !node.Value.MarkedForDeletion)
-                    {
-                        UpdateTarget(node.Value.Target, dt);
-                    }
-                }
-
-                // updates with priority > 0
-                for (LinkedListNode<ListEntry> node = m_pUpdatesPosList.First; node != null; node = next)
-                {
-                    next = node.Next;
-                    if (!node.Value.Paused && !node.Value.MarkedForDeletion)
-                    {
-                        UpdateTarget(node.Value.Target, dt);
-                    }
-                }
-
-                // Iterate over all the custom selectors
-                var count = m_pHashForTimers.Keys.Count;
-                if (s_pTmpSelectorArray.Length < count)
-                {
-                    s_pTmpSelectorArray = new ICCSelectorProtocol[s_pTmpSelectorArray.Length * 2];
-                }
-                m_pHashForTimers.Keys.CopyTo(s_pTmpSelectorArray, 0);
-
-                for (int i = 0; i < count; i++)
-                {
-                    ICCSelectorProtocol key = s_pTmpSelectorArray[i];
-					if (key == null || !m_pHashForTimers.ContainsKey(key))
-                    {
-                        continue;
-                    }
-                    HashTimeEntry elt = m_pHashForTimers[key];
-
-                    m_pCurrentTarget = elt;
-                    m_bCurrentTargetSalvaged = false;
-
-                    if (elt != null && !m_pCurrentTarget.Paused)
-                    {
-                        // The 'timers' array may change while inside this loop
-                        for (elt.TimerIndex = 0; elt.TimerIndex < elt.Timers.Count; ++elt.TimerIndex)
+                        next = node.Next;
+                        if (node.Value != null && !node.Value.Paused && !node.Value.MarkedForDeletion)
                         {
-                            elt.CurrentTimer = elt.Timers[elt.TimerIndex];
-							if(elt.CurrentTimer != null) {
-	                            elt.CurrentTimerSalvaged = false;
-                                UpdateTarget(elt.CurrentTimer, dt);
-                                elt.CurrentTimer = null;
-							}
+                            UpdateTarget(node.Value.Target, dt);
                         }
                     }
-
-                    // only delete currentTarget if no actions were scheduled during the cycle (issue #481)
-                    if (m_bCurrentTargetSalvaged && m_pCurrentTarget.Timers.Count == 0)
-                    {
-                        RemoveHashElement(m_pCurrentTarget);
-                    }
                 }
-                /*
-                // Iterate over all the script callbacks
-                if (m_pScriptHandlerEntries)
+
+                if (m_pUpdates0List != null)
                 {
-                    for (int i = m_pScriptHandlerEntries->count() - 1; i >= 0; i--)
+                    for (LinkedListNode<ListEntry> node = m_pUpdates0List.First; node != null; node = next)
                     {
-                        CCSchedulerScriptHandlerEntry* pEntry = static_cast<CCSchedulerScriptHandlerEntry*>(m_pScriptHandlerEntries->objectAtIndex(i));
-                        if (pEntry->isMarkedForDeletion())
+                        next = node.Next;
+                        if (node.Value != null && !node.Value.Paused && !node.Value.MarkedForDeletion)
                         {
-                            m_pScriptHandlerEntries->removeObjectAtIndex(i);
-                        }
-                        else if (!pEntry->isPaused())
-                        {
-                            pEntry->getTimer()->update(dt);
+                            UpdateTarget(node.Value.Target, dt);
                         }
                     }
-                }             
-                */
+                }
 
-                // delete all updates that are marked for deletion
-                // updates with priority < 0
-                for (LinkedListNode<ListEntry> node = m_pUpdatesNegList.First; node != null; node = next)
+                if (m_pUpdatesPosList != null)
                 {
-                    next = node.Next;
-                    if (node.Value.MarkedForDeletion)
+                    for (LinkedListNode<ListEntry> node = m_pUpdatesPosList.First; node != null; node = next)
                     {
-                        m_pUpdatesNegList.Remove(node);
-                        RemoveUpdateFromHash(node.Value);
+                        next = node.Next;
+                        if (node.Value != null && !node.Value.Paused && !node.Value.MarkedForDeletion)
+                        {
+                            UpdateTarget(node.Value.Target, dt);
+                        }
                     }
                 }
 
-                // updates with priority == 0
-                for (LinkedListNode<ListEntry> node = m_pUpdates0List.First; node != null; node = next)
+                // Hash for timers null check
+                if (m_pHashForTimers != null)
                 {
-                    next = node.Next;
-                    if (node.Value.MarkedForDeletion)
+                    var count = m_pHashForTimers.Keys.Count;
+                    if (s_pTmpSelectorArray.Length < count)
                     {
-                        m_pUpdates0List.Remove(node);
-                        RemoveUpdateFromHash(node.Value);
+                        s_pTmpSelectorArray = new ICCSelectorProtocol[s_pTmpSelectorArray.Length * 2];
+                    }
+                    m_pHashForTimers.Keys.CopyTo(s_pTmpSelectorArray, 0);
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        ICCSelectorProtocol key = s_pTmpSelectorArray[i];
+                        if (key != null && m_pHashForTimers.ContainsKey(key))
+                        {
+                            HashTimeEntry elt = m_pHashForTimers[key];
+                            m_pCurrentTarget = elt;
+                            m_bCurrentTargetSalvaged = false;
+
+                            if (elt != null && !m_pCurrentTarget.Paused)
+                            {
+                                for (elt.TimerIndex = 0; elt.TimerIndex < elt.Timers?.Count; ++elt.TimerIndex)
+                                {
+                                    elt.CurrentTimer = elt.Timers[elt.TimerIndex];
+                                    if (elt.CurrentTimer != null)
+                                    {
+                                        elt.CurrentTimerSalvaged = false;
+                                        UpdateTarget(elt.CurrentTimer, dt);
+                                        elt.CurrentTimer = null;
+                                    }
+                                }
+                            }
+                            if (m_bCurrentTargetSalvaged && m_pCurrentTarget.Timers.Count == 0)
+                            {
+                                RemoveHashElement(m_pCurrentTarget);
+                            }
+                        }
                     }
                 }
 
-                // updates with priority > 0
-                for (LinkedListNode<ListEntry> node = m_pUpdatesPosList.First; node != null; node = next)
+                // Delete all updates that are marked for deletion with null checks added on lists
+                if (m_pUpdatesNegList != null)
                 {
-                    next = node.Next;
-                    if (node.Value.MarkedForDeletion)
+                    for (LinkedListNode<ListEntry> node = m_pUpdatesNegList.First; node != null; node = next)
                     {
-                        m_pUpdatesPosList.Remove(node);
-                        RemoveUpdateFromHash(node.Value);
+                        next = node.Next;
+                        if (node.Value != null && node.Value.MarkedForDeletion)
+                        {
+                            m_pUpdatesNegList.Remove(node);
+                            RemoveUpdateFromHash(node.Value);
+                        }
+                    }
+                }
+
+                if (m_pUpdates0List != null)
+                {
+                    for (LinkedListNode<ListEntry> node = m_pUpdates0List.First; node != null; node = next)
+                    {
+                        next = node.Next;
+                        if (node.Value != null && node.Value.MarkedForDeletion)
+                        {
+                            m_pUpdates0List.Remove(node);
+                            RemoveUpdateFromHash(node.Value);
+                        }
+                    }
+                }
+
+                if (m_pUpdatesPosList != null)
+                {
+                    for (LinkedListNode<ListEntry> node = m_pUpdatesPosList.First; node != null; node = next)
+                    {
+                        next = node.Next;
+                        if (node.Value != null && node.Value.MarkedForDeletion)
+                        {
+                            m_pUpdatesPosList.Remove(node);
+                            RemoveUpdateFromHash(node.Value);
+                        }
                     }
                 }
             }
             finally
             {
-                // Always do this just in case there is a problem
-
+                // Always reset these fields in the finally block to ensure proper cleanup
                 m_bUpdateHashLocked = false;
                 m_pCurrentTarget = null;
             }
