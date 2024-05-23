@@ -195,6 +195,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)keypad_dispatcher\CCKeypadDispatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)keypad_dispatcher\ICCKeypadDelegate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCBMFontConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCBMFontTexture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabel-Android.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabel-CoreGraphics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabel-Gdi.cs" />
