@@ -13,7 +13,7 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.DesktopGL</PackageId>
-    <Version>2.4.7.4</Version>
+    <Version>2.4.7.5</Version>
     <Description>Cocos2D-Mono for DesktopGL (OpenGL Desktop Platforms)</Description>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
@@ -23,8 +23,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-		- Add null checks for CCScheduler
-		- Improve reliability for CCLabel textures
+		- Improve texture cache for CCLabel textures
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>

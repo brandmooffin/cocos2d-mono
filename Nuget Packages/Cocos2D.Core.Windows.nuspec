@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.Core.Windows</id>
-    <version>2.4.7.4</version>
+    <version>2.4.7.5</version>
     <title>Cocos2D-Mono for Core Windows</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
@@ -13,8 +13,7 @@
     <description>Cocos2D-Mono for Core Windows (DX)</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
-      - Add null checks for CCScheduler
-      - Improve reliability for CCLabel textures
+     - Improve texture cache for CCLabel textures
     </releaseNotes>
     <copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
