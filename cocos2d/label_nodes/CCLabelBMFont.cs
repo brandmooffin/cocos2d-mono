@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.IO;
+using cocos2d.label_nodes;
 
 namespace Cocos2D
 {
@@ -11,8 +12,8 @@ namespace Cocos2D
     {
         public const int kCCLabelAutomaticWidth = -1;
 
-        public Dictionary<string, CCBMFontConfiguration> s_pConfigurations = new Dictionary<string, CCBMFontConfiguration>();
-
+        public static Dictionary<string, CCBMFontConfiguration> s_pConfigurations = new Dictionary<string, CCBMFontConfiguration>();
+        public static Dictionary<string, CCBMFontTexture> s_pTextures = new Dictionary<string, CCBMFontTexture>();
 
         protected bool m_bLineBreakWithoutSpaces;
         protected CCTextAlignment m_pHAlignment = CCTextAlignment.Center;
@@ -303,7 +304,7 @@ namespace Cocos2D
 
         #endregion
 
-        public void FNTConfigRemoveCache()
+        public static void FNTConfigRemoveCache()
         {
             if (s_pConfigurations != null)
             {
@@ -313,7 +314,7 @@ namespace Cocos2D
             //CCLabel.m_pData = null;
         }
 
-        public void PurgeCachedData()
+        public static void PurgeCachedData()
         {
             FNTConfigRemoveCache();
         }
@@ -1067,7 +1068,7 @@ namespace Cocos2D
         }
 
 
-        public CCBMFontConfiguration FNTConfigLoadFile(string file)
+        public static CCBMFontConfiguration FNTConfigLoadFile(string file)
         {
             CCBMFontConfiguration pRet;
 
@@ -1080,7 +1081,7 @@ namespace Cocos2D
             return pRet;
         }
 
-        public CCBMFontConfiguration FNTConfigLoadFile(string fntName, Stream src)
+        public static CCBMFontConfiguration FNTConfigLoadFile(string fntName, Stream src)
         {
             CCBMFontConfiguration pRet;
 

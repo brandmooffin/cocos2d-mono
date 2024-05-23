@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-
+using cocos2d.label_nodes;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Cocos2D
@@ -162,25 +162,48 @@ namespace Cocos2D
             InitializeFont(fontName, fontSize, text);
 			m_FontName = fontName;
 			m_FontSize = fontSize;
-               
+
+            s_pTextures[GetFontKey(m_FontName, m_FontSize)] = new CCBMFontTexture()
+            {
+                m_pNodes = m_pNodes,
+                m_nUsed = m_nUsed,
+                m_nWidth = m_nWidth,
+                m_nHeight = m_nHeight,
+                m_nDepth = m_nDepth,
+                m_pData = m_pData,
+                m_pTexture = m_pTexture
+            };
+
             return base.InitWithString(text, GetFontKey(fontName, fontSize), dimensions.PointsToPixels(), hAlignment, vAlignment, CCPoint.Zero, m_pTexture);
         }
 
         private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset)
         {
+            var fontKey = GetFontKey(fontName, fontSize);
+
+            if (s_pTextures.ContainsKey(fontKey))
+            {
+                var m_pBMFontTexture = s_pTextures[fontKey];
+                m_pTexture = m_pBMFontTexture.m_pTexture;
+                m_pData = m_pBMFontTexture.m_pData;
+                m_nWidth = m_pBMFontTexture.m_nWidth;
+                m_nHeight = m_pBMFontTexture.m_nHeight;
+                m_pNodes = m_pBMFontTexture.m_pNodes;
+                m_nUsed = m_pBMFontTexture.m_nUsed;
+                m_nDepth = m_pBMFontTexture.m_nDepth;
+            }
+
             if (m_pData == null)
             {
                 InitializeTTFAtlas((int)(1024 * (fontSize/24)), (int)(1024 * (fontSize / 24)));
             }
 
-            if (String.IsNullOrEmpty(charset))
+            if (string.IsNullOrEmpty(charset))
             {
                 charset = " ";
             }
 
             var chars = new CCRawList<char>();
-
-            var fontKey = GetFontKey(fontName, fontSize);
 
             CCBMFontConfiguration fontConfig;
 
@@ -353,7 +376,7 @@ namespace Cocos2D
 
         #region Skyline Bottom Left
 
-        private struct ivec3
+        public struct ivec3
         {
             public int x;
             public int y;

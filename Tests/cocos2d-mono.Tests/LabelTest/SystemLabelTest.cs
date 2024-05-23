@@ -74,7 +74,7 @@ namespace cocos2d_mono.Tests.LabelTest
             AddChild(multiLineSystemLabel);
             AddChild(mediumSystemLabel);
             AddChild(largeSystemLabel);
-           // AddChild(japaneseSystemLabel);
+            // AddChild(japaneseSystemLabel);
             scene.AddChild(japaneseSystemLabel);
 
             smallAdjustDimensionSystemLabel.Dimensions = new CCSize(500, 0);
