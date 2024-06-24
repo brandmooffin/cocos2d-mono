@@ -184,6 +184,10 @@ namespace Cocos2D
             if (s_pTextures.ContainsKey(fontKey))
             {
                 var m_pBMFontTexture = s_pTextures[fontKey];
+                if (m_pTexture != null)
+                {
+                    m_pTexture.Dispose();
+                }
                 m_pTexture = m_pBMFontTexture.m_pTexture;
                 m_pData = m_pBMFontTexture.m_pData;
                 m_nWidth = m_pBMFontTexture.m_nWidth;
@@ -224,6 +228,9 @@ namespace Cocos2D
                 {
                     var fontDef = fontConfig.m_pFontDefDictionary[ch];
                     fontDef.xAdvance = fontDef.xKern + m_FontSpacing;
+                    #if IOS
+                    fontDef.xAdvance = (int)((fontDef.xKern + m_FontSpacing) * 0.75f);
+                    #endif
                 }
             }
 
@@ -319,7 +326,10 @@ namespace Cocos2D
                             xKern = (int)Math.Ceiling(info.A + info.B + info.C),
                             xAdvance = (int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing
                         };
-
+                        
+#if IOS
+                        fontDef.xAdvance = (int)(((int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing) * 0.75f);
+#endif
                         fontConfig.CharacterSet.Add(chars[i]);
                         fontConfig.m_pFontDefDictionary.Add(chars[i], fontDef);
                     }
@@ -342,10 +352,18 @@ namespace Cocos2D
                 m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
                 m_bFontDirty = false;
             }
-
+            
             if (m_bTextureDirty)
             {
-                m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, m_nWidth, m_nHeight, true);
+                if (m_nWidth != m_pTexture.PixelsWide || m_nHeight != m_pTexture.PixelsHigh)
+                {
+                    m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, m_nWidth, m_nHeight, true);
+                }
+                else
+                {
+                    m_pTexture.XNATexture.SetData(m_pData);
+                }
+
                 m_bTextureDirty = false;
             }
 
