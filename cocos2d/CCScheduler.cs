@@ -213,19 +213,13 @@ namespace Cocos2D
 
         private void UpdateTarget(ICCSelectorProtocol target, float dt)
         {
-            if (OnUnhandledException == null)
-            {
-                target.Update(dt);
-                return;
-            }
-
             try
             {
                 target.Update(dt);
             }
             catch (Exception exception)
             {
-                OnUnhandledException(exception);
+                OnUnhandledException?.Invoke(exception);
             }
         }
 

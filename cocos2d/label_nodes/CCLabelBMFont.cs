@@ -310,6 +310,11 @@ namespace Cocos2D
             {
                 s_pConfigurations.Clear();
             }
+            
+            if (s_pTextures != null)
+            {
+                s_pTextures.Clear();
+            }
 
             //CCLabel.m_pData = null;
         }
@@ -618,7 +623,7 @@ namespace Cocos2D
                 // If the last character processed has an xAdvance which is less that the width of the characters image, then we need
                 // to adjust the width of the string to take this into account, or the character will overlap the end of the bounding
                 // box
-                if (fontDef.xAdvance < fontDef.rect.Size.Width)
+                if (fontDef != null && fontDef.xAdvance < fontDef.rect.Size.Width)
                 {
                     tmpSize.Width = longestLine + fontDef.rect.Size.Width - fontDef.xAdvance;
                 }

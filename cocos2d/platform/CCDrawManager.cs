@@ -1795,7 +1795,7 @@ namespace Cocos2D
             }
         }
 
-        internal static void DisposeAllResources()
+        public static void DisposeAllResources()
         {
             lock (_createdResources)
             {
