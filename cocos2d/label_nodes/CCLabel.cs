@@ -228,6 +228,9 @@ namespace Cocos2D
                 {
                     var fontDef = fontConfig.m_pFontDefDictionary[ch];
                     fontDef.xAdvance = fontDef.xKern + m_FontSpacing;
+                    #if IOS
+                    fontDef.xAdvance = (int)((fontDef.xKern + m_FontSpacing) * 0.75f);
+                    #endif
                 }
             }
 
@@ -323,7 +326,10 @@ namespace Cocos2D
                             xKern = (int)Math.Ceiling(info.A + info.B + info.C),
                             xAdvance = (int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing
                         };
-
+                        
+#if IOS
+                        fontDef.xAdvance = (int)(((int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing) * 0.75f);
+#endif
                         fontConfig.CharacterSet.Add(chars[i]);
                         fontConfig.m_pFontDefDictionary.Add(chars[i], fontDef);
                     }
