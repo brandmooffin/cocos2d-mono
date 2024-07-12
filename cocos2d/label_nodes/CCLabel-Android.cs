@@ -72,7 +72,8 @@ namespace Cocos2D
 
         private float GetFontHeight()
         {
-            return (_fontMetrix.Bottom - _fontMetrix.Top) + _paint.Descent(); // / _fontScaleFactor + 1f;
+            var descent = _paint.Descent();
+            return (_fontMetrix.Bottom - _fontMetrix.Top) - descent / _fontScaleFactor - 1f;
         }
 
         private CCSize GetMeasureString(string text)

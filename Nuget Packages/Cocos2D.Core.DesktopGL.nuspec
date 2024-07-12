@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.Core.DesktopGL</id>
-    <version>2.4.7.6</version>
+    <version>2.4.7.7</version>
     <title>Cocos2D-Mono for Core DesktopGL</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
@@ -13,9 +13,9 @@
     <description>Cocos2D-Mono for Core DesktopGL (OpenGL Desktop Platforms)</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
-    - Better handling for CCTexture caching
-    - Improvements for font definitions
-    - Minor adjustment for font spacing
+    - Improved support for CJK characters
+    - Resolved character spacing issues for CCLabel
+    - iOS improvements
     </releaseNotes>
     <copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
