@@ -93,7 +93,7 @@ namespace Cocos2D
 			CCLabelUtilities.NativeDrawString(_bitmap, s, _font, _brush, new CGRect(0,0,w,h));
 			_bitmapData = _bitmap.Data;
 
-            stride = (int)_bitmap.BytesPerRow;
+            stride = (int)_bitmap.Width * 4;
 
 			return (byte*)_bitmapData;
 		}
