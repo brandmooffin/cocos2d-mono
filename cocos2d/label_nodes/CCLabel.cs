@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using cocos2d.label_nodes;
 using Microsoft.Xna.Framework.Graphics;
+#if IOS
+using Foundation;
+#endif
 
 namespace Cocos2D
 {
@@ -16,9 +19,11 @@ namespace Cocos2D
             /// <summary>Specifies the A spacing of the character. The A spacing is the distance to add to the current
             /// position before drawing the character glyph.</summary>
             public float A;
+
             /// <summary>Specifies the B spacing of the character. The B spacing is the width of the drawn portion of
             /// the character glyph.</summary>
             public float B;
+
             /// <summary>Specifies the C spacing of the character. The C spacing is the distance to add to the current
             /// position to provide white space to the right of the character glyph.</summary>
             public float C;
@@ -122,15 +127,19 @@ namespace Cocos2D
 
         public CCLabel(string text, string fontName, float fontSize) :
             this(text, fontName, fontSize, CCSize.Zero, CCTextAlignment.Left, CCVerticalTextAlignment.Top)
-        { }
+        {
+        }
 
         public CCLabel(string text, string fontName, float fontSize, CCTextAlignment hAlignment) :
             this(text, fontName, fontSize, CCSize.Zero, hAlignment, CCVerticalTextAlignment.Top)
-        { }
+        {
+        }
 
-        public CCLabel(string text, string fontName, float fontSize, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment) :
+        public CCLabel(string text, string fontName, float fontSize, CCTextAlignment hAlignment,
+            CCVerticalTextAlignment vAlignment) :
             this(text, fontName, fontSize, CCSize.Zero, hAlignment, vAlignment)
-        { }
+        {
+        }
 
         public CCLabel(string text, string fontName, float fontSize, CCSize dimensions) :
             this(text, fontName, fontSize, dimensions, CCTextAlignment.Left, CCVerticalTextAlignment.Top)
@@ -142,26 +151,30 @@ namespace Cocos2D
         {
         }
 
-        public CCLabel(string text, string fontName, float fontSize, CCSize dimensions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment)
+        public CCLabel(string text, string fontName, float fontSize, CCSize dimensions, CCTextAlignment hAlignment,
+            CCVerticalTextAlignment vAlignment)
         {
             InitWithString(text, fontName, fontSize, dimensions, hAlignment, vAlignment);
         }
 
         public bool InitWithString(string text, string fontName, float fontSize)
         {
-            return InitWithString(text, fontName, fontSize, CCSize.Zero, CCTextAlignment.Left, CCVerticalTextAlignment.Top);
+            return InitWithString(text, fontName, fontSize, CCSize.Zero, CCTextAlignment.Left,
+                CCVerticalTextAlignment.Top);
         }
 
-        public bool InitWithString(string text, string fontName, float fontSize, CCSize dimensions, CCTextAlignment hAlignment)
+        public bool InitWithString(string text, string fontName, float fontSize, CCSize dimensions,
+            CCTextAlignment hAlignment)
         {
             return InitWithString(text, fontName, fontSize, dimensions, hAlignment, CCVerticalTextAlignment.Top);
         }
 
-        public bool InitWithString(string text, string fontName, float fontSize, CCSize dimensions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment)
+        public bool InitWithString(string text, string fontName, float fontSize, CCSize dimensions,
+            CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment)
         {
             InitializeFont(fontName, fontSize, text);
-			m_FontName = fontName;
-			m_FontSize = fontSize;
+            m_FontName = fontName;
+            m_FontSize = fontSize;
 
             s_pTextures[GetFontKey(m_FontName, m_FontSize)] = new CCBMFontTexture()
             {
@@ -174,7 +187,8 @@ namespace Cocos2D
                 m_pTexture = m_pTexture
             };
 
-            return base.InitWithString(text, GetFontKey(fontName, fontSize), dimensions.PointsToPixels(), hAlignment, vAlignment, CCPoint.Zero, m_pTexture);
+            return base.InitWithString(text, GetFontKey(fontName, fontSize), dimensions.PointsToPixels(), hAlignment,
+                vAlignment, CCPoint.Zero, m_pTexture);
         }
 
         private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset)
@@ -188,6 +202,7 @@ namespace Cocos2D
                 {
                     m_pTexture.Dispose();
                 }
+
                 m_pTexture = m_pBMFontTexture.m_pTexture;
                 m_pData = m_pBMFontTexture.m_pData;
                 m_nWidth = m_pBMFontTexture.m_nWidth;
@@ -199,7 +214,7 @@ namespace Cocos2D
 
             if (m_pData == null)
             {
-                InitializeTTFAtlas((int)(1024 * (fontSize/24)), (int)(1024 * (fontSize / 24)));
+                InitializeTTFAtlas((int)(1024 * (fontSize / 24)), (int)(1024 * (fontSize / 24)));
             }
 
             if (string.IsNullOrEmpty(charset))
@@ -228,9 +243,6 @@ namespace Cocos2D
                 {
                     var fontDef = fontConfig.m_pFontDefDictionary[ch];
                     fontDef.xAdvance = fontDef.xKern + m_FontSpacing;
-                    #if IOS
-                    fontDef.xAdvance = (int)((fontDef.xKern + m_FontSpacing) * 0.75f);
-                    #endif
                 }
             }
 
@@ -326,9 +338,11 @@ namespace Cocos2D
                             xKern = (int)Math.Ceiling(info.A + info.B + info.C),
                             xAdvance = (int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing
                         };
-                        
 #if IOS
-                        fontDef.xAdvance = (int)(((int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing) * 0.75f);
+                        if (char.IsDigit(chars[i]) || !IsCJKCharacter(chars[i]))
+                        {
+                            fontDef.yOffset += 10;
+                        }
 #endif
                         fontConfig.CharacterSet.Add(chars[i]);
                         fontConfig.m_pFontDefDictionary.Add(chars[i], fontDef);
@@ -352,7 +366,7 @@ namespace Cocos2D
                 m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
                 m_bFontDirty = false;
             }
-            
+
             if (m_bTextureDirty)
             {
                 if (m_nWidth != m_pTexture.PixelsWide || m_nHeight != m_pTexture.PixelsHigh)
@@ -372,10 +386,7 @@ namespace Cocos2D
 
         public override string Text
         {
-            get
-            {
-                return base.Text;
-            }
+            get { return base.Text; }
             set
             {
                 if (m_sInitialString != value)
@@ -383,6 +394,7 @@ namespace Cocos2D
                     InitializeFont(FontName, FontSize, value);
                     base.Text = value;
                 }
+
                 UpdateLabel();
             }
         }
@@ -391,6 +403,39 @@ namespace Cocos2D
         private string GetFontKey(string fontName, float fontSize)
         {
             return String.Format("ttf-{0}-{1}", fontName, fontSize);
+        }
+
+        public static bool IsCJKCharacter(char c)
+        {
+            var category = CharUnicodeInfo.GetUnicodeCategory(c);
+
+            if ((category == UnicodeCategory.OtherLetter)
+                || (category == UnicodeCategory.ModifierLetter)
+                || (category == UnicodeCategory.OtherPunctuation)
+                || (category == UnicodeCategory.OtherSymbol)
+                || (category == UnicodeCategory.OtherNotAssigned)
+                || (category == UnicodeCategory.OtherNumber)
+                || (category == UnicodeCategory.LetterNumber))
+            {
+                if ((c >= '\u3041' && c <= '\u309F') // Hiragana ranges
+                    || (c >= '\u30A0' && c <= '\u30FF') // Katakana ranges
+                    || (c >= '\u4E00' && c <= '\u9FBF') // Unified CJK ranges
+                    || (c >= '\uAC00' && c <= '\uD7A3') // Hangul ranges (Korean)
+                    || (c >= '\u3000' && c <= '\u303F') // CJK Punctuation
+                    || (c >= '\u3400' && c <= '\u4DBF') // CJK Extension A
+                    || (c >= '\uF900' && c <= '\uFAFF') // CJK Compatibility Ideographs
+                    // || (c >= '\u20000' && c <= '\u2A6DF') // CJK Extension B
+                    // || (c >= '\u2A700' && c <= '\u2B73F') // CJK Extension C
+                    // || (c >= '\u2B740' && c <= '\u2B81F') // CJK Extension D
+                    // || (c >= '\u2B820' && c <= '\u2CEAF') // CJK Extension E
+                    // || (c >= '\u2CEB0' && c <= '\u2EBEF')) // CJK Extension F
+                    )
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         #region Skyline Bottom Left
@@ -449,6 +494,7 @@ namespace Cocos2D
 
                 ++i;
             }
+
             return y;
         }
 
@@ -573,5 +619,4 @@ namespace Cocos2D
 
         #endregion
     }
-
 }
