@@ -8,6 +8,7 @@ using cocos2d.label_nodes;
 using Microsoft.Xna.Framework.Graphics;
 #if IOS
 using Foundation;
+using UIKit;
 #endif
 
 namespace Cocos2D
@@ -243,6 +244,21 @@ namespace Cocos2D
                 {
                     var fontDef = fontConfig.m_pFontDefDictionary[ch];
                     fontDef.xAdvance = fontDef.xKern + m_FontSpacing;
+
+                    #if IOS
+                    var deviceName = UIDevice.CurrentDevice.Name;
+                    if (IsCJKCharacter(chars[i]))
+                    {
+                        if (deviceName.Contains("13"))
+                        {
+                            fontDef.xAdvance = (int)((fontDef.xKern + m_FontSpacing) * 0.75f);
+                        }
+                        else
+                        {
+                            fontDef.yOffset -= 10;
+                        }
+                    }
+                    #endif
                 }
             }
 
@@ -339,9 +355,18 @@ namespace Cocos2D
                             xAdvance = (int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing
                         };
 #if IOS
-                        if (char.IsDigit(chars[i]) || !IsCJKCharacter(chars[i]))
+                        var deviceName = UIDevice.CurrentDevice.Name;
+                        if (IsCJKCharacter(chars[i]))
                         {
-                            fontDef.yOffset += 10;
+                            if (deviceName.Contains("13"))
+                            {
+                                fontDef.xAdvance = (int)(((int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing) *
+                                                         0.75f);
+                            }
+                            else
+                            {
+                                fontDef.yOffset -= 10;
+                            }
                         }
 #endif
                         fontConfig.CharacterSet.Add(chars[i]);
