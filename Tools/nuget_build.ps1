@@ -1,0 +1,8 @@
+dotnet pack "..\cocos2d-mono\cocos2d\cocos2d.Android\cocos2d.Android.csproj" -p:NuspecFile=".\..\..\Nuget Packages\Cocos2D.Android.nuspec" -c Release -o "..\cocos2d-mono\Nuget Packages"
+dotnet pack "..\cocos2d-mono\cocos2d\cocos2d.Core.Android\cocos2d.Core.Android.csproj" -p:NuspecFile=".\..\..\Nuget Packages\Cocos2D.Core.Android.nuspec" -c Release -o "..\cocos2d-mono\Nuget Packages"
+dotnet pack "..\cocos2d-mono\cocos2d\cocos2d.iOS\cocos2d.iOS.csproj" -p:NuspecFile=".\..\..\Nuget Packages\Cocos2D.iOS.nuspec" -c Release -o "..\cocos2d-mono\Nuget Packages"
+dotnet pack "..\cocos2d-mono\cocos2d\cocos2d.Core.iOS\cocos2d.Core.iOS.csproj" -p:NuspecFile=".\..\..\Nuget Packages\Cocos2D.Core.iOS.nuspec" -c Release -o "..\cocos2d-mono\Nuget Packages"
+dotnet pack "..\cocos2d-mono\cocos2d\cocos2d.DesktopGL\cocos2d.DesktopGL.csproj" -p:NuspecFile=".\..\..\Nuget Packages\Cocos2D.DesktopGL.nuspec" -c Release -o "..\cocos2d-mono\Nuget Packages"
+dotnet pack "..\cocos2d-mono\cocos2d\cocos2d.Core.DesktopGL\cocos2d.Core.DesktopGL.csproj" -p:NuspecFile=".\..\..\Nuget Packages\Cocos2D.Core.DesktopGL.nuspec" -c Release -o "..\cocos2d-mono\Nuget Packages"
+dotnet pack "..\cocos2d-mono\cocos2d\cocos2d.Windows\cocos2d.Windows.csproj" -p:NuspecFile=".\..\..\Nuget Packages\Cocos2D.Windows.nuspec" -c Release -o "..\cocos2d-mono\Nuget Packages"
+dotnet pack "..\cocos2d-mono\cocos2d\cocos2d.Core.Windows\cocos2d.Core.Windows.csproj" -p:NuspecFile=".\..\..\Nuget Packages\Cocos2D.Core.Windows.nuspec" -c Release -o "..\cocos2d-mono\Nuget Packages"
