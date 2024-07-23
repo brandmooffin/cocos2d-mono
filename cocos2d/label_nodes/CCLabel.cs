@@ -246,10 +246,11 @@ namespace Cocos2D
                     fontDef.xAdvance = fontDef.xKern + m_FontSpacing;
 
                     #if IOS
-                    var deviceName = UIDevice.CurrentDevice.Name;
-                    if (IsCJKCharacter(chars[i]))
+                    if (IsCJKCharacter(ch))
                     {
-                        if (deviceName.Contains("13"))
+                        var deviceName = UIDevice.CurrentDevice.Name;
+                        var languages = NSUserDefaults.StandardUserDefaults.ArrayForKey("AppleLanguages");
+                        if (deviceName.Contains("13") || languages.Contains(new NSString("ja")))
                         {
                             fontDef.xAdvance = (int)((fontDef.xKern + m_FontSpacing) * 0.75f);
                         }
@@ -355,10 +356,11 @@ namespace Cocos2D
                             xAdvance = (int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing
                         };
 #if IOS
-                        var deviceName = UIDevice.CurrentDevice.Name;
                         if (IsCJKCharacter(chars[i]))
                         {
-                            if (deviceName.Contains("13"))
+                            var deviceName = UIDevice.CurrentDevice.Name;
+                            var languages = NSUserDefaults.StandardUserDefaults.ArrayForKey("AppleLanguages");
+                            if (deviceName.Contains("13") || languages.Contains(new NSString("ja")))
                             {
                                 fontDef.xAdvance = (int)(((int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing) *
                                                          0.75f);
