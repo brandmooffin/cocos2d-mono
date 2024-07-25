@@ -7,7 +7,7 @@
     <CheckEolWorkloads>false</CheckEolWorkloads>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetFramework>net6.0-android31.0</TargetFramework>
+    <TargetFramework>net7.0-android</TargetFramework>
     <BaseIntermediateOutputPath>obj\Core\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
 	    - Improved support for CJK characters

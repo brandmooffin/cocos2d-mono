@@ -38,34 +38,6 @@ namespace Cocos2D
         protected int m_FontSpacing;
         protected bool m_bFontDirty;
 
-        [Obsolete("This will be removed in a future release. Please use SystemFont instead.")]
-        public string FontName
-        {
-            get { return m_FontName; }
-            set
-            {
-                if (m_FontName != value)
-                {
-                    m_FontName = value;
-                    m_bFontDirty = true;
-                }
-            }
-        }
-
-        [Obsolete("This will be removed in a future release. Please use SystemFontSize instead.")]
-        public float FontSize
-        {
-            get { return m_FontSize; }
-            set
-            {
-                if (m_FontSize != value)
-                {
-                    m_FontSize = value;
-                    m_bFontDirty = true;
-                }
-            }
-        }
-
         public string SystemFont
         {
             get { return m_FontName; }
@@ -84,12 +56,8 @@ namespace Cocos2D
             get { return m_FontSize; }
             set
             {
-                if (m_FontSize != value)
-                {
-                    m_FontSize = value;
-                    m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
-                    m_bFontDirty = true;
-                }
+                m_FontSize = value;
+                m_bFontDirty = true;
             }
         }
 
@@ -101,9 +69,24 @@ namespace Cocos2D
                 if (m_FontSpacing != value)
                 {
                     m_FontSpacing = value;
-                    m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
                     m_bFontDirty = true;
                 }
+            }
+        }
+
+        public override string Text
+        {
+            get { return base.Text; }
+            set
+            {
+                if (m_sInitialString != value)
+                {
+                    m_pConfiguration = InitializeFont(m_FontName, m_FontSize, value);
+                    //m_bFontDirty = true;
+                    base.Text = value;
+                }
+
+                UpdateLabel();
             }
         }
 
@@ -177,23 +160,6 @@ namespace Cocos2D
             m_FontName = fontName;
             m_FontSize = fontSize;
 
-            s_pTextures[GetFontKey(m_FontName, m_FontSize)] = new CCBMFontTexture()
-            {
-                m_pNodes = m_pNodes,
-                m_nUsed = m_nUsed,
-                m_nWidth = m_nWidth,
-                m_nHeight = m_nHeight,
-                m_nDepth = m_nDepth,
-                m_pData = m_pData,
-                m_pTexture = m_pTexture
-            };
-
-            return base.InitWithString(text, GetFontKey(fontName, fontSize), dimensions.PointsToPixels(), hAlignment,
-                vAlignment, CCPoint.Zero, m_pTexture);
-        }
-
-        private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset)
-        {
             var fontKey = GetFontKey(fontName, fontSize);
 
             if (s_pTextures.ContainsKey(fontKey))
@@ -212,6 +178,27 @@ namespace Cocos2D
                 m_nUsed = m_pBMFontTexture.m_nUsed;
                 m_nDepth = m_pBMFontTexture.m_nDepth;
             }
+            else
+            {
+                s_pTextures[fontKey] = new CCBMFontTexture()
+                {
+                    m_pNodes = m_pNodes,
+                    m_nUsed = m_nUsed,
+                    m_nWidth = m_nWidth,
+                    m_nHeight = m_nHeight,
+                    m_nDepth = m_nDepth,
+                    m_pData = m_pData,
+                    m_pTexture = m_pTexture
+                };
+            }
+
+            return base.InitWithString(text, fontKey, dimensions.PointsToPixels(), hAlignment,
+                vAlignment, CCPoint.Zero, m_pTexture);
+        }
+
+        private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset)
+        {
+            var fontKey = GetFontKey(fontName, fontSize);
 
             if (m_pData == null)
             {
@@ -396,34 +383,19 @@ namespace Cocos2D
 
             if (m_bTextureDirty)
             {
-                if (m_nWidth != m_pTexture.PixelsWide || m_nHeight != m_pTexture.PixelsHigh)
+                //if (m_nWidth != m_pTexture.PixelsWide || m_nHeight != m_pTexture.PixelsHigh)
                 {
                     m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, m_nWidth, m_nHeight, true);
                 }
-                else
-                {
-                    m_pTexture.XNATexture.SetData(m_pData);
-                }
+                // else
+                // {
+                //     m_pTexture.XNATexture.SetData(m_pData);
+                // }
 
                 m_bTextureDirty = false;
             }
 
             base.Draw();
-        }
-
-        public override string Text
-        {
-            get { return base.Text; }
-            set
-            {
-                if (m_sInitialString != value)
-                {
-                    InitializeFont(FontName, FontSize, value);
-                    base.Text = value;
-                }
-
-                UpdateLabel();
-            }
         }
 
 

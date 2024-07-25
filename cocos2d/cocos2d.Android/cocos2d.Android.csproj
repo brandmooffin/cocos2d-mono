@@ -7,7 +7,7 @@
     <CheckEolWorkloads>false</CheckEolWorkloads>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetFramework>net6.0-android31.0</TargetFramework>
+    <TargetFramework>net7.0-android</TargetFramework>
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
 	    - Improved support for CJK characters
@@ -60,9 +60,9 @@
     <PackageReference Include="OpenTK" Version="4.7.7" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
-  <Import Project="..\cocos2d.projitems" Label="Shared" Condition="Exists('..\cocos2d.projitems')" />
    <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
     <Exec Command="dotnet tool restore" />
   </Target>
+   <Import Project="..\cocos2d.projitems" Label="Shared" />
 </Project>

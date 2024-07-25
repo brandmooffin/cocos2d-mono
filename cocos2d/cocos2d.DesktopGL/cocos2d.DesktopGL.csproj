@@ -6,7 +6,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>cocos2d_mono.DesktopGL</RootNamespace>
     <AssemblyName>cocos2d_mono.DesktopGL</AssemblyName>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>

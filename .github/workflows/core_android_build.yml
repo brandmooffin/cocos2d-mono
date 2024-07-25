@@ -29,11 +29,11 @@ jobs:
         with:
           distribution: "microsoft"
           java-version: "11"
-      # Install the .NET Core workload
-      - name: Install .NET Core
-        uses: actions/setup-dotnet@v2
+      # Install the .NET workload
+      - name: Install .NET
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 7.0.x
 
       - name: Install Android Workloads
         run: |
