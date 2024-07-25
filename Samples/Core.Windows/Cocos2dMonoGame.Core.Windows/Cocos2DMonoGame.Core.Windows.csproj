@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
     <UseWindowsForms>true</UseWindowsForms>
@@ -14,7 +14,7 @@
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Cocos2D-Mono.Core.Windows" Version="2.4.7.8" />
+    <PackageReference Include="Cocos2D-Mono.Core.Windows" Version="2.4.7.9" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
   </ItemGroup>
   <ItemGroup>

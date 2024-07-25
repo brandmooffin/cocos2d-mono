@@ -4,7 +4,7 @@
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
     <ProjectGuid>{CE272322-EEA8-4CDF-86E9-4FAA85D0BB98}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0-ios16.1</TargetFramework>
+    <TargetFramework>net7.0-ios</TargetFramework>
     <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
     <RootNamespace>cocos2d_mono.Tests.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>

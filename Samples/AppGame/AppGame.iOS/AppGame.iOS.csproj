@@ -4,7 +4,7 @@
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
     <ProjectGuid>{8182f0aa-9409-4752-9851-7b2ab1b7df08}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0-ios16.1</TargetFramework>
+    <TargetFramework>net7.0-ios</TargetFramework>
     <SupportedOSPlatformVersion>15.4</SupportedOSPlatformVersion>
     <RootNamespace>AppGame.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
@@ -148,7 +148,7 @@
     <BundleResource Include="Content\sprites\ui.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Cocos2D-Mono.iOS" Version="2.4.7.8" />
+    <PackageReference Include="Cocos2D-Mono.iOS" Version="2.4.7.9" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.1.303" />
   </ItemGroup>

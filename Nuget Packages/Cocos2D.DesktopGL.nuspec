@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.DesktopGL</id>
-    <version>2.4.7.8</version>
+    <version>2.4.7.9</version>
     <title>Cocos2D-Mono for DesktopGL</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
@@ -13,8 +13,9 @@
     <description>Cocos2D-Mono for DesktopGL (OpenGL Desktop Platforms)</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
-- Fix vertical spacing for CCLabel
-- Fix spacing between CJK characters
+- Reduce character spacing for JA language
+- Improve CCLabel Texture Caching
+- Upgrade to .NET 7
     </releaseNotes>
     <copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
@@ -27,6 +28,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\cocos2d\cocos2d.DesktopGL\bin\DesktopGL\Release\net6.0\*.dll" target="lib\net6.0" />
+    <file src="..\cocos2d\cocos2d.DesktopGL\bin\DesktopGL\Release\net7.0\*.dll" target="lib\net7.0" />
   </files>
 </package>

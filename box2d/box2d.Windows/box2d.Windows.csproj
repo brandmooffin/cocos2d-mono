@@ -6,14 +6,14 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Box2D</RootNamespace>
     <AssemblyName>Box2D</AssemblyName>
-    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <TargetFramework>net7.0-windows7.0</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.4.7.8</Version>
+    <Version>2.4.7.9</Version>
     <PackageId>box2d.Windows</PackageId>
     <Company>Broken Walls Studios</Company>
     <Copyright>Copyright ©  2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -26,8 +26,9 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- Fix vertical spacing for CCLabel
-- Fix spacing between CJK characters
+- Reduce character spacing for JA language
+- Improve CCLabel Texture Caching
+- Upgrade to .NET 7
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>

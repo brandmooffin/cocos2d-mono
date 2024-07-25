@@ -6,7 +6,7 @@
     <FileAlignment>512</FileAlignment>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidStoreUncompressedFileExtensions>.m4a</AndroidStoreUncompressedFileExtensions>
-    <TargetFramework>net6.0-android</TargetFramework>
+    <TargetFramework>net7.0-android</TargetFramework>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -51,7 +51,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" Visible="false" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Cocos2D-Mono.Android" Version="2.4.7.8" />
+    <PackageReference Include="Cocos2D-Mono.Android" Version="2.4.7.9" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.1.303" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
