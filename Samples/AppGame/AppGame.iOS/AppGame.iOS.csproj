@@ -4,7 +4,7 @@
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
     <ProjectGuid>{8182f0aa-9409-4752-9851-7b2ab1b7df08}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0-ios16.1</TargetFramework>
+    <TargetFramework>net7.0-ios</TargetFramework>
     <SupportedOSPlatformVersion>15.4</SupportedOSPlatformVersion>
     <RootNamespace>AppGame.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>

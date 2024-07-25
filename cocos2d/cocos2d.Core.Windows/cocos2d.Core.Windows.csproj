@@ -6,7 +6,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>cocos2d_mono.Windows</RootNamespace>
     <AssemblyName>cocos2d_mono.Windows</AssemblyName>
-    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <UseWindowsForms>true</UseWindowsForms>
