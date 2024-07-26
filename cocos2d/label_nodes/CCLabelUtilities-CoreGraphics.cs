@@ -252,7 +252,6 @@ namespace Cocos2D
 			nfloat leading;
 			abc = new ABCFloat[1];
 			abc[0].abcfB = (float)line.GetTypographicBounds(out ascent, out descent, out leading);
-            abc [0].abcfB += (float)leading;
 		}
 
 		internal static CCSize MeasureString (string textg, CTFont font, CCRect rect)
