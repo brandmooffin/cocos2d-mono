@@ -342,22 +342,6 @@ namespace Cocos2D
                             xKern = (int)Math.Ceiling(info.A + info.B + info.C),
                             xAdvance = (int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing
                         };
-#if IOS
-                        if (IsCJKCharacter(chars[i]))
-                        {
-                            var deviceName = UIDevice.CurrentDevice.Name;
-                            var languages = NSUserDefaults.StandardUserDefaults.ArrayForKey("AppleLanguages");
-                            if (deviceName.Contains("13") || languages.Contains(new NSString("ja")))
-                            {
-                                fontDef.xAdvance = (int)(((int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing) *
-                                                         0.75f);
-                            }
-                            else
-                            {
-                                fontDef.yOffset -= 10;
-                            }
-                        }
-#endif
                         fontConfig.CharacterSet.Add(chars[i]);
                         fontConfig.m_pFontDefDictionary.Add(chars[i], fontDef);
                     }
