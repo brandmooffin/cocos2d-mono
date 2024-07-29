@@ -231,22 +231,6 @@ namespace Cocos2D
                 {
                     var fontDef = fontConfig.m_pFontDefDictionary[ch];
                     fontDef.xAdvance = fontDef.xKern + m_FontSpacing;
-
-                    #if IOS
-                    if (IsCJKCharacter(ch))
-                    {
-                        var deviceName = UIDevice.CurrentDevice.Name;
-                        var languages = NSUserDefaults.StandardUserDefaults.ArrayForKey("AppleLanguages");
-                        if (deviceName.Contains("13") || languages.Contains(new NSString("ja")))
-                        {
-                            fontDef.xAdvance = (int)((fontDef.xKern + m_FontSpacing) * 0.75f);
-                        }
-                        else
-                        {
-                            fontDef.yOffset -= 10;
-                        }
-                    }
-                    #endif
                 }
             }
 
