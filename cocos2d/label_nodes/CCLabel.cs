@@ -30,7 +30,7 @@ namespace Cocos2D
             public float C;
         }
 
-        public CCTexture2D m_pTexture;
+        public static CCTexture2D m_pTexture;
         protected bool m_bTextureDirty = true;
 
         protected string m_FontName;
@@ -46,6 +46,7 @@ namespace Cocos2D
                 if (m_FontName != value)
                 {
                     m_FontName = value;
+                    InitializeFont(m_FontName, m_FontSize, Text);
                     m_bFontDirty = true;
                 }
             }
@@ -57,6 +58,7 @@ namespace Cocos2D
             set
             {
                 m_FontSize = value;
+                InitializeFont(m_FontName, m_FontSize, Text);
                 m_bFontDirty = true;
             }
         }
@@ -69,6 +71,7 @@ namespace Cocos2D
                 if (m_FontSpacing != value)
                 {
                     m_FontSpacing = value;
+                    InitializeFont(m_FontName, m_FontSize, Text);
                     m_bFontDirty = true;
                 }
             }
@@ -81,8 +84,8 @@ namespace Cocos2D
             {
                 if (m_sInitialString != value)
                 {
-                    m_pConfiguration = InitializeFont(m_FontName, m_FontSize, value);
-                    //m_bFontDirty = true;
+                    InitializeFont(m_FontName, m_FontSize, value);
+                    m_bFontDirty = true;
                     base.Text = value;
                 }
 
@@ -90,7 +93,7 @@ namespace Cocos2D
             }
         }
 
-        public void InitializeTTFAtlas(int width, int height)
+        public static void InitializeTTFAtlas(int width, int height)
         {
             m_nWidth = width;
             m_nHeight = height;
@@ -161,36 +164,6 @@ namespace Cocos2D
             m_FontSize = fontSize;
 
             var fontKey = GetFontKey(fontName, fontSize);
-
-            if (s_pTextures.ContainsKey(fontKey))
-            {
-                var m_pBMFontTexture = s_pTextures[fontKey];
-                if (m_pTexture != null)
-                {
-                    m_pTexture.Dispose();
-                }
-
-                m_pTexture = m_pBMFontTexture.m_pTexture;
-                m_pData = m_pBMFontTexture.m_pData;
-                m_nWidth = m_pBMFontTexture.m_nWidth;
-                m_nHeight = m_pBMFontTexture.m_nHeight;
-                m_pNodes = m_pBMFontTexture.m_pNodes;
-                m_nUsed = m_pBMFontTexture.m_nUsed;
-                m_nDepth = m_pBMFontTexture.m_nDepth;
-            }
-            else
-            {
-                s_pTextures[fontKey] = new CCBMFontTexture()
-                {
-                    m_pNodes = m_pNodes,
-                    m_nUsed = m_nUsed,
-                    m_nWidth = m_nWidth,
-                    m_nHeight = m_nHeight,
-                    m_nDepth = m_nDepth,
-                    m_pData = m_pData,
-                    m_pTexture = m_pTexture
-                };
-            }
 
             return base.InitWithString(text, fontKey, dimensions.PointsToPixels(), hAlignment,
                 vAlignment, CCPoint.Zero, m_pTexture);
@@ -351,14 +324,7 @@ namespace Cocos2D
 
             if (m_bTextureDirty)
             {
-                //if (m_nWidth != m_pTexture.PixelsWide || m_nHeight != m_pTexture.PixelsHigh)
-                {
                     m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, m_nWidth, m_nHeight, true);
-                }
-                // else
-                // {
-                //     m_pTexture.XNATexture.SetData(m_pData);
-                // }
 
                 m_bTextureDirty = false;
             }
@@ -370,39 +336,6 @@ namespace Cocos2D
         private string GetFontKey(string fontName, float fontSize)
         {
             return String.Format("ttf-{0}-{1}", fontName, fontSize);
-        }
-
-        public static bool IsCJKCharacter(char c)
-        {
-            var category = CharUnicodeInfo.GetUnicodeCategory(c);
-
-            if ((category == UnicodeCategory.OtherLetter)
-                || (category == UnicodeCategory.ModifierLetter)
-                || (category == UnicodeCategory.OtherPunctuation)
-                || (category == UnicodeCategory.OtherSymbol)
-                || (category == UnicodeCategory.OtherNotAssigned)
-                || (category == UnicodeCategory.OtherNumber)
-                || (category == UnicodeCategory.LetterNumber))
-            {
-                if ((c >= '\u3041' && c <= '\u309F') // Hiragana ranges
-                    || (c >= '\u30A0' && c <= '\u30FF') // Katakana ranges
-                    || (c >= '\u4E00' && c <= '\u9FBF') // Unified CJK ranges
-                    || (c >= '\uAC00' && c <= '\uD7A3') // Hangul ranges (Korean)
-                    || (c >= '\u3000' && c <= '\u303F') // CJK Punctuation
-                    || (c >= '\u3400' && c <= '\u4DBF') // CJK Extension A
-                    || (c >= '\uF900' && c <= '\uFAFF') // CJK Compatibility Ideographs
-                    // || (c >= '\u20000' && c <= '\u2A6DF') // CJK Extension B
-                    // || (c >= '\u2A700' && c <= '\u2B73F') // CJK Extension C
-                    // || (c >= '\u2B740' && c <= '\u2B81F') // CJK Extension D
-                    // || (c >= '\u2B820' && c <= '\u2CEAF') // CJK Extension E
-                    // || (c >= '\u2CEB0' && c <= '\u2EBEF')) // CJK Extension F
-                    )
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         #region Skyline Bottom Left
@@ -422,12 +355,12 @@ namespace Cocos2D
             public int height;
         }
 
-        private CCRawList<ivec3> m_pNodes = new CCRawList<ivec3>();
-        private int m_nUsed;
-        private int m_nWidth;
-        private int m_nHeight;
-        private int m_nDepth;
-        public int[] m_pData;
+        private static CCRawList<ivec3> m_pNodes = new CCRawList<ivec3>();
+        private static int m_nUsed;
+        private static int m_nWidth;
+        private static int m_nHeight;
+        private static int m_nDepth;
+        public static int[] m_pData;
 
         private int Fit(int index, int width, int height)
         {
