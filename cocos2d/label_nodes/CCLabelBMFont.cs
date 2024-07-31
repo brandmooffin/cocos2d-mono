@@ -13,7 +13,6 @@ namespace Cocos2D
         public const int kCCLabelAutomaticWidth = -1;
 
         public static Dictionary<string, CCBMFontConfiguration> s_pConfigurations = new Dictionary<string, CCBMFontConfiguration>();
-        public static Dictionary<string, CCBMFontTexture> s_pTextures = new Dictionary<string, CCBMFontTexture>();
 
         protected bool m_bLineBreakWithoutSpaces;
         protected CCTextAlignment m_pHAlignment = CCTextAlignment.Center;
@@ -309,11 +308,6 @@ namespace Cocos2D
             if (s_pConfigurations != null)
             {
                 s_pConfigurations.Clear();
-            }
-            
-            if (s_pTextures != null)
-            {
-                s_pTextures.Clear();
             }
 
             //CCLabel.m_pData = null;
