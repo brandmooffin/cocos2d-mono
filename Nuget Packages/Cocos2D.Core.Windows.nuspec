@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.Core.Windows</id>
-    <version>2.4.7.13</version>
+    <version>2.4.7.14</version>
     <title>Cocos2D-Mono for Core Windows</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
@@ -13,7 +13,7 @@
     <description>Cocos2D-Mono for Core Windows (DX)</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
-- Lower iOS target version to 16.1
+- Fix Font Size not changing immediately
     </releaseNotes>
     <copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
