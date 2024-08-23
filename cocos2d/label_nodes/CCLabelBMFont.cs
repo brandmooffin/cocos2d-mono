@@ -307,10 +307,12 @@ namespace Cocos2D
         {
             if (s_pConfigurations != null)
             {
-                s_pConfigurations.Clear();
+               s_pConfigurations.Clear();
             }
-
-            //CCLabel.m_pData = null;
+            
+            CCLabel.m_pData = null;
+            CCLabel.m_pTexture?.Dispose();
+            CCLabel.m_pTexture = null;
         }
 
         public static void PurgeCachedData()
