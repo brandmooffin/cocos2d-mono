@@ -173,7 +173,7 @@ namespace Cocos2D
         {
             var fontKey = GetFontKey(fontName, fontSize);
 
-            if (m_pData == null)
+            if (m_pData == null || s_pConfigurations.Count == 0)
             {
                 InitializeTTFAtlas((int)(1024 * (fontSize / 24)), (int)(1024 * (fontSize / 24)));
             }

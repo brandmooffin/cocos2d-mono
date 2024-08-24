@@ -10,7 +10,7 @@
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>2.4.7.15</Version>
+    <Version>2.4.7.16</Version>
     <Title>box2d for Android</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
     <Description>box2d for Android</Description>

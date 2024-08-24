@@ -148,7 +148,7 @@
     <BundleResource Include="Content\sprites\ui.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Cocos2D-Mono.iOS" Version="2.4.7.15" />
+    <PackageReference Include="Cocos2D-Mono.iOS" Version="2.4.7.16" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.1.303" />
   </ItemGroup>
