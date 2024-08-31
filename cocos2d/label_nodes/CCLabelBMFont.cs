@@ -433,6 +433,12 @@ namespace Cocos2D
 
                 m_tImageOffset = imageOffset;
 
+                if (m_pReusedChar != null)
+                {
+                    m_pReusedChar.BatchNode = null;
+                    m_pReusedChar.Dispose();
+                    m_pReusedChar = null;
+                }
                 m_pReusedChar = new CCSprite();
                 m_pReusedChar.InitWithTexture(m_pobTextureAtlas.Texture, CCRect.Zero, false);
                 m_pReusedChar.BatchNode = this;
@@ -1009,7 +1015,10 @@ namespace Cocos2D
                                 if (index < 0) continue;
 
                                 var characterSprite = (CCSprite) GetChildByTag(index);
-                                characterSprite.Position = characterSprite.Position + new CCPoint(shift, 0.0f);
+                                if (characterSprite != null)
+                                {
+                                    characterSprite.Position = characterSprite.Position + new CCPoint(shift, 0.0f);
+                                }
                             }
                         }
 
