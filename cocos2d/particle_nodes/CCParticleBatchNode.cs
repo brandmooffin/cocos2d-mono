@@ -396,14 +396,14 @@ namespace Cocos2D
             RemoveChild(m_pChildren[index], doCleanup);
         }
 
-        public override void RemoveAllChildrenWithCleanup(bool doCleanup)
+        public override void RemoveAllChildren(bool doCleanup = true)
         {
             for (int i = 0; i < m_pChildren.count; i++)
             {
                 ((CCParticleSystem) m_pChildren.Elements[i]).BatchNode = null;
             }
 
-            base.RemoveAllChildrenWithCleanup(doCleanup);
+            base.RemoveAllChildren(doCleanup);
 
             TextureAtlas.RemoveAllQuads();
         }

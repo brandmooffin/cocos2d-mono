@@ -5,34 +5,23 @@
     <AssemblyName>Box2D</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <TargetFramework>net6.0-android31.0</TargetFramework>
+    <TargetFramework>net7.0-android33.0</TargetFramework>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>2.4.5.3</Version>
+    <Version>2.4.7.16</Version>
     <Title>box2d for Android</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
     <Description>box2d for Android</Description>
-    <Copyright>Copyright © 2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <PackageReleaseNotes>
-		- Maintain CCSprite scale when changing SpriteFrame
-		- Fix BitmapFont not loading in Android Tests
-		- CCNodeRGBA is officially gone! Use CCNode instead
-		- Implement IsSwallowTouches for CCTapNode
-		- Removed CCActionState from certain CCActions and aligned them with existing CCActions
-		- Reset vertex for CCDrawNode on Clear
-		- Maintain CCSprite Scale on TextureRect changes
-		- Fixes for CCSprite ContentSize setter
-		- Fixes for CCParallel
-		- Fixed issue with CCNode Pause and Resume
-		- Fixed visibility issue with CCSprite
-		- Enhancements for DrawSegment
-		- Add DrawLine function
-		- Additional colors like CCColor3B.DarkGray
-		- Font improvements for Android and iOS
+	    - Improved support for CJK characters
+	    - Resolved character spacing issues for CCLabel
+	    - iOS improvements
 	</PackageReleaseNotes>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
@@ -60,11 +49,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.1.303" />
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
   </ItemGroup>
   <Import Project="..\box2d.projitems" Label="Shared" />
-  <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
-    <Message Text="Restoring dotnet tools" Importance="High" />
-    <Exec Command="dotnet tool restore" />
-  </Target>
 </Project>

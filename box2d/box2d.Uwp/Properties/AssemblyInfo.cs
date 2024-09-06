@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Broken Walls Studios")]
 [assembly: AssemblyProduct("box2d")]
-[assembly: AssemblyCopyright("Copyright ©  2023 Cocos2D-Mono Team; Broken Walls Studios, LLC.")]
+[assembly: AssemblyCopyright("Copyright ©  2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -35,5 +35,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.4.5.3")]
-[assembly: AssemblyFileVersion("2.4.5.3")]
+[assembly: AssemblyVersion("2.4.7.16")]
+[assembly: AssemblyFileVersion("2.4.7.16")]

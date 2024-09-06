@@ -1031,6 +1031,14 @@ namespace Cocos2D
         Bottom
     }
 
+    public enum CCTextLineBreakMode
+    {
+        SmartBreak,
+        WordBreak,
+        CharacterBreak,
+        NoBreak
+    }
+
     public class CCTypes
     {
         //ccColor3B predefined colors

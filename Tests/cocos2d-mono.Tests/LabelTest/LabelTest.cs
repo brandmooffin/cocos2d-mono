@@ -85,7 +85,6 @@ namespace Cocos2D
             item3.Scale = 0.5f;
 
             AddChild(menu, 11);
-
         }
 
         public void restartCallback(object pSender)

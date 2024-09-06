@@ -36,7 +36,7 @@ namespace tests
         }
 
         static int sceneIdx = -1;
-        static int MAX_LAYER = 50;
+        static int MAX_LAYER = 51;
 
         public static CCLayer createSpriteTestLayer(int nIndex)
         {
@@ -92,6 +92,7 @@ namespace tests
                 case 47: return new SpriteMaskTest();
                 case 48: return new SpriteOpacityTest();
                 case 49: return new SpriteContentSize();
+                case 50: return new SpriteReset();
                     //case 47: return new SpriteBatchNodeReorderSameIndex();
                     //case 48: return new SpriteBatchNodeReorderOneChild();
                     //case 49: return new NodeSort();

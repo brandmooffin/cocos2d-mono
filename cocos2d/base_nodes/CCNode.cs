@@ -1023,12 +1023,7 @@ namespace Cocos2D
 
         #region RemoveChild
 
-        public void RemoveFromParent()
-        {
-            RemoveFromParentAndCleanup(true);
-        }
-
-        public void RemoveFromParentAndCleanup(bool cleanup)
+        public void RemoveFromParent(bool cleanup = true)
         {
             if (m_pParent != null)
             {
@@ -1036,12 +1031,7 @@ namespace Cocos2D
             }
         }
 
-        public void RemoveChild(CCNode child)
-        {
-            RemoveChild(child, true);
-        }
-
-        public virtual void RemoveChild(CCNode child, bool cleanup)
+        public virtual void RemoveChild(CCNode child, bool cleanup = true)
         {
             // explicit nil handling
             if (m_pChildren == null || child == null)
@@ -1097,12 +1087,7 @@ namespace Cocos2D
             }
         }
 
-        public virtual void RemoveAllChildren()
-        {
-            RemoveAllChildrenWithCleanup(true);
-        }
-
-        public virtual void RemoveAllChildrenWithCleanup(bool cleanup)
+        public virtual void RemoveAllChildren(bool cleanup = true)
         {
             // not using detachChild improves speed here
             if (m_pChildren != null && m_pChildren.Count > 0)

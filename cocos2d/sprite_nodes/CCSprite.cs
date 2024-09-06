@@ -33,35 +33,45 @@ namespace Cocos2D
 
         public override void Serialize(System.IO.Stream stream)
         {
-            base.Serialize(stream);
-            StreamWriter sw = new StreamWriter(stream);
-            CCSerialization.SerializeData(Dirty, sw);
-            CCSerialization.SerializeData(IsTextureRectRotated, sw);
-            CCSerialization.SerializeData(AtlasIndex, sw);
-            CCSerialization.SerializeData(TextureRect, sw);
-            CCSerialization.SerializeData(OffsetPosition, sw);
-            sw.WriteLine(m_TextureFile == null ? "null" : m_TextureFile);
+            using (stream)
+            {
+                base.Serialize(stream);
+                using (StreamWriter sw = new StreamWriter(stream))
+                {
+                    CCSerialization.SerializeData(Dirty, sw);
+                    CCSerialization.SerializeData(IsTextureRectRotated, sw);
+                    CCSerialization.SerializeData(AtlasIndex, sw);
+                    CCSerialization.SerializeData(TextureRect, sw);
+                    CCSerialization.SerializeData(OffsetPosition, sw);
+                    sw.WriteLine(m_TextureFile == null ? "null" : m_TextureFile);
+                }
+            }
         }
 
         public override void Deserialize(System.IO.Stream stream)
         {
-            base.Deserialize(stream);
-            StreamReader sr = new StreamReader(stream);
-            m_TextureFile = sr.ReadLine();
-            if (m_TextureFile == "null")
+            using (stream)
             {
-                m_TextureFile = null;
+                base.Deserialize(stream);
+                using (StreamReader sr = new StreamReader(stream))
+                {
+                    m_TextureFile = sr.ReadLine();
+                    if (m_TextureFile == "null")
+                    {
+                        m_TextureFile = null;
+                    }
+                    else
+                    {
+                        CCLog.Log("CCSprite - deserialized with texture file " + m_TextureFile);
+                        InitWithFile(m_TextureFile);
+                    }
+                    Dirty = CCSerialization.DeSerializeBool(sr);
+                    IsTextureRectRotated = CCSerialization.DeSerializeBool(sr);
+                    AtlasIndex = CCSerialization.DeSerializeInt(sr);
+                    TextureRect = CCSerialization.DeSerializeRect(sr);
+                    OffsetPosition = CCSerialization.DeSerializePoint(sr);
+                }
             }
-            else
-            {
-                CCLog.Log("CCSprite - deserialized with texture file " + m_TextureFile);
-                InitWithFile(m_TextureFile);
-            }
-            Dirty = CCSerialization.DeSerializeBool(sr);
-            IsTextureRectRotated = CCSerialization.DeSerializeBool(sr);
-            AtlasIndex = CCSerialization.DeSerializeInt(sr);
-            TextureRect = CCSerialization.DeSerializeRect(sr);
-            OffsetPosition = CCSerialization.DeSerializePoint(sr);
         }
 
         public virtual bool Dirty
@@ -1033,7 +1043,7 @@ namespace Cocos2D
             base.RemoveChild(child, cleanup);
         }
 
-        public override void RemoveAllChildrenWithCleanup(bool cleanup)
+        public override void RemoveAllChildren(bool cleanup = true)
         {
             if (m_pobBatchNode != null)
             {
@@ -1045,7 +1055,7 @@ namespace Cocos2D
                 }
             }
 
-            base.RemoveAllChildrenWithCleanup(cleanup);
+            base.RemoveAllChildren(cleanup);
 
             m_bHasChildren = false;
         }
@@ -1279,6 +1289,11 @@ namespace Cocos2D
                 m_sQuad.TopRight.TexCoords.U = right;
                 m_sQuad.TopRight.TexCoords.V = top;
             }
+        }
+
+        public override void OnExit()
+        {
+            base.OnExit();
         }
     }
 }

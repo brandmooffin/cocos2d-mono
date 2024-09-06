@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cocos2DMonoGame.Core.Android", "Cocos2DMonoGame.Core.Android\Cocos2DMonoGame.Core.Android.csproj", "{62661FE0-DE41-4665-83A4-33894E6C1827}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62661FE0-DE41-4665-83A4-33894E6C1827}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62661FE0-DE41-4665-83A4-33894E6C1827}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62661FE0-DE41-4665-83A4-33894E6C1827}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{62661FE0-DE41-4665-83A4-33894E6C1827}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62661FE0-DE41-4665-83A4-33894E6C1827}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62661FE0-DE41-4665-83A4-33894E6C1827}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BA3781C3-CC06-45B6-BBC4-66009F4F0EF1}
+	EndGlobalSection
+EndGlobal

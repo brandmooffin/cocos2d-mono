@@ -45,7 +45,7 @@ namespace Cocos2D
 
         public override void Update(float time)
         {
-            m_pTarget.RemoveFromParentAndCleanup(m_bIsNeedCleanUp);
+            m_pTarget.RemoveFromParent(m_bIsNeedCleanUp);
         }
 
         public override CCFiniteTimeAction Reverse()

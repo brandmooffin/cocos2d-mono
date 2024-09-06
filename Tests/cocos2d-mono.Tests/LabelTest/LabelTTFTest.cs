@@ -53,7 +53,7 @@ namespace tests
 
             if (m_plabel != null)
             {
-                m_plabel.RemoveFromParentAndCleanup(true);
+                m_plabel.RemoveFromParent();
             }
 
             m_plabel = new CCLabelTTF(getCurrentAlignment(), "Marker Felt", 32,

@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
-
+using cocos2d.label_nodes;
 using Microsoft.Xna.Framework.Graphics;
+#if IOS
+using Foundation;
+using UIKit;
+#endif
 
 namespace Cocos2D
 {
@@ -15,48 +20,23 @@ namespace Cocos2D
             /// <summary>Specifies the A spacing of the character. The A spacing is the distance to add to the current
             /// position before drawing the character glyph.</summary>
             public float A;
+
             /// <summary>Specifies the B spacing of the character. The B spacing is the width of the drawn portion of
             /// the character glyph.</summary>
             public float B;
+
             /// <summary>Specifies the C spacing of the character. The C spacing is the distance to add to the current
             /// position to provide white space to the right of the character glyph.</summary>
             public float C;
         }
 
         public static CCTexture2D m_pTexture;
-        protected static bool m_bTextureDirty = true;
+        protected bool m_bTextureDirty = true;
 
         protected string m_FontName;
         protected float m_FontSize;
+        protected int m_FontSpacing;
         protected bool m_bFontDirty;
-
-        [Obsolete("This will be removed in a future release. Please use SystemFont instead.")]
-        public string FontName
-        {
-            get { return m_FontName; }
-            set
-            {
-                if (m_FontName != value)
-                {
-                    m_FontName = value;
-                    m_bFontDirty = true;
-                }
-            }
-        }
-
-        [Obsolete("This will be removed in a future release. Please use SystemFontSize instead.")]
-        public float FontSize
-        {
-            get { return m_FontSize; }
-            set
-            {
-                if (m_FontSize != value)
-                {
-                    m_FontSize = value;
-                    m_bFontDirty = true;
-                }
-            }
-        }
 
         public string SystemFont
         {
@@ -66,6 +46,7 @@ namespace Cocos2D
                 if (m_FontName != value)
                 {
                     m_FontName = value;
+                    InitializeFont(m_FontName, m_FontSize, Text);
                     m_bFontDirty = true;
                 }
             }
@@ -76,12 +57,39 @@ namespace Cocos2D
             get { return m_FontSize; }
             set
             {
-                if (m_FontSize != value)
+                m_FontSize = value;
+                m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
+                m_bFontDirty = true;
+            }
+        }
+
+        public int SystemFontSpacing
+        {
+            get { return m_FontSpacing; }
+            set
+            {
+                if (m_FontSpacing != value)
                 {
-                    m_FontSize = value;
-                    m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
+                    m_FontSpacing = value;
+                    InitializeFont(m_FontName, m_FontSize, Text);
                     m_bFontDirty = true;
                 }
+            }
+        }
+
+        public override string Text
+        {
+            get { return base.Text; }
+            set
+            {
+                if (m_sInitialString != value)
+                {
+                    InitializeFont(m_FontName, m_FontSize, value);
+                    m_bFontDirty = true;
+                    base.Text = value;
+                }
+
+                UpdateLabel();
             }
         }
 
@@ -106,15 +114,19 @@ namespace Cocos2D
 
         public CCLabel(string text, string fontName, float fontSize) :
             this(text, fontName, fontSize, CCSize.Zero, CCTextAlignment.Left, CCVerticalTextAlignment.Top)
-        { }
+        {
+        }
 
         public CCLabel(string text, string fontName, float fontSize, CCTextAlignment hAlignment) :
             this(text, fontName, fontSize, CCSize.Zero, hAlignment, CCVerticalTextAlignment.Top)
-        { }
+        {
+        }
 
-        public CCLabel(string text, string fontName, float fontSize, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment) :
+        public CCLabel(string text, string fontName, float fontSize, CCTextAlignment hAlignment,
+            CCVerticalTextAlignment vAlignment) :
             this(text, fontName, fontSize, CCSize.Zero, hAlignment, vAlignment)
-        { }
+        {
+        }
 
         public CCLabel(string text, string fontName, float fontSize, CCSize dimensions) :
             this(text, fontName, fontSize, dimensions, CCTextAlignment.Left, CCVerticalTextAlignment.Top)
@@ -126,44 +138,52 @@ namespace Cocos2D
         {
         }
 
-        public CCLabel(string text, string fontName, float fontSize, CCSize dimensions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment)
+        public CCLabel(string text, string fontName, float fontSize, CCSize dimensions, CCTextAlignment hAlignment,
+            CCVerticalTextAlignment vAlignment)
         {
             InitWithString(text, fontName, fontSize, dimensions, hAlignment, vAlignment);
         }
 
         public bool InitWithString(string text, string fontName, float fontSize)
         {
-            return InitWithString(text, fontName, fontSize, CCSize.Zero, CCTextAlignment.Left, CCVerticalTextAlignment.Top);
+            return InitWithString(text, fontName, fontSize, CCSize.Zero, CCTextAlignment.Left,
+                CCVerticalTextAlignment.Top);
         }
 
-        public bool InitWithString(string text, string fontName, float fontSize, CCSize dimensions, CCTextAlignment hAlignment)
+        public bool InitWithString(string text, string fontName, float fontSize, CCSize dimensions,
+            CCTextAlignment hAlignment)
         {
             return InitWithString(text, fontName, fontSize, dimensions, hAlignment, CCVerticalTextAlignment.Top);
         }
 
-        public bool InitWithString(string text, string fontName, float fontSize, CCSize dimensions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment)
+        public bool InitWithString(string text, string fontName, float fontSize, CCSize dimensions,
+            CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment)
         {
             InitializeFont(fontName, fontSize, text);
-			m_FontName = fontName;
-			m_FontSize = fontSize;
-            return base.InitWithString(text, GetFontKey(fontName, fontSize), dimensions.PointsToPixels(), hAlignment, vAlignment, CCPoint.Zero, m_pTexture);
+            m_FontName = fontName;
+            m_FontSize = fontSize;
+
+            var fontKey = GetFontKey(fontName, fontSize);
+
+            return base.InitWithString(text, fontKey, dimensions.PointsToPixels(), hAlignment,
+                vAlignment, CCPoint.Zero, m_pTexture);
         }
 
         private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset)
         {
-            if (m_pData == null)
+            var fontKey = GetFontKey(fontName, fontSize);
+
+            if (m_pData == null || s_pConfigurations.Count == 0)
             {
-                InitializeTTFAtlas(1024, 1024);
+                InitializeTTFAtlas((int)(1024 * (fontSize / 24)), (int)(1024 * (fontSize / 24)));
             }
 
-            if (String.IsNullOrEmpty(charset))
+            if (string.IsNullOrEmpty(charset))
             {
                 charset = " ";
             }
 
             var chars = new CCRawList<char>();
-
-            var fontKey = GetFontKey(fontName, fontSize);
 
             CCBMFontConfiguration fontConfig;
 
@@ -179,6 +199,11 @@ namespace Cocos2D
                 if (!fontConfig.m_pFontDefDictionary.ContainsKey(ch) && chars.IndexOf(ch) == -1)
                 {
                     chars.Add(ch);
+                }
+                else if (fontConfig.m_pFontDefDictionary.ContainsKey(ch))
+                {
+                    var fontDef = fontConfig.m_pFontDefDictionary[ch];
+                    fontDef.xAdvance = fontDef.xKern + m_FontSpacing;
                 }
             }
 
@@ -236,9 +261,6 @@ namespace Cocos2D
                     w = Math.Max(maxX - minX + 1, 1);
                     h = Math.Max(maxY - minY + 1, 1);
 
-                    //maxX = minX + w;
-                    //maxY = minY + h;
-
                     int index = 0;
                     for (int y = minY; y <= maxY; y++)
                     {
@@ -257,16 +279,26 @@ namespace Cocos2D
                         SetRegionData(region, data, w);
 
                         var info = GetKerningInfo(chars[i]);
+                        var regionX = region.x + 0.015f;
+                        var regionWidth = region.width;
+#if ANDROID
+                        regionX = region.x + 0.55f;
+#endif
+
+#if IOS
+                        regionX = region.x + 0.33f;
+                        regionWidth -= 1;
+#endif
 
                         var fontDef = new CCBMFontConfiguration.CCBMFontDef()
                         {
                             charID = chars[i],
-                            rect = new CCRect(region.x, region.y, region.width, region.height),
-                            xOffset = minX, // + (int)Math.Ceiling(info.A),
+                            rect = new CCRect(regionX, region.y, regionWidth, region.height),
+                            xOffset = minX,
                             yOffset = minY,
-                            xAdvance = (int)Math.Ceiling(info.A + info.B + info.C)
+                            xKern = (int)Math.Ceiling(info.A + info.B + info.C),
+                            xAdvance = (int)Math.Ceiling(info.A + info.B + info.C) + m_FontSpacing
                         };
-
                         fontConfig.CharacterSet.Add(chars[i]);
                         fontConfig.m_pFontDefDictionary.Add(chars[i], fontDef);
                     }
@@ -292,36 +324,23 @@ namespace Cocos2D
 
             if (m_bTextureDirty)
             {
-                m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, m_nWidth, m_nHeight, true);
+                    m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, m_nWidth, m_nHeight, true);
+
                 m_bTextureDirty = false;
             }
 
             base.Draw();
         }
 
-		public override string Text {
-			get {
-				return base.Text;
-			}
-			set {
-				if (m_sInitialString != value)
-				{
-					InitializeFont (FontName, FontSize, value);
-					base.Text = value;
-				}
-                UpdateLabel();
-            }
-        }
 
-
-        private static string GetFontKey(string fontName, float fontSize)
+        private string GetFontKey(string fontName, float fontSize)
         {
             return String.Format("ttf-{0}-{1}", fontName, fontSize);
         }
 
         #region Skyline Bottom Left
 
-        private struct ivec3
+        public struct ivec3
         {
             public int x;
             public int y;
@@ -341,9 +360,9 @@ namespace Cocos2D
         private static int m_nWidth;
         private static int m_nHeight;
         private static int m_nDepth;
-        private static int[] m_pData;
+        public static int[] m_pData;
 
-        private static int Fit(int index, int width, int height)
+        private int Fit(int index, int width, int height)
         {
             var node = m_pNodes[index];
 
@@ -375,10 +394,11 @@ namespace Cocos2D
 
                 ++i;
             }
+
             return y;
         }
 
-        private static void Merge()
+        private void Merge()
         {
             var nodes = m_pNodes.Elements;
             for (int i = 0, count = m_pNodes.Count; i < count - 1; ++i)
@@ -393,7 +413,7 @@ namespace Cocos2D
             }
         }
 
-        public static ivec4 AllocateRegion(int width, int height)
+        public ivec4 AllocateRegion(int width, int height)
         {
             ivec3 node, prev;
             ivec4 region = new ivec4() { x = 0, y = 0, width = width, height = height };
@@ -470,7 +490,7 @@ namespace Cocos2D
             return region;
         }
 
-        public static void SetRegionData(ivec4 region, int[] data, int stride)
+        public void SetRegionData(ivec4 region, int[] data, int stride)
         {
             var x = region.x;
             var y = region.y;
@@ -499,5 +519,4 @@ namespace Cocos2D
 
         #endregion
     }
-
 }
