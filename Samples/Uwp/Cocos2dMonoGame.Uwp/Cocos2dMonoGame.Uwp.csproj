@@ -170,7 +170,7 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Cocos2D-Mono.Uwp" Version="2.4.7.16" />
+    <PackageReference Include="Cocos2D-Mono.Uwp" Version="2.4.7.17" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.11" />
     <PackageReference Include="MonoGame.Framework.WindowsUniversal" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />

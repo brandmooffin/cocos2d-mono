@@ -42,7 +42,7 @@
     <AndroidResource Include="Resources\Values\Strings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Cocos2D-Mono.Core.Android" Version="2.4.7.16" />
+    <PackageReference Include="Cocos2D-Mono.Core.Android" Version="2.4.7.17" />
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.1.303" />
   </ItemGroup>
   <ItemGroup>
