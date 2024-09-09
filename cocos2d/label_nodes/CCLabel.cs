@@ -31,7 +31,7 @@ namespace Cocos2D
         }
 
         public static CCTexture2D m_pTexture;
-        protected bool m_bTextureDirty = true;
+        protected static bool m_bTextureDirty = true;
 
         protected string m_FontName;
         protected float m_FontSize;
@@ -175,7 +175,7 @@ namespace Cocos2D
 
             if (m_pData == null || s_pConfigurations.Count == 0)
             {
-                InitializeTTFAtlas((int)(1024 * (fontSize / 24)), (int)(1024 * (fontSize / 24)));
+                InitializeTTFAtlas(2048, 2048);
             }
 
             if (string.IsNullOrEmpty(charset))
