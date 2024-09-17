@@ -175,7 +175,7 @@ namespace Cocos2D
 
             if (m_pData == null || s_pConfigurations.Count == 0)
             {
-                InitializeTTFAtlas(2048, 2048);
+                InitializeTTFAtlas(1024, 1024);
             }
 
             if (string.IsNullOrEmpty(charset))
