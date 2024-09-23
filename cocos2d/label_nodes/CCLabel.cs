@@ -175,7 +175,18 @@ namespace Cocos2D
 
             if (m_pData == null || s_pConfigurations.Count == 0)
             {
-                InitializeTTFAtlas(1024, 1024);
+                switch (fontSize)
+                {
+                    case >= 105:
+                        InitializeTTFAtlas(2048, 2048);
+                        break;
+                    case >= 80:
+                        InitializeTTFAtlas(2048, 1024);
+                        break;
+                    default:
+                        InitializeTTFAtlas(1024, 1024);
+                        break;
+                }
             }
 
             if (string.IsNullOrEmpty(charset))
