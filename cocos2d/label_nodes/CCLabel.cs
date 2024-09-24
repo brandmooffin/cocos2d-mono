@@ -46,7 +46,7 @@ namespace Cocos2D
                 if (m_FontName != value)
                 {
                     m_FontName = value;
-                    InitializeFont(m_FontName, m_FontSize, Text);
+                    m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
                     m_bFontDirty = true;
                 }
             }
@@ -84,7 +84,7 @@ namespace Cocos2D
             {
                 if (m_sInitialString != value)
                 {
-                    InitializeFont(m_FontName, m_FontSize, value);
+                    m_pConfiguration = InitializeFont(m_FontName, m_FontSize, value);
                     m_bFontDirty = true;
                     base.Text = value;
                 }
@@ -99,6 +99,7 @@ namespace Cocos2D
             m_nHeight = height;
             m_nDepth = 4;
 
+            m_pTexture?.Dispose();
             m_pTexture = new CCTexture2D();
             m_pData = new int[width * height];
 
@@ -159,7 +160,7 @@ namespace Cocos2D
         public bool InitWithString(string text, string fontName, float fontSize, CCSize dimensions,
             CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment)
         {
-            InitializeFont(fontName, fontSize, text);
+            m_pConfiguration = InitializeFont(fontName, fontSize, text);
             m_FontName = fontName;
             m_FontSize = fontSize;
 
@@ -169,7 +170,8 @@ namespace Cocos2D
                 vAlignment, CCPoint.Zero, m_pTexture);
         }
 
-        private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset)
+
+        private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset, bool retry = false)
         {
             var fontKey = GetFontKey(fontName, fontSize);
 
@@ -188,6 +190,12 @@ namespace Cocos2D
                         break;
                 }
             }
+
+            if (Texture.IsDisposed && retry)
+            {
+                Texture = m_pTexture;
+            }
+
 
             if (string.IsNullOrEmpty(charset))
             {
@@ -315,6 +323,12 @@ namespace Cocos2D
                     }
                     else
                     {
+                        if (!retry)
+                        {
+                            m_pData = null;
+                            s_pConfigurations.Clear();
+                            return InitializeFont(fontName, fontSize, charset, true);
+                        }
                         CCLog.Log("Texture atlas is full");
                     }
                 }
@@ -331,6 +345,16 @@ namespace Cocos2D
             {
                 m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
                 m_bFontDirty = false;
+            }
+
+            if (m_pobTextureAtlas.Texture.IsDisposed)
+            {
+                m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text, true);
+                m_bFontDirty = true;
+                m_sInitialString = Text;
+                m_bLabelDirty = true;
+
+                UpdateLabel();
             }
 
             if (m_bTextureDirty)
