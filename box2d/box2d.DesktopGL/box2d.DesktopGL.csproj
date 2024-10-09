@@ -12,7 +12,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.4.7.17</Version>
+    <Version>2.4.7.18</Version>
     <PackageId>box2d.DesktopGL</PackageId>
     <Company>Broken Walls Studios</Company>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -25,7 +25,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- Increase Texture Size for CCLabel
+- Fix for recreating static texture for the atlas in CCLabel
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>

@@ -9,13 +9,13 @@
     <AssemblyName>box2d.iOS</AssemblyName>
     <Title>box2d for iOS</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.7.17</Version>
+    <Version>2.4.7.18</Version>
     <Description>box2d for iOS</Description>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageReleaseNotes>
-- Increase Texture Size for CCLabel
+- Fix for recreating static texture for the atlas in CCLabel
 	</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
