@@ -246,6 +246,44 @@ namespace CocosDenshion
             }
         }
 
+        public void PauseAllEffects()
+        {
+            if (_NoAudioHardware) return;
+            List<CCEffectPlayer> l = new List<CCEffectPlayer>();
+
+            try
+            {
+                foreach (CCEffectPlayer p in l)
+                {
+                    p.Pause();
+                }
+            }
+            catch (Exception ex)
+            {
+                CCLog.Log("Unexpected exception while pausing all effects.");
+                CCLog.Log(ex.ToString());
+            }
+        }
+
+        public void ResumeAllEffects()
+        {
+            if (_NoAudioHardware) return;
+            List<CCEffectPlayer> l = new List<CCEffectPlayer>();
+
+            try
+            {
+                foreach (CCEffectPlayer p in l)
+                {
+                    p.Resume();
+                }
+            }
+            catch (Exception ex)
+            {
+                CCLog.Log("Unexpected exception while resuming all effects.");
+                CCLog.Log(ex.ToString());
+            }
+        }
+
         public void StopAllEffects()
         {
             if (_NoAudioHardware) return;
