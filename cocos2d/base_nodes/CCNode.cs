@@ -1637,13 +1637,13 @@ namespace Cocos2D
             m_pActionManager.RemoveAction(action);
         }
 
-        public void StopActionByTag(int tag)
+        public void StopAction(int tag)
         {
             Debug.Assert(tag != (int) CCNodeTag.Invalid, "Invalid tag");
             m_pActionManager.RemoveActionByTag(tag, this);
         }
 
-        public CCAction GetActionByTag(int tag)
+        public CCAction GetAction(int tag)
         {
             Debug.Assert(tag != (int) CCNodeTag.Invalid, "Invalid tag");
             return m_pActionManager.GetActionByTag(tag, this);
