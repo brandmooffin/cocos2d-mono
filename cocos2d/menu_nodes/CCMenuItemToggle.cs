@@ -148,7 +148,7 @@ namespace Cocos2D
             m_pSubItems[m_uSelectedIndex].Selected();
             if (ZoomBehaviorOnTouch)
             {
-                CCAction action = m_pSubItems[m_uSelectedIndex].GetActionByTag(unchecked((int)kZoomActionTag));
+                CCAction action = m_pSubItems[m_uSelectedIndex].GetAction(unchecked((int)kZoomActionTag));
                 if (action != null)
                 {
                     StopAction(action);
@@ -170,7 +170,7 @@ namespace Cocos2D
             m_pSubItems[m_uSelectedIndex].Unselected();
             if (ZoomBehaviorOnTouch)
             {
-                m_pSubItems[m_uSelectedIndex].StopActionByTag(unchecked((int)kZoomActionTag));
+                m_pSubItems[m_uSelectedIndex].StopAction(unchecked((int)kZoomActionTag));
                 CCAction zoomAction = new CCScaleTo(0.1f, m_fOriginalScale);
                 zoomAction.Tag = unchecked((int)kZoomActionTag);
                 m_pSubItems[m_uSelectedIndex].RunAction(zoomAction);

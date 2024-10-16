@@ -235,7 +235,7 @@ namespace Cocos2D
                     m_pNormalImage.Visible = true;
                     if (ZoomBehaviorOnTouch)
                     {
-                        CCAction action = GetActionByTag(unchecked((int)kZoomActionTag));
+                        CCAction action = GetAction(unchecked((int)kZoomActionTag));
                         if (action != null)
                         {
                             StopAction(action);
@@ -266,7 +266,7 @@ namespace Cocos2D
                 }
                 if (ZoomBehaviorOnTouch)
                 {
-                    StopActionByTag(unchecked((int)kZoomActionTag));
+                    StopAction(unchecked((int)kZoomActionTag));
                     CCAction zoomAction = new CCScaleTo(0.1f, m_fOriginalScale);
                     zoomAction.Tag = unchecked((int)kZoomActionTag);
                     RunAction(zoomAction);
