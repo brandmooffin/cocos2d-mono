@@ -129,5 +129,10 @@ namespace Cocos2D
          * Macros defined in CCSprite.h
          */
         public static readonly int CCSpriteIndexNotInitialized = 320000000; // 0xffffffff; // CCSprite invalid index on the CCSpriteBatchode
+
+        internal static CCVector2 ToCCVector2(this Microsoft.Xna.Framework.Vector2 point)
+        {
+            return new CCVector2(point.X, point.Y);
+        }
     }
 }
