@@ -356,12 +356,7 @@ namespace Cocos2D
 
         #region Menu - Alignment
 
-        public void AlignItemsVertically(CCMenuAlignment alignment = CCMenuAlignment.Center)
-        {
-            AlignItemsVerticallyWithPadding(kDefaultPadding, alignment);
-        }
-
-        public void AlignItemsVerticallyWithPadding(float padding, CCMenuAlignment alignment = CCMenuAlignment.Center)
+        public void AlignItemsVertically(float padding = kDefaultPadding, CCMenuAlignment alignment = CCMenuAlignment.Center)
         {
             float width = 0f;
             float height = 0f; 
@@ -410,12 +405,7 @@ namespace Cocos2D
             ContentSize = new CCSize(width, height);
         }
 
-        public void AlignItemsHorizontally()
-        {
-            AlignItemsHorizontallyWithPadding(kDefaultPadding);
-        }
-
-        public void AlignItemsHorizontallyWithPadding(float padding)
+        public void AlignItemsHorizontally(float padding = kDefaultPadding)
         {
             float height = 0f;
             float width = 0f;
