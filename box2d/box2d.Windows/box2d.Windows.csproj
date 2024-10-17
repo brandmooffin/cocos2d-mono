@@ -13,7 +13,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.4.7.18</Version>
+    <Version>2.4.8</Version>
     <PackageId>box2d.Windows</PackageId>
     <Company>Broken Walls Studios</Company>
     <Copyright>Copyright ©  2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -26,7 +26,14 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- Fix for recreating static texture for the atlas in CCLabel
+- Support for CCVector2
+- Replace GetActionByTag with GetAction
+- Replace StopActionByTag with StopAction
+- AlignItemsVerticallyWithPadding with AlignItemsVertically
+- AlignItemsHorizontallyWithPadding with AlignItemsHorizontally
+- Add support for pause all sound effects
+- Add support for resume all sound effects
+- Fix out of index error for CCSpriteBatchNode
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>

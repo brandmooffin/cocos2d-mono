@@ -9,13 +9,20 @@
     <AssemblyName>box2d.iOS</AssemblyName>
     <Title>box2d for iOS</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.7.18</Version>
+    <Version>2.4.8</Version>
     <Description>box2d for iOS</Description>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageReleaseNotes>
-- Fix for recreating static texture for the atlas in CCLabel
+- Support for CCVector2
+- Replace GetActionByTag with GetAction
+- Replace StopActionByTag with StopAction
+- AlignItemsVerticallyWithPadding with AlignItemsVertically
+- AlignItemsHorizontallyWithPadding with AlignItemsHorizontally
+- Add support for pause all sound effects
+- Add support for resume all sound effects
+- Fix out of index error for CCSpriteBatchNode
 	</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
