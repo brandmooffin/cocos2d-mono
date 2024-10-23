@@ -2317,8 +2317,9 @@ namespace Cocos2D
             if (Children != null && Children.Count > 0)
             {
                 CCNode[] elements = Children.Elements;
-                foreach (CCNode child in Children.Elements)
+                for (var index = 0; index < Children.Elements.Length; index++)
                 {
+                    var child = Children.Elements[index];
                     if (child != null)
                     {
                         if (!child.m_bCleaned)
@@ -2337,10 +2338,12 @@ namespace Cocos2D
             if (Children != null && Children.Count > 0)
             {
                 CCNode[] elements = Children.Elements;
-                foreach (CCNode child in Children.Elements)
+                for (var index = 0; index < Children.Elements.Length; index++)
                 {
+                    var child = Children.Elements[index];
                     child?.CleanUpParentsProperly();
                 }
+
                 Children.Clear(true);
             }
             Parent = null;
