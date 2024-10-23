@@ -9,19 +9,12 @@
 	<CheckEolWorkloads>false</CheckEolWorkloads>
     <BaseIntermediateOutputPath>obj\Core\iOS\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- Support for CCVector2
-- Replace GetActionByTag with GetAction
-- Replace StopActionByTag with StopAction
-- AlignItemsVerticallyWithPadding with AlignItemsVertically
-- AlignItemsHorizontallyWithPadding with AlignItemsHorizontally
-- Add support for pause all sound effects
-- Add support for resume all sound effects
-- Fix out of index error for CCSpriteBatchNode
+- Add method to set atlas texture size for CCLabel
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.8</Version>
+    <Version>2.4.8.1</Version>
     <Description>Cocos2D-Mono for Core iOS</Description>
     <Title>Cocos2D-Mono for Core iOS</Title>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
