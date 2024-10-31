@@ -26,7 +26,7 @@ namespace tests
                 new CCMenuItemFont("Center", setAlignmentCenter),
                 new CCMenuItemFont("Right", setAlignmentRight)
                 );
-            menu.AlignItemsVerticallyWithPadding(4);
+            menu.AlignItemsVertically(4);
             menu.Position = new CCPoint(50, s.Height / 2 - 20);
             AddChild(menu);
 
@@ -35,7 +35,7 @@ namespace tests
                 new CCMenuItemFont("Middle", setAlignmentMiddle),
                 new CCMenuItemFont("Bottom", setAlignmentBottom)
                 );
-            menu.AlignItemsVerticallyWithPadding(4);
+            menu.AlignItemsVertically(4);
             menu.Position = new CCPoint(s.Width - 50, s.Height / 2 - 20);
             AddChild(menu);
 
