@@ -129,9 +129,9 @@ namespace tests
         public void testStopAction(float dt)
         {
             Unschedule(testStopAction);
-            m_kathia.StopActionByTag(1);
-            m_tamara.StopActionByTag(1);
-            m_grossini.StopActionByTag(1);
+            m_kathia.StopAction(1);
+            m_tamara.StopAction(1);
+            m_grossini.StopAction(1);
         }
     }
 
@@ -546,9 +546,9 @@ namespace tests
 
         public void altertime(float dt)
         {
-            var action1 = (CCSpeed) (m_grossini.GetActionByTag(EaseTest.kTagAction1));
-            var action2 = (CCSpeed) (m_tamara.GetActionByTag(EaseTest.kTagAction1));
-            var action3 = (CCSpeed) (m_kathia.GetActionByTag(EaseTest.kTagAction1));
+            var action1 = (CCSpeed) (m_grossini.GetAction(EaseTest.kTagAction1));
+            var action2 = (CCSpeed) (m_tamara.GetAction(EaseTest.kTagAction1));
+            var action3 = (CCSpeed) (m_kathia.GetAction(EaseTest.kTagAction1));
 
             action1.Speed = CCRandom.Float_0_1() * 2;
             action2.Speed = CCRandom.Float_0_1() * 2;

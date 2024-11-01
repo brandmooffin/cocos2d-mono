@@ -1646,7 +1646,7 @@ namespace Cocos2D
         public CCAction GetAction(int tag)
         {
             Debug.Assert(tag != (int) CCNodeTag.Invalid, "Invalid tag");
-            return m_pActionManager.GetActionByTag(tag, this);
+            return m_pActionManager.GetAction(tag, this);
         }
 
         public int NumberOfRunningActions()

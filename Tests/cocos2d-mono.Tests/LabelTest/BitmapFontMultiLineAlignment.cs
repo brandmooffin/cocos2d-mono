@@ -66,7 +66,7 @@ namespace tests
             CCMenuItemFont center = new CCMenuItemFont("Center", alignmentChanged);
             CCMenuItemFont right = new CCMenuItemFont("Right", alignmentChanged);
             CCMenu alignmentMenu = new CCMenu(left, center, right);
-            alignmentMenu.AlignItemsHorizontallyWithPadding(alignmentItemPadding);
+            alignmentMenu.AlignItemsHorizontally(alignmentItemPadding);
 
             center.Color = CCTypes.CCRed;
             m_pLastAlignmentItem = center;
