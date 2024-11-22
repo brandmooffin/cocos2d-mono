@@ -1,12 +1,8 @@
 ﻿#if DESKTOPGL
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Drawing.Text;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Cocos2D
@@ -16,57 +12,36 @@ namespace Cocos2D
         [StructLayout(LayoutKind.Sequential)]
         private struct ABCFloat
         {
-            /// <summary>Specifies the A spacing of the character. The A spacing is the distance to add to the current
-            /// position before drawing the character glyph.</summary>
-            public float abcfA;
-            /// <summary>Specifies the B spacing of the character. The B spacing is the width of the drawn portion of
-            /// the character glyph.</summary>
-            public float abcfB;
-            /// <summary>Specifies the C spacing of the character. The C spacing is the distance to add to the current
-            /// position to provide white space to the right of the character glyph.</summary>
-            public float abcfC;
+            public float abcfA; // The A spacing of the character.
+            public float abcfB; // The B spacing of the character.
+            public float abcfC; // The C spacing of the character.
         }
 
-        private static Font _defaultFont;
-        private static Font _currentFont;
+        private static SKTypeface _defaultFont;
+        private static SKTypeface _currentFont;
+        private static float _currentFontSize;
+        private static readonly float _defaultFontSize = 12;
 
-        private static Graphics _graphics;
-        private static Bitmap _bitmap;
-        private static BitmapData _bitmapData;
-        private static Brush _brush;
+        private static SKBitmap _bitmap;
+        private static SKCanvas _canvas;
+        private static SKPaint _paint;
         private static Dictionary<char, KerningInfo> _abcValues = new Dictionary<char, KerningInfo>();
-        private static Dictionary<string, FontFamily> _fontFamilyCache = new Dictionary<string, FontFamily>();
-        private static PrivateFontCollection _loadedFonts = new PrivateFontCollection();
-
-        [DllImport("gdi32.dll", SetLastError = true)]
-        static extern IntPtr CreateCompatibleDC(IntPtr hdc);
-
-        [DllImport("user32.dll")]
-        static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDC);
-
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
-        private static extern bool GetCharABCWidthsFloat(IntPtr hdc, uint iFirstChar, uint iLastChar, [Out] ABCFloat[] lpABCF);
-
-        [DllImport("gdi32.dll", ExactSpelling = true, PreserveSig = true, SetLastError = true)]
-        static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
-
-        [DllImport("gdi32.dll")]
-        static extern bool DeleteObject(IntPtr hObject);
+        private static Dictionary<string, SKTypeface> _fontFamilyCache = new Dictionary<string, SKTypeface>();
 
         private string CreateFont(string fontName, float fontSize, CCRawList<char> charset)
         {
             if (_defaultFont == null)
             {
-                _defaultFont = new Font(FontFamily.GenericSansSerif, 12);
+
+                _defaultFont = SKTypeface.FromFamilyName("Sans-serif");
             }
 
-            FontFamily fontFamily;
-
-            if (!_fontFamilyCache.TryGetValue(fontName, out fontFamily))
+            if (!_fontFamilyCache.TryGetValue(fontName, out _currentFont))
             {
                 var ext = Path.GetExtension(fontName);
 
                 _currentFont = _defaultFont;
+                _currentFontSize = _defaultFontSize;
 
                 if (!String.IsNullOrEmpty(ext) && ext.ToLower() == ".ttf")
                 {
@@ -78,107 +53,86 @@ namespace Cocos2D
                     {
                         try
                         {
-                            _loadedFonts.AddFontFile(fontPath);
-
-                            fontFamily = _loadedFonts.Families[_loadedFonts.Families.Length - 1];
-
-                            _currentFont = new Font(fontFamily, fontSize);
+                            _currentFont = SKTypeface.FromFile(fontPath);
+                            _currentFontSize = fontSize;
                         }
                         catch
                         {
                             _currentFont = _defaultFont;
+                            _currentFontSize = _defaultFontSize;
                         }
                     }
                 }
                 else
                 {
-                    _currentFont = new Font(fontName, fontSize);
+                    _currentFont = SKTypeface.FromFamilyName(fontName);
+                    _currentFontSize = fontSize;
                 }
 
-                _fontFamilyCache.Add(fontName, _currentFont.FontFamily);
-            }
-            else
-            {
-                _currentFont = new Font(fontFamily, fontSize);
+                _fontFamilyCache.Add(fontName, _currentFont);
             }
 
             GetKerningInfo(charset);
 
-            CreateBitmap(1, 1);
-
-            return _currentFont.Name;
+            return _currentFont.FamilyName;
         }
 
-        private static void GetKerningInfo(CCRawList<char> charset)
+        private void GetKerningInfo(CCRawList<char> charset)
         {
             _abcValues.Clear();
 
-            var hDC = CreateCompatibleDC(IntPtr.Zero);
-
-            var hFont = _currentFont.ToHfont();
-            SelectObject(hDC, hFont);
-
-            var value = new ABCFloat[1];
-            
-            for (int i = 0; i < charset.Count; i++)
+            using (SKPaint paint = new SKPaint { Typeface = _currentFont })
             {
-                var ch = charset[i];
-                if (!_abcValues.ContainsKey(ch))
+                foreach (var ch in charset)
                 {
-                    GetCharABCWidthsFloat(hDC, ch, ch, value);
-                    _abcValues.Add(
-                        ch,
-                        new KerningInfo()
-                            {
-                                A = value[0].abcfA,
-                                B = value[0].abcfB,
-                                C = value[0].abcfC
-                            });
+                    if (!_abcValues.ContainsKey(ch))
+                    {
+                        var width = paint.MeasureText(ch.ToString());
+                        _abcValues.Add(ch, new KerningInfo { A = 0, B = width, C = 0 });
+                    }
                 }
             }
-
-            DeleteObject(hFont);
-            ReleaseDC(IntPtr.Zero, hDC);
         }
 
         private float GetFontHeight()
         {
-            return _currentFont.GetHeight();
+            using (SKPaint paint = new SKPaint { Typeface = _currentFont })
+            {
+                return paint.FontMetrics.CapHeight;
+            }
         }
 
         private CCSize GetMeasureString(string text)
         {
-            var size = _graphics.MeasureString(text, _currentFont);
-            return new CCSize(size.Width, size.Height);
+            using (SKPaint paint = new SKPaint { Typeface = _currentFont, TextSize = _currentFontSize })
+            {
+                var size = new SKRect();
+                paint.MeasureText(text, ref size);
+                return new CCSize(size.Width, size.Height);
+            }
         }
 
         private void CreateBitmap(int width, int height)
         {
             if (_bitmap == null || (_bitmap.Width < width || _bitmap.Height < height))
             {
-                _bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+                _bitmap = new SKBitmap(width, height);
 
-                _graphics = Graphics.FromImage(_bitmap);
+                _canvas = new SKCanvas(_bitmap);
 
-                _graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                _graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                _graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                //graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-            }
-
-            if (_brush == null)
-            {
-                _brush = new SolidBrush(System.Drawing.Color.White);
+                _paint = new SKPaint
+                {
+                    IsAntialias = true,
+                    FilterQuality = SKFilterQuality.High,
+                    TextSize = 12,
+                    Color = SKColors.White
+                };
             }
         }
 
         private void FreeBitmapData()
         {
-            if (_bitmapData != null)
-            {
-                _bitmap.UnlockBits(_bitmapData);
-                _bitmapData = null;
-            }
+            // SkiaSharp does not need bitmap data to be unlocked
         }
 
         private KerningInfo GetKerningInfo(char ch)
@@ -192,20 +146,17 @@ namespace Cocos2D
 
             var size = GetMeasureString(s);
 
-            var w = (int)(Math.Ceiling(size.Width += 2));
-            var h = (int)(Math.Ceiling(size.Height += 2));
+            var w = (int)(Math.Ceiling(size.Width + 2));
+            var h = (int)(Math.Ceiling(size.Height + 2));
 
             CreateBitmap(w, h);
 
-            _graphics.Clear(System.Drawing.Color.Transparent);
-            _graphics.DrawString(s, _currentFont, _brush, 0, 0);
-            _graphics.Flush();
+            _canvas.Clear(SKColors.Transparent);
+            _canvas.DrawText(s, 0, size.Height, _paint);
 
-            _bitmapData = _bitmap.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            stride = _bitmap.RowBytes;
 
-            stride = _bitmapData.Stride;
-
-            return (byte*)_bitmapData.Scan0.ToPointer();
+            return (byte*)_bitmap.GetPixels();
         }
     }
 }

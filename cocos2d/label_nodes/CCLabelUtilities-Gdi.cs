@@ -1,120 +1,113 @@
 ﻿#if DESKTOPGL
+using SkiaSharp;
 using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Cocos2D
 {
-    internal static partial class CCLabelUtilities
+internal static partial class CCLabelUtilities
+{
+    private static SKBitmap _bitmap;
+    private static SKCanvas _canvas;
+    private static SKPaint _paint;
+
+    internal static CCTexture2D CreateNativeLabel(string text, CCSize dimensions, CCTextAlignment hAlignment,
+                                        CCVerticalTextAlignment vAlignment, string fontName,
+                                        float fontSize, CCColor4B textColor)
     {
-        private static Bitmap _bitmap;
-        private static Graphics _graphics;
-        private static Brush _brush;
-
-        internal static CCTexture2D CreateNativeLabel(string text, CCSize dimensions, CCTextAlignment hAlignment,
-		                                   CCVerticalTextAlignment vAlignment, string fontName,
-		                                   float fontSize, CCColor4B textColor)
-		{
-
-		    if (string.IsNullOrEmpty(text))
-		    {
-		        return new CCTexture2D();
-		    }
-
-		    var font = CreateFont (fontName, fontSize);
-
-            if (dimensions.Equals(CCSize.Zero))
-            {
-                CreateBitmap(1, 1);
-
-                var ms = _graphics.MeasureString(text, font);
-                
-                dimensions.Width = ms.Width;
-                dimensions.Height = ms.Height;
-            }
-
-            CreateBitmap((int)dimensions.Width, (int)dimensions.Height);
-
-            var stringFormat = new StringFormat();
-
-		    switch (hAlignment)
-		    {
-		        case CCTextAlignment.Left:
-                    stringFormat.Alignment = StringAlignment.Near;
-		            break;
-		        case CCTextAlignment.Center:
-                    stringFormat.Alignment = StringAlignment.Center;
-		            break;
-		        case CCTextAlignment.Right:
-                    stringFormat.Alignment = StringAlignment.Far;
-		            break;
-		    }
-
-		    switch (vAlignment)
-		    {
-		        case CCVerticalTextAlignment.Top:
-        		    stringFormat.LineAlignment = StringAlignment.Near;
-		            break;
-		        case CCVerticalTextAlignment.Center:
-        		    stringFormat.LineAlignment = StringAlignment.Center;
-		            break;
-		        case CCVerticalTextAlignment.Bottom:
-        		    stringFormat.LineAlignment = StringAlignment.Far;
-		            break;
-		    }
-
-            _graphics.DrawString(text, font, _brush, new RectangleF(0, 0, dimensions.Width, dimensions.Height), stringFormat);
-            _graphics.Flush();
-
-			var texture = new CCTexture2D();
-			texture.InitWithStream (SaveToStream(), Microsoft.Xna.Framework.Graphics.SurfaceFormat.Bgra4444);
-
-			return texture;
-		}
-
-        static void CreateBitmap(int width, int height)
+        if (string.IsNullOrEmpty(text))
         {
-            if (_brush == null)
-            {
-                _brush = new SolidBrush(Color.White);
-            }
-
-            //if (_bitmap != null && _bitmap.Width <= width && _bitmap.Height <= height)
-            //{
-            //    return;
-            //}
-
-            width = Math.Max(width, 1);
-            height = Math.Max(height, 1);
-
-            _bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            _graphics = Graphics.FromImage(_bitmap);
-
-            _graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            return new CCTexture2D();
         }
 
-        static Font CreateFont(string familyName, float emSize)
+        var font = CreateFont(fontName, fontSize);
+
+        if (dimensions.Equals(CCSize.Zero))
         {
-            return CreateFont(familyName, emSize, FontStyle.Regular);
-        }
-        
-        static Font CreateFont(string familyName, float emSize, FontStyle style)
-		{
-            return new Font(familyName, emSize, style);
+            CreateBitmap(1, 1);
+
+            var size = new SKRect();
+            _paint.MeasureText(text, ref size);
+
+            dimensions.Width = size.Width;
+            dimensions.Height = size.Height;
         }
 
-		static Stream SaveToStream()
-		{
-		    var stream = new MemoryStream();
-            
-            _bitmap.Save(stream, ImageFormat.Png);
-		    stream.Position = 0;
-		    
-            return stream;
-		}
+        CreateBitmap((int)dimensions.Width, (int)dimensions.Height);
 
+        var alignment = SKTextAlign.Left;
+
+        switch (hAlignment)
+        {
+            case CCTextAlignment.Center:
+                alignment = SKTextAlign.Center;
+                break;
+            case CCTextAlignment.Right:
+                alignment = SKTextAlign.Right;
+                break;
+        }
+
+        var lineAlignment = 0; // Top by default
+
+        switch (vAlignment)
+        {
+            case CCVerticalTextAlignment.Center:
+                lineAlignment = (int)(dimensions.Height / 2);
+                break;
+            case CCVerticalTextAlignment.Bottom:
+                lineAlignment = (int)dimensions.Height;
+                break;
+        }
+
+        _paint.Color = new SKColor(textColor.R, textColor.G, textColor.B, textColor.A);
+        _paint.TextAlign = alignment;
+
+        _canvas.Clear(SKColors.Transparent);
+        _canvas.DrawText(text, 0, lineAlignment, _paint);
+
+        var texture = new CCTexture2D();
+        texture.InitWithStream(SaveToStream(), Microsoft.Xna.Framework.Graphics.SurfaceFormat.Bgra4444);
+
+        return texture;
     }
+
+    static void CreateBitmap(int width, int height)
+    {
+        width = Math.Max(width, 1);
+        height = Math.Max(height, 1);
+
+        _bitmap = new SKBitmap(width, height);
+        _canvas = new SKCanvas(_bitmap);
+
+        _paint = new SKPaint
+        {
+            IsAntialias = true,
+            FilterQuality = SKFilterQuality.High,
+            Color = SKColors.White,
+            Typeface = SKTypeface.FromFamilyName("Sans-serif"),
+            TextSize = 12
+        };
+    }
+
+    static SKTypeface CreateFont(string familyName, float emSize)
+    {
+        return SKTypeface.FromFamilyName(familyName);
+    }
+
+    static Stream SaveToStream()
+    {
+        var image = SKImage.FromBitmap(_bitmap);
+        var data = image.Encode(SKEncodedImageFormat.Png, 100);
+        var stream = new MemoryStream();
+        data.SaveTo(stream);
+        stream.Position = 0;
+
+        return stream;
+    }
+}
+
 }
 #endif
