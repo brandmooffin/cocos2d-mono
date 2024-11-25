@@ -170,7 +170,7 @@ namespace Cocos2D
         public bool InitWithString(string text, string fontName, float fontSize, CCSize dimensions,
             CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment)
         {
-            m_pConfiguration = InitializeFont(fontName, fontSize, text);
+            InitializeFont(fontName, fontSize, text);
             m_FontName = fontName;
             m_FontSize = fontSize;
 
