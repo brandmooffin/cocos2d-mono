@@ -15,7 +15,7 @@
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageReleaseNotes>
-- CCDrawManager reset width & height on Init
+- CCDrawManager reset width and height on Init
 - Remove early config init during CCLabel init
 	</PackageReleaseNotes>
   </PropertyGroup>

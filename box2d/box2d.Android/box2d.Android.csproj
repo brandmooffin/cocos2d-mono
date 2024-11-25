@@ -19,9 +19,8 @@
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <PackageReleaseNotes>
-	    - Improved support for CJK characters
-	    - Resolved character spacing issues for CCLabel
-	    - iOS improvements
+- CCDrawManager reset width and height on Init
+- Remove early config init during CCLabel init
 	</PackageReleaseNotes>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>

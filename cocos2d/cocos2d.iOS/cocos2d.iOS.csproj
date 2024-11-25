@@ -9,7 +9,7 @@
 	<CheckEolWorkloads>false</CheckEolWorkloads>
     <BaseIntermediateOutputPath>obj\iOS\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- CCDrawManager reset width & height on Init
+- CCDrawManager reset width and height on Init
 - Remove early config init during CCLabel init
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>

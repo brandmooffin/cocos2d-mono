@@ -13,7 +13,7 @@
     <description>Cocos2D-Mono for Core DesktopGL (OpenGL Desktop Platforms)</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
-- CCDrawManager reset width & height on Init
+- CCDrawManager reset width and height on Init
 - Remove early config init during CCLabel init
     </releaseNotes>
     <copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
