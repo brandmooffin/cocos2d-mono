@@ -449,6 +449,8 @@ namespace Cocos2D
             //m_eResolutionPolicy = CCResolutionPolicy.UnKnown;
             m_obViewPortRect = new CCRect(0, 0, pp.BackBufferWidth, pp.BackBufferHeight);
             m_obScreenSize = m_obViewPortRect.Size;
+            m_lastWidth = 0;
+            m_lastHeight = 0;
 
             if (m_eResolutionPolicy != CCResolutionPolicy.UnKnown)
             {
