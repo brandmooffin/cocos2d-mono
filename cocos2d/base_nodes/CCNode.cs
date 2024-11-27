@@ -1637,16 +1637,16 @@ namespace Cocos2D
             m_pActionManager.RemoveAction(action);
         }
 
-        public void StopActionByTag(int tag)
+        public void StopAction(int tag)
         {
             Debug.Assert(tag != (int) CCNodeTag.Invalid, "Invalid tag");
             m_pActionManager.RemoveActionByTag(tag, this);
         }
 
-        public CCAction GetActionByTag(int tag)
+        public CCAction GetAction(int tag)
         {
             Debug.Assert(tag != (int) CCNodeTag.Invalid, "Invalid tag");
-            return m_pActionManager.GetActionByTag(tag, this);
+            return m_pActionManager.GetAction(tag, this);
         }
 
         public int NumberOfRunningActions()
@@ -2317,8 +2317,9 @@ namespace Cocos2D
             if (Children != null && Children.Count > 0)
             {
                 CCNode[] elements = Children.Elements;
-                foreach (CCNode child in Children.Elements)
+                for (var index = 0; index < Children.Elements.Length; index++)
                 {
+                    var child = Children.Elements[index];
                     if (child != null)
                     {
                         if (!child.m_bCleaned)
@@ -2337,10 +2338,12 @@ namespace Cocos2D
             if (Children != null && Children.Count > 0)
             {
                 CCNode[] elements = Children.Elements;
-                foreach (CCNode child in Children.Elements)
+                for (var index = 0; index < Children.Elements.Length; index++)
                 {
+                    var child = Children.Elements[index];
                     child?.CleanUpParentsProperly();
                 }
+
                 Children.Clear(true);
             }
             Parent = null;

@@ -298,7 +298,7 @@ namespace Cocos2D
             }
         }
 
-        public CCAction GetActionByTag(int tag, CCNode target)
+        public CCAction GetAction(int tag, CCNode target)
         {
             Debug.Assert(tag != CCAction.kInvalidTag);
 
@@ -317,12 +317,12 @@ namespace Cocos2D
                             return action;
                         }
                     }
-                    CCLog.Log("cocos2d : getActionByTag: Tag " + tag + " not found");
+                    CCLog.Log("cocos2d : GetAction: Tag " + tag + " not found");
                 }
             }
             else
             {
-                CCLog.Log("cocos2d : getActionByTag: Target not found");
+                CCLog.Log("cocos2d : GetAction: Target not found");
             }
             return null;
         }

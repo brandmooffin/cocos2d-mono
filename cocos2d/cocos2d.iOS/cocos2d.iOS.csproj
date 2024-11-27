@@ -9,12 +9,13 @@
     <CheckEolWorkloads>false</CheckEolWorkloads>
     <BaseIntermediateOutputPath>obj\iOS\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- Fix for recreating static texture for the atlas in CCLabel
+- CCDrawManager reset width and height on Init
+- Remove early config init during CCLabel init
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.7.18</Version>
+    <Version>2.4.8.2</Version>
     <Description>Cocos2D-Mono for iOS</Description>
     <Title>Cocos2D-Mono for iOS</Title>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>

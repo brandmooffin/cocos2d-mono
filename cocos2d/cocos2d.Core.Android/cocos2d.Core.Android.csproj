@@ -10,12 +10,11 @@
     <TargetFramework>net7.0-android33.0</TargetFramework>
     <BaseIntermediateOutputPath>obj\Core\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-	    - Improved support for CJK characters
-	    - Resolved character spacing issues for CCLabel
-	    - iOS improvements
+- CCDrawManager reset width and height on Init
+- Remove early config init during CCLabel init
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.7.18</Version>
+    <Version>2.4.8.2</Version>
     <Title>Cocos2D-Mono for Core Android</Title>
     <Description>Cocos2D-Mono for Core Android</Description>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
