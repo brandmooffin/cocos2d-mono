@@ -33,7 +33,6 @@ jobs:
 
       - name: Install iOS Workloads
         run: |
-          dotnet workload update --version 8.0.400
           dotnet workload install ios --ignore-failed-sources
 
       # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
