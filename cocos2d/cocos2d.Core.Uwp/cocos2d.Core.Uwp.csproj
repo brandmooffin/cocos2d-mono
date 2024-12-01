@@ -153,7 +153,7 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.11</Version>
     </PackageReference>
-    <PackageReference Include="MonoGame.Framework.WindowsUniversal" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.WindowsUniversal" Version="3.8.2.1105" />
     <PackageReference Include="SharpDX.Mathematics">
       <Version>4.0.1</Version>
     </PackageReference>

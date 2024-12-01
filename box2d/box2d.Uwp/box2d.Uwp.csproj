@@ -146,7 +146,7 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.11</Version>
     </PackageReference>
-    <PackageReference Include="MonoGame.Framework.WindowsUniversal" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.WindowsUniversal" Version="3.8.2.1105" />
   </ItemGroup>
   <Import Project="..\box2d.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

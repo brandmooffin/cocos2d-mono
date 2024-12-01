@@ -19,7 +19,7 @@
     <copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
     <dependencies>
-      <dependency id="MonoGame.Framework.iOS" version="3.8.1.303" />
+      <dependency id="MonoGame.Framework.iOS" version="3.8.2.1105" />
       <dependency id="SharpZipLib" version="1.4.2" />
       <dependency id="OpenTK" version="4.7.7" />
     </dependencies>

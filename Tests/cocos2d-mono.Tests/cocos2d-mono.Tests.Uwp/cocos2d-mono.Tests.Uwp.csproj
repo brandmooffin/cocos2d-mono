@@ -118,8 +118,8 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.7</Version>
     </PackageReference>
-    <PackageReference Include="MonoGame.Framework.WindowsUniversal" Version="3.8.1.303" />
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.WindowsUniversal" Version="3.8.2.1105" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.2.1105" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\box2d\box2d.Uwp\box2d.Uwp.csproj">
