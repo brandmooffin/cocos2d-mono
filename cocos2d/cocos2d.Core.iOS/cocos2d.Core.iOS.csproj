@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <TargetFramework>net8.0-ios16.1</TargetFramework>
+    <TargetFramework>net8.0-ios</TargetFramework>
     <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
     <OutputType>Library</OutputType>
     <RootNamespace>cocos2d_mono.Core.iOS</RootNamespace>

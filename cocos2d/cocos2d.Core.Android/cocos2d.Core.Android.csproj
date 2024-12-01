@@ -7,7 +7,7 @@
     <CheckEolWorkloads>false</CheckEolWorkloads>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetFramework>net8.0-android33.0</TargetFramework>
+    <TargetFramework>net8.0-android</TargetFramework>
     <BaseIntermediateOutputPath>obj\Core\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
 - CCDrawManager reset width and height on Init
