@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <TargetFramework>net7.0-ios16.1</TargetFramework>
+    <TargetFramework>net8.0-ios</TargetFramework>
     <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
     <OutputType>Library</OutputType>
     <RootNamespace>cocos2d_mono.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>cocos2d-mono.iOS</AssemblyName>
-	<CheckEolWorkloads>false</CheckEolWorkloads>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
     <BaseIntermediateOutputPath>obj\iOS\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
 - CCDrawManager reset width and height on Init
@@ -55,8 +55,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
-    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.2.1105" />
+    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.2.1105" />
     <PackageReference Include="OpenTK" Version="4.7.7" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
