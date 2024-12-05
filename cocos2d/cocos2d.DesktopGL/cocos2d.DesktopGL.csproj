@@ -9,6 +9,18 @@
     <TargetFramework>net7.0</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+    <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+    <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsWindows)'=='true'">
+    <DefineConstants>TRACE;DEBUG;OPENGL;MONOGAME;DESKTOPGL;WINDOWSGL;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsOSX)'=='true'">
+    <DefineConstants>TRACE;DEBUG;OPENGL;MONOGAME;DESKTOPGL;MACOS;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsLinux)'=='true'">
+    <DefineConstants>TRACE;DEBUG;OPENGL;MONOGAME;DESKTOPGL;LINUX;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -39,18 +51,17 @@
     <OutputPath>bin\DesktopGL\Debug\</OutputPath>
     <IntermediateOutputPath>obj\DesktopGL\Debug</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\DesktopGL\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;DEBUG;WINDOWSGL;OPENGL;MONOGAME;DESKTOPGL;LINUX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\DesktopGL\Release\</OutputPath>
     <IntermediateOutputPath>obj\DesktopGL\Release</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\DesktopGL\Release</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;DEBUG;WINDOWSGL;OPENGL;MONOGAME;DESKTOPGL;LINUX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -62,6 +73,7 @@
     <PackageReference Include="SharpZipLib" Version="1.3.3" />
     <PackageReference Include="SkiaSharp" Version="2.88.9" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.9" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.11" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\box2d\box2d.DesktopGL\box2d.DesktopGL.csproj">
