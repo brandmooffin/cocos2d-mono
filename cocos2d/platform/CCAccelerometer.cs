@@ -81,7 +81,7 @@ namespace Cocos2D
             {
                 if (m_bActive && !m_bEmulation)
                 {
-#if !WINDOWS && !PSM && !OUYA && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL
+#if !WINDOWS && !PSM && !OUYA && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
                     //if (accelerometer != null)
                     //{
                     //    accelerometer.CurrentValueChanged -= accelerometer_CurrentValueChanged;

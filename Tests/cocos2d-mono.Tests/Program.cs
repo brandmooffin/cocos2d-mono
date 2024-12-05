@@ -90,18 +90,18 @@ namespace tests
 		}
 	}
 	#endif
-	#if WINDOWS || WINDOWSGL || XBOX || PSM
+	#if WINDOWS || WINDOWSGL || XBOX || PSM || LINUX || MACOS
 
 #if !NETFX_CORE
     static class Program
     {
-#if WINDOWS || WINDOWSGL
+#if WINDOWS || WINDOWSGL || LINUX || MACOS
         private static Game1 game;
 #endif
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-#if WINDOWS || WINDOWSGL
+#if WINDOWS || WINDOWSGL || LINUX || MACOS
         [STAThread]
 #endif
         static void Main(string[] args)
