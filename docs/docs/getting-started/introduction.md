@@ -15,7 +15,6 @@ Cocos2D-Mono focuses more on the MonoGame Framework and removes the limitations 
 [![DesktopGL (Windows/Linux/macOS)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/desktopgl_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/desktopgl_build.yml)
 [![Windows](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/windows_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/windows_build.yml)
 [![Android](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/android_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/android_build.yml)
-[![UWP](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/uwp_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/uwp_build.yml)
 [![iOS](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/ios_build.yml/badge.svg)](https://github.com/brandmooffin/cocos2d-mono/actions/workflows/ios_build.yml)
 
 # Supported Platforms
@@ -23,24 +22,20 @@ Cocos2D-Mono focuses more on the MonoGame Framework and removes the limitations 
 We support a growing list of platforms across the desktop, mobile, and console space. If there is a platform we don't support, please [make a request](https://github.com/brandmooffin/cocos2d-mono/issues).
 
 - Desktop PCs
-  - Windows 10 Store Apps (UWP)
-  - Windows Win32 (OpenGL & DirectX)
+  - Windows (OpenGL & DirectX)
   - Linux (OpenGL)
   - macOS (OpenGL)
 - Mobile/Tablet Devices
   - Android (OpenGL)
   - iOS (OpenGL)
-  - Windows Phone 10 (UWP)
-- Consoles
-  - Xbox One (UWP)
 - Coming Soon
   - iOS (Metal)
   - tvOS (Metal)
   - macOS (Metal)
-  - Xbox One (XDK)
+  - Xbox (XDK)
   - Nintendo Switch
-  - PlayStation Vita
   - PlayStation 4
+  - PlayStation 5
 
 # Support & Contributing
 
@@ -57,8 +52,6 @@ You can find those in the [Tests directory](https://github.com/brandmooffin/coco
 - cocos2d-mono.Tests.Android
 
 - cocos2d-mono.Tests.Windows
-
-- cocos2d-mono.Tests.Uwp
 
 - cocos2d-mono.Tests.DesktopGL
 

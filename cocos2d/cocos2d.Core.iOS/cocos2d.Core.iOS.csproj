@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <TargetFramework>net7.0-ios16.1</TargetFramework>
+    <TargetFramework>net8.0-ios</TargetFramework>
     <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
     <OutputType>Library</OutputType>
     <RootNamespace>cocos2d_mono.Core.iOS</RootNamespace>
@@ -55,7 +55,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.2.1105" />
     <PackageReference Include="OpenTK" Version="4.7.7" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
