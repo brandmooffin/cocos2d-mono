@@ -20,14 +20,6 @@ namespace Cocos2D
 
         private string CreateFont(string fontName, float fontSize, CCRawList<char> charset)
         {
-#if LINUX
-Console.WriteLine("Built on Linux!");
-#elif MACOS
-Console.WriteLine("Built on macOS!");
-#elif WINDOWSGL
-Console.WriteLine("Built in Windows!");
-#endif
-
             if (_defaultTypeface == null)
             {
                 _defaultTypeface = SKTypeface.Default;
@@ -176,6 +168,5 @@ Console.WriteLine("Built in Windows!");
             return _kerningInfo[ch];
         }
     }
-
 }
 #endif
