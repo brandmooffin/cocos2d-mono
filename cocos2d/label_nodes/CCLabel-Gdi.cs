@@ -1,4 +1,4 @@
-﻿#if DESKTOPGL
+﻿#if DESKTOPGL && WINDOWSGL
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,11 +9,12 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+
 namespace Cocos2D
 {
     public partial class CCLabel
     {
-        [StructLayout(LayoutKind.Sequential)]
+         [StructLayout(LayoutKind.Sequential)]
         private struct ABCFloat
         {
             /// <summary>Specifies the A spacing of the character. The A spacing is the distance to add to the current
@@ -119,7 +120,7 @@ namespace Cocos2D
             SelectObject(hDC, hFont);
 
             var value = new ABCFloat[1];
-            
+
             for (int i = 0; i < charset.Count; i++)
             {
                 var ch = charset[i];
