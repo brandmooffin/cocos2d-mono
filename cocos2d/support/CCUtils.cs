@@ -24,9 +24,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using System.Globalization;
 #if !WINDOWS_PHONE && !XBOX && !WINDOWS &&!NETFX_CORE && !PSM
-#if MACOS
-using MonoMac.OpenGL;
-#elif WINDOWSGL || LINUX
+#if WINDOWSGL || LINUX
 using OpenTK.Graphics.OpenGL;
 #else
 using OpenTK.Graphics.ES20;
