@@ -125,7 +125,7 @@ namespace Cocos2D
 
         private void CreateBitmap(int width, int height)
         {
-            if (_bitmap == null || (_bitmap.Width < width || _bitmap.Height < height))
+            //if (_bitmap == null || (_bitmap.Width < width || _bitmap.Height < height))
             {
                 _bitmap?.Dispose();
 
@@ -154,9 +154,9 @@ namespace Cocos2D
             };
 
 
-            var font = new SKFont(_currentTypeface, _currentFontSize);
+            var font = new SKFont(_currentTypeface, _currentFontSize *.68f);
 
-            _canvas.DrawText(s, 0, 10, SKTextAlign.Left, font, paint);
+            _canvas.DrawText(s, 0, _currentFontSize/2, SKTextAlign.Left, font, paint);
 
             stride = _bitmap.RowBytes;
 
