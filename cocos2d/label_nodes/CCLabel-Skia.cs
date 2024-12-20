@@ -153,7 +153,10 @@ namespace Cocos2D
                 Color = SKColors.White
             };
 
-            _canvas.DrawText(s, 0, _currentFontSize * 0.6945f, paint);
+
+            var font = new SKFont(_currentTypeface, _currentFontSize *.68f);
+
+            _canvas.DrawText(s, 0, _currentFontSize/2, SKTextAlign.Left, font, paint);
 
             stride = _bitmap.RowBytes;
 
