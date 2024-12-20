@@ -125,7 +125,7 @@ namespace Cocos2D
 
         private void CreateBitmap(int width, int height)
         {
-            //if (_bitmap == null || (_bitmap.Width < width || _bitmap.Height < height))
+            if (_bitmap == null || (_bitmap.Width < width || _bitmap.Height < height))
             {
                 _bitmap?.Dispose();
 
