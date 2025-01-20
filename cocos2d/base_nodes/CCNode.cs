@@ -1290,7 +1290,7 @@ namespace Cocos2D
 
             int i = 0;
 
-            if ((m_pChildren != null) && (m_pChildren.count > 0))
+            if ((m_pChildren != null) && (m_pChildren.count > 0) && m_pChildren.Elements != null)
             {
                 SortAllChildren();
 

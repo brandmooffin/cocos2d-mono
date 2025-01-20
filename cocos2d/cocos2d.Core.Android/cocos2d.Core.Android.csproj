@@ -10,11 +10,10 @@
     <TargetFramework>net8.0-android</TargetFramework>
     <BaseIntermediateOutputPath>obj\Core\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- CCDrawManager reset width and height on Init
-- Remove early config init during CCLabel init
+- Null reference check in CCNode.Visit()
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.8.2</Version>
+    <Version>2.4.8.3</Version>
     <Title>Cocos2D-Mono for Core Android</Title>
     <Description>Cocos2D-Mono for Core Android</Description>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>

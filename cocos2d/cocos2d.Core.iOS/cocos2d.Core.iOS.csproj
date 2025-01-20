@@ -9,13 +9,12 @@
 	<CheckEolWorkloads>false</CheckEolWorkloads>
     <BaseIntermediateOutputPath>obj\Core\iOS\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- CCDrawManager reset width and height on Init
-- Remove early config init during CCLabel init
+- Null reference check in CCNode.Visit()
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.8.2</Version>
+    <Version>2.4.8.3</Version>
     <Description>Cocos2D-Mono for Core iOS</Description>
     <Title>Cocos2D-Mono for Core iOS</Title>
     <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
