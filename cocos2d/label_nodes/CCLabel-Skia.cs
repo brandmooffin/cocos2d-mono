@@ -47,7 +47,7 @@ namespace Cocos2D
 
         private unsafe byte* GetBitmapData(string s, out int stride)
         {
-           GetBitmapDataSkia(s, out stride);
+           return GetBitmapDataSkia(s, out stride);
         }
 
         private KerningInfo GetKerningInfo(char ch)
