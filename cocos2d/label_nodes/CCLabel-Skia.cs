@@ -1,4 +1,4 @@
-﻿#if DESKTOPGL && (LINUX || MACOS)
+﻿#if DESKTOPGL 
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -13,12 +13,49 @@ namespace Cocos2D
         private static SKTypeface _currentTypeface;
         private static float _currentFontSize;
 
-        private static SKBitmap _bitmap;
+        private static SKBitmap _bitmapSkia;
         private static SKCanvas _canvas;
         private static Dictionary<char, KerningInfo> _kerningInfo = new Dictionary<char, KerningInfo>();
         private static Dictionary<string, SKTypeface> _typefaceCache = new Dictionary<string, SKTypeface>();
 
+#if (LINUX || MACOS)
+
         private string CreateFont(string fontName, float fontSize, CCRawList<char> charset)
+        {
+            return CreateFontSkia(fontName, fontSize, charset);
+        }
+
+        private static void GetKerningInfo(CCRawList<char> charset)
+        {
+            GetKerningInfoSkia(charset);
+        }
+
+        private float GetFontHeight()
+        {
+            return GetFontHeightSkia();
+        }
+
+        private CCSize GetMeasureString(string text)
+        {
+            return GetMeasureStringSkia(text);
+        }
+
+        private void CreateBitmap(int width, int height)
+        {
+            CreateBitmapSkia(width, height);
+        }
+
+        private unsafe byte* GetBitmapData(string s, out int stride)
+        {
+           GetBitmapDataSkia(s, out stride);
+        }
+
+        private KerningInfo GetKerningInfo(char ch)
+        {
+            return GetKerningInfoSkia(ch);
+        }
+#endif
+        private string CreateFontSkia(string fontName, float fontSize, CCRawList<char> charset)
         {
             if (_defaultTypeface == null)
             {
@@ -64,14 +101,14 @@ namespace Cocos2D
 
             _currentFontSize = fontSize;
 
-            GetKerningInfo(charset);
+            GetKerningInfoSkia(charset);
 
-            CreateBitmap(1, 1);
+            CreateBitmapSkia(1, 1);
 
             return _currentTypeface.FamilyName;
         }
 
-        private static void GetKerningInfo(CCRawList<char> charset)
+        private static void GetKerningInfoSkia(CCRawList<char> charset)
         {
             _kerningInfo.Clear();
 
@@ -100,7 +137,7 @@ namespace Cocos2D
             }
         }
 
-        private float GetFontHeight()
+        private float GetFontHeightSkia()
         {
             using var paint = new SKPaint
             {
@@ -110,7 +147,7 @@ namespace Cocos2D
             return paint.FontMetrics.CapHeight;
         }
 
-        private CCSize GetMeasureString(string text)
+        private CCSize GetMeasureStringSkia(string text)
         {
             using var paint = new SKPaint
             {
@@ -123,25 +160,25 @@ namespace Cocos2D
             return new CCSize(bounds.Width, bounds.Height);
         }
 
-        private void CreateBitmap(int width, int height)
+        private void CreateBitmapSkia(int width, int height)
         {
-            if (_bitmap == null || (_bitmap.Width < width || _bitmap.Height < height))
+            if (_bitmapSkia == null || (_bitmapSkia.Width < width || _bitmapSkia.Height < height))
             {
-                _bitmap?.Dispose();
+                _bitmapSkia?.Dispose();
 
-                _bitmap = new SKBitmap(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
-                _canvas = new SKCanvas(_bitmap);
+                _bitmapSkia = new SKBitmap(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
+                _canvas = new SKCanvas(_bitmapSkia);
             }
         }
 
-        private unsafe byte* GetBitmapData(string s, out int stride)
+        private unsafe byte* GetBitmapDataSkia(string s, out int stride)
         {
-            var size = GetMeasureString(s);
+            var size = GetMeasureStringSkia(s);
 
             var w = (int)Math.Ceiling(size.Width + 2);
             var h = (int)Math.Ceiling(size.Height + 2);
 
-            CreateBitmap(w, h);
+            CreateBitmapSkia(w, h);
 
             _canvas.Clear(SKColors.Transparent);
 
@@ -158,15 +195,15 @@ namespace Cocos2D
 
             _canvas.DrawText(s, 0, _currentFontSize/2, SKTextAlign.Left, font, paint);
 
-            stride = _bitmap.RowBytes;
+            stride = _bitmapSkia.RowBytes;
 
-            fixed (byte* ptr = _bitmap.GetPixelSpan())
+            fixed (byte* ptr = _bitmapSkia.GetPixelSpan())
             {
                 return ptr;
             }
         }
 
-        private KerningInfo GetKerningInfo(char ch)
+        private KerningInfo GetKerningInfoSkia(char ch)
         {
             return _kerningInfo[ch];
         }
