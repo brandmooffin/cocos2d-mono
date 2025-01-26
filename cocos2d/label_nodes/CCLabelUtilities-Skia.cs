@@ -1,4 +1,4 @@
-﻿#if DESKTOPGL && (LINUX || MACOS)
+﻿#if DESKTOPGL
 using SkiaSharp;
 using System;
 using System.IO;
@@ -7,11 +7,34 @@ namespace Cocos2D
 {
     internal static partial class CCLabelUtilities
     {
-        private static SKBitmap _bitmap;
+        private static SKBitmap _bitmapSkia;
         private static SKCanvas _canvas;
         private static SKPaint _paint;
 
+        #if (LINUX || MACOS)
         internal static CCTexture2D CreateNativeLabel(string text, CCSize dimensions, CCTextAlignment hAlignment,
+            CCVerticalTextAlignment vAlignment, string fontName,
+            float fontSize, CCColor4B textColor)
+        {
+            return CreateNativeLabelSkia(text, dimensions, hAlignment, vAlignment, fontName, fontSize, textColor);
+        }
+
+        static void CreateBitmap(int width, int height)
+        {
+            CreateBitmapSkia(width, height);
+        }
+
+        static SKTypeface CreateFont(string familyName, float emSize)
+        {
+            return CreateFontSkia(familyName, emSize);
+        }
+
+        static Stream SaveToStream()
+        {
+            return SaveToStreamSkia();
+        }
+#endif
+        internal static CCTexture2D CreateNativeLabelSkia(string text, CCSize dimensions, CCTextAlignment hAlignment,
             CCVerticalTextAlignment vAlignment, string fontName,
             float fontSize, CCColor4B textColor)
         {
@@ -20,11 +43,11 @@ namespace Cocos2D
                 return new CCTexture2D();
             }
 
-            var font = CreateFont(fontName, fontSize);
+            var font = CreateFontSkia(fontName, fontSize);
 
             if (dimensions.Equals(CCSize.Zero))
             {
-                CreateBitmap(1, 1);
+                CreateBitmapSkia(1, 1);
 
                 var size = new SKRect();
                 _paint.MeasureText(text, ref size);
@@ -33,7 +56,7 @@ namespace Cocos2D
                 dimensions.Height = size.Height;
             }
 
-            CreateBitmap((int)dimensions.Width, (int)dimensions.Height);
+            CreateBitmapSkia((int)dimensions.Width, (int)dimensions.Height);
 
             var alignment = SKTextAlign.Left;
 
@@ -66,18 +89,18 @@ namespace Cocos2D
             _canvas.DrawText(text, 0, lineAlignment, _paint);
 
             var texture = new CCTexture2D();
-            texture.InitWithStream(SaveToStream(), Microsoft.Xna.Framework.Graphics.SurfaceFormat.Bgra4444);
+            texture.InitWithStream(SaveToStreamSkia(), Microsoft.Xna.Framework.Graphics.SurfaceFormat.Bgra4444);
 
             return texture;
         }
 
-        static void CreateBitmap(int width, int height)
+        static void CreateBitmapSkia(int width, int height)
         {
             width = Math.Max(width, 1);
             height = Math.Max(height, 1);
 
-            _bitmap = new SKBitmap(width, height);
-            _canvas = new SKCanvas(_bitmap);
+            _bitmapSkia = new SKBitmap(width, height);
+            _canvas = new SKCanvas(_bitmapSkia);
 
             _paint = new SKPaint
             {
@@ -89,14 +112,14 @@ namespace Cocos2D
             };
         }
 
-        static SKTypeface CreateFont(string familyName, float emSize)
+        static SKTypeface CreateFontSkia(string familyName, float emSize)
         {
             return SKTypeface.FromFamilyName(familyName);
         }
 
-        static Stream SaveToStream()
+        static Stream SaveToStreamSkia()
         {
-            var image = SKImage.FromBitmap(_bitmap);
+            var image = SKImage.FromBitmap(_bitmapSkia);
             var data = image.Encode(SKEncodedImageFormat.Png, 100);
             var stream = new MemoryStream();
             data.SaveTo(stream);
