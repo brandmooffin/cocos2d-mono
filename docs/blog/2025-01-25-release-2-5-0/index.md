@@ -5,6 +5,8 @@ authors: [brandmooffin]
 tags: [update, release, 2.5.0]
 ---
 
+![Release Logo](./logo-full-release.png)
+
 Cocos2D-Mono 2.5.0 is out now! Go check out the [release notes](https://github.com/brandmooffin/cocos2d-mono/releases/tag/2.5.0) to see what's change...or just read below. 
 
 There's also a lot of news to take a look at too!
