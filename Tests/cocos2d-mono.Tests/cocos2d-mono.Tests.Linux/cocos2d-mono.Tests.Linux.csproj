@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CAE04575-CC7A-43FF-A750-09EDD2FB5BFE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>cocos2d_mono.Tests.Linux</RootNamespace>
+    <AssemblyName>cocos2d-mono.Tests.Linux</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MonoGamePlatform>Linux</MonoGamePlatform>
+    <TargetFramework>net8.0</TargetFramework>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;LINUX;WINDOWSGL;OPENGL;MONOGAME;DESKTOPGL</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;LINUX;WINDOWSGL;OPENGL;MONOGAME;DESKTOPGL</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <PackageId>Cocos2D-Mono Tests for Linux</PackageId>
+    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Version>2.3.10.0</Version>
+    <Product>cocos2d-mono.Tests.Linux</Product>
+    <Company>Broken Walls Studios</Company>
+    <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
+    <Description>Cocos2D-Mono Tests for Linux</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icon.bmp" />
+    <EmbeddedResource Include="Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="..\Content\Content.mgcb">
+      <Link>Content\Content.mgcb</Link>
+    </MonoGameContentReference>
+    <ProjectReference Include="..\..\..\box2d\box2d.DesktopGL\box2d.DesktopGL.csproj">
+      <Project>{18aafe9f-27fd-4b00-9aac-14612319ea91}</Project>
+      <Name>box2d.DesktopGL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\cocos2d\cocos2d.Linux\cocos2d.Linux.csproj">
+      <Project>{01382ad1-179c-4322-91c4-e4fac0ca6c84}</Project>
+      <Name>cocos2d.Linux</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
+  </ItemGroup>
+  <Import Project="..\cocos2d-mono.Tests.projitems" Label="Shared" />
+  <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
+    <Message Text="Restoring dotnet tools" Importance="High" />
+    <Exec Command="dotnet tool restore" />
+  </Target>
+</Project>

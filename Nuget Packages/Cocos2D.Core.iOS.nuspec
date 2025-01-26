@@ -15,7 +15,7 @@
     <releaseNotes>
 - Null reference check in CCNode.Visit()
     </releaseNotes>
-    <copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
+    <copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
     <dependencies>
       <dependency id="MonoGame.Framework.iOS" version="3.8.2.1105" />
@@ -24,6 +24,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\cocos2d\cocos2d.Core.iOS\bin\Core\iOS\Release\net7.0-ios16.1\*.dll" target="lib\net7.0-ios16.1" />
+    <file src="..\cocos2d\cocos2d.Core.iOS\bin\Core\iOS\Release\net8.0-ios\*.dll" target="lib\net8.0-ios" />
   </files>
 </package>

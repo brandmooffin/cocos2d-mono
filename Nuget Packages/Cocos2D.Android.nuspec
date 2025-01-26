@@ -15,10 +15,10 @@
     <releaseNotes>
 - Null reference check in CCNode.Visit()
     </releaseNotes>
-    <copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
+    <copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
     <dependencies>
-      <group targetFramework="net7.0-android33.0">
+      <group targetFramework="net8.0-android">
         <dependency id="MonoGame.Content.Builder.Task" version="3.8.2.1105" />
         <dependency id="MonoGame.Framework.Android" version="3.8.2.1105" />
         <dependency id="SharpZipLib" version="1.4.2" />
@@ -27,6 +27,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\cocos2d\cocos2d.Android\bin\Android\Release\net7.0-android33.0\*.dll" target="lib" />
+    <file src="..\cocos2d\cocos2d.Android\bin\Android\Release\net8.0-android\*.dll" target="lib" />
   </files>
 </package>
