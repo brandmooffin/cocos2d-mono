@@ -1,120 +1,134 @@
-﻿#if DESKTOPGL
+﻿#if DESKTOPGL && WINDOWSGL
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Cocos2D
 {
-    internal static partial class CCLabelUtilities
-    {
-        private static Bitmap _bitmap;
-        private static Graphics _graphics;
-        private static Brush _brush;
+	internal static partial class CCLabelUtilities
+	{
+		private static Bitmap _bitmap;
+		private static Graphics _graphics;
+		private static Brush _brush;
 
-        internal static CCTexture2D CreateNativeLabel(string text, CCSize dimensions, CCTextAlignment hAlignment,
-		                                   CCVerticalTextAlignment vAlignment, string fontName,
-		                                   float fontSize, CCColor4B textColor)
+		internal static CCTexture2D CreateNativeLabel(string text, CCSize dimensions, CCTextAlignment hAlignment,
+			CCVerticalTextAlignment vAlignment, string fontName,
+			float fontSize, CCColor4B textColor)
 		{
-
-		    if (string.IsNullOrEmpty(text))
-		    {
-		        return new CCTexture2D();
-		    }
-
-		    var font = CreateFont (fontName, fontSize);
-
-            if (dimensions.Equals(CCSize.Zero))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+               || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                CreateBitmap(1, 1);
-
-                var ms = _graphics.MeasureString(text, font);
-                
-                dimensions.Width = ms.Width;
-                dimensions.Height = ms.Height;
+                return CreateNativeLabelSkia(text, dimensions, hAlignment, vAlignment, fontName, fontSize, textColor);
             }
 
-            CreateBitmap((int)dimensions.Width, (int)dimensions.Height);
+            if (string.IsNullOrEmpty(text))
+			{
+				return new CCTexture2D();
+			}
 
-            var stringFormat = new StringFormat();
+			var font = CreateFont(fontName, fontSize);
 
-		    switch (hAlignment)
-		    {
-		        case CCTextAlignment.Left:
-                    stringFormat.Alignment = StringAlignment.Near;
-		            break;
-		        case CCTextAlignment.Center:
-                    stringFormat.Alignment = StringAlignment.Center;
-		            break;
-		        case CCTextAlignment.Right:
-                    stringFormat.Alignment = StringAlignment.Far;
-		            break;
-		    }
+			if (dimensions.Equals(CCSize.Zero))
+			{
+				CreateBitmap(1, 1);
 
-		    switch (vAlignment)
-		    {
-		        case CCVerticalTextAlignment.Top:
-        		    stringFormat.LineAlignment = StringAlignment.Near;
-		            break;
-		        case CCVerticalTextAlignment.Center:
-        		    stringFormat.LineAlignment = StringAlignment.Center;
-		            break;
-		        case CCVerticalTextAlignment.Bottom:
-        		    stringFormat.LineAlignment = StringAlignment.Far;
-		            break;
-		    }
+				var ms = _graphics.MeasureString(text, font);
 
-            _graphics.DrawString(text, font, _brush, new RectangleF(0, 0, dimensions.Width, dimensions.Height), stringFormat);
-            _graphics.Flush();
+				dimensions.Width = ms.Width;
+				dimensions.Height = ms.Height;
+			}
+
+			CreateBitmap((int)dimensions.Width, (int)dimensions.Height);
+
+			var stringFormat = new StringFormat();
+
+			switch (hAlignment)
+			{
+				case CCTextAlignment.Left:
+					stringFormat.Alignment = StringAlignment.Near;
+					break;
+				case CCTextAlignment.Center:
+					stringFormat.Alignment = StringAlignment.Center;
+					break;
+				case CCTextAlignment.Right:
+					stringFormat.Alignment = StringAlignment.Far;
+					break;
+			}
+
+			switch (vAlignment)
+			{
+				case CCVerticalTextAlignment.Top:
+					stringFormat.LineAlignment = StringAlignment.Near;
+					break;
+				case CCVerticalTextAlignment.Center:
+					stringFormat.LineAlignment = StringAlignment.Center;
+					break;
+				case CCVerticalTextAlignment.Bottom:
+					stringFormat.LineAlignment = StringAlignment.Far;
+					break;
+			}
+
+			_graphics.DrawString(text, font, _brush, new RectangleF(0, 0, dimensions.Width, dimensions.Height),
+				stringFormat);
+			_graphics.Flush();
 
 			var texture = new CCTexture2D();
-			texture.InitWithStream (SaveToStream(), Microsoft.Xna.Framework.Graphics.SurfaceFormat.Bgra4444);
+			texture.InitWithStream(SaveToStream(), Microsoft.Xna.Framework.Graphics.SurfaceFormat.Bgra4444);
 
 			return texture;
 		}
 
-        static void CreateBitmap(int width, int height)
-        {
-            if (_brush == null)
+		static void CreateBitmap(int width, int height)
+		{
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+               || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                _brush = new SolidBrush(Color.White);
+                CreateBitmapSkia(width, height);
+                return;
             }
 
-            //if (_bitmap != null && _bitmap.Width <= width && _bitmap.Height <= height)
-            //{
-            //    return;
-            //}
+            if (_brush == null)
+			{
+				_brush = new SolidBrush(Color.White);
+			}
 
-            width = Math.Max(width, 1);
-            height = Math.Max(height, 1);
+			//if (_bitmap != null && _bitmap.Width <= width && _bitmap.Height <= height)
+			//{
+			//    return;
+			//}
 
-            _bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            _graphics = Graphics.FromImage(_bitmap);
+			width = Math.Max(width, 1);
+			height = Math.Max(height, 1);
 
-            _graphics.SmoothingMode = SmoothingMode.AntiAlias;
-        }
+			_bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+			_graphics = Graphics.FromImage(_bitmap);
 
-        static Font CreateFont(string familyName, float emSize)
-        {
-            return CreateFont(familyName, emSize, FontStyle.Regular);
-        }
-        
-        static Font CreateFont(string familyName, float emSize, FontStyle style)
+			_graphics.SmoothingMode = SmoothingMode.AntiAlias;
+		}
+
+		static Font CreateFont(string familyName, float emSize)
 		{
-            return new Font(familyName, emSize, style);
-        }
+            return CreateFont(familyName, emSize, FontStyle.Regular);
+		}
+
+		static Font CreateFont(string familyName, float emSize, FontStyle style)
+		{
+			return new Font(familyName, emSize, style);
+		}
 
 		static Stream SaveToStream()
 		{
-		    var stream = new MemoryStream();
-            
-            _bitmap.Save(stream, ImageFormat.Png);
-		    stream.Position = 0;
-		    
-            return stream;
-		}
+			var stream = new MemoryStream();
 
-    }
+			_bitmap.Save(stream, ImageFormat.Png);
+			stream.Position = 0;
+
+			return stream;
+		}
+	}
+
 }
 #endif

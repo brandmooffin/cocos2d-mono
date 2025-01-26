@@ -6,16 +6,16 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Box2D</RootNamespace>
     <AssemblyName>Box2D</AssemblyName>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.4.8.3</Version>
+    <Version>2.5.0</Version>
     <PackageId>box2d.DesktopGL</PackageId>
     <Company>Broken Walls Studios</Company>
-    <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Product>box2d for DesktopG</Product>
     <Description>Box2D for DesktopGL (OpenGL Desktop Platforms)</Description>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
@@ -25,7 +25,18 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
+- Upgrade to .NET 8
+- Support for MonoGame 3.8.2
+- Linux platform support
+- macOS platform support
+- Removal for UWP platform
+- Support for iOS 18
+- Support for Android 34
+- Fixes for DesktopGL crashing when using System Label for Linux and macOS
 - Null reference check in CCNode.Visit()
+- CCDrawManager reset width and height on Init
+- Remove early config init during CCLabel init
+- Add method to set atlas texture size for CCLabel
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
@@ -54,12 +65,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.2.1105" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Logos\logo-small.png">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>
+      </PackagePath>
     </None>
   </ItemGroup>
   <Import Project="..\box2d.projitems" Label="Shared" />

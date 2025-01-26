@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "box2d.DesktopGL", "..\box2d
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "box2d.iOS", "..\box2d\box2d.iOS\box2d.iOS.csproj", "{8AC4C3CC-9BCD-405C-BE0B-5C217A054B78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "box2d.Uwp", "..\box2d\box2d.Uwp\box2d.Uwp.csproj", "{ACAC14A0-8C2B-413C-875F-A2AD3C647800}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "box2d.Windows", "..\box2d\box2d.Windows\box2d.Windows.csproj", "{F0F33689-AED5-4D53-9BE7-8E8F9306CF26}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "cocos2d", "..\cocos2d\cocos2d.shproj", "{AFED60A6-F61D-4C4E-BB3B-20FFDA06B990}"
@@ -22,8 +20,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cocos2d.DesktopGL", "..\cocos2d\cocos2d.DesktopGL\cocos2d.DesktopGL.csproj", "{01382AD1-179C-4322-91C4-E4FAC0CA6C84}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cocos2d.iOS", "..\cocos2d\cocos2d.iOS\cocos2d.iOS.csproj", "{E71F3053-056C-4381-9638-048ED73BDFF6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cocos2d.Uwp", "..\cocos2d\cocos2d.Uwp\cocos2d.Uwp.csproj", "{11382845-C53D-4D81-8F2E-A7F88C9BDAD6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cocos2d.Windows", "..\cocos2d\cocos2d.Windows\cocos2d.Windows.csproj", "{E3CF514A-3539-4F29-9E16-0AEA2EDEF311}"
 EndProject
