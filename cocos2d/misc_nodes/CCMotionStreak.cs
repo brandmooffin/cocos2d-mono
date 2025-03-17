@@ -206,8 +206,8 @@ namespace Cocos2D
 
             else if (m_uNuPoints > 0)
             {
-                bool a1 = m_pPointVertexes[m_uNuPoints - 1].DistanceSQ(ref m_tPositionR) < m_fMinSeg;
-                bool a2 = (m_uNuPoints != 1) && (m_pPointVertexes[m_uNuPoints - 2].DistanceSQ(ref m_tPositionR) < (m_fMinSeg * 2.0f));
+                bool a1 = m_pPointVertexes[m_uNuPoints - 1].DistanceSquared(ref m_tPositionR) < m_fMinSeg;
+                bool a2 = (m_uNuPoints != 1) && (m_pPointVertexes[m_uNuPoints - 2].DistanceSquared(ref m_tPositionR) < (m_fMinSeg * 2.0f));
 
                 if (a1 || a2)
                 {

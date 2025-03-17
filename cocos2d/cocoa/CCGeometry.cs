@@ -113,11 +113,6 @@ namespace Cocos2D
             return String.Format("CCPoint : (x={0}, y={1})", X, Y);
         }
 
-        [Obsolete("This will be removed in a future release. Please use DistanceSquared instead.")]
-        public float DistanceSQ(ref CCPoint v2)
-        {
-            return Sub(ref v2).LengthSquared;
-        }
 
         public CCPoint Sub(ref CCPoint v2)
         {
@@ -127,21 +122,9 @@ namespace Cocos2D
             return pt;
         }
 
-        [Obsolete("This will be removed in a future release. Please use LengthSquared instead.")]
-        public float LengthSQ
-        {
-            get { return X * X + Y * Y; }
-        }
-
         public float LengthSquared
         {
             get { return X * X + Y * Y; }
-        }
-
-        [Obsolete("This will be removed in a future release. Please use LengthSquared instead.")]
-        public float LengthSquare
-        {
-            get { return LengthSQ; }
         }
 
         /// <summary>
@@ -561,7 +544,7 @@ namespace Cocos2D
         public static CCPoint Project(CCPoint v1, CCPoint v2)
         {
             float dp1 = v1.X * v2.X + v1.Y * v2.Y;
-            float dp2 = v2.LengthSQ;
+            float dp2 = v2.LengthSquared;
             float f = dp1 / dp2;
             CCPoint pt;
             pt.X = v2.X * f;
