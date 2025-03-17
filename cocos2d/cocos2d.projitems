@@ -180,7 +180,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)extentions\GUI\CCControlExtension\CCInvocation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)extentions\GUI\CCControlExtension\CCScale9Sprite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)extentions\GUI\CCControlExtension\CCScale9SpriteFile.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)extentions\GUI\CCControlExtension\CCScale9SpriteFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)extentions\GUI\CCScrollView\CCScrollView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)extentions\GUI\CCScrollView\CCSorting.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)extentions\GUI\CCScrollView\CCTableView.cs" />

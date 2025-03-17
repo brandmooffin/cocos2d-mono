@@ -805,7 +805,7 @@ namespace Cocos2D
 
         public virtual void SetBackgroundSpriteFrameForState(CCSpriteFrame spriteFrame, CCControlState state)
         {
-            CCScale9Sprite sprite = new CCScale9SpriteFrame(spriteFrame);
+            CCScale9Sprite sprite = new CCScale9Sprite(spriteFrame);
             SetBackgroundSpriteForState(sprite, state);
         }
     }
