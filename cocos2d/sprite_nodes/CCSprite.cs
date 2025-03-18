@@ -390,7 +390,7 @@ namespace Cocos2D
 
                 // update rect
                 m_bRectRotated = value.IsRotated;
-                SetTextureRect(value.Rect, m_bRectRotated, value.OriginalSize);
+                SetTextureRect(value.Rect, m_bRectRotated, value.ContentSize);
                 UntrimmedSizeInPixels = m_obContentSize.PointsToPixels();
 
                 Scale = currentScale;
