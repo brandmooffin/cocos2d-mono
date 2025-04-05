@@ -9,24 +9,22 @@
     <AssemblyName>box2d.iOS</AssemblyName>
     <Title>box2d for iOS</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.5.0</Version>
+    <Version>2.5.1</Version>
     <Description>box2d for iOS</Description>
     <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageReleaseNotes>
-- Upgrade to .NET 8
-- Support for MonoGame 3.8.2
-- Linux platform support
-- macOS platform support
-- Removal for UWP platform
-- Support for iOS 18
-- Support for Android 34
-- Fixes for DesktopGL crashing when using System Label for Linux and macOS
-- Null reference check in CCNode.Visit()
-- CCDrawManager reset width and height on Init
-- Remove early config init during CCLabel init
-- Add method to set atlas texture size for CCLabel
+- Removed IsFrameDisplayed from CCSprite
+   - Update usage to IsSpriteFrameDisplayed
+- Removed LengthSQ and LengthSquare from CCGeometry
+   - Update usage to LengthSquared
+- Removed DistanceSQ from CCGeometry
+   - Update usage to DistanceSquared
+- Removed OriginalSize from CCSpriteFrame
+   - Updated usage to ContentSize
+- Updated Common Issues
+- New Samples for macOS and Linux
 	</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
