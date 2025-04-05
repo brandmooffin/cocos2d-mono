@@ -53,7 +53,7 @@ You may need to also copy the lib file to the .dotnet directory so MonoGame can 
 
 - Locate `libfreetype.6.dylib` in the following directory `/opt/homebrew/Cellar/freetype/2.13.3/lib`
 
-- Copy `libfreetype.6.dylib` into `~/.dotnet/shared/Microsoft.NETCore.App`
+- Copy `libfreetype.6.dylib` into `~/.dotnet/shared/Microsoft.NETCore.App/8.0.13` (or whichever version of donet installed)
 
 - Rename `libfreetype.6.dylib` to `libfreetype6.dylib` 
 
@@ -91,6 +91,6 @@ You may need to also copy the lib file to the .dotnet directory so MonoGame can 
 
 - Locate `libfreeimage.3.18.0.dylib` in the following directory `/opt/homebrew/Cellar/freeimage/3.18.0/lib`
 
-- Copy `libfreeimage.3.18.0.dylib` into `~/.dotnet/shared/Microsoft.NETCore.App`
+- Copy `libfreeimage.3.18.0.dylib` into `~/.dotnet/shared/Microsoft.NETCore.App/8.0.13` (or whichever version of donet installed)
 
 - Rename `libfreeimage.3.18.0.dylib` to `libfreeimage.dylib` 
