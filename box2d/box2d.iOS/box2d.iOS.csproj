@@ -50,7 +50,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.iOS" Version="3.7.1.189" />
+    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.2.1105" />
   </ItemGroup>
   <Import Project="..\box2d.projitems" Label="Shared" />
 </Project>
