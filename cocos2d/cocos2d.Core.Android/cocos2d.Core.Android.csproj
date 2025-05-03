@@ -10,7 +10,7 @@
     <TargetFramework>net8.0-android34.0</TargetFramework>
     <BaseIntermediateOutputPath>obj\Core\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- Removed IsFrameDisplayed from CCSprite
+- Update OpenTK to 4.9.4
    - Update usage to IsSpriteFrameDisplayed
 - Removed LengthSQ and LengthSquare from CCGeometry
    - Update usage to LengthSquared
@@ -22,7 +22,7 @@
 - New Samples for macOS and Linux
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.5.1</Version>
+    <Version>2.5.2</Version>
     <Title>Cocos2D-Mono for Core Android</Title>
     <Description>Cocos2D-Mono for Core Android</Description>
     <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.2.1105" />
-    <PackageReference Include="OpenTK" Version="4.7.7" />
+    <PackageReference Include="OpenTK" Version="4.9.4" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
   <Import Project="..\cocos2d.projitems" Label="Shared" Condition="Exists('..\cocos2d.projitems')" />
