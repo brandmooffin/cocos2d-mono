@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <TargetFramework>net8.0-ios</TargetFramework>
+    <TargetFramework>net8.0-ios18.0</TargetFramework>
     <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
     <OutputType>Library</OutputType>
     <RootNamespace>cocos2d_mono.Core.iOS</RootNamespace>
@@ -9,15 +9,24 @@
 	<CheckEolWorkloads>false</CheckEolWorkloads>
     <BaseIntermediateOutputPath>obj\Core\iOS\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- Null reference check in CCNode.Visit()
+- Removed IsFrameDisplayed from CCSprite
+   - Update usage to IsSpriteFrameDisplayed
+- Removed LengthSQ and LengthSquare from CCGeometry
+   - Update usage to LengthSquared
+- Removed DistanceSQ from CCGeometry
+   - Update usage to DistanceSquared
+- Removed OriginalSize from CCSpriteFrame
+   - Updated usage to ContentSize
+- Updated Common Issues
+- New Samples for macOS and Linux
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.4.8.3</Version>
+    <Version>2.5.1</Version>
     <Description>Cocos2D-Mono for Core iOS</Description>
     <Title>Cocos2D-Mono for Core iOS</Title>
-    <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageTags>mono monogame cocos2d game</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
