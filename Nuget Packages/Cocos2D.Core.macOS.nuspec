@@ -14,21 +14,12 @@
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
 - Update OpenTK to 4.9.4
-   - Update usage to IsSpriteFrameDisplayed
-- Removed LengthSQ and LengthSquare from CCGeometry
-   - Update usage to LengthSquared
-- Removed DistanceSQ from CCGeometry
-   - Update usage to DistanceSquared
-- Removed OriginalSize from CCSpriteFrame
-   - Updated usage to ContentSize
-- Updated Common Issues
-- New Samples for macOS and Linux
     </releaseNotes>
     <copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
     <dependencies>
       <dependency id="MonoGame.Framework.DesktopGL" version="3.8.2.1105" />
-      <dependency id="OpenTK" version="4.4.0" />
+      <dependency id="OpenTK" version="4.9.4" />
       <dependency id="SharpZipLib" version="1.3.3" />
       <dependency id="SkiaSharp" version="3.116.1" />
       <dependency id="SkiaSharp.NativeAssets.macOS" version="3.116.1" />

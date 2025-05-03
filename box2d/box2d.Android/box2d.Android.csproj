@@ -20,15 +20,6 @@
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <PackageReleaseNotes>
 - Update OpenTK to 4.9.4
-   - Update usage to IsSpriteFrameDisplayed
-- Removed LengthSQ and LengthSquare from CCGeometry
-   - Update usage to LengthSquared
-- Removed DistanceSQ from CCGeometry
-   - Update usage to DistanceSquared
-- Removed OriginalSize from CCSpriteFrame
-   - Updated usage to ContentSize
-- Updated Common Issues
-- New Samples for macOS and Linux
 	</PackageReleaseNotes>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
