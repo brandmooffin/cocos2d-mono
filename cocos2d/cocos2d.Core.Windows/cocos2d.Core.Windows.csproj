@@ -14,9 +14,9 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.Core.Windows</PackageId>
-    <Version>2.4.8.3</Version>
+    <Version>2.5.1</Version>
     <Description>Cocos2D-Mono for Core Windows (DX)</Description>
-    <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
     <Company>Broken Walls Studios</Company>
     <Product>cocos2d-mono for Core Windows</Product>
@@ -24,7 +24,16 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- Null reference check in CCNode.Visit()
+- Removed IsFrameDisplayed from CCSprite
+   - Update usage to IsSpriteFrameDisplayed
+- Removed LengthSQ and LengthSquare from CCGeometry
+   - Update usage to LengthSquared
+- Removed DistanceSQ from CCGeometry
+   - Update usage to DistanceSquared
+- Removed OriginalSize from CCSpriteFrame
+   - Updated usage to ContentSize
+- Updated Common Issues
+- New Samples for macOS and Linux
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
