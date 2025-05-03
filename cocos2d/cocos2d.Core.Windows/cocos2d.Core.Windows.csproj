@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E3CF514A-3539-4F29-9E16-0AEA2EDEF311}</ProjectGuid>
+    <ProjectGuid>{60360116-AACA-4EA3-99DB-B600B5500EF4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>cocos2d_mono.Windows</RootNamespace>
     <AssemblyName>cocos2d_mono.Windows</AssemblyName>
@@ -14,7 +14,7 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.Core.Windows</PackageId>
-    <Version>2.5.1</Version>
+    <Version>2.5.2</Version>
     <Description>Cocos2D-Mono for Core Windows (DX)</Description>
     <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>

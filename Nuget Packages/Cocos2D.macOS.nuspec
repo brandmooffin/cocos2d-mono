@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.macOS</id>
-    <version>2.5.1</version>
+    <version>2.5.2</version>
     <title>Cocos2D-Mono for macOS</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
@@ -13,7 +13,7 @@
     <description>Cocos2D-Mono for macOS</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
-- Removed IsFrameDisplayed from CCSprite
+- Update OpenTK to 4.9.4
    - Update usage to IsSpriteFrameDisplayed
 - Removed LengthSQ and LengthSquare from CCGeometry
    - Update usage to LengthSquared
