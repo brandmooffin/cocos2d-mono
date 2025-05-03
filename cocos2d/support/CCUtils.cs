@@ -64,7 +64,7 @@ namespace Cocos2D
                 if (error != ErrorCode.NoError)
                     CCLog.Log("ERROR: The GL context is in error (" + error + ").");
 #else
-                var extstring = GL.GetString(RenderbufferStorage.Extensions); 
+                var extstring = GL.GetString(StringName.Extensions); 
                 All error = (RenderbufferTarget)GL.GetError(); 
                 if (error != All.False)
                     CCLog.Log("ERROR: The GL context is in error (" + error + ").");
