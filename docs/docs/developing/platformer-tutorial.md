@@ -34,12 +34,12 @@ Before you begin, make sure you have:
 ### Create a New DesktopGL Project
 
 1. Open Visual Studio and select "Create a new project"
-2. Search for "cocos2d-mono" and select the "cocos2d-mono Game (DesktopGL)" template
+2. Search for "cocos2d-mono" and select the "Cocos2D-Mono for DesktopGL (OpenGL Desktop Platforms)" template
 3. Name your project "Platformer" and click "Create"
 
 If you don't have the template installed, you can:
 - Install the [Visual Studio Extension](https://marketplace.visualstudio.com/items?itemName=Cocos2D-MonoTeamBrokenWallsStudios.cocos2dmonoprojecttemplates)
-- Or create a new MonoGame DesktopGL project and add cocos2d-mono through NuGet packages
+- Or create a new MonoGame DesktopGL project and add cocos2d-mono.DesktopGL through NuGet packages
 
 ### Project Structure Overview
 
@@ -73,6 +73,14 @@ You can create these yourself or use free assets from sites like:
 - [Kenney Assets](https://kenney.nl/assets) (recommended for beginners)
 - [itch.io](https://itch.io/game-assets/free)
 
+In order to add content to your project, not only should the assets exist within the `Content` folder but they must be registered in the `Content.mgcb` file.
+
+[MGCB Editor](https://docs.monogame.net/articles/getting_started/tools/mgcb_editor.html) is the easiest way to do this and can be installed as a dotnet tool.
+
+```
+dotnet tool install --global dotnet-mgcb-editor
+```
+
 ### Setting Up Content Pipeline
 
 1. In Visual Studio, right-click the "Content" folder
@@ -93,12 +101,10 @@ Box2D is included with cocos2d-mono and will help us implement realistic physics
 Create a new file called `PhysicsHelper.cs`:
 
 ```csharp
-using System;
 using Cocos2D;
 using Box2D.Dynamics;
 using Box2D.Collision.Shapes;
 using Box2D.Common;
-using Microsoft.Xna.Framework;
 
 namespace Platformer
 {
@@ -155,6 +161,262 @@ namespace Platformer
 }
 ```
 
+## Implementing the Player Character
+
+Create `Player.cs`:
+
+```csharp
+using System;
+using Cocos2D;
+using Box2D.Dynamics;
+using Box2D.Common;
+using Box2D.Collision.Shapes;
+
+namespace Platformer
+{
+    public class Player : CCSprite
+    {
+        // Physics body
+        private b2Body _body;
+        
+        // Movement parameters
+        private const float MOVE_SPEED = 5.0f;
+        private const float JUMP_FORCE = 7.0f;
+        private bool _canJump = false;
+        private int _jumpCount = 0;
+        private const int MAX_JUMPS = 2; // Allow double jump
+        
+        // Animation states
+        private CCAnimation _idleAnimation;
+        private CCAnimation _runAnimation;
+        private CCAnimation _jumpAnimation;
+        
+        public Player(b2World world) : base("player_idle")
+        {
+            // Create physics body
+            b2BodyDef bodyDef = new b2BodyDef();
+            bodyDef.type = b2BodyType.b2_dynamicBody;
+            bodyDef.fixedRotation = true; // Prevent rotation
+            bodyDef.allowSleep = false;
+            
+            _body = world.CreateBody(bodyDef);
+            
+            // Create fixture
+            b2PolygonShape shape = new b2PolygonShape();
+            // Make the collision box slightly smaller than the sprite
+            shape.SetAsBox(
+                this.ContentSize.Width * 0.4f / PhysicsHelper.PTM_RATIO,
+                this.ContentSize.Height * 0.45f / PhysicsHelper.PTM_RATIO);
+            
+            b2FixtureDef fixtureDef = new b2FixtureDef();
+            fixtureDef.shape = shape;
+            fixtureDef.density = 1.0f;
+            fixtureDef.friction = 0.2f;
+            fixtureDef.restitution = 0.0f;
+            
+            // Set collision filtering
+            fixtureDef.filter.categoryBits = PhysicsHelper.CATEGORY_PLAYER;
+            fixtureDef.filter.maskBits = PhysicsHelper.CATEGORY_PLATFORM | PhysicsHelper.CATEGORY_COLLECTIBLE;
+            
+            _body.CreateFixture(fixtureDef);
+            
+            // Add foot sensor for jump detection
+            b2PolygonShape footShape = new b2PolygonShape();
+            footShape.SetAsBox(
+                this.ContentSize.Width * 0.3f / PhysicsHelper.PTM_RATIO, 
+                0.1f / PhysicsHelper.PTM_RATIO,
+                new b2Vec2(0, -this.ContentSize.Height * 0.45f / PhysicsHelper.PTM_RATIO),
+                0);
+                
+            b2FixtureDef footFixtureDef = new b2FixtureDef();
+            footFixtureDef.shape = footShape;
+            footFixtureDef.isSensor = true;
+            
+            b2Fixture footSensor = _body.CreateFixture(footFixtureDef);
+            footSensor.UserData = new FootSensorUserData(this);
+            
+            // Load animations
+            LoadAnimations();
+        }
+        
+        private void LoadAnimations()
+        {
+            // In a real game, you would load animation frames
+            // For this tutorial, we'll use placeholder logic
+            
+            _idleAnimation = new CCAnimation();
+            // Add frames to animation
+            _idleAnimation.AddSpriteFrameWithFileName("player_idle");
+            _idleAnimation.DelayPerUnit = 0.2f;
+            
+            _runAnimation = new CCAnimation();
+            // Add multiple frames for run animation
+            _runAnimation.AddSpriteFrameWithFileName("player_run1");
+            _runAnimation.AddSpriteFrameWithFileName("player_run2");
+            _runAnimation.AddSpriteFrameWithFileName("player_run3");
+            _runAnimation.AddSpriteFrameWithFileName("player_run4");
+            _runAnimation.DelayPerUnit = 0.1f;
+            
+            _jumpAnimation = new CCAnimation();
+            _jumpAnimation.AddSpriteFrameWithFileName("player_jump");
+            _jumpAnimation.DelayPerUnit = 0.1f;
+        }
+        
+        public void Update(float dt)
+        {
+            // Update sprite position based on physics body
+            this.Position = PhysicsHelper.ToCocosVector(_body.Position);
+            
+            // Check if player fell off the screen
+            if (this.Position.Y < -100)
+            {
+                // Reset position
+                _body.SetTransform(new b2Vec2(100 / PhysicsHelper.PTM_RATIO, 300 / PhysicsHelper.PTM_RATIO), 0);
+                _body.LinearVelocity = b2Vec2.Zero;
+            }
+        }
+        
+        public void MoveLeft()
+        {
+            _body.LinearVelocity = new b2Vec2(-MOVE_SPEED, _body.LinearVelocity.y);
+            
+            // Flip sprite to face left
+            this.ScaleX = -Math.Abs(this.ScaleX);
+            
+            // Play run animation if on ground
+            if (_canJump && _jumpCount == 0)
+            {
+                this.RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
+            }
+        }
+        
+        public void MoveRight()
+        {
+            _body.LinearVelocity = new b2Vec2(MOVE_SPEED, _body.LinearVelocity.y);
+            
+            // Flip sprite to face right
+            this.ScaleX = Math.Abs(this.ScaleX);
+            
+            // Play run animation if on ground
+            if (_canJump && _jumpCount == 0)
+            {
+                this.RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
+            }
+        }
+        
+        public void StopMoving()
+        {
+            _body.SetLinearVelocity(new b2Vec2(0, _body.GetLinearVelocity().y));
+            
+            // Play idle animation if on ground
+            if (_canJump && _jumpCount == 0)
+            {
+                this.StopAllActions();
+                this.RunAction(new CCRepeatForever(new CCAnimate(_idleAnimation)));
+            }
+        }
+        
+        public void Jump()
+        {
+            if (_canJump && _jumpCount < MAX_JUMPS)
+            {
+                _body.SetLinearVelocity(new b2Vec2(_body.GetLinearVelocity().x, JUMP_FORCE));
+                _jumpCount++;
+                _canJump = (_jumpCount < MAX_JUMPS);
+                
+                // Play jump animation
+                this.StopAllActions();
+                this.RunAction(new CCAnimate(_jumpAnimation));
+            }
+        }
+        
+        public void SetCanJump(bool canJump)
+        {
+            if (canJump && !_canJump)
+            {
+                // Player just landed
+                _jumpCount = 0;
+                
+                // Play idle or run animation based on horizontal velocity
+                this.StopAllActions();
+                
+                if (Math.Abs(_body.GetLinearVelocity().x) > 0.1f)
+                {
+                    this.RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
+                }
+                else
+                {
+                    this.RunAction(new CCRepeatForever(new CCAnimate(_idleAnimation)));
+                }
+            }
+            
+            _canJump = canJump;
+        }
+        
+        // User data for foot sensor
+        private class FootSensorUserData
+        {
+            public Player Player { get; private set; }
+            
+            public FootSensorUserData(Player player)
+            {
+                Player = player;
+            }
+        }
+    }
+}
+```
+
+
+## Creating Platform Objects
+
+Create `Platform.cs`:
+
+```csharp
+using Cocos2D;
+using Box2D.Dynamics;
+
+namespace Platformer
+{
+    public class Platform : CCSprite
+    {
+        // Physics body
+        private b2Body _body;
+        
+        public Platform(b2World world, float posX, float posY, float width, float height) : base("platform")
+        {
+            // Set position and scale to match desired dimensions
+            this.Position = new CCPoint(posX, posY);
+            this.ScaleX = width / this.ContentSize.Width;
+            this.ScaleY = height / this.ContentSize.Height;
+            
+            // Create physics body
+            _body = PhysicsHelper.CreateBoxBody(
+                world, 
+                posX, 
+                posY, 
+                width, 
+                height, 
+                false,  // Static body
+                1.0f,   // Density
+                0.3f,   // Friction
+                0.0f    // No bounce
+            );
+            
+            // Set collision filtering
+            b2Fixture fixture = _body.FixtureList;
+            b2Filter filter = fixture.Filter;
+            filter.categoryBits = PhysicsHelper.CATEGORY_PLATFORM;
+            filter.maskBits = PhysicsHelper.CATEGORY_PLAYER;
+            fixture.SetFilterData(filter);
+            
+            // Store reference to this platform
+            _body.UserData = this;
+        }
+    }
+}
+```
+
 ## Creating the Main Game Layer
 
 Create `GameLayer.cs`:
@@ -165,7 +427,6 @@ using System.Collections.Generic;
 using Cocos2D;
 using Box2D.Dynamics;
 using Box2D.Common;
-using Microsoft.Xna.Framework;
 
 namespace Platformer
 {
@@ -290,262 +551,6 @@ namespace Platformer
 }
 ```
 
-## Implementing the Player Character
-
-Create `Player.cs`:
-
-```csharp
-using System;
-using Cocos2D;
-using Box2D.Dynamics;
-using Box2D.Common;
-using Box2D.Collision.Shapes;
-using Microsoft.Xna.Framework;
-
-namespace Platformer
-{
-    public class Player : CCSprite
-    {
-        // Physics body
-        private b2Body _body;
-        
-        // Movement parameters
-        private const float MOVE_SPEED = 5.0f;
-        private const float JUMP_FORCE = 7.0f;
-        private bool _canJump = false;
-        private int _jumpCount = 0;
-        private const int MAX_JUMPS = 2; // Allow double jump
-        
-        // Animation states
-        private CCAnimation _idleAnimation;
-        private CCAnimation _runAnimation;
-        private CCAnimation _jumpAnimation;
-        
-        public Player(b2World world) : base("player_idle")
-        {
-            // Create physics body
-            b2BodyDef bodyDef = new b2BodyDef();
-            bodyDef.type = b2BodyType.b2_dynamicBody;
-            bodyDef.fixedRotation = true; // Prevent rotation
-            bodyDef.allowSleep = false;
-            
-            _body = world.CreateBody(bodyDef);
-            
-            // Create fixture
-            b2PolygonShape shape = new b2PolygonShape();
-            // Make the collision box slightly smaller than the sprite
-            shape.SetAsBox(
-                this.ContentSize.Width * 0.4f / PhysicsHelper.PTM_RATIO,
-                this.ContentSize.Height * 0.45f / PhysicsHelper.PTM_RATIO);
-            
-            b2FixtureDef fixtureDef = new b2FixtureDef();
-            fixtureDef.shape = shape;
-            fixtureDef.density = 1.0f;
-            fixtureDef.friction = 0.2f;
-            fixtureDef.restitution = 0.0f;
-            
-            // Set collision filtering
-            fixtureDef.filter.categoryBits = PhysicsHelper.CATEGORY_PLAYER;
-            fixtureDef.filter.maskBits = PhysicsHelper.CATEGORY_PLATFORM | PhysicsHelper.CATEGORY_COLLECTIBLE;
-            
-            _body.CreateFixture(fixtureDef);
-            
-            // Add foot sensor for jump detection
-            b2PolygonShape footShape = new b2PolygonShape();
-            footShape.SetAsBox(
-                this.ContentSize.Width * 0.3f / PhysicsHelper.PTM_RATIO, 
-                0.1f / PhysicsHelper.PTM_RATIO,
-                new b2Vec2(0, -this.ContentSize.Height * 0.45f / PhysicsHelper.PTM_RATIO),
-                0);
-                
-            b2FixtureDef footFixtureDef = new b2FixtureDef();
-            footFixtureDef.shape = footShape;
-            footFixtureDef.isSensor = true;
-            
-            b2Fixture footSensor = _body.CreateFixture(footFixtureDef);
-            footSensor.SetUserData(new FootSensorUserData(this));
-            
-            // Load animations
-            LoadAnimations();
-        }
-        
-        private void LoadAnimations()
-        {
-            // In a real game, you would load animation frames
-            // For this tutorial, we'll use placeholder logic
-            
-            _idleAnimation = new CCAnimation();
-            // Add frames to animation
-            _idleAnimation.AddSpriteFrameWithFileName("player_idle");
-            _idleAnimation.DelayPerUnit = 0.2f;
-            
-            _runAnimation = new CCAnimation();
-            // Add multiple frames for run animation
-            _runAnimation.AddSpriteFrameWithFileName("player_run1");
-            _runAnimation.AddSpriteFrameWithFileName("player_run2");
-            _runAnimation.AddSpriteFrameWithFileName("player_run3");
-            _runAnimation.AddSpriteFrameWithFileName("player_run4");
-            _runAnimation.DelayPerUnit = 0.1f;
-            
-            _jumpAnimation = new CCAnimation();
-            _jumpAnimation.AddSpriteFrameWithFileName("player_jump");
-            _jumpAnimation.DelayPerUnit = 0.1f;
-        }
-        
-        public void Update(float dt)
-        {
-            // Update sprite position based on physics body
-            this.Position = PhysicsHelper.ToCocosVector(_body.GetPosition());
-            
-            // Check if player fell off the screen
-            if (this.Position.Y < -100)
-            {
-                // Reset position
-                _body.SetTransform(new b2Vec2(100 / PhysicsHelper.PTM_RATIO, 300 / PhysicsHelper.PTM_RATIO), 0);
-                _body.SetLinearVelocity(b2Vec2.Zero);
-            }
-        }
-        
-        public void MoveLeft()
-        {
-            _body.SetLinearVelocity(new b2Vec2(-MOVE_SPEED, _body.GetLinearVelocity().y));
-            
-            // Flip sprite to face left
-            this.ScaleX = -Math.Abs(this.ScaleX);
-            
-            // Play run animation if on ground
-            if (_canJump && _jumpCount == 0)
-            {
-                this.RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
-            }
-        }
-        
-        public void MoveRight()
-        {
-            _body.SetLinearVelocity(new b2Vec2(MOVE_SPEED, _body.GetLinearVelocity().y));
-            
-            // Flip sprite to face right
-            this.ScaleX = Math.Abs(this.ScaleX);
-            
-            // Play run animation if on ground
-            if (_canJump && _jumpCount == 0)
-            {
-                this.RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
-            }
-        }
-        
-        public void StopMoving()
-        {
-            _body.SetLinearVelocity(new b2Vec2(0, _body.GetLinearVelocity().y));
-            
-            // Play idle animation if on ground
-            if (_canJump && _jumpCount == 0)
-            {
-                this.StopAllActions();
-                this.RunAction(new CCRepeatForever(new CCAnimate(_idleAnimation)));
-            }
-        }
-        
-        public void Jump()
-        {
-            if (_canJump && _jumpCount < MAX_JUMPS)
-            {
-                _body.SetLinearVelocity(new b2Vec2(_body.GetLinearVelocity().x, JUMP_FORCE));
-                _jumpCount++;
-                _canJump = (_jumpCount < MAX_JUMPS);
-                
-                // Play jump animation
-                this.StopAllActions();
-                this.RunAction(new CCAnimate(_jumpAnimation));
-            }
-        }
-        
-        public void SetCanJump(bool canJump)
-        {
-            if (canJump && !_canJump)
-            {
-                // Player just landed
-                _jumpCount = 0;
-                
-                // Play idle or run animation based on horizontal velocity
-                this.StopAllActions();
-                
-                if (Math.Abs(_body.GetLinearVelocity().x) > 0.1f)
-                {
-                    this.RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
-                }
-                else
-                {
-                    this.RunAction(new CCRepeatForever(new CCAnimate(_idleAnimation)));
-                }
-            }
-            
-            _canJump = canJump;
-        }
-        
-        // User data for foot sensor
-        private class FootSensorUserData
-        {
-            public Player Player { get; private set; }
-            
-            public FootSensorUserData(Player player)
-            {
-                Player = player;
-            }
-        }
-    }
-}
-```
-
-## Creating Platform Objects
-
-Create `Platform.cs`:
-
-```csharp
-using Cocos2D;
-using Box2D.Dynamics;
-using Box2D.Common;
-
-namespace Platformer
-{
-    public class Platform : CCSprite
-    {
-        // Physics body
-        private b2Body _body;
-        
-        public Platform(b2World world, float posX, float posY, float width, float height) : base("platform")
-        {
-            // Set position and scale to match desired dimensions
-            this.Position = new CCPoint(posX, posY);
-            this.ScaleX = width / this.ContentSize.Width;
-            this.ScaleY = height / this.ContentSize.Height;
-            
-            // Create physics body
-            _body = PhysicsHelper.CreateBoxBody(
-                world, 
-                posX, 
-                posY, 
-                width, 
-                height, 
-                false,  // Static body
-                1.0f,   // Density
-                0.3f,   // Friction
-                0.0f    // No bounce
-            );
-            
-            // Set collision filtering
-            b2Fixture fixture = _body.GetFixtureList();
-            b2Filter filter = fixture.GetFilterData();
-            filter.categoryBits = PhysicsHelper.CATEGORY_PLATFORM;
-            filter.maskBits = PhysicsHelper.CATEGORY_PLAYER;
-            fixture.SetFilterData(filter);
-            
-            // Store reference to this platform
-            _body.SetUserData(this);
-        }
-    }
-}
-```
 
 ## Updating the Main Game Class
 
