@@ -1,4 +1,4 @@
-#if MACOS || IOS
+#if IOS
 using System;
 using System.Collections.Generic;
 using System.Linq;

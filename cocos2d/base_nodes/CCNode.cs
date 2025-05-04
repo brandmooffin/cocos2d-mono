@@ -1290,7 +1290,7 @@ namespace Cocos2D
 
             int i = 0;
 
-            if ((m_pChildren != null) && (m_pChildren.count > 0))
+            if ((m_pChildren != null) && (m_pChildren.count > 0) && m_pChildren.Elements != null)
             {
                 SortAllChildren();
 
@@ -1646,7 +1646,7 @@ namespace Cocos2D
         public CCAction GetAction(int tag)
         {
             Debug.Assert(tag != (int) CCNodeTag.Invalid, "Invalid tag");
-            return m_pActionManager.GetActionByTag(tag, this);
+            return m_pActionManager.GetAction(tag, this);
         }
 
         public int NumberOfRunningActions()

@@ -54,7 +54,7 @@ namespace Cocos2D
         TEST_TRANSITIONS,
         //TEST_USERDEFAULT,
         TEST_ZWOPTEX,
-#if IOS || MACOS || WINDOWSGL || WINDOWS || ANDROID || NETFX_CORE
+#if IOS || MACOS || WINDOWSGL || WINDOWS || ANDROID || NETFX_CORE || LINUX
         TEST_SYSTEM_FONTS,
 #endif
         TESTS_COUNT,
@@ -112,7 +112,7 @@ namespace Cocos2D
             "TransitionsTest",
             //"UserDefaultTest",
             "ZwoptexTest",
-#if IOS || MACOS || WINDOWSGL || WINDOWS || (ANDROID && !OUYA) || NETFX_CORE
+#if IOS || MACOS || WINDOWSGL || WINDOWS || (ANDROID && !OUYA) || NETFX_CORE || LINUX
 			"SystemFontTest",
 #endif
         };

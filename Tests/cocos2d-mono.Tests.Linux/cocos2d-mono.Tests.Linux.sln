@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "box2d.DesktopGL", "..\..\box2d\box2d.DesktopGL\box2d.DesktopGL.csproj", "{18AAFE9F-27FD-4B00-9AAC-14612319EA91}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "box2d", "..\..\box2d\box2d.shproj", "{02F4E1C8-8A0D-49DE-9B39-A966E126ACC3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cocos2d.Linux", "..\..\cocos2d\cocos2d.Linux\cocos2d.Linux.csproj", "{01382AD1-179C-4322-91C4-E4FAC0CA6C84}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "cocos2d", "..\..\cocos2d\cocos2d.shproj", "{AFED60A6-F61D-4C4E-BB3B-20FFDA06B990}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cocos2d-mono.Tests.Linux", "..\cocos2d-mono.Tests\cocos2d-mono.Tests.Linux\cocos2d-mono.Tests.Linux.csproj", "{CAE04575-CC7A-43FF-A750-09EDD2FB5BFE}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "cocos2d-mono.Tests", "..\cocos2d-mono.Tests\cocos2d-mono.Tests.shproj", "{2AA8482A-DC8A-4905-8D09-F34D95FC66B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18AAFE9F-27FD-4B00-9AAC-14612319EA91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18AAFE9F-27FD-4B00-9AAC-14612319EA91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18AAFE9F-27FD-4B00-9AAC-14612319EA91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18AAFE9F-27FD-4B00-9AAC-14612319EA91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01382AD1-179C-4322-91C4-E4FAC0CA6C84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01382AD1-179C-4322-91C4-E4FAC0CA6C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01382AD1-179C-4322-91C4-E4FAC0CA6C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01382AD1-179C-4322-91C4-E4FAC0CA6C84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAE04575-CC7A-43FF-A750-09EDD2FB5BFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAE04575-CC7A-43FF-A750-09EDD2FB5BFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAE04575-CC7A-43FF-A750-09EDD2FB5BFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAE04575-CC7A-43FF-A750-09EDD2FB5BFE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C218047F-63DA-4BA9-8062-C27539A4E24B}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\cocos2d\cocos2d.projitems*{01382ad1-179c-4322-91c4-e4fac0ca6c84}*SharedItemsImports = 5
+		..\..\box2d\box2d.projitems*{02f4e1c8-8a0d-49de-9b39-a966e126acc3}*SharedItemsImports = 13
+		..\..\box2d\box2d.projitems*{18aafe9f-27fd-4b00-9aac-14612319ea91}*SharedItemsImports = 5
+		..\cocos2d-mono.Tests\cocos2d-mono.Tests.projitems*{2aa8482a-dc8a-4905-8d09-f34d95fc66b4}*SharedItemsImports = 13
+		..\..\cocos2d\cocos2d.projitems*{afed60a6-f61d-4c4e-bb3b-20ffda06b990}*SharedItemsImports = 13
+		..\cocos2d-mono.Tests\cocos2d-mono.Tests.projitems*{cae04575-cc7a-43ff-a750-09edd2fb5bfe}*SharedItemsImports = 5
+	EndGlobalSection
+EndGlobal

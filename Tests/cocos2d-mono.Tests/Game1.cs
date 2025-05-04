@@ -34,7 +34,7 @@ namespace tests
 
             IsMouseVisible = true;
 
-#if WINDOWS || WINDOWSGL || WINDOWSDX || MACOS
+#if WINDOWS || WINDOWSGL || WINDOWSDX || MACOS || LINUX
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
 #endif

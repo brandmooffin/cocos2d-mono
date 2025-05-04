@@ -6,16 +6,28 @@
     <OutputType>Library</OutputType>
     <RootNamespace>cocos2d_mono.DesktopGL</RootNamespace>
     <AssemblyName>cocos2d_mono.DesktopGL</AssemblyName>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+    <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+    <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsWindows)'=='true'">
+    <DefineConstants>TRACE;DEBUG;OPENGL;MONOGAME;DESKTOPGL;WINDOWSGL;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsOSX)'=='true'">
+    <DefineConstants>TRACE;DEBUG;OPENGL;MONOGAME;DESKTOPGL;MACOS;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsLinux)'=='true'">
+    <DefineConstants>TRACE;DEBUG;OPENGL;MONOGAME;DESKTOPGL;LINUX;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.DesktopGL</PackageId>
-    <Version>2.4.8.1</Version>
+    <Version>2.5.2</Version>
     <Description>Cocos2D-Mono for DesktopGL (OpenGL Desktop Platforms)</Description>
-    <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
     <Company>Broken Walls Studios</Company>
     <Product>cocos2d-mono for DesktopGL</Product>
@@ -23,7 +35,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- Add method to set atlas texture size for CCLabel
+- Update OpenTK to 4.9.4
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
@@ -38,28 +50,30 @@
     <OutputPath>bin\DesktopGL\Debug\</OutputPath>
     <IntermediateOutputPath>obj\DesktopGL\Debug</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\DesktopGL\Debug</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;DEBUG;WINDOWSGL;OPENGL;MONOGAME;DESKTOPGL;LINUX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\DesktopGL\Release\</OutputPath>
     <IntermediateOutputPath>obj\DesktopGL\Release</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\DesktopGL\Release</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;DEBUG;WINDOWSGL;OPENGL;MONOGAME;DESKTOPGL;LINUX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
-    <PackageReference Include="OpenTK" Version="4.4.0" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.2.1105" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.2.1105" />
+    <PackageReference Include="OpenTK" Version="4.9.4" />
     <PackageReference Include="SharpZipLib" Version="1.3.3" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
+    <PackageReference Include="SkiaSharp" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="3.116.1" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.11" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\box2d\box2d.DesktopGL\box2d.DesktopGL.csproj">
@@ -70,7 +84,8 @@
   <ItemGroup>
     <None Include="..\..\Logos\logo-small.png">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>
+      </PackagePath>
     </None>
   </ItemGroup>
   <Import Project="..\cocos2d.projitems" Label="Shared" />

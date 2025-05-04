@@ -51,7 +51,7 @@ namespace tests
             m_pMenu1.AddChild(item1);
             m_pMenu1.AddChild(item2);
 
-            m_pMenu1.AlignItemsVerticallyWithPadding(2);
+            m_pMenu1.AlignItemsVertically(2);
 
             AddChild(m_pMenu1);
 
