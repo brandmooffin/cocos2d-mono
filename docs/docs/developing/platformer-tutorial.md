@@ -186,7 +186,8 @@ namespace Platformer
         private bool _canJump = false;
         private int _jumpCount = 0;
         private const int MAX_JUMPS = 2; // Allow double jump
-        
+        private bool _isRunning = false;
+
         // Animation states
         private CCAnimation _idleAnimation;
         private CCAnimation _runAnimation;
@@ -206,8 +207,8 @@ namespace Platformer
             b2PolygonShape shape = new b2PolygonShape();
             // Make the collision box slightly smaller than the sprite
             shape.SetAsBox(
-                this.ContentSize.Width * 0.4f / PhysicsHelper.PTM_RATIO,
-                this.ContentSize.Height * 0.45f / PhysicsHelper.PTM_RATIO);
+                ContentSize.Width * 0.4f / PhysicsHelper.PTM_RATIO,
+                ContentSize.Height * 0.45f / PhysicsHelper.PTM_RATIO);
             
             b2FixtureDef fixtureDef = new b2FixtureDef();
             fixtureDef.shape = shape;
@@ -224,9 +225,9 @@ namespace Platformer
             // Add foot sensor for jump detection
             b2PolygonShape footShape = new b2PolygonShape();
             footShape.SetAsBox(
-                this.ContentSize.Width * 0.3f / PhysicsHelper.PTM_RATIO, 
+                ContentSize.Width * 0.3f / PhysicsHelper.PTM_RATIO, 
                 0.1f / PhysicsHelper.PTM_RATIO,
-                new b2Vec2(0, -this.ContentSize.Height * 0.45f / PhysicsHelper.PTM_RATIO),
+                new b2Vec2(0, -ContentSize.Height * 0.45f / PhysicsHelper.PTM_RATIO),
                 0);
                 
             b2FixtureDef footFixtureDef = new b2FixtureDef();
@@ -252,10 +253,10 @@ namespace Platformer
             
             _runAnimation = new CCAnimation();
             // Add multiple frames for run animation
-            _runAnimation.AddSpriteFrameWithFileName("player_run1");
-            _runAnimation.AddSpriteFrameWithFileName("player_run2");
-            _runAnimation.AddSpriteFrameWithFileName("player_run3");
-            _runAnimation.AddSpriteFrameWithFileName("player_run4");
+            _runAnimation.AddSpriteFrameWithFileName("player_run_1");
+            _runAnimation.AddSpriteFrameWithFileName("player_run_2");
+            _runAnimation.AddSpriteFrameWithFileName("player_run_3");
+            _runAnimation.AddSpriteFrameWithFileName("player_run_4");
             _runAnimation.DelayPerUnit = 0.1f;
             
             _jumpAnimation = new CCAnimation();
@@ -266,10 +267,10 @@ namespace Platformer
         public void Update(float dt)
         {
             // Update sprite position based on physics body
-            this.Position = PhysicsHelper.ToCocosVector(_body.Position);
+            Position = PhysicsHelper.ToCocosVector(_body.Position);
             
             // Check if player fell off the screen
-            if (this.Position.Y < -100)
+            if (Position.Y < -100)
             {
                 // Reset position
                 _body.SetTransform(new b2Vec2(100 / PhysicsHelper.PTM_RATIO, 300 / PhysicsHelper.PTM_RATIO), 0);
@@ -282,12 +283,13 @@ namespace Platformer
             _body.LinearVelocity = new b2Vec2(-MOVE_SPEED, _body.LinearVelocity.y);
             
             // Flip sprite to face left
-            this.ScaleX = -Math.Abs(this.ScaleX);
+            FlipX = true;
             
             // Play run animation if on ground
-            if (_canJump && _jumpCount == 0)
+            if (_canJump && _jumpCount == 0 && !_isRunning)
             {
-                this.RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
+                _isRunning = true; // Set running state
+                RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
             }
         }
         
@@ -296,12 +298,13 @@ namespace Platformer
             _body.LinearVelocity = new b2Vec2(MOVE_SPEED, _body.LinearVelocity.y);
             
             // Flip sprite to face right
-            this.ScaleX = Math.Abs(this.ScaleX);
+            FlipX = false;
             
             // Play run animation if on ground
-            if (_canJump && _jumpCount == 0)
+            if (_canJump && _jumpCount == 0 && !_isRunning)
             {
-                this.RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
+                _isRunning = true; // Set running state
+                RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
             }
         }
         
@@ -312,8 +315,9 @@ namespace Platformer
             // Play idle animation if on ground
             if (_canJump && _jumpCount == 0)
             {
-                this.StopAllActions();
-                this.RunAction(new CCRepeatForever(new CCAnimate(_idleAnimation)));
+                _isRunning = false; // Stop running animation
+                StopAllActions();
+                RunAction(new CCRepeatForever(new CCAnimate(_idleAnimation)));
             }
         }
         
@@ -325,9 +329,10 @@ namespace Platformer
                 _jumpCount++;
                 _canJump = (_jumpCount < MAX_JUMPS);
                 
+                _isRunning = false; // Stop running animation when jumping
                 // Play jump animation
-                this.StopAllActions();
-                this.RunAction(new CCAnimate(_jumpAnimation));
+                StopAllActions();
+                RunAction(new CCAnimate(_jumpAnimation));
             }
         }
         
@@ -339,15 +344,15 @@ namespace Platformer
                 _jumpCount = 0;
                 
                 // Play idle or run animation based on horizontal velocity
-                this.StopAllActions();
+                StopAllActions();
                 
                 if (Math.Abs(_body.LinearVelocity.x) > 0.1f)
                 {
-                    this.RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
+                    RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
                 }
                 else
                 {
-                    this.RunAction(new CCRepeatForever(new CCAnimate(_idleAnimation)));
+                    RunAction(new CCRepeatForever(new CCAnimate(_idleAnimation)));
                 }
             }
             
@@ -387,9 +392,9 @@ namespace Platformer
         public Platform(b2World world, float posX, float posY, float width, float height) : base("platform")
         {
             // Set position and scale to match desired dimensions
-            this.Position = new CCPoint(posX, posY);
-            this.ScaleX = width / this.ContentSize.Width;
-            this.ScaleY = height / this.ContentSize.Height;
+            Position = new CCPoint(posX, posY);
+            ScaleX = width / ContentSize.Width;
+            ScaleY = height / ContentSize.Height;
             
             // Create physics body
             _body = PhysicsHelper.CreateBoxBody(
@@ -446,18 +451,15 @@ namespace Platformer
         private bool _isJumpPressed;
         
         public GameLayer()
-        {
-            // Enable keyboard
-            this.KeyboardEnabled = true;
-            
+        {            
             // Initialize physics world with gravity
             _world = new b2World(new b2Vec2(0, -10.0f));
             
-            // Schedule physics updates
-            Schedule(Update);
-            
             // Create level
             CreateLevel();
+
+            // Schedule updates
+            ScheduleUpdate();
         }
         
         private void CreateLevel()
@@ -478,17 +480,13 @@ namespace Platformer
             AddChild(floor);
             
             // Create some platforms
-            Platform platform1 = new Platform(_world, 200, 150, 200, 32);
+            Platform platform1 = new Platform(_world, 200, 100, 200, 32);
             _platforms.Add(platform1);
             AddChild(platform1);
             
-            Platform platform2 = new Platform(_world, 400, 250, 200, 32);
+            Platform platform2 = new Platform(_world, 600, 100, 200, 32);
             _platforms.Add(platform2);
             AddChild(platform2);
-            
-            Platform platform3 = new Platform(_world, 600, 350, 200, 32);
-            _platforms.Add(platform3);
-            AddChild(platform3);
             
             // Create player
             _player = new Player(_world);
@@ -496,11 +494,11 @@ namespace Platformer
             AddChild(_player);
         }
         
-        private void Update(float dt)
+        public override void Update(float dt)
         {
             // Update physics world
             _world.Step(dt, 8, 3);
-            
+
             // Update player movement based on input
             if (_isLeftPressed)
                 _player.MoveLeft();
@@ -508,45 +506,34 @@ namespace Platformer
                 _player.MoveRight();
             else
                 _player.StopMoving();
-                
+
             if (_isJumpPressed)
                 _player.Jump();
-                
+
             // Update all game objects
             _player.Update(dt);
+
+            base.Update(dt);
+
+            // Handle keyboard state every frame            
+            HandleInput();
         }
-        
-        // Handle keyboard events
-        public override void KeyPressed(Keys key)
+
+        public void HandleInput()
         {
-            switch (key)
-            {
-                case Microsoft.Xna.Framework.Input.Keys.Left:
-                    _isLeftPressed = true;
-                    break;
-                case Microsoft.Xna.Framework.Input.Keys.Right:
-                    _isRightPressed = true;
-                    break;
-                case Microsoft.Xna.Framework.Input.Keys.Space:
-                    _isJumpPressed = true;
-                    break;
-            }
-        }
-        
-        public override void KeyReleased(Keys key)
-        {
-            switch (key)
-            {
-                case Microsoft.Xna.Framework.Input.Keys.Left:
-                    _isLeftPressed = false;
-                    break;
-                case Microsoft.Xna.Framework.Input.Keys.Right:
-                    _isRightPressed = false;
-                    break;
-                case Microsoft.Xna.Framework.Input.Keys.Space:
-                    _isJumpPressed = false;
-                    break;
-            }
+            // Reset input state
+            _isLeftPressed = false;
+            _isRightPressed = false;
+            _isJumpPressed = false;
+
+            // Handle keyboard input
+            KeyboardState state = Keyboard.GetState();
+            if (state.IsKeyDown(Keys.Left))
+                _isLeftPressed = true;
+            if (state.IsKeyDown(Keys.Right))
+                _isRightPressed = true;
+            if (state.IsKeyDown(Keys.Space))
+                _isJumpPressed = true;
         }
     }
 }
@@ -683,13 +670,14 @@ private CCMenuItemLabel _restartButton;
 
 // Add this to the CreateLevel method in GameLayer.cs
 // Create score label
-_scoreLabel = new CCLabelTTF($"Score: {_score}", "Arial", 24);
+_scoreLabel = new CCLabelTTF($"Score: {_score}", "MarkerFelt", 22);
 _scoreLabel.Position = new CCPoint(100, visibleSize.Height - 30);
-_scoreLabel.Color = CCColor3B.White;
+_scoreLabel.Color = CCColor3B.Black;
 AddChild(_scoreLabel, 10);
 
 // Create restart button
-CCLabelTTF restartLabel = new CCLabelTTF("Restart", "Arial", 24);
+CCLabelTTF restartLabel = new CCLabelTTF("Restart", "MarkerFelt", 22);
+restartLabel.Color = CCColor3B.Black;
 _restartButton = new CCMenuItemLabel(restartLabel, RestartGame);
 _restartButton.Position = new CCPoint(visibleSize.Width - 100, visibleSize.Height - 30);
 
@@ -702,10 +690,9 @@ private void RestartGame(object sender)
 {
     // Reset score
     _score = 0;
-    _scoreLabel.Text = $"Score: {_score}";
-    
-    // Reset player position
-    _player.Position = new CCPoint(100, 300);
+
+    RemoveAllChildren();
+    CreateLevel();
 }
 ```
 
@@ -781,9 +768,9 @@ public void IncreaseScore(int points)
 
 // In the CreateLevel method of GameLayer, add some collectibles
 // Create collectibles
-for (int i = 0; i < 5; i++)
+for (int i = 0; i < 3; i++)
 {
-    Collectible coin = new Collectible(_world, 200 + i * 100, 400);
+    Collectible coin = new Collectible(_world, 200 + i * 200, 200);
     AddChild(coin);
 }
 
@@ -802,13 +789,13 @@ private class ContactListener : b2ContactListener
     private void CheckCollectibleContact(b2Fixture fixtureA, b2Fixture fixtureB)
     {
         // Check if fixA is a collectible and fixB is the player
-        Collectible collectible = fixtureA.Body.UserData as Collectible;
+        Collectible collectible = fixtureA.UserData as Collectible;
         if (collectible != null && 
             fixtureB.Filter.categoryBits == PhysicsHelper.CATEGORY_PLAYER)
         {
             // Get the game layer from the player's parent
-            CCNode playerNode = fixtureB.Body.UserData as CCNode;
-            if (playerNode != null && playerNode.Parent is GameLayer gameLayer)
+            Player.FootSensorUserData playerNode = fixtureB.UserData as Player.FootSensorUserData;
+            if (playerNode != null && collectible.Parent is GameLayer gameLayer)
             {
                 collectible.Collect(gameLayer);
             }
@@ -846,8 +833,8 @@ public void Jump()
         _canJump = (_jumpCount < MAX_JUMPS);
         
         // Play jump animation
-        this.StopAllActions();
-        this.RunAction(new CCAnimate(_jumpAnimation));
+        StopAllActions();
+        RunAction(new CCAnimate(_jumpAnimation));
         
         // Play jump sound
         PlayJumpSound();
