@@ -57,6 +57,7 @@ For our platformer, we'll add several classes to organize our code:
 - `GameLayer.cs` - Main game logic
 - `Player.cs` - Player character implementation
 - `Platform.cs` - Platform objects
+- `Collectible.cs` - Coin object
 - `PhysicsHelper.cs` - Helper class for Box2D physics
 
 ## Creating Game Assets
@@ -306,7 +307,7 @@ namespace Platformer
         
         public void StopMoving()
         {
-            _body.SetLinearVelocity(new b2Vec2(0, _body.GetLinearVelocity().y));
+            _body.LinearVelocity = new b2Vec2(0, _body.LinearVelocity.y);
             
             // Play idle animation if on ground
             if (_canJump && _jumpCount == 0)
@@ -320,7 +321,7 @@ namespace Platformer
         {
             if (_canJump && _jumpCount < MAX_JUMPS)
             {
-                _body.SetLinearVelocity(new b2Vec2(_body.GetLinearVelocity().x, JUMP_FORCE));
+                _body.LinearVelocity = new b2Vec2(_body.LinearVelocity.x, JUMP_FORCE);
                 _jumpCount++;
                 _canJump = (_jumpCount < MAX_JUMPS);
                 
@@ -340,7 +341,7 @@ namespace Platformer
                 // Play idle or run animation based on horizontal velocity
                 this.StopAllActions();
                 
-                if (Math.Abs(_body.GetLinearVelocity().x) > 0.1f)
+                if (Math.Abs(_body.LinearVelocity.x) > 0.1f)
                 {
                     this.RunAction(new CCRepeatForever(new CCAnimate(_runAnimation)));
                 }
@@ -354,7 +355,7 @@ namespace Platformer
         }
         
         // User data for foot sensor
-        private class FootSensorUserData
+        public class FootSensorUserData
         {
             public Player Player { get; private set; }
             
@@ -516,7 +517,7 @@ namespace Platformer
         }
         
         // Handle keyboard events
-        public override void OnKeyPressed(Microsoft.Xna.Framework.Input.Keys key)
+        public override void KeyPressed(Keys key)
         {
             switch (key)
             {
@@ -532,7 +533,7 @@ namespace Platformer
             }
         }
         
-        public override void OnKeyReleased(Microsoft.Xna.Framework.Input.Keys key)
+        public override void KeyReleased(Keys key)
         {
             switch (key)
             {
@@ -554,45 +555,59 @@ namespace Platformer
 
 ## Updating the Main Game Class
 
-Update `Game1.cs`:
+Update `AppDelegate.cs`:
 
 ```csharp
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System;
 using Cocos2D;
+using CocosDenshion;
+using Microsoft.Xna.Framework;
 
 namespace Platformer
 {
-    public class Game1 : Game
+    public class AppDelegate : CCApplication
     {
-        private CCDirector _director;
+        // Existing code
         
-        public Game1()
+        // Update ApplicationDidFinishLaunching
+        public override bool ApplicationDidFinishLaunching()
         {
-            CCApplication application = new CCApplication(this);
-            _director = CCDirector.SharedDirector;
-            
-            application.ApplicationDelegate = new AppDelegate();
-            application.StartGame();
-        }
-        
-        // AppDelegate class
-        internal class AppDelegate : CCApplicationDelegate
-        {
-            public override void ApplicationDidFinishLaunching()
+            CCSimpleAudioEngine.SharedEngine.SaveMediaState();
+
+            CCDirector pDirector = null;
+            try
             {
-                CCDirector director = CCDirector.SharedDirector;
-                
-                // Set display settings
+                // Set your design resolution here, which is the target resolution of your primary
+                // design hardware.
+                //
                 CCDrawManager.SetDesignResolutionSize(800, 600, CCResolutionPolicy.ShowAll);
-                
-                // Create and run the game scene
+                CCApplication.SharedApplication.GraphicsDevice.Clear(Color.Black);
+                //initialize director
+                pDirector = CCDirector.SharedDirector;
+                pDirector.SetOpenGlView();
+
+                //turn on display FPS
+                pDirector.DisplayStats = false;
+
+                // set FPS. the default value is 1.0/60 if you don't call this
+#if WINDOWS_PHONE
+                pDirector.AnimationInterval = 1f / 30f;
+#else
+                pDirector.AnimationInterval = 1.0 / 60;
+#endif
                 CCScene scene = new CCScene();
                 scene.AddChild(new GameLayer());
-                director.RunWithScene(scene);
+
+                pDirector.RunWithScene(scene);
             }
+            catch (Exception ex)
+            {
+                CCLog.Log("ApplicationDidFinishLaunching(): Error " + ex.ToString());
+            }
+            return true;
         }
+
+        // Existing code
     }
 }
 ```
@@ -612,7 +627,7 @@ _contactListener = new ContactListener();
 _world.SetContactListener(_contactListener);
 
 // Add this class inside GameLayer.cs
-private class ContactListener : b2ContactListener
+class ContactListener : b2ContactListener
 {
     public override void BeginContact(b2Contact contact)
     {
@@ -642,6 +657,16 @@ private class ContactListener : b2ContactListener
         {
             footData.Player.SetCanJump(false);
         }
+    }
+
+    public override void PostSolve(b2Contact contact, ref b2ContactImpulse impulse)
+    {
+        // Required to implement b2ContactListener
+    }
+
+    public override void PreSolve(b2Contact contact, b2Manifold oldManifold)
+    {
+        // Required to implement b2ContactListener
     }
 }
 ```
@@ -722,7 +747,7 @@ namespace Platformer
             fixtureDef.filter.categoryBits = PhysicsHelper.CATEGORY_COLLECTIBLE;
             fixtureDef.filter.maskBits = PhysicsHelper.CATEGORY_PLAYER;
             
-            _body.CreateFixture(fixtureDef).SetUserData(this);
+            _body.CreateFixture(fixtureDef).UserData = this;
             
             // Add a rotation action
             RunAction(new CCRepeatForever(new CCRotateBy(2.0f, 360)));
@@ -731,7 +756,7 @@ namespace Platformer
         public void Collect(GameLayer gameLayer)
         {
             // Remove from physics world
-            _body.GetWorld().DestroyBody(_body);
+            _body.World.DestroyBody(_body);
             _body = null;
             
             // Play collection animation
@@ -777,12 +802,12 @@ private class ContactListener : b2ContactListener
     private void CheckCollectibleContact(b2Fixture fixtureA, b2Fixture fixtureB)
     {
         // Check if fixA is a collectible and fixB is the player
-        Collectible collectible = fixtureA.GetBody().GetUserData() as Collectible;
+        Collectible collectible = fixtureA.Body.UserData as Collectible;
         if (collectible != null && 
-            fixtureB.GetFilterData().categoryBits == PhysicsHelper.CATEGORY_PLAYER)
+            fixtureB.Filter.categoryBits == PhysicsHelper.CATEGORY_PLAYER)
         {
             // Get the game layer from the player's parent
-            CCNode playerNode = fixtureB.GetBody().GetUserData() as CCNode;
+            CCNode playerNode = fixtureB.Body.UserData as CCNode;
             if (playerNode != null && playerNode.Parent is GameLayer gameLayer)
             {
                 collectible.Collect(gameLayer);
