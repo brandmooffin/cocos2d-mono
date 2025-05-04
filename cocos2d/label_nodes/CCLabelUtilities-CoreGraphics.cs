@@ -1,24 +1,15 @@
-#if MACOS || IOS
+#if IOS
 using System;
 using System.Runtime.Serialization;
 using System.Runtime.InteropServices;
 using CoreGraphics;
 using System.IO;
 
-#if MACOS
-using MonoMac.CoreGraphics;
-using MonoMac.AppKit;
-using MonoMac.Foundation;
-using MonoMac.CoreText;
-using MonoMac.ImageIO;
-
-#else
-using CoreGraphics;
 using UIKit;
 using Foundation;
 using CoreText;
 using ImageIO;
-#endif
+
 
 namespace Cocos2D
 {

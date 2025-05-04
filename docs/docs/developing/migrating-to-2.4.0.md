@@ -20,8 +20,8 @@ Edit your csproj file to change your `TargetFramework`:
 Then edit your Cocos2D-Mono PackageReference to point to 2.4.0 & MonoGame PackageReference to point to 3.8.1:
 
     <PackageReference Include="Cocos2D-Mono.{Platform}" Version="2.4.0" />
-    <PackageReference Include="MonoGame.Framework.{Platform}" Version="3.8.1.303" />
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.{Platform}" Version="3.8.2.1105" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.2.1105" />
 
 ## iOS/iPadOS, and Android
 .NET 6 introduced breaking changes in how csproj are defined for iOS/iPadOS and Android. We recommand that you create new projects using the [Cocos2D-Mono 2.4.0 Project Templates](https://marketplace.visualstudio.com/items?itemName=Cocos2D-MonoTeamBrokenWallsStudios.cocos2dmonoprojecttemplates) and that you copy over your project files there.

@@ -4,10 +4,6 @@ using Android.App;
 using Android.Util;
 #endif
 
-#if WINDOWS || WINDOWSGL
-
-#endif
-
 namespace Cocos2D
 {
 

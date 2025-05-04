@@ -30,7 +30,7 @@ namespace tests.FontTest
 			"fonts/ThonburiBold.ttf"
 
 #endif
-#if WINDOWS || WINDOWSGL
+#if WINDOWS || WINDOWSGL || MACOS || LINUX
 			"Comic Sans MS",
 			"Felt",
 			"MoolBoran",

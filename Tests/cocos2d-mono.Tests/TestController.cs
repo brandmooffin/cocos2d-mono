@@ -36,7 +36,7 @@ namespace tests
             GamePadEnabled = true;
 			KeypadEnabled = true;
 #endif
-#if WINDOWS || WINDOWSGL || MACOS
+#if WINDOWS || WINDOWSGL || MACOS || LINUX
 			GamePadEnabled = true;
 #endif
 
@@ -233,7 +233,7 @@ namespace tests
 
         public void closeCallback(object pSender)
         {
-#if (WINDOWS && !WINRT) || WINDOWSGL || WINDOWSDX || MACOS || WINDOWS_UWP
+#if (WINDOWS && !WINRT) || WINDOWSGL || WINDOWSDX || MACOS || WINDOWS_UWP || LINUX
             CCApplication.SharedApplication.Game.Exit();
 #elif ANDROID
             Game.Activity.MoveTaskToBack(true);
@@ -374,7 +374,7 @@ namespace tests
 
                 case (int)TestCases.TEST_FONTS:
                         pScene = new FontTestScene(); break;
-#if IPHONE || IOS || MACOS || WINDOWSGL || WINDOWS || (ANDROID && !OUYA) || NETFX_CORE
+#if IPHONE || IOS || MACOS || WINDOWSGL || WINDOWS || (ANDROID && !OUYA) || NETFX_CORE || LINUX
                 case (int)TestCases.TEST_SYSTEM_FONTS:
                     pScene = new SystemFontTestScene(); break;
 #endif

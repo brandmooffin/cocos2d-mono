@@ -24,9 +24,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using System.Globalization;
 #if !WINDOWS_PHONE && !XBOX && !WINDOWS &&!NETFX_CORE && !PSM
-#if MACOS
-using MonoMac.OpenGL;
-#elif WINDOWSGL || LINUX
+#if WINDOWSGL || LINUX
 using OpenTK.Graphics.OpenGL;
 #else
 using OpenTK.Graphics.ES20;
@@ -66,7 +64,7 @@ namespace Cocos2D
                 if (error != ErrorCode.NoError)
                     CCLog.Log("ERROR: The GL context is in error (" + error + ").");
 #else
-                var extstring = GL.GetString(RenderbufferStorage.Extensions); 
+                var extstring = GL.GetString(StringName.Extensions); 
                 All error = (RenderbufferTarget)GL.GetError(); 
                 if (error != All.False)
                     CCLog.Log("ERROR: The GL context is in error (" + error + ").");

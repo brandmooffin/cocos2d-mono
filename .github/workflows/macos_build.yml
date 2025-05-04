@@ -1,0 +1,24 @@
+name: macOS
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore ./cocos2d-mono.macOS/cocos2d-mono.macOS.sln
+      - name: Build
+        run: dotnet build ./cocos2d-mono.macOS/cocos2d-mono.macOS.sln --no-restore
+      - name: Test
+        run: dotnet test ./cocos2d-mono.macOS/cocos2d-mono.macOS.sln --no-build --verbosity normal
