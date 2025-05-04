@@ -31,6 +31,8 @@ namespace Cocos2D
         }
 
         public static CCTexture2D m_pTexture;
+        private static CCSize m_pAtlasTextureSize = new CCSize(0, 0);
+        
         protected static bool m_bTextureDirty = true;
 
         protected string m_FontName;
@@ -46,7 +48,7 @@ namespace Cocos2D
                 if (m_FontName != value)
                 {
                     m_FontName = value;
-                    InitializeFont(m_FontName, m_FontSize, Text);
+                    m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
                     m_bFontDirty = true;
                 }
             }
@@ -84,12 +86,20 @@ namespace Cocos2D
             {
                 if (m_sInitialString != value)
                 {
-                    InitializeFont(m_FontName, m_FontSize, value);
+                    m_pConfiguration = InitializeFont(m_FontName, m_FontSize, value);
                     m_bFontDirty = true;
                     base.Text = value;
                 }
 
                 UpdateLabel();
+            }
+        }
+
+        public static void SetTTFAtlasTextureSize(float width, float height)
+        {
+            if (width > 0 && height > 0)
+            {
+                m_pAtlasTextureSize = new CCSize(width, height);
             }
         }
 
@@ -99,6 +109,7 @@ namespace Cocos2D
             m_nHeight = height;
             m_nDepth = 4;
 
+            m_pTexture?.Dispose();
             m_pTexture = new CCTexture2D();
             m_pData = new int[width * height];
 
@@ -169,14 +180,36 @@ namespace Cocos2D
                 vAlignment, CCPoint.Zero, m_pTexture);
         }
 
-        private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset)
+
+        private CCBMFontConfiguration InitializeFont(string fontName, float fontSize, string charset, bool retry = false)
         {
             var fontKey = GetFontKey(fontName, fontSize);
 
             if (m_pData == null || s_pConfigurations.Count == 0)
             {
-                InitializeTTFAtlas(2048, 2048);
+                if (m_pAtlasTextureSize.Width > 0 && m_pAtlasTextureSize.Height > 0)
+                {
+                    InitializeTTFAtlas((int)m_pAtlasTextureSize.Width, (int)m_pAtlasTextureSize.Height);
+                }
+                else if (fontSize >= 105)
+                {
+                    InitializeTTFAtlas(2048, 2048);
+                }
+                else if (fontSize >= 80)
+                {
+                    InitializeTTFAtlas(2048, 1024);
+                }
+                else
+                {
+                    InitializeTTFAtlas(1024, 1024);
+                }
             }
+
+            if (Texture.IsDisposed && retry)
+            {
+                Texture = m_pTexture;
+            }
+
 
             if (string.IsNullOrEmpty(charset))
             {
@@ -304,6 +337,12 @@ namespace Cocos2D
                     }
                     else
                     {
+                        if (!retry)
+                        {
+                            m_pData = null;
+                            s_pConfigurations.Clear();
+                            return InitializeFont(fontName, fontSize, charset, true);
+                        }
                         CCLog.Log("Texture atlas is full");
                     }
                 }
@@ -320,6 +359,16 @@ namespace Cocos2D
             {
                 m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text);
                 m_bFontDirty = false;
+            }
+
+            if (m_pobTextureAtlas.Texture.IsDisposed)
+            {
+                m_pConfiguration = InitializeFont(m_FontName, m_FontSize, Text, true);
+                m_bFontDirty = true;
+                m_sInitialString = Text;
+                m_bLabelDirty = true;
+
+                UpdateLabel();
             }
 
             if (m_bTextureDirty)

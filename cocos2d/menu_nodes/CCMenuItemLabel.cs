@@ -115,7 +115,7 @@ namespace Cocos2D
             {
                 base.Selected();
 
-                CCAction action = GetActionByTag(unchecked((int) kZoomActionTag));
+                CCAction action = GetAction(unchecked((int) kZoomActionTag));
                 if (action != null)
                 {
                     StopAction(action);
@@ -137,7 +137,7 @@ namespace Cocos2D
             if (m_bIsEnabled)
             {
                 base.Unselected();
-                StopActionByTag(unchecked((int) kZoomActionTag));
+                StopAction(unchecked((int) kZoomActionTag));
                 CCAction zoomAction = new CCScaleTo(0.1f, m_fOriginalScale);
                 zoomAction.Tag = unchecked((int) kZoomActionTag);
                 RunAction(zoomAction);

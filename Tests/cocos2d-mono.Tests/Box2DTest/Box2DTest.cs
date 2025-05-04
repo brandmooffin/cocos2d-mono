@@ -274,7 +274,7 @@ namespace tests
                 }
             }
 
-#if WINDOWS || WINDOWSGL || LINUX || MACOS
+#if WINDOWS || WINDOWSGL || LINUX || MACOS || LINUX
             CCInputState.Instance.Update(dt);
             PlayerIndex p;
             if (CCInputState.Instance.IsKeyPress(Microsoft.Xna.Framework.Input.Keys.D, PlayerIndex.One, out p))

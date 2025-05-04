@@ -199,6 +199,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabel-Android.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabel-CoreGraphics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabel-Gdi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabel-Skia.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabel-Windows.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabelAtlas.cs" />
@@ -206,6 +207,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabelTTF.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabelUtilities-CoreGraphics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabelUtilities-Gdi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabelUtilities-Skia.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)label_nodes\CCLabelUtilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)layers_scenes_transitions_nodes\CCLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)layers_scenes_transitions_nodes\CCLayerColor.cs" />

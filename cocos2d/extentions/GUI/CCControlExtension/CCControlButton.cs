@@ -112,7 +112,7 @@ namespace Cocos2D
             {
                 base.Highlighted = value;
 
-                CCAction action = GetActionByTag(kZoomActionTag);
+                CCAction action = GetAction(kZoomActionTag);
                 if (action != null)
                 {
                     StopAction(action);

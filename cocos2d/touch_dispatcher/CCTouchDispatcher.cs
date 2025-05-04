@@ -482,8 +482,9 @@ namespace Cocos2D
         protected void ForceRemoveDelegate(ICCTouchDelegate pDelegate)
         {
             // remove handler from m_pStandardHandlers
-            foreach (CCTouchHandler pHandler in m_pStandardHandlers)
+            for (var index = 0; index < m_pStandardHandlers.Count; index++)
             {
+                var pHandler = m_pStandardHandlers[index];
                 if (pHandler != null && pHandler.Delegate == pDelegate)
                 {
                     m_pStandardHandlers.Remove(pHandler);
@@ -492,8 +493,9 @@ namespace Cocos2D
             }
 
             // remove handler from m_pTargetedHandlers
-            foreach (CCTouchHandler pHandler in m_pTargetedHandlers)
+            for (var index = 0; index < m_pTargetedHandlers.Count; index++)
             {
+                var pHandler = m_pTargetedHandlers[index];
                 if (pHandler != null && pHandler.Delegate == pDelegate)
                 {
                     m_pTargetedHandlers.Remove(pHandler);

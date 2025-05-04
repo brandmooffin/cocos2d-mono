@@ -2,11 +2,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E3CF514A-3539-4F29-9E16-0AEA2EDEF311}</ProjectGuid>
+    <ProjectGuid>{60360116-AACA-4EA3-99DB-B600B5500EF4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>cocos2d_mono.Windows</RootNamespace>
     <AssemblyName>cocos2d_mono.Windows</AssemblyName>
-    <TargetFramework>net7.0-windows7.0</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <UseWindowsForms>true</UseWindowsForms>
@@ -14,9 +14,9 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.Core.Windows</PackageId>
-    <Version>2.4.7.17</Version>
+    <Version>2.5.2</Version>
     <Description>Cocos2D-Mono for Core Windows (DX)</Description>
-    <Copyright>Copyright © 2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
     <Company>Broken Walls Studios</Company>
     <Product>cocos2d-mono for Core Windows</Product>
@@ -24,7 +24,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- Increase Texture Size for CCLabel
+- Update OpenTK to 4.9.4
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
@@ -57,7 +57,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BitMiracle.LibTiff.NET" Version="2.4.639" />
-    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.2.1105" />
     <PackageReference Include="SharpZipLib" Version="1.3.3" />
     <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
   </ItemGroup>

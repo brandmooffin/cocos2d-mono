@@ -351,13 +351,16 @@ namespace Cocos2D
             CCSprite tempItem = sprites[oldIndex];
             CCV3F_C4B_T2F_Quad tempItemQuad = quads[oldIndex];
 
-            //update the index of other swapped item
-            sprites[newIndex].AtlasIndex = oldIndex;
+            if (newIndex < sprites.Length && newIndex < quads.Count)
+            {
+                //update the index of other swapped item
+                sprites[newIndex].AtlasIndex = oldIndex;
 
-            sprites[oldIndex] = sprites[newIndex];
-            quads[oldIndex] = quads[newIndex];
-            sprites[newIndex] = tempItem;
-            quads[newIndex] = tempItemQuad;
+                sprites[oldIndex] = sprites[newIndex];
+                quads[oldIndex] = quads[newIndex];
+                sprites[newIndex] = tempItem;
+                quads[newIndex] = tempItemQuad;
+            }
         }
 
         public void ReorderBatch(bool reorder)

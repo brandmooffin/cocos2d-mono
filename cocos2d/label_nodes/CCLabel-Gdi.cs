@@ -1,4 +1,4 @@
-﻿#if DESKTOPGL
+﻿#if DESKTOPGL && WINDOWSGL
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,14 +6,14 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
+
 
 namespace Cocos2D
 {
     public partial class CCLabel
     {
-        [StructLayout(LayoutKind.Sequential)]
+         [StructLayout(LayoutKind.Sequential)]
         private struct ABCFloat
         {
             /// <summary>Specifies the A spacing of the character. The A spacing is the distance to add to the current
@@ -55,6 +55,12 @@ namespace Cocos2D
 
         private string CreateFont(string fontName, float fontSize, CCRawList<char> charset)
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return CreateFontSkia(fontName, fontSize, charset);
+            }
+            
             if (_defaultFont == null)
             {
                 _defaultFont = new Font(FontFamily.GenericSansSerif, 12);
@@ -111,6 +117,14 @@ namespace Cocos2D
 
         private static void GetKerningInfo(CCRawList<char> charset)
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                GetKerningInfoSkia(charset);
+                return;
+            }
+
+
             _abcValues.Clear();
 
             var hDC = CreateCompatibleDC(IntPtr.Zero);
@@ -119,7 +133,7 @@ namespace Cocos2D
             SelectObject(hDC, hFont);
 
             var value = new ABCFloat[1];
-            
+
             for (int i = 0; i < charset.Count; i++)
             {
                 var ch = charset[i];
@@ -143,17 +157,35 @@ namespace Cocos2D
 
         private float GetFontHeight()
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return GetFontHeightSkia();
+            }
             return _currentFont.GetHeight();
         }
 
         private CCSize GetMeasureString(string text)
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return GetMeasureStringSkia(text);
+            }
+
             var size = _graphics.MeasureString(text, _currentFont);
             return new CCSize(size.Width, size.Height);
         }
 
         private void CreateBitmap(int width, int height)
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                CreateBitmapSkia(width, height);
+                return;
+            }
+
             if (_bitmap == null || (_bitmap.Width < width || _bitmap.Height < height))
             {
                 _bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
@@ -183,11 +215,22 @@ namespace Cocos2D
 
         private KerningInfo GetKerningInfo(char ch)
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return GetKerningInfoSkia(ch);
+            }
             return _abcValues[ch];
         }
 
         private unsafe byte* GetBitmapData(string s, out int stride)
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return GetBitmapDataSkia(s, out stride);
+            }
+
             FreeBitmapData();
 
             var size = GetMeasureString(s);

@@ -54,7 +54,7 @@ namespace Cocos2D
         }
 
         /// <summary>
-        /// map width & height
+        /// map width and height
         /// </summary>
         public CCSize MapSize
         {
@@ -63,7 +63,7 @@ namespace Cocos2D
         }
 
         /// <summary>
-        /// tiles width & height
+        /// tiles width and height
         /// </summary>
         public CCSize TileSize
         {

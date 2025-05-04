@@ -17,7 +17,7 @@ namespace Cocos2D
         private readonly LinkedList<CCTouch> m_pTouches = new LinkedList<CCTouch>();
         private readonly List<CCTouch> movedTouches = new List<CCTouch>();
         private readonly List<CCTouch> newTouches = new List<CCTouch>();
-#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
         private int _lastMouseId;
         private MouseState _lastMouseState;
         private MouseState _prevMouseState;
@@ -167,7 +167,7 @@ namespace Cocos2D
             if (UseInputStateManagement)
             {
                 CCInputState.Instance.Update(1f / (float)gameTime.ElapsedGameTime.Milliseconds);
-#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
                 ProcessMouse(CCInputState.Instance.Mouse);
 #else
                 ProcessTouch(CCInputState.Instance.TouchState);
@@ -185,7 +185,7 @@ namespace Cocos2D
             else
             {
                 // Process touch events 
-#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
                 ProcessMouse();
 #else
                 ProcessTouch();
@@ -460,7 +460,7 @@ namespace Cocos2D
 
         #region Mouse Support
 
-#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
         private void ProcessMouse()
         {
             ProcessMouse(Mouse.GetState());
@@ -585,7 +585,7 @@ namespace Cocos2D
                             {
                                 pos = CCDrawManager.ScreenToWorld(touch.Position.X, touch.Position.Y);
                                 var delta = existingTouch.Value.LocationInView - pos;
-                                if (delta.LengthSQ > 1.0f)
+                                if (delta.LengthSquared > 1.0f)
                                 {
                                     movedTouches.Add(existingTouch.Value);
                                     existingTouch.Value.SetTouchInfo(touch.Id, pos.X, pos.Y);
