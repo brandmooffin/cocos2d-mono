@@ -920,3 +920,5 @@ With this foundation, you can continue to build and expand your game with more f
 ## Full Platformer Project
 
 You can check out the full platformer project [here](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer) for reference.
+
+The full project also contains all the assets used like sprites and sfx that can be used in your project as well!
