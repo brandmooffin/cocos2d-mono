@@ -916,3 +916,7 @@ Congratulations! You've built a basic 2D platformer game using cocos2d-mono and 
 - Adding UI elements and sound effects
 
 With this foundation, you can continue to build and expand your game with more features and polish. Happy game development!
+
+## Full Platformer Project
+
+You can check out the full platformer project [here](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer) for reference.
