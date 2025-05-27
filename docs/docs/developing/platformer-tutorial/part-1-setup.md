@@ -30,6 +30,7 @@ Before you begin, make sure you have:
 
 If you don't have the template installed, you can:
 - Install the [Visual Studio Extension](https://marketplace.visualstudio.com/items?itemName=Cocos2D-MonoTeamBrokenWallsStudios.cocos2dmonoprojecttemplates)
+- Install the dotnet templates by running: `dotnet new install Cocos2DMono.Samples` and then create a new project with `dotnet new c2mdesktopgl -n Platformer`
 - Or create a new MonoGame DesktopGL project and add cocos2d-mono.DesktopGL through NuGet packages
 
 ## Step 2: Understanding Project Structure
@@ -39,10 +40,14 @@ Once created, your project will have the following structure:
 ```
 Platformer/
 ├── Content/           - Game assets like images and sounds
-├── Game1.cs          - Main entry point and game loop
-├── Program.cs        - Program initialization
-└── app.manifest      - Application manifest file
+├── AppDelegate.cs     - cocos2d-mono initialization and configuration
+├── Game1.cs           - Main entry point and game loop
+├── IntroLayer.cs      - Default template layer (you'll delete this)
+├── Program.cs         - Program initialization
+└── app.manifest       - Application manifest file
 ```
+
+> **Note:** The template includes `IntroLayer.cs`, but we'll be replacing it with our own `GameLayer.cs` in this tutorial. You can delete `IntroLayer.cs` once you've created the `GameLayer.cs` file.
 
 For our platformer, we'll eventually add several classes to organize our code:
 - `GameLayer.cs` - Main game logic
@@ -82,11 +87,12 @@ dotnet tool install --global dotnet-mgcb-editor
 
 ### Adding Content to Your Project
 
-1. In Visual Studio, right-click the "Content" folder
-2. Select "Add" > "New Item" > "MonoGame Content Item"
-3. Name it "Content.mgcb"
-4. Double-click the created file to open the MonoGame Content Pipeline Tool
-5. Add your assets using "Add" > "Existing Item" and select appropriate processors for each
+The cocos2d-mono template already includes a Content.mgcb file in the Content folder, so you can proceed with adding your assets:
+
+1. Double-click the Content.mgcb file in the Content folder to open the MonoGame Content Pipeline Tool
+2. Add your assets using "Add" > "Existing Item" and select appropriate processors for each
+
+NOTE: For more information on working with the MonoGame Content Pipeline Tool please check out MonoGame's docs [here](https://docs.monogame.net/articles/getting_started/content_pipeline/index.html).
 
 Make sure to add these assets (use placeholder images if you don't have them yet):
 - `background.png` - Background image
