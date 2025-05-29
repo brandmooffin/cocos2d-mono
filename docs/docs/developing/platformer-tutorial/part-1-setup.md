@@ -107,6 +107,7 @@ Now let's create a simple scene that displays our background. First, let's creat
 Create a new file called `GameLayer.cs`:
 
 ```csharp
+using System;
 using Cocos2D;
 
 namespace Platformer
@@ -130,9 +131,9 @@ namespace Platformer
             AddChild(background, -1);
             
             // Add a simple label to confirm everything is working
-            CCLabelTTF label = new CCLabelTTF("Platformer Tutorial - Part 1", "Arial", 24);
+            CCLabelTTF label = new CCLabelTTF("Platformer Tutorial - Part 1", "MarkerFelt", 22);
             label.Position = new CCPoint(visibleSize.Width / 2, visibleSize.Height - 50);
-            label.Color = CCColor3B.White;
+            label.Color = CCColor3B.Blue;
             AddChild(label);
         }
     }
@@ -153,6 +154,13 @@ namespace Platformer
 {
     public class AppDelegate : CCApplication
     {
+        public AppDelegate(Game game, GraphicsDeviceManager graphics)
+            : base(game, graphics)
+        {
+            s_pSharedApplication = this;
+            CCDrawManager.InitializeDisplay(game, graphics, DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight);
+        }
+
         public override bool ApplicationDidFinishLaunching()
         {
             CCSimpleAudioEngine.SharedEngine.SaveMediaState();
