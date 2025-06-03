@@ -65,6 +65,12 @@ const config = {
           },
           { to: "/blog", label: "Blog", position: "left" },
           {
+            type: "doc",
+            docId: "tutorials/introduction",
+            position: "left",
+            label: "Tutorials",
+          },
+          {
             href: "https://github.com/brandmooffin/cocos2d-mono",
             label: "GitHub",
             position: "right",
@@ -78,8 +84,16 @@ const config = {
             title: "Docs",
             items: [
               {
+                label: "Blog",
+                to: "/blog",
+              },
+              {
                 label: "Getting Started",
                 to: "/docs/getting-started/introduction",
+              },
+              {
+                label: "Tutorials",
+                to: "/docs/tutorials/introduction",
               },
             ],
           },
@@ -99,10 +113,6 @@ const config = {
           {
             title: "More",
             items: [
-              {
-                label: "Blog",
-                to: "/blog",
-              },
               {
                 label: "GitHub",
                 href: "https://github.com/brandmooffin/cocos2d-mono",

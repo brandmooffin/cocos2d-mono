@@ -1,0 +1,8 @@
+{
+  "label": "Tutorials",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "This section contains tutorials for Cocos2d-Mono, including the 2D Platformer Tutorial and other guides to help you learn and master the framework."
+  }
+}
