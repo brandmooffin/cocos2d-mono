@@ -26,6 +26,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\cocos2d\cocos2d.Core.Android\bin\Core\Android\Release\net8.0-android34.0\*.dll" target="lib" />
+    <file src="..\cocos2d\cocos2d.Core.Android\bin\Core\Android\Release\net8.0-android34.0\*.dll" target="lib\net8.0-android34.0" />
   </files>
 </package>
