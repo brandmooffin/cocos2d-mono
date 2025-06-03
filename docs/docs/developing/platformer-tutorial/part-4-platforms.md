@@ -26,7 +26,7 @@ By the end of this part, you'll have:
 For platforms, we'll need:
 - `platform.png` - Simple platform sprite
 
-Add these to your Content folder. You can find these assets in the [complete project reference](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer/Content/Images).
+Add these to your Content folder. You can find these assets in the [complete project reference](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer/Final/Platformer/Content).
 
 ## Step 2: Create Platform Class
 
@@ -209,4 +209,4 @@ In [Part 5: Game Mechanics](./part-5-mechanics), we'll add collectible items, a 
 
 ## Complete Code Reference
 
-You can find the complete code for this part in the [tutorial samples repository](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer).
+You can find the complete code for this part in the [tutorial samples repository](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer/Checkpoints/Part%204).

@@ -31,7 +31,7 @@ For this tutorial, we'll need the following sprite assets:
 - `jump.wav` - Jumping sound
 - `land.wav` - Landing sound
 
-You can find these assets in the [complete project reference](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer/Content/Images).
+You can find these assets in the [complete project reference](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer/Final/Platformer/Content).
 
 Add these files to your Content folder and ensure they're set to "Content" build action.
 
@@ -435,4 +435,4 @@ In [Part 4: Platforms and Collision](./part-4-platforms), we'll create platforms
 
 ## Complete Code Reference
 
-You can find the complete code for this part in the [tutorial samples repository](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer).
+You can find the complete code for this part in the [tutorial samples repository](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer/Checkpoints/Part%203).

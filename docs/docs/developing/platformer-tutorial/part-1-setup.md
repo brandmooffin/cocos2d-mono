@@ -267,4 +267,4 @@ Congratulations! You've successfully set up your platformer project and created 
 
 ## Download Checkpoint Project
 
-You can download the complete Part 1 project [here](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer/Checkpoints/Part1) to compare with your implementation or use as a starting point.
+You can download the complete Part 1 project [here](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer/Checkpoints/Part%201) to compare with your implementation or use as a starting point.

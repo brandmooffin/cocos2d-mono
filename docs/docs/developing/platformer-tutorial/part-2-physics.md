@@ -358,4 +358,4 @@ Key topics in Part 3:
 
 ## Download Checkpoint Project
 
-You can download the complete Part 2 project [here](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer/Checkpoints/Part2) to compare with your implementation.
+You can download the complete Part 2 project [here](https://github.com/brandmooffin/cocos2d-mono-samples/tree/main/Tutorial%20Samples/Platformer/Checkpoints/Part%202) to compare with your implementation.
