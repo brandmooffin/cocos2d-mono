@@ -10,31 +10,31 @@ This tutorial series will guide you through creating a simple 2D platformer game
 
 This tutorial is divided into several parts, each building upon the previous one:
 
-### [Part 1: Project Setup and Assets](./parts/part-1-setup)
+### [Part 1: Project Setup and Assets](./part-1-setup)
 - Setting up a cocos2d-mono DesktopGL project
 - Creating and organizing game assets
 - Setting up the content pipeline
 - **Checkpoint**: A working project that displays a background
 
-### [Part 2: Physics Foundation](./parts/part-2-physics)
+### [Part 2: Physics Foundation](./part-2-physics)
 - Implementing Box2D physics
 - Creating physics helper utilities
 - Understanding coordinate systems
 - **Checkpoint**: A physics world with gravity
 
-### [Part 3: Player Character](./parts/part-3-player)
+### [Part 3: Player Character](./part-3-player)
 - Creating the player character
 - Implementing basic movement
 - Adding animations and sprites
 - **Checkpoint**: A controllable character that moves and animates
 
-### [Part 4: Platforms and Collision](./parts/part-4-platforms)
+### [Part 4: Platforms and Collision](./part-4-platforms)
 - Creating platform objects
 - Implementing collision detection
 - Adding jump mechanics
 - **Checkpoint**: A character that can jump on platforms
 
-### [Part 5: Game Mechanics](./parts/part-5-mechanics)
+### [Part 5: Game Mechanics](./part-5-mechanics)
 - Adding collectible items
 - Implementing scoring system
 - Creating UI elements
@@ -72,7 +72,7 @@ By the end of this tutorial series, you'll have built a complete 2D platformer f
 
 ## Getting Started
 
-Ready to start building? Head over to [Part 1: Project Setup and Assets](./parts/part-1-setup) to begin your platformer journey!
+Ready to start building? Head over to [Part 1: Project Setup and Assets](./part-1-setup) to begin your platformer journey!
 
 ## Full Project Reference
 
