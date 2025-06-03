@@ -40,12 +40,6 @@ This tutorial is divided into several parts, each building upon the previous one
 - Creating UI elements
 - **Checkpoint**: A playable game with collectibles and score
 
-### [Part 6: Polish and Effects](./platformer-tutorial/part-6-polish)
-- Adding sound effects
-- Creating visual effects
-- Implementing game state management
-- **Checkpoint**: A polished, complete platformer game
-
 ## What You'll Learn
 
 Throughout this tutorial series, you'll master:
