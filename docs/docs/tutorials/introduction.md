@@ -10,7 +10,7 @@ Welcome to the cocos2d-mono tutorials section! This area of the documentation is
 
 Here you'll find a collection of tutorials that will guide you from the basics to more advanced concepts:
 
-### [2D Platformer Tutorial](./platformer-tutorial/platformer-tutorial.md)
+### [2D Platformer Tutorial](./platformer-tutorial/overview.md)
 A comprehensive tutorial series that walks you through creating a complete 2D platformer game with physics, animations, and game mechanics. This tutorial is broken down into six parts:
 
 - **Part 1: Project Setup and Assets** - Setting up your development environment and organizing game assets
@@ -58,7 +58,7 @@ Have you created a tutorial or sample project that could help others? We encoura
 
 ## Ready to Begin?
 
-We recommend starting with the [2D Platformer Tutorial](./platformer-tutorial/platformer-tutorial.md) if you're new to cocos2d-mono. This comprehensive guide will introduce you to the fundamental concepts while building a complete game.
+We recommend starting with the [2D Platformer Tutorial](./platformer-tutorial/overview.md) if you're new to cocos2d-mono. This comprehensive guide will introduce you to the fundamental concepts while building a complete game.
 
 If you're looking for specific examples or have a particular feature in mind, browse through the sample projects to find relevant examples.
 

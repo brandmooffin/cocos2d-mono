@@ -1,8 +1,0 @@
-{
-  "label": "Platformer Tutorial Parts",
-  "position": 1,
-  "link": {
-    "type": "generated-index",
-    "description": "This section contains the parts of the 2D Platformer Tutorial, which is a step-by-step guide to creating a platformer game using Cocos2d-Mono."
-  }
-}
