@@ -20,7 +20,7 @@ Before you begin, make sure you have:
 - Visual Studio 2019 or newer installed
 - .NET Core SDK installed
 - Basic C# knowledge
-- cocos2d-mono installed (see [Environment Setup](../../getting-started/environment-setup.md))
+- cocos2d-mono installed (see [Environment Setup](../../../getting-started/environment-setup.md))
 
 ## Step 1: Create a New DesktopGL Project
 
