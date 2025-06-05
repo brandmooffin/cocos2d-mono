@@ -59,9 +59,7 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\Icon.png" />
   </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable-xhdpi\ouya_icon.png" />
-  </ItemGroup>
+
   <ItemGroup>
     <AndroidResource Include="Resources\Layout\Main.axml" />
   </ItemGroup>

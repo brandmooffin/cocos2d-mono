@@ -32,7 +32,7 @@ namespace Cocos2D
     /// </summary>
     /// <param name="backButton">State of the back button</param>
     /// <param name="startButton">State of the start button</param>
-    /// <param name="systemButton">State of the system (Xbox, PS3, Ouya) button</param>
+    /// <param name="systemButton">State of the system (Xbox, PS3) button</param>
     /// <param name="aButton">State of the A (bottom) button</param>
     /// <param name="bButton">State of the B (right) button</param>
     /// <param name="xButton">State of the X (left) button</param>

@@ -30,7 +30,7 @@ namespace tests
             var pMenu = new CCMenu(pCloseItem);
             var s = CCDirector.SharedDirector.WinSize;
 
-#if !XBOX && !OUYA
+#if !XBOX
             TouchEnabled = true;
 #else
             GamePadEnabled = true;
@@ -70,7 +70,7 @@ namespace tests
 
                 pMenuItem.UserData = i;
                 m_pItemMenu.AddChild(pMenuItem, 10000);
-#if XBOX || OUYA
+#if XBOX
                 pMenuItem.Position = new CCPoint(s.Width / 2, -(i + 1) * LINE_SPACE);
 #else
                 pMenuItem.Position = new CCPoint(s.Width / 2, (s.Height - (i + 1) * LINE_SPACE));
@@ -82,7 +82,7 @@ namespace tests
             }
 
             m_pItemMenu.ContentSize = new CCSize(s.Width, ((int)TestCases.TESTS_COUNT + 1) * LINE_SPACE);
-#if XBOX || OUYA
+#if XBOX
             CCSprite sprite = new CCSprite("Images/aButton");
             AddChild(sprite, 10001);
             _menuIndicator = sprite;
@@ -374,7 +374,7 @@ namespace tests
 
                 case (int)TestCases.TEST_FONTS:
                         pScene = new FontTestScene(); break;
-#if IPHONE || IOS || MACOS || WINDOWSGL || WINDOWS || (ANDROID && !OUYA) || NETFX_CORE || LINUX
+#if IPHONE || IOS || MACOS || WINDOWSGL || WINDOWS || ANDROID || NETFX_CORE || LINUX
                 case (int)TestCases.TEST_SYSTEM_FONTS:
                     pScene = new SystemFontTestScene(); break;
 #endif
