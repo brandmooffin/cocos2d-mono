@@ -3,7 +3,9 @@
     {
       "src": [
         {
-          "files": ["./cocos2d-mono.All/cocos2d-mono.All.sln"]
+          "src": "../",
+          "exclude": ["**/bin/**", "**/obj/**"],
+          "files": ["cocos2d-mono.All/cocos2d-mono.All.sln"]
         }
       ],
       "dest": "api"
