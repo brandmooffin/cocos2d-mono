@@ -3,7 +3,7 @@
     {
       "src": [
         {
-          "files": ["../cocos2d-mono.All/cocos2d-mono.All.sln"]
+          "files": ["./cocos2d-mono.All/cocos2d-mono.All.sln"]
         }
       ],
       "dest": "api"
