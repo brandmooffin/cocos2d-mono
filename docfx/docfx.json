@@ -1,0 +1,12 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": ["../cocos2d-mono.All/cocos2d-mono.All.sln"]
+        }
+      ],
+      "dest": "api"
+    }
+  ]
+}
