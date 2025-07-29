@@ -4,7 +4,7 @@
       "src": [
         {
           "src": "../cocos2d/",
-          "files": ["**/bin/Release/**.dll"]
+          "files": ["**/bin/**/Release/**/**.dll"]
         }
       ],
       "dest": "api"
