@@ -22,8 +22,8 @@
     <tags>mono monogame cocos2d game</tags>
     <dependencies>
       <group targetFramework="net8.0-android34.0">
-        <dependency id="MonoGame.Content.Builder.Task" version="3.8.2.1105" />
-        <dependency id="MonoGame.Framework.Android" version="3.8.2.1105" />
+        <dependency id="MonoGame.Content.Builder.Task" version="3.8.4" />
+        <dependency id="MonoGame.Framework.Android" version="3.8.4" />
         <dependency id="SharpZipLib" version="1.4.2" />
         <dependency id="OpenTK" version="4.9.4" />
       </group>

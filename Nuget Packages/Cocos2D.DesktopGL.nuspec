@@ -21,8 +21,8 @@
     <copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
     <dependencies>
-      <dependency id="MonoGame.Content.Builder.Task" version="3.8.2.1105" />
-      <dependency id="MonoGame.Framework.DesktopGL" version="3.8.2.1105" />
+      <dependency id="MonoGame.Content.Builder.Task" version="3.8.4" />
+      <dependency id="MonoGame.Framework.DesktopGL" version="3.8.4" />
       <dependency id="OpenTK" version="4.9.4" />
       <dependency id="SharpZipLib" version="1.3.3" />
       <dependency id="SkiaSharp" version="3.116.1" />
