@@ -10,7 +10,7 @@ namespace Cocos2D
     {
 #if !WINDOWS && !PSM && !XBOX && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
         // the accelerometer sensor on the device
-        private static Microsoft.Devices.Sensors.Accelerometer accelerometer = null;
+        private static MonoGame.Framework.Devices.Sensors.Accelerometer accelerometer = null;
 #endif
 
         private const float TG3_GRAVITY_EARTH = 9.80665f;
@@ -25,7 +25,7 @@ namespace Cocos2D
 #if !WINDOWS && !PSM && !XBOX && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
             try
             {
-                accelerometer = new Microsoft.Devices.Sensors.Accelerometer();
+                accelerometer = new MonoGame.Framework.Devices.Sensors.Accelerometer();
             }
             catch (Exception ex)
             {
@@ -51,7 +51,7 @@ namespace Cocos2D
 #if !WINDOWS && !PSM && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
                     try
                 {
-                    if (Microsoft.Devices.Sensors.Accelerometer.IsSupported)
+                    if (MonoGame.Framework.Devices.Sensors.Accelerometer.IsSupported)
                     {
                         accelerometer.CurrentValueChanged += accelerometer_CurrentValueChanged;
                         accelerometer.Start();
@@ -62,7 +62,7 @@ namespace Cocos2D
                         m_bActive = false;
                     }
                 }
-                catch (Microsoft.Devices.Sensors.AccelerometerFailedException)
+                catch (MonoGame.Framework.Devices.Sensors.AccelerometerFailedException)
                 {
                     m_bActive = false;
                 }
@@ -99,7 +99,7 @@ namespace Cocos2D
 
 
 #if !WINDOWS && !PSM && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
-        private void accelerometer_CurrentValueChanged(object sender, Microsoft.Devices.Sensors.SensorReadingEventArgs<Microsoft.Devices.Sensors.AccelerometerReading> e)
+        private void accelerometer_CurrentValueChanged(object sender, MonoGame.Framework.Devices.Sensors.SensorReadingEventArgs<MonoGame.Framework.Devices.Sensors.AccelerometerReading> e)
         {
 
             // We have to use reflection to get the Vector3 value out of Acceleration
