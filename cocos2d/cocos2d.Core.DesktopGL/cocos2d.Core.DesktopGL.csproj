@@ -25,7 +25,7 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.Core.DesktopGL</PackageId>
-    <Version>2.5.3</Version>
+    <Version>2.5.4</Version>
     <Description>Cocos2D-Mono for Core DesktopGL (OpenGL Desktop Platforms)</Description>
     <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
@@ -35,8 +35,8 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- Removed Ouya specific code
-- Fix .NET 8 target path for Android
+- Updated to support MonoGame 3.8.4
+- Small fixes and improvements
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
