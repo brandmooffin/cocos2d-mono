@@ -8,7 +8,7 @@
     <title>Cocos2D-Mono for Core DesktopGL</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
-    <license type="expression">MIT</license>
+    <license type="expression">AGPL-3.0-only</license>
     <projectUrl>https://github.com/brandmooffin/cocos2d-mono</projectUrl>
     <iconUrl>https://pbs.twimg.com/profile_images/1112234186457473024/G7S7ARjA_400x400.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -33,6 +33,7 @@
   <files>
     <file src="..\Logos\logo-small.png" target="images\" />
     <file src="..\README.md" target="docs\" />
+
     <file src="..\cocos2d\cocos2d.Core.DesktopGL\bin\Core\DesktopGL\Release\net8.0\*.dll" target="lib\net8.0" />
   </files>
 </package>
