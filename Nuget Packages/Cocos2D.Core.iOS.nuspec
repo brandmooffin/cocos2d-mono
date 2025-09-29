@@ -2,21 +2,21 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.Core.iOS</id>
-    <version>2.5.3</version>
+    <version>2.5.4</version>
     <icon>images\logo-small.png</icon>
     <readme>docs\README.md</readme>
     <title>Cocos2d-Mono for Core iOS</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
-    <license type="expression">MIT</license>
+    <license type="expression">AGPL-3.0-only</license>
     <projectUrl>https://github.com/brandmooffin/cocos2d-mono</projectUrl>
     <iconUrl>https://pbs.twimg.com/profile_images/1112234186457473024/G7S7ARjA_400x400.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Cocos2D-Mono for Core iOS</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
-- Removed Ouya specific code
-- Fix .NET 8 target path for Android
+- Updated to support MonoGame 3.8.4
+- Small fixes and improvements
     </releaseNotes>
     <copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
@@ -29,6 +29,7 @@
   <files>
     <file src="..\Logos\logo-small.png" target="images\" />
     <file src="..\README.md" target="docs\" />
+
     <file src="..\cocos2d\cocos2d.Core.iOS\bin\Core\iOS\Release\net8.0-ios18.0\*.dll" target="lib\net8.0-ios18.0" />
   </files>
 </package>
