@@ -8,9 +8,13 @@
         }
       ],
       "dest": "api",
+      "includePrivateMembers": false,
       "properties": {
         "TargetFramework": "net8.0"
-      }
+      },
+      "namespaceLayout": "flattened",
+      "memberLayout": "samePage",
+      "EnumSortOrder": "alphabetic"
     }
   ],
   "build": {
@@ -30,6 +34,14 @@
     "template": ["default", "modern"],
     "postProcessors": [],
     "keepFileLink": false,
-    "disableGitFeatures": false
+    "disableGitFeatures": false,
+    "markdownEngineProperties": {
+      "markdigExtensions": [
+        "Abbreviations",
+        "Figures",
+        "CustomContainers",
+        "attributes"
+      ]
+    }
   }
 }
