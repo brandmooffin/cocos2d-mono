@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <TargetFramework>net8.0-ios18.0</TargetFramework>
+    <TargetFramework>net9.0-ios18.0</TargetFramework>
     <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
     <OutputType>Library</OutputType>
     <RootNamespace>cocos2d_mono.Core.iOS</RootNamespace>
@@ -9,7 +9,7 @@
 	<CheckEolWorkloads>false</CheckEolWorkloads>
     <BaseIntermediateOutputPath>obj\Core\iOS\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- Updated to support MonoGame 3.8.4
+- Updated to support MonoGame 3.8.5-develop.11
 - Small fixes and improvements
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
@@ -55,7 +55,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.4" />
+    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.5-develop.11" />
     <PackageReference Include="OpenTK" Version="4.9.4" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>

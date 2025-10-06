@@ -10,7 +10,7 @@
     <AssemblyName>cocos2d-mono.Tests.Core.Windows</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -70,7 +70,7 @@
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.4" />
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.5-develop.11" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Content\animations\animations-2.plist">
