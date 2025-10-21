@@ -9,13 +9,13 @@
     <AssemblyName>box2d.iOS</AssemblyName>
     <Title>box2d for iOS</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.5.5</Version>
+    <Version>2.6.0-preview.2</Version>
     <Description>box2d for iOS</Description>
     <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageReleaseNotes>
-- Updated to support MonoGame 3.8.4.1
+- Updated to support MonoGame 3.8.5 prerelease (3.8.5-develop.12)
 - Upgrade to .NET 9
 - Small fixes and improvements
 	</PackageReleaseNotes>
@@ -43,7 +43,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.4.1" />
+    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.5-develop.12" />
   </ItemGroup>
   <Import Project="..\box2d.projitems" Label="Shared" />
 </Project>
