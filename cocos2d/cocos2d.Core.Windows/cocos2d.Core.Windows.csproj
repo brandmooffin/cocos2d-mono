@@ -14,7 +14,7 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.Core.Windows</PackageId>
-    <Version>2.6.0-preview.1</Version>
+    <Version>2.5.5</Version>
     <Description>Cocos2D-Mono for Core Windows (DX)</Description>
     <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
