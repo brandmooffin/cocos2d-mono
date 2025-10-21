@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="cocos2d_mono.Tests.Android" android:versionCode="1" android:versionName="1.0" android:installLocation="auto">
-	<uses-sdk android:targetSdkVersion="28" />
+	<uses-sdk android:targetSdkVersion="35" />
 	<application android:label="Cocos2D-Mono Tests"></application>
 </manifest>

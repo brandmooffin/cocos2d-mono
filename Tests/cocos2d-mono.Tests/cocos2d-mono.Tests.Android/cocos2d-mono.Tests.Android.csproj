@@ -6,7 +6,7 @@
     <AndroidApplication>true</AndroidApplication>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFramework>net8.0-android</TargetFramework>
+    <TargetFramework>net9.0-android</TargetFramework>
     <CheckEolWorkloads>false</CheckEolWorkloads>
     <OutputType>Exe</OutputType>
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
@@ -38,8 +38,8 @@
     <AndroidSupportedAbis />
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4" />
-    <PackageReference Include="MonoGame.Framework.Android" Version="3.8.4" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
+    <PackageReference Include="MonoGame.Framework.Android" Version="3.8.4.1" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />

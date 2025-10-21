@@ -7,14 +7,15 @@
     <CheckEolWorkloads>false</CheckEolWorkloads>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetFramework>net8.0-android34.0</TargetFramework>
+    <TargetFramework>net9.0-android35.0</TargetFramework>
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- Updated to support MonoGame 3.8.4
+- Updated to support MonoGame 3.8.4.1
+- Upgrade to .NET 9
 - Small fixes and improvements
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.5.4</Version>
+    <Version>2.5.5</Version>
     <Title>Cocos2D-Mono for Android</Title>
     <Description>Cocos2D-Mono for Android</Description>
     <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -54,8 +55,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4" />
-    <PackageReference Include="MonoGame.Framework.Android" Version="3.8.4" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
+    <PackageReference Include="MonoGame.Framework.Android" Version="3.8.4.1" />
     <PackageReference Include="OpenTK" Version="4.9.4" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>

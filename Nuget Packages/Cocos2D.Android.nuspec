@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.Android</id>
-    <version>2.5.4</version>
+    <version>2.5.5</version>
     <icon>images\logo-small.png</icon>
     <readme>docs\README.md</readme>
     <title>Cocos2D-Mono for Android</title>
@@ -15,15 +15,16 @@
     <description>Cocos2D-Mono for Android</description>
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
-- Updated to support MonoGame 3.8.4
+- Updated to support MonoGame 3.8.4.1
+- Upgrade to .NET 9
 - Small fixes and improvements
     </releaseNotes>
     <copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
     <dependencies>
-      <group targetFramework="net8.0-android34.0">
-        <dependency id="MonoGame.Content.Builder.Task" version="3.8.4" />
-        <dependency id="MonoGame.Framework.Android" version="3.8.4" />
+      <group targetFramework="net9.0-android35.0">
+        <dependency id="MonoGame.Content.Builder.Task" version="3.8.4.1" />
+        <dependency id="MonoGame.Framework.Android" version="3.8.4.1" />
         <dependency id="SharpZipLib" version="1.4.2" />
         <dependency id="OpenTK" version="4.9.4" />
       </group>
@@ -32,6 +33,6 @@
   <files>
     <file src="..\Logos\logo-small.png" target="images\" />
     <file src="..\README.md" target="docs\" />
-    <file src="..\cocos2d\cocos2d.Android\bin\Android\Release\net8.0-android34.0\*.dll" target="lib\net8.0-android34.0" />
+    <file src="..\cocos2d\cocos2d.Android\bin\Android\Release\net9.0-android35.0\*.dll" target="lib\net9.0-android35.0" />
   </files>
 </package>
