@@ -19,7 +19,7 @@
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <PackageReleaseNotes>
-- Updated to support MonoGame 3.8.5 prerelease (3.8.5-develop.11)
+- Updated to support MonoGame 3.8.4.1
 - Upgrade to .NET 9
 - Small fixes and improvements
 	</PackageReleaseNotes>
@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.Android" Version="3.8.5-develop.11" />
+    <PackageReference Include="MonoGame.Framework.Android" Version="3.8.4.1" />
   </ItemGroup>
   <Import Project="..\box2d.projitems" Label="Shared" />
 </Project>

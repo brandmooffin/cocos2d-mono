@@ -26,7 +26,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- Updated to support MonoGame 3.8.5 prerelease (3.8.5-develop.11)
+- Updated to support MonoGame 3.8.4.1
 - Upgrade to .NET 9
 - Small fixes and improvements
 	</PackageReleaseNotes>
@@ -57,7 +57,7 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.5-develop.11" />
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.4.1" />
   </ItemGroup>
   <Import Project="..\box2d.projitems" Label="Shared" />
 </Project>
