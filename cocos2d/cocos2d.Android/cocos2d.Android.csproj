@@ -55,8 +55,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
-    <PackageReference Include="MonoGame.Framework.Android" Version="3.8.4.1" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="$(MonoGameVersion)" />
+    <PackageReference Include="MonoGame.Framework.Android" Version="$(MonoGameVersion)" />
     <PackageReference Include="OpenTK" Version="4.9.4" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
