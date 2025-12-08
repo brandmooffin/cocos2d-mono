@@ -506,6 +506,8 @@ namespace Cocos2D
 
                 float loadedSize = fontSize;
 
+                CCLog.Log("Loading font '{0}' at size {1}", fontName, fontSize);
+
                 SpriteFont font = CCSpriteFontCache.SharedInstance.TryLoadFont(fontName, fontSize, out loadedSize);
 
                 if (font == null)

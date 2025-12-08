@@ -215,6 +215,11 @@ namespace Cocos2D
         {
             CCTexture2D tex = new CCTexture2D();
 
+            CCLog.Log("CCLabelTTF: updating texture with string '{0}'", m_pString);
+            CCLog.Log("Font: {0}, Size: {1}", m_pFontName, m_fFontSize);
+            CCLog.Log("Dimensions: {0}, HAlignment: {1}, VAlignment: {2}", m_tDimensions, m_hAlignment, m_vAlignment);
+            CCLog.Log("Content Scale Factor: {0}", CCMacros.CCContentScaleFactor());
+
             var result = tex.InitWithString(m_pString,
                                m_tDimensions.PointsToPixels(),
                                m_hAlignment,

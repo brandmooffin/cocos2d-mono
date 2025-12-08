@@ -1241,6 +1241,16 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/Scissor Cuts-26.spritefont
 
+#begin fonts/SF Fedora Titles.ttf
+/copy:fonts/SF Fedora Titles.ttf
+
+#begin fonts/SFFedoraTitles-32.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/SFFedoraTitles-32.spritefont
+
 #begin fonts/strings.plist
 /copy:fonts/strings.plist
 
