@@ -527,7 +527,7 @@ namespace Cocos2D
                 {
                     Vector2 temp = font.MeasureString(text);
                     dimensions.Width = temp.X * scale;
-                    dimensions.Height = temp.Y * scale * 3;
+                    dimensions.Height = temp.Y * scale;
                 }
 
                 var textList = new List<String>();
