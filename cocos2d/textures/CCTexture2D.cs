@@ -527,12 +527,10 @@ namespace Cocos2D
                 {
                     Vector2 temp = font.MeasureString(text);
                     dimensions.Width = temp.X * scale;
-                    dimensions.Height = temp.Y * scale;
+                    dimensions.Height = temp.Y * scale * 3;
                 }
 
                 var textList = new List<String>();
-                var nextText = new StringBuilder();
-
                 string[] lineList = text.Split('\n');
 
                 StringBuilder next = new StringBuilder();
@@ -580,13 +578,6 @@ namespace Cocos2D
                         last = null;
                         next.Length = 0;
                     }
-
-                    textList.Add(nextText.ToString());
-#if XBOX || XBOX360
-                    nextText.Length = 0;
-#else
-                    nextText.Clear();
-#endif
                 }
 
                 if (textList.Count == 0 && text.Length > 0)
@@ -619,8 +610,8 @@ namespace Cocos2D
                 SpriteBatch sb = CCDrawManager.spriteBatch;
                 sb.Begin();
 
-                float textHeight = textList.Count * font.LineSpacing * scale;
-                float nextY = 0;
+                float textHeight = textList.Count * font.LineSpacing * scale * 3;
+                float nextY = textHeight / 3;
 
                 if (vAlignment == CCVerticalTextAlignment.Bottom)
                 {
