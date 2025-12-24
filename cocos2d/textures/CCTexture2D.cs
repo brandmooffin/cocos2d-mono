@@ -56,6 +56,8 @@ namespace Cocos2D
         public static bool OptimizeForPremultipliedAlpha = true;
         public static bool PreserveSourceSurfaceFormat = true;
 
+        public float TextHeightPaddingMultiplier = 3f;
+
         private CCTextureCacheInfo m_CacheInfo;
         private Texture2D m_Texture2D;
         private bool m_bHasMipmaps;
@@ -505,7 +507,9 @@ namespace Cocos2D
                 }
 
                 float loadedSize = fontSize;
-
+#if DEBUG
+                CCLog.Log("Loading font '{0}' at size {1}", fontName, fontSize);
+#endif
                 SpriteFont font = CCSpriteFontCache.SharedInstance.TryLoadFont(fontName, fontSize, out loadedSize);
 
                 if (font == null)
@@ -521,16 +525,16 @@ namespace Cocos2D
                     scale = fontSize / loadedSize * CCSpriteFontCache.FontScale;
                 }
 
+                scale *= CCMacros.CCContentScaleFactor();
+
                 if (dimensions.Equals(CCSize.Zero))
                 {
                     Vector2 temp = font.MeasureString(text);
                     dimensions.Width = temp.X * scale;
-                    dimensions.Height = temp.Y * scale;
+                    dimensions.Height = temp.Y * scale * TextHeightPaddingMultiplier;
                 }
 
                 var textList = new List<String>();
-                var nextText = new StringBuilder();
-
                 string[] lineList = text.Split('\n');
 
                 StringBuilder next = new StringBuilder();
@@ -578,13 +582,6 @@ namespace Cocos2D
                         last = null;
                         next.Length = 0;
                     }
-
-                    textList.Add(nextText.ToString());
-#if XBOX || XBOX360
-                    nextText.Length = 0;
-#else
-                    nextText.Clear();
-#endif
                 }
 
                 if (textList.Count == 0 && text.Length > 0)
@@ -594,7 +591,7 @@ namespace Cocos2D
 
                 if (dimensions.Height == 0)
                 {
-                    dimensions.Height = textList.Count * font.LineSpacing * scale;
+                    dimensions.Height = textList.Count * font.LineSpacing * scale * TextHeightPaddingMultiplier;
                 }
 
                 //*  for render to texture
@@ -617,8 +614,8 @@ namespace Cocos2D
                 SpriteBatch sb = CCDrawManager.spriteBatch;
                 sb.Begin();
 
-                float textHeight = textList.Count * font.LineSpacing * scale;
-                float nextY = 0;
+                float textHeight = textList.Count * font.LineSpacing * scale * TextHeightPaddingMultiplier;
+                float nextY = textHeight / TextHeightPaddingMultiplier;
 
                 if (vAlignment == CCVerticalTextAlignment.Bottom)
                 {
