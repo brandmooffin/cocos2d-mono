@@ -81,7 +81,7 @@ namespace tests
                 CCContentManager.SharedContentManager.SearchPaths.Add("Sounds");
                 CCContentManager.SharedContentManager.SearchPaths.Add("TileMaps");
                  */
-                //pDirector.ContentScaleFactor = resourceSize.Height / designSize.Height;
+                pDirector.ContentScaleFactor = resourceSize.Height / designSize.Height;
             }
 
             CCDrawManager.SetDesignResolutionSize(designSize.Width, designSize.Height, CCResolutionPolicy.ShowAll);

@@ -225,7 +225,7 @@ namespace Cocos2D
                                m_hAlignment,
                                m_vAlignment,
                                m_pFontName,
-                               m_fFontSize * CCMacros.CCContentScaleFactor());
+                               m_fFontSize);
 
             if (result)
             {

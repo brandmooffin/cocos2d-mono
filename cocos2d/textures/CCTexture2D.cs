@@ -516,12 +516,14 @@ namespace Cocos2D
                     return (false);
                 }
 
-                float scale = 1f;
+                float scale = 1f * CCMacros.CCContentScaleFactor();
                 
                 if (loadedSize != 0)
                 {
                     scale = fontSize / loadedSize * CCSpriteFontCache.FontScale;
                 }
+
+                scale *= CCMacros.CCContentScaleFactor();
 
                 if (dimensions.Equals(CCSize.Zero))
                 {
