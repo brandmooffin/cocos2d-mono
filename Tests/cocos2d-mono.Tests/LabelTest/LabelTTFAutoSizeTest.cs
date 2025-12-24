@@ -7,9 +7,6 @@ namespace tests
 {
     public class LabelTTFAutoSizeTest : AtlasDemo
     {
-        private CCTextAlignment m_eHorizAlign;
-        private CCVerticalTextAlignment m_eVertAlign;
-
         public LabelTTFAutoSizeTest()
         {
             var blockSize = new CCSize(400, 160);
@@ -29,26 +26,20 @@ namespace tests
             var blockSize = new CCSize(400, 160);
             CCSize s = CCDirector.SharedDirector.WinSize;
 
-            var m_label2 = new CCLabelTTF("AutoSize Font #1", "SFFedoraTitles", 32);
-            m_label2.AnchorPoint = new CCPoint(0, 0);
-            m_label2.Position = new CCPoint((s.Width - blockSize.Width) / 2, (s.Height - blockSize.Height +150) / 2);
-
-            AddChild(m_label2);
-
-            var m_plabel = new CCLabelTTF("AutoSize Custom Font 2", "SFFedora", 32);
-            m_plabel.AnchorPoint = new CCPoint(0, 0);
-            m_plabel.Position = new CCPoint((s.Width - blockSize.Width) / 2, (s.Height - blockSize.Height) / 2);
-
-
-            AddChild(m_plabel);
-
-            var m_label3 = new CCLabelTTF("AutoSize Font", "Abduction", 26);
-            m_label3.Position = new CCPoint((s.Width - blockSize.Width) / 2, (s.Height - blockSize.Height) / 4);
-            AddChild(m_label3);
-
-            var m_label4 = new CCLabelTTF("AutoSize Font 4", "arial", 64);
-            m_label4.Position = new CCPoint((s.Width - blockSize.Width) / 2, (s.Height - blockSize.Height) / 6);
-            AddChild(m_label4);
+            var titleLabel = new CCLabelTTF("AutoSize Font #1", "SFFedoraTitles", 32);
+            titleLabel.AnchorPoint = new CCPoint(0, 0);
+            titleLabel.Position = new CCPoint((s.Width - blockSize.Width) / 2, (s.Height - blockSize.Height + 150) / 2);
+            AddChild(titleLabel);
+            var customFontLabel = new CCLabelTTF("AutoSize Custom Font 2", "SFFedora", 32);
+            customFontLabel.AnchorPoint = new CCPoint(0, 0);
+            customFontLabel.Position = new CCPoint((s.Width - blockSize.Width) / 2, (s.Height - blockSize.Height) / 2);
+            AddChild(customFontLabel);
+            var abductionFontLabel = new CCLabelTTF("AutoSize Font", "Abduction", 26);
+            abductionFontLabel.Position = new CCPoint((s.Width - blockSize.Width) / 2, (s.Height - blockSize.Height) / 4);
+            AddChild(abductionFontLabel);
+            var arialFontLabel = new CCLabelTTF("AutoSize Font 4", "arial", 64);
+            arialFontLabel.Position = new CCPoint((s.Width - blockSize.Width) / 2, (s.Height - blockSize.Height) / 6);
+            AddChild(arialFontLabel);
         }
 
         public override string title()
