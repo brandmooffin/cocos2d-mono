@@ -1627,6 +1627,43 @@ namespace Cocos2D
             return action;
         }
 
+        public CCAction Repeat(CCFiniteTimeAction[] actions, uint times)
+        {
+            return RunAction (new CCRepeat (new CCSequence(actions), times));
+        }
+
+        public CCAction Repeat (CCFiniteTimeAction action, uint times)
+        {
+            return RunAction (new CCRepeat (action, times));
+        }
+
+        public CCAction RepeatForever(params CCActionInterval[] actions)
+        {
+            var repeatForever = new CCRepeatForever(actions);
+            if (actions != null && actions.Length > 0)
+            {
+                repeatForever.Tag = actions[0].Tag;
+            }
+            return RunAction(repeatForever);
+        }
+
+        public CCAction RepeatForever(CCActionInterval action)
+        {
+            return RunAction(new CCRepeatForever (action) { Tag = action.Tag });
+        }
+
+        public CCAction RunActions(params CCFiniteTimeAction[] actions)
+        {
+            Debug.Assert(actions != null, "Argument must be non-nil");
+            if (actions.Length == 0)
+            {
+                return null;
+            }
+            var sequence = new CCSequence(actions);
+            m_pActionManager.AddAction(sequence, this, !m_bRunning);
+            return sequence;
+        }
+
         public void StopAllActions()
         {
             m_pActionManager.RemoveAllActionsFromTarget(this);

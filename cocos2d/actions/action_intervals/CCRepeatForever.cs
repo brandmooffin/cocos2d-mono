@@ -17,6 +17,11 @@ namespace Cocos2D
             InitWithAction(action);
         }
 
+        public CCRepeatForever(CCActionInterval[] actions)
+        {
+            InitWithActions(actions);
+        }
+
         protected CCRepeatForever(CCRepeatForever repeatForever) : base(repeatForever)
         {
             var param = repeatForever.m_pInnerAction.Copy() as CCActionInterval;
@@ -28,6 +33,15 @@ namespace Cocos2D
             Debug.Assert(action != null);
             m_pInnerAction = action;
             // Duration = action.Duration;
+            return true;
+        }
+
+        protected bool InitWithActions(CCActionInterval[] actions)
+        {
+            Debug.Assert(actions != null && actions.Length > 0);
+
+            m_pInnerAction = new CCSequence(actions);
+            // Duration = m_pInnerAction.Duration;
             return true;
         }
 
