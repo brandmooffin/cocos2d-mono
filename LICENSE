@@ -716,3 +716,34 @@ specific requirements.
 if any, to sign a "copyright disclaimer" for the program, if necessary.
 For more information on this, and how to apply and follow the GNU AGPL, see
 <https://www.gnu.org/licenses/>.
+
+
+===============================================================================
+Commercial License
+===============================================================================
+
+In addition to the open source license terms above (GNU Affero General Public License v3.0
+with FOSS License Exception), this project is also available under a separate
+commercial license.
+
+The Commercial License is intended for companies and developers who wish to
+use this software in closed-source or proprietary applications without the
+obligations of the AGPL v3.0 copyleft requirements.
+
+Under the Commercial License, licensees receive:
+  - The right to use, modify, and distribute the Software in proprietary products
+    without making their own source code public;
+  - Standard warranty and indemnification terms as described in the signed
+    agreement;
+  - Optional technical or integration support.
+
+To obtain a Commercial License, please contact:
+
+    Brandon Roberts
+    Email: broberts@cocos2d-mono.dev
+    Subject: “Cocos2D-Mono Commercial License Request”
+
+Use of the Software under the Commercial License is subject solely to the
+terms negotiated in a separate signed agreement between you and the copyright
+holder.  The existence of this option does not modify or limit the rights
+granted under the AGPL v3.0 + FOSS Exception for open-source use.
