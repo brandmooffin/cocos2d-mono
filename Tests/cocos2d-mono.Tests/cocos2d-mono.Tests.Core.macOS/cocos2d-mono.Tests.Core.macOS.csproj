@@ -10,7 +10,7 @@
     <AssemblyName>cocos2d-mono.Tests.Core.macOS</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>macOS</MonoGamePlatform>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>

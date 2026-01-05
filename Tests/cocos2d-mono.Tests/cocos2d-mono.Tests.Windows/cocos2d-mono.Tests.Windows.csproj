@@ -10,7 +10,7 @@
     <AssemblyName>cocos2d-mono.Tests.Windows</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -72,7 +72,7 @@
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.5-develop.13" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.5-preview.2" />
   </ItemGroup>
   <Import Project="..\cocos2d-mono.Tests.projitems" Label="Shared" />
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
