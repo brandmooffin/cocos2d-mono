@@ -1639,7 +1639,12 @@ namespace Cocos2D
 
         public CCAction RepeatForever(params CCActionInterval[] actions)
         {
-            return RunAction(new CCRepeatForever (actions));
+            var repeatForever = new CCRepeatForever(actions);
+            if (actions != null && actions.Length > 0)
+            {
+                repeatForever.Tag = actions[0].Tag;
+            }
+            return RunAction(repeatForever);
         }
 
         public CCAction RepeatForever(CCActionInterval action)
