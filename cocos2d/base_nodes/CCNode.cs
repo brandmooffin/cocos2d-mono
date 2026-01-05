@@ -1650,8 +1650,13 @@ namespace Cocos2D
         public CCAction RunActions(params CCFiniteTimeAction[] actions)
         {
             Debug.Assert(actions != null, "Argument must be non-nil");
-            m_pActionManager.AddAction(new CCSequence(actions), this, !m_bRunning);
-            return actions.Length > 0 ? actions[0] : null;
+            if (actions.Length == 0)
+            {
+                return null;
+            }
+            var sequence = new CCSequence(actions);
+            m_pActionManager.AddAction(sequence, this, !m_bRunning);
+            return sequence;
         }
 
         public void StopAllActions()
