@@ -1627,6 +1627,13 @@ namespace Cocos2D
             return action;
         }
 
+        public CCAction RunActions(params CCFiniteTimeAction[] actions)
+        {
+            Debug.Assert(actions != null, "Argument must be non-nil");
+            m_pActionManager.AddAction(new CCSequence(actions), this, !m_bRunning);
+            return actions.Length > 0 ? actions[0] : null;
+        }
+
         public void StopAllActions()
         {
             m_pActionManager.RemoveAllActionsFromTarget(this);
