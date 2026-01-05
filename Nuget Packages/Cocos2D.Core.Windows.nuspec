@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.Core.Windows</id>
-    <version>2.6.0-preview.3</version>
+    <version>2.6.0-preview.4</version>
     <icon>images\logo-small.png</icon>
     <readme>docs\README.md</readme>
     <title>Cocos2D-Mono for Core Windows</title>
@@ -16,7 +16,7 @@
     <repository url="https://github.com/brandmooffin/cocos2d-mono" />
     <releaseNotes>
 - Updated to support MonoGame 3.8.5 prerelease (3.8.5-preview.2)
-- Upgrade to .NET 9
+- Upgrade to .NET 10
 - Small fixes and improvements
     </releaseNotes>
     <copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>

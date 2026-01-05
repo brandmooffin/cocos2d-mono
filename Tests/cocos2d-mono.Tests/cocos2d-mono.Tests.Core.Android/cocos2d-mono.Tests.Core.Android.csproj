@@ -38,7 +38,7 @@
     <AndroidSupportedAbis />
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.Android" Version="3.8.5-preview.2" />
+    <PackageReference Include="MonoGame.Framework.Android" Version="$(MonoGameVersion)" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />

@@ -70,7 +70,7 @@
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.5-preview.2" />
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="$(MonoGameVersion)" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Content\animations\animations-2.plist">

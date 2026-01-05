@@ -73,8 +73,8 @@
     </MonoGameContentReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.5-preview.2" />
-    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.5-preview.2" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="$(MonoGameVersion)" />
+    <PackageReference Include="MonoGame.Framework.iOS" Version="$(MonoGameVersion)" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.5" />
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>2.6.0-preview.3</Version>
+    <Version>2.6.0-preview.4</Version>
     <Title>box2d for Android</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
     <Description>box2d for Android</Description>
@@ -20,7 +20,7 @@
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <PackageReleaseNotes>
 - Updated to support MonoGame 3.8.5 prerelease (3.8.5-preview.2)
-- Upgrade to .NET 9
+- Upgrade to .NET 10
 - Small fixes and improvements
 	</PackageReleaseNotes>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.Android" Version="3.8.5-preview.2" />
+    <PackageReference Include="MonoGame.Framework.Android" Version="$(MonoGameVersion)" />
   </ItemGroup>
   <Import Project="..\box2d.projitems" Label="Shared" />
 </Project>

@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
     <!-- Centralized MonoGame version for all projects -->
-    <MonoGameVersion>3.8.4.1</MonoGameVersion>
+    <MonoGameVersion>3.8.5-preview.2</MonoGameVersion>
   </PropertyGroup>
 </Project>

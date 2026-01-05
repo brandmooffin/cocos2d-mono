@@ -14,7 +14,7 @@
     <DefineConstants>TRACE;DEBUG;OPENGL;MONOGAME;DESKTOPGL;MACOS;</DefineConstants>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.Core.macOS</PackageId>
-    <Version>2.6.0-preview.3</Version>
+    <Version>2.6.0-preview.4</Version>
     <Description>Cocos2D-Mono for Core macOS (OpenGL Desktop Platforms)</Description>
     <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
@@ -25,7 +25,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
 - Updated to support MonoGame 3.8.5 prerelease (3.8.5-preview.2)
-- Upgrade to .NET 9
+- Upgrade to .NET 10
 - Small fixes and improvements
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
@@ -56,8 +56,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.5-preview.2" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.5-preview.2" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="$(MonoGameVersion)" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(MonoGameVersion)" />
     <PackageReference Include="OpenTK" Version="4.9.4" />
     <PackageReference Include="SharpZipLib" Version="1.3.3" />
     <PackageReference Include="SkiaSharp" Version="3.116.1" />
