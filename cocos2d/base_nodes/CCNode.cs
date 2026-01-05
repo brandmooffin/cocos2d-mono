@@ -1627,6 +1627,26 @@ namespace Cocos2D
             return action;
         }
 
+        public CCAction Repeat(CCFiniteTimeAction[] actions, uint times)
+        {
+            return RunAction (new CCRepeat (new CCSequence(actions), times));
+        }
+
+        public CCAction Repeat (CCFiniteTimeAction action, uint times)
+        {
+            return RunAction (new CCRepeat (action, times));
+        }
+
+        public CCAction RepeatForever(params CCActionInterval[] actions)
+        {
+            return RunAction(new CCRepeatForever (actions));
+        }
+
+        public CCAction RepeatForever(CCActionInterval action)
+        {
+            return RunAction(new CCRepeatForever (action) { Tag = action.Tag });
+        }
+
         public CCAction RunActions(params CCFiniteTimeAction[] actions)
         {
             Debug.Assert(actions != null, "Argument must be non-nil");
