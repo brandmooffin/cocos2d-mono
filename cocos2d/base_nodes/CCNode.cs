@@ -1639,6 +1639,8 @@ namespace Cocos2D
 
         public CCAction RepeatForever(params CCActionInterval[] actions)
         {
+            Debug.Assert(actions != null, "Argument must be non-null");
+            Debug.Assert(actions.Length > 0, "At least one action must be provided");
             var repeatForever = new CCRepeatForever(actions);
             if (actions.Length > 0)
             {
