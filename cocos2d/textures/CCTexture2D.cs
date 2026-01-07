@@ -55,8 +55,7 @@ namespace Cocos2D
         public static SurfaceFormat DefaultAlphaPixelFormat = SurfaceFormat.Color;
         public static bool OptimizeForPremultipliedAlpha = true;
         public static bool PreserveSourceSurfaceFormat = true;
-
-        public float TextHeightPaddingMultiplier = 3f;
+        public static float TextHeightPaddingMultiplier = 3f;
 
         private CCTextureCacheInfo m_CacheInfo;
         private Texture2D m_Texture2D;
