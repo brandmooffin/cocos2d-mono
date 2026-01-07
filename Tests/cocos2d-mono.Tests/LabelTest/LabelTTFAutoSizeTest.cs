@@ -1,6 +1,5 @@
 using Cocos2D;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace tests
 {
