@@ -16,10 +16,10 @@ namespace tests
 
             AddChild(colorLayer);
 
-            updateAlignment();
+            UpdateAlignment();
         }
 
-        private void updateAlignment()
+        private void UpdateAlignment()
         {
             var blockSize = new CCSize(400, 160);
             CCSize s = CCDirector.SharedDirector.WinSize;
