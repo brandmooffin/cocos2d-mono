@@ -13,7 +13,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.5.5</Version>
+    <Version>2.5.6</Version>
     <PackageId>box2d.Windows</PackageId>
     <Company>Broken Walls Studios</Company>
     <Copyright>Copyright ©  2024 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -26,9 +26,9 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- Updated to support MonoGame 3.8.4.1
-- Upgrade to .NET 9
-- Small fixes and improvements
+- Font cutoff fixes for CCLabelTTF
+- Add Support for RunActions on CCSprite
+- Add Support for CCSprite Repeat
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
