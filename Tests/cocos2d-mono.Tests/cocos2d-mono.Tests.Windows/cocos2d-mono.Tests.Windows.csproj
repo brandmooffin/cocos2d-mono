@@ -72,7 +72,7 @@
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="$(MonoGameVersion)" />
   </ItemGroup>
   <Import Project="..\cocos2d-mono.Tests.projitems" Label="Shared" />
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

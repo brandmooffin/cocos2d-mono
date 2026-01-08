@@ -9,14 +9,14 @@
 	<CheckEolWorkloads>false</CheckEolWorkloads>
     <BaseIntermediateOutputPath>obj\Core\iOS\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- Updated to support MonoGame 3.8.4.1
-- Upgrade to .NET 9
-- Small fixes and improvements
+- Font cutoff fixes for CCLabelTTF
+- Add Support for RunActions on CCSprite
+- Add Support for CCSprite Repeat
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.5.5</Version>
+    <Version>2.5.6</Version>
     <Description>Cocos2D-Mono for Core iOS</Description>
     <Title>Cocos2D-Mono for Core iOS</Title>
     <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
@@ -56,7 +56,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.iOS" Version="3.8.4.1" />
+    <PackageReference Include="MonoGame.Framework.iOS" Version="$(MonoGameVersion)" />
     <PackageReference Include="OpenTK" Version="4.9.4" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>

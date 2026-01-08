@@ -370,6 +370,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\LabelTTFA8Test.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\LabelTTFChinese.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\LabelTTFMultiline.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LabelTest\LabelTTFAutoSizeTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\LabelTTFTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\TTFFontInit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LayerTest\LayerGradient.cs" />

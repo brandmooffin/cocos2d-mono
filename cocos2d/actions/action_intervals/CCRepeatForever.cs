@@ -12,9 +12,23 @@ namespace Cocos2D
             set { m_pInnerAction = value; }
         }
 
+        /// <summary>
+        /// Creates a CCRepeatForever action that repeats a single action indefinitely.
+        /// </summary>
+        /// <param name="action">The action to repeat forever.</param>
         public CCRepeatForever(CCActionInterval action)
         {
             InitWithAction(action);
+        }
+
+        /// <summary>
+        /// Creates a CCRepeatForever action that repeats a sequence of actions indefinitely.
+        /// The actions are automatically combined into a CCSequence and then repeated forever.
+        /// </summary>
+        /// <param name="actions">An array of actions to be executed sequentially and repeated forever.</param>
+        public CCRepeatForever(CCActionInterval[] actions)
+        {
+            InitWithActions(actions);
         }
 
         protected CCRepeatForever(CCRepeatForever repeatForever) : base(repeatForever)
@@ -28,6 +42,15 @@ namespace Cocos2D
             Debug.Assert(action != null);
             m_pInnerAction = action;
             // Duration = action.Duration;
+            return true;
+        }
+
+        protected bool InitWithActions(CCActionInterval[] actions)
+        {
+            Debug.Assert(actions != null && actions.Length > 0);
+
+            m_pInnerAction = new CCSequence(actions);
+            // Duration = m_pInnerAction.Duration;
             return true;
         }
 
