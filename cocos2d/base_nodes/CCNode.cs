@@ -811,8 +811,8 @@ namespace Cocos2D
             }
         }
 
-                /// <summary>
-        /// Returns the bounding box of this node in the coordinate system of its parent.
+        /// <summary>
+        /// Returns the bounding box size of this node in the coordinate system of its parent.
         /// </summary>
         public CCSize Size
         {
