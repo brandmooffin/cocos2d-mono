@@ -811,6 +811,18 @@ namespace Cocos2D
             }
         }
 
+                /// <summary>
+        /// Returns the bounding box of this node in the coordinate system of its parent.
+        /// </summary>
+        public CCSize Size
+        {
+            get
+            {
+                var boundingBox = BoundingBox;
+                return boundingBox.Size;
+            }
+        }
+
         public uint OrderOfArrival
         {
             get { return m_uOrderOfArrival; }
