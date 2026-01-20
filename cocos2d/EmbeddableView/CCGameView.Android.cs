@@ -160,7 +160,8 @@ namespace Cocos2D
                 }
                 catch (Exception ex)
                 {
-                    CCLog.Log("CCGameView: Error creating frame buffer: " + ex.Message);
+                    CCLog.Log("CCGameView: Error creating frame buffer. StartedRunning={0}, GraphicsContext={1}. Error: {2}",
+                        _startedRunning, GraphicsContext != null ? "available" : "null", ex.Message);
                 }
             }
         }
@@ -286,7 +287,10 @@ namespace Cocos2D
             }
             catch (Exception ex)
             {
-                CCLog.Log("CCGameView: Error in swap buffers: " + ex.Message);
+                CCLog.Log("CCGameView: Error in swap buffers. Paused={0}, GraphicsDevice={1}, GraphicsContext={2}. Error: {3}",
+                    Paused, _graphicsDevice != null ? "available" : "null",
+                    GraphicsContext != null && !GraphicsContext.IsDisposed ? "valid" : "invalid",
+                    ex.Message);
             }
         }
 

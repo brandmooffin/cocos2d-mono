@@ -81,7 +81,7 @@ namespace Cocos2D
 
         partial void PlatformUpdatePaused()
         {
-            DesktopPlatformUpdatePaused();
+            // Desktop-specific pause handling if needed
         }
 
         partial void ProcessInput()

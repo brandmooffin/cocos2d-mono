@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -459,19 +458,20 @@ namespace Cocos2D
 
         void Tick()
         {
-            RetryTick:
-
-            var currentTicks = _gameTimer.Elapsed.Ticks;
-            _accumulatedElapsedTime += TimeSpan.FromTicks(currentTicks - _previousTicks);
-            _previousTicks = currentTicks;
-
-            if (_accumulatedElapsedTime < _targetElapsedTime)
+            while (true)
             {
+                var currentTicks = _gameTimer.Elapsed.Ticks;
+                _accumulatedElapsedTime += TimeSpan.FromTicks(currentTicks - _previousTicks);
+                _previousTicks = currentTicks;
+
+                if (_accumulatedElapsedTime >= _targetElapsedTime)
+                    break;
+
                 var sleepTime = (int)(_targetElapsedTime - _accumulatedElapsedTime).TotalMilliseconds;
-
-                Task.Delay(sleepTime).Wait();
-
-                goto RetryTick;
+                if (sleepTime > 0)
+                {
+                    System.Threading.Thread.Sleep(sleepTime);
+                }
             }
 
             if (_accumulatedElapsedTime > _maxElapsedTime)

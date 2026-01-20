@@ -165,13 +165,6 @@ namespace Cocos2D
 
             Initialise();
 
-            // For iOS, MonoGame's GraphicsDevice needs to maintain reference to default framebuffer
-            if (_graphicsDevice != null)
-            {
-                // Note: glFramebuffer property may not be accessible in all MonoGame versions
-                // This is a platform-specific detail
-            }
-
             _bufferCreated = true;
         }
 

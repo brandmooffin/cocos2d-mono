@@ -64,11 +64,6 @@ namespace Cocos2D
             // The CCAccelerometer in cocos2d-mono handles this differently
         }
 
-        void DesktopPlatformUpdatePaused()
-        {
-            // Desktop-specific pause handling if needed
-        }
-
         #endregion Pause handling
 
         #region Touch handling
@@ -169,9 +164,25 @@ namespace Cocos2D
         // a release touch event may not have been triggered within the view
         void RemoveOldTouches()
         {
-            // Note: In cocos2d-mono, touch timeout handling is different
-            // The original CocosSharp implementation tracked timestamp on touches
-            // We'll keep this simplified for now
+            // cocos2d-mono's CCTouch doesn't track timestamps, so we can't implement
+            // time-based stale touch detection like CocosSharp does.
+            // Stale touches are handled by the pause/resume mechanism instead -
+            // when the app is paused, touches should be cleared or handled
+            // by the platform-specific implementations.
+        }
+
+        /// <summary>
+        /// Clears all tracked touches. Call this when the view is paused or loses focus.
+        /// </summary>
+        protected void ClearTouches()
+        {
+            lock (_touchLock)
+            {
+                _touchMap.Clear();
+                _incomingNewTouches.Clear();
+                _incomingMoveTouches.Clear();
+                _incomingReleaseTouches.Clear();
+            }
         }
 
         /// <summary>
