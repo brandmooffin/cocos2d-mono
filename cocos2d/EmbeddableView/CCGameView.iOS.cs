@@ -1,16 +1,12 @@
 #if IOS || __IOS__
 using System;
 using System.ComponentModel;
+using System.Threading;
 using CoreAnimation;
 using CoreGraphics;
 using Foundation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ObjCRuntime;
-using OpenGLES;
-using OpenTK.Graphics;
-using OpenTK.Graphics.ES20;
-using OpenTK.Platform.iPhoneOS;
 using UIKit;
 
 namespace Cocos2D
@@ -64,14 +60,12 @@ namespace Cocos2D
 
     /// <summary>
     /// iOS-specific partial implementation of CCGameView.
-    /// Inherits from iPhoneOSGameView to provide OpenGL rendering on iOS.
+    /// Uses UIView with CADisplayLink for rendering with MonoGame graphics integration.
     /// </summary>
     [Register("CCGameView"), DesignTimeVisible(true)]
-    public partial class CCGameView : iPhoneOSGameView
+    public partial class CCGameView : UIView
     {
-        bool _bufferCreated;
-        uint _depthbuffer;
-
+        bool _initialized;
         GameViewTimeSource _timeSource;
 
         NSObject _backgroundObserver;
@@ -100,10 +94,9 @@ namespace Cocos2D
 
         void BeginInitialise()
         {
-            LayerRetainsBacking = true;
-            LayerColorFormat = EAGLColorFormat.RGBA8;
-            ContextRenderingApi = EAGLRenderingAPI.OpenGLES2;
             ContentScaleFactor = UIScreen.MainScreen.Scale;
+            MultipleTouchEnabled = true;
+            UserInteractionEnabled = true;
         }
 
         #endregion Constructors
@@ -112,7 +105,6 @@ namespace Cocos2D
 
         partial void PlatformInitialise()
         {
-            AutoResize = true;
             _backgroundObserver = NSNotificationCenter.DefaultCenter.AddObserver(
                 UIApplication.DidEnterBackgroundNotification, (n) => Paused = true);
             _foregroundObserver = NSNotificationCenter.DefaultCenter.AddObserver(
@@ -131,93 +123,30 @@ namespace Cocos2D
 
             _timeSource = new GameViewTimeSource(this, 60.0f);
 
-            CreateFrameBuffer();
+            if (!_initialized)
+            {
+                Initialise();
+                _initialized = true;
+                _platformInitialised = true;
+                LoadGame();
+            }
 
             _timeSource.Resume();
         }
 
-        /// <summary>
-        /// Creates the frame buffer.
-        /// </summary>
-        protected override void CreateFrameBuffer()
-        {
-            RemoveExistingView();
-
-            CAEAGLLayer eaglLayer = (CAEAGLLayer)Layer;
-
-            if (_bufferCreated || eaglLayer.Bounds.Size.Width == 0 || eaglLayer.Bounds.Size.Height == 0)
-                return;
-
-            base.CreateFrameBuffer();
-
-            MakeCurrent();
-
-            var newSize = new System.Drawing.Size(
-                (int)Math.Round(eaglLayer.Bounds.Size.Width * Layer.ContentsScale),
-                (int)Math.Round(eaglLayer.Bounds.Size.Height * Layer.ContentsScale));
-
-            GL.GenRenderbuffers(1, out _depthbuffer);
-            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _depthbuffer);
-            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferInternalFormat.DepthComponent16, newSize.Width, newSize.Height);
-            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferSlot.DepthAttachment, RenderbufferTarget.Renderbuffer, _depthbuffer);
-
-            Size = newSize;
-
-            Initialise();
-
-            _bufferCreated = true;
-        }
-
-        /// <summary>
-        /// Called when the view is resized.
-        /// </summary>
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-
-            ViewSize = new CCSize(Size.Width, Size.Height);
-            _viewportDirty = true;
-        }
-
-        /// <summary>
-        /// Called when subviews need to be laid out.
-        /// </summary>
         public override void LayoutSubviews()
         {
-            // Called when the dimensions of our view change
-            // E.g. When rotating the device and autoresizing
-            var newSize = new System.Drawing.Size(
-                (int)Math.Round(Layer.Bounds.Size.Width * Layer.ContentsScale),
-                (int)Math.Round(Layer.Bounds.Size.Height * Layer.ContentsScale));
+            base.LayoutSubviews();
+
+            var newSize = new CCSize(
+                (float)(Bounds.Size.Width * ContentScaleFactor),
+                (float)(Bounds.Size.Height * ContentScaleFactor));
 
             if (newSize.Width == 0 || newSize.Height == 0)
                 return;
 
-            CreateFrameBuffer();
-
-            if ((Framebuffer + _depthbuffer + Renderbuffer == 0) || EAGLContext == null)
-                return;
-
-            Size = newSize;
-
-            var eaglLayer = Layer as CAEAGLLayer;
-
-            // Do not call base because iPhoneOSGameView:LayoutSubviews
-            // destroys our graphics context
-            // Instead we will manually rejig our buffer storage
-
-            MakeCurrent();
-
-            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, Renderbuffer);
-            EAGLContext.RenderBufferStorage((uint)All.Renderbuffer, eaglLayer);
-            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferSlot.ColorAttachment0, RenderbufferTarget.Renderbuffer, Renderbuffer);
-
-            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _depthbuffer);
-            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferInternalFormat.DepthComponent16, newSize.Width, newSize.Height);
-            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferSlot.DepthAttachment, RenderbufferTarget.Renderbuffer, _depthbuffer);
-
-            _platformInitialised = true;
-            LoadGame();
+            ViewSize = newSize;
+            _viewportDirty = true;
         }
 
         partial void InitialiseInputHandling()
@@ -231,8 +160,6 @@ namespace Cocos2D
 
         partial void PlatformDispose(bool disposing)
         {
-            MakeCurrent();
-
             if (disposing)
             {
                 if (_timeSource != null)
@@ -251,39 +178,7 @@ namespace Cocos2D
 
         partial void PlatformCanDisposeGraphicsDevice(ref bool canDispose)
         {
-            try
-            {
-                MakeCurrent();
-                canDispose = true;
-            }
-            catch (Exception)
-            {
-                canDispose = false;
-            }
-        }
-
-        /// <summary>
-        /// Destroys the frame buffer.
-        /// </summary>
-        protected override void DestroyFrameBuffer()
-        {
-            MakeCurrent();
-
-            GL.DeleteRenderbuffers(1, ref _depthbuffer);
-            _depthbuffer = 0;
-
-            base.DestroyFrameBuffer();
-
-            _bufferCreated = false;
-        }
-
-        /// <summary>
-        /// Called when the view is about to move to a window.
-        /// </summary>
-        public override void WillMoveToWindow(UIWindow window)
-        {
-            if (window != null)
-                base.WillMoveToWindow(window);
+            canDispose = true;
         }
 
         #endregion Cleaning up
@@ -292,10 +187,13 @@ namespace Cocos2D
 
         partial void PlatformUpdatePaused()
         {
-            if (Paused)
-                _timeSource.Suspend();
-            else
-                _timeSource.Resume();
+            if (_timeSource != null)
+            {
+                if (Paused)
+                    _timeSource.Suspend();
+                else
+                    _timeSource.Resume();
+            }
 
             MobilePlatformUpdatePaused();
         }
@@ -305,50 +203,12 @@ namespace Cocos2D
         /// </summary>
         internal void RunIteration(NSTimer timer)
         {
-            if (GL.GetErrorCode() != ErrorCode.NoError)
+            if (Paused)
                 return;
-
-            OnUpdateFrame(null);
-
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, Framebuffer);
-
-            OnRenderFrame(null);
-        }
-
-        /// <summary>
-        /// Called on each render frame.
-        /// </summary>
-        protected override void OnRenderFrame(global::OpenTK.FrameEventArgs e)
-        {
-            base.OnRenderFrame(e);
-
-            if (GraphicsContext == null || GraphicsContext.IsDisposed)
-                return;
-
-            if (!GraphicsContext.IsCurrent)
-                MakeCurrent();
-
-            Draw();
-
-            Present();
-        }
-
-        partial void PlatformPresent()
-        {
-            if (_graphicsDevice != null)
-                _graphicsDevice.Present();
-
-            SwapBuffers();
-        }
-
-        /// <summary>
-        /// Called on each update frame.
-        /// </summary>
-        protected override void OnUpdateFrame(global::OpenTK.FrameEventArgs e)
-        {
-            base.OnUpdateFrame(e);
 
             Tick();
+            Draw();
+            PlatformPresentInternal();
         }
 
         partial void ProcessInput()
@@ -357,6 +217,31 @@ namespace Cocos2D
         }
 
         #endregion Run loop
+
+        #region Rendering
+
+        partial void PlatformPresent()
+        {
+            PlatformPresentInternal();
+        }
+
+        void PlatformPresentInternal()
+        {
+            if (Paused)
+                return;
+
+            try
+            {
+                if (_graphicsDevice != null)
+                    _graphicsDevice.Present();
+            }
+            catch (Exception ex)
+            {
+                CCLog.Log("CCGameView: Error in present. Error: {0}", ex.Message);
+            }
+        }
+
+        #endregion Rendering
 
         #region Touch handling
 
@@ -409,9 +294,9 @@ namespace Cocos2D
             foreach (UITouch touch in touches)
             {
                 var location = touch.LocationInView(touch.View);
-                var position = new CCPoint((float)(location.X * Layer.ContentsScale), (float)(location.Y * Layer.ContentsScale));
+                var position = new CCPoint((float)(location.X * ContentScaleFactor), (float)(location.Y * ContentScaleFactor));
 
-                var id = touch.Handle.ToInt32();
+                var id = touch.Handle.GetHashCode();
 
                 switch (touch.Phase)
                 {

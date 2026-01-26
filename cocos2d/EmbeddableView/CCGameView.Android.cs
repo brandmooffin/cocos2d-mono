@@ -8,18 +8,17 @@ using Android.Util;
 using Android.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OpenTK.Graphics;
-using OpenTK.Platform.Android;
 
 namespace Cocos2D
 {
     /// <summary>
     /// Android-specific partial implementation of CCGameView.
-    /// Inherits from AndroidGameView to provide OpenGL rendering on Android.
+    /// Uses Android SurfaceView for rendering with MonoGame graphics integration.
     /// </summary>
-    public partial class CCGameView : AndroidGameView, View.IOnTouchListener, ISurfaceHolderCallback
+    public partial class CCGameView : SurfaceView, ISurfaceHolderCallback, View.IOnTouchListener
     {
-        bool _startedRunning;
+        bool _running;
+        Thread _renderThread;
         CCAndroidScreenReceiver _screenLockHandler;
         object _androidViewLock = new object();
 
@@ -85,11 +84,8 @@ namespace Cocos2D
 
         void ViewInit()
         {
-            RenderOnUIThread = false;
-            AutoSetContextOnRenderFrame = true;
-            RenderThreadRestartRetries = 100;
             FocusableInTouchMode = true;
-            ContextRenderingApi = GLVersion.ES2;
+            Holder.AddCallback(this);
         }
 
         #endregion Constructors
@@ -112,56 +108,18 @@ namespace Cocos2D
         partial void PlatformInitialiseGraphicsDevice(ref PresentationParameters presParams)
         {
             // Android-specific graphics device initialization
+            presParams.DeviceWindowHandle = Holder.Surface.Handle;
         }
 
         partial void PlatformStartGame()
         {
             lock (_androidViewLock)
             {
-                Resume();
-            }
-        }
-
-        /// <summary>
-        /// Called when the OpenGL context is set.
-        /// </summary>
-        protected override void OnContextSet(EventArgs e)
-        {
-            lock (_androidViewLock)
-            {
-                base.OnContextSet(e);
-
-                Initialise();
-
-                _platformInitialised = true;
-                LoadGame();
-            }
-        }
-
-        /// <summary>
-        /// Creates the frame buffer.
-        /// </summary>
-        protected override void CreateFrameBuffer()
-        {
-            lock (_androidViewLock)
-            {
-                try
+                if (!_running)
                 {
-                    base.CreateFrameBuffer();
-                    // Kick start the render loop
-                    // In particular, graphics context is lazily created, so we need to start this up 
-                    // here so that the view is initialised correctly
-                    if (!_startedRunning)
-                    {
-                        Run();
-                        _startedRunning = true;
-                    }
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    CCLog.Log("CCGameView: Error creating frame buffer. StartedRunning={0}, GraphicsContext={1}. Error: {2}",
-                        _startedRunning, GraphicsContext != null ? "available" : "null", ex.Message);
+                    _running = true;
+                    _renderThread = new Thread(RenderLoop);
+                    _renderThread.Start();
                 }
             }
         }
@@ -175,22 +133,11 @@ namespace Cocos2D
 
         #region Cleaning up
 
-        /// <summary>
-        /// Called when the OpenGL context is lost.
-        /// </summary>
-        protected override void OnContextLost(EventArgs e)
-        {
-            lock (_androidViewLock)
-            {
-                base.OnContextLost(e);
-
-                if (_graphicsDevice != null)
-                    _graphicsDevice.Dispose();
-            }
-        }
-
         partial void PlatformDispose(bool disposing)
         {
+            _running = false;
+            _renderThread?.Join();
+
             var context = Android.App.Application.Context;
             if (_screenLockHandler != null)
             {
@@ -201,15 +148,7 @@ namespace Cocos2D
 
         partial void PlatformCanDisposeGraphicsDevice(ref bool canDispose)
         {
-            try
-            {
-                MakeCurrent();
-                canDispose = true;
-            }
-            catch (Exception)
-            {
-                canDispose = false;
-            }
+            canDispose = true;
         }
 
         #endregion Cleaning up
@@ -220,13 +159,10 @@ namespace Cocos2D
         {
             if (Paused)
             {
-                Pause();
                 ClearFocus();
             }
             else
             {
-                Resume();
-
                 if (!IsFocused)
                     RequestFocus();
             }
@@ -234,29 +170,25 @@ namespace Cocos2D
             MobilePlatformUpdatePaused();
         }
 
-        /// <summary>
-        /// Called on each render frame.
-        /// </summary>
-        protected override void OnRenderFrame(global::OpenTK.FrameEventArgs e)
+        void RenderLoop()
         {
-            base.OnRenderFrame(e);
+            Initialise();
+            _platformInitialised = true;
+            LoadGame();
 
-            if (Paused || GraphicsContext == null || GraphicsContext.IsDisposed)
-                return;
-
-            Draw();
-
-            PlatformPresentInternal();
-        }
-
-        /// <summary>
-        /// Called on each update frame.
-        /// </summary>
-        protected override void OnUpdateFrame(global::OpenTK.FrameEventArgs e)
-        {
-            base.OnUpdateFrame(e);
-
-            Tick();
+            while (_running)
+            {
+                if (!Paused)
+                {
+                    Tick();
+                    Draw();
+                    PlatformPresentInternal();
+                }
+                else
+                {
+                    Thread.Sleep(16);
+                }
+            }
         }
 
         partial void ProcessInput()
@@ -282,47 +214,44 @@ namespace Cocos2D
             {
                 if (_graphicsDevice != null)
                     _graphicsDevice.Present();
-
-                SwapBuffers();
             }
             catch (Exception ex)
             {
-                CCLog.Log("CCGameView: Error in swap buffers. Paused={0}, GraphicsDevice={1}, GraphicsContext={2}. Error: {3}",
-                    Paused, _graphicsDevice != null ? "available" : "null",
-                    GraphicsContext != null && !GraphicsContext.IsDisposed ? "valid" : "invalid",
-                    ex.Message);
+                CCLog.Log("CCGameView: Error in present. Paused={0}, GraphicsDevice={1}. Error: {2}",
+                    Paused, _graphicsDevice != null ? "available" : "null", ex.Message);
             }
         }
 
-        void ISurfaceHolderCallback.SurfaceDestroyed(ISurfaceHolder holder)
+        #endregion Rendering
+
+        #region ISurfaceHolderCallback
+
+        public void SurfaceDestroyed(ISurfaceHolder holder)
         {
             lock (_androidViewLock)
             {
                 Paused = true;
-                SurfaceDestroyed(holder);
             }
         }
 
-        void ISurfaceHolderCallback.SurfaceCreated(ISurfaceHolder holder)
+        public void SurfaceCreated(ISurfaceHolder holder)
         {
             lock (_androidViewLock)
             {
-                SurfaceCreated(holder);
                 Paused = false;
             }
         }
 
-        void ISurfaceHolderCallback.SurfaceChanged(ISurfaceHolder holder, Android.Graphics.Format format, int width, int height)
+        public void SurfaceChanged(ISurfaceHolder holder, Android.Graphics.Format format, int width, int height)
         {
             lock (_androidViewLock)
             {
-                SurfaceChanged(holder, format, width, height);
                 ViewSize = new CCSize(width, height);
                 _viewportDirty = true;
             }
         }
 
-        #endregion Rendering
+        #endregion ISurfaceHolderCallback
 
         #region Touch handling
 
