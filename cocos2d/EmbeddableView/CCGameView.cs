@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace Cocos2D
 {
@@ -408,8 +407,8 @@ namespace Cocos2D
                 (int)(width * _viewportRatio.Size.Width), (int)(height * _viewportRatio.Size.Height));
 
             CCPoint center = new CCPoint(ViewSize.Width / 2.0f, ViewSize.Height / 2.0f);
-            _defaultViewMatrix = Matrix.CreateLookAt(new Vector3(center.X, center.Y, 300.0f), new Vector3(center.X, center.Y, 0.0f), Vector3.Up);
-            _defaultProjMatrix = Matrix.CreateOrthographic(ViewSize.Width, ViewSize.Height, 1024f, -1024);
+            _defaultViewMatrix = Microsoft.Xna.Framework.Matrix.CreateLookAt(new Vector3(center.X, center.Y, 300.0f), new Vector3(center.X, center.Y, 0.0f), Vector3.Up);
+            _defaultProjMatrix = Microsoft.Xna.Framework.Matrix.CreateOrthographic(ViewSize.Width, ViewSize.Height, 1024f, -1024);
             _defaultViewport = new Viewport(0, 0, (int)ViewSize.Width, (int)ViewSize.Height);
 
             // Update the draw manager with the new resolution
