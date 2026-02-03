@@ -44,22 +44,42 @@ namespace Cocos2D
             internal void RaiseDeviceResetting() => DeviceResetting?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Internal service provider for content loading.
+        /// </summary>
+        class CCServiceProvider : IServiceProvider
+        {
+            IGraphicsDeviceService _graphicsDeviceService;
+
+            public CCServiceProvider(IGraphicsDeviceService graphicsDeviceService)
+            {
+                _graphicsDeviceService = graphicsDeviceService;
+            }
+
+            public object GetService(Type serviceType)
+            {
+                if (serviceType == typeof(IGraphicsDeviceService))
+                    return _graphicsDeviceService;
+                return null;
+            }
+        }
+
         internal delegate void ViewportChangedEventHandler(CCGameView sender);
         internal event ViewportChangedEventHandler ViewportChanged;
 
         EventHandler<EventArgs> _viewCreated;
 
         bool _disposed;
-        bool _paused;
-        bool _viewInitialised;
+        volatile bool _paused;
+        volatile bool _viewInitialised;
         /// <summary>
         /// Indicates whether platform-specific initialization is complete.
         /// Set by platform-specific implementations after initialization.
         /// </summary>
-        protected bool _platformInitialised;
-        bool _gameLoaded;
-        bool _gameStarted;
-        bool _viewportDirty;
+        protected volatile bool _platformInitialised;
+        volatile bool _gameLoaded;
+        volatile bool _gameStarted;
+        volatile bool _viewportDirty;
 
         CCViewResolutionPolicy _resolutionPolicy = CCViewResolutionPolicy.ShowAll;
         CCRect _viewportRatio = ExactFitViewportRatio;
@@ -71,6 +91,7 @@ namespace Cocos2D
 
         GraphicsDevice _graphicsDevice;
         CCGraphicsDeviceService _graphicsDeviceService;
+        string _contentRootDirectory = "Content";
 
         GameTime _gameTime;
         TimeSpan _accumulatedElapsedTime;
@@ -105,6 +126,11 @@ namespace Cocos2D
         /// Gets the action manager.
         /// </summary>
         public CCActionManager ActionManager { get { return CCDirector.SharedDirector.ActionManager; } }
+
+        /// <summary>
+        /// Gets the content manager for loading assets.
+        /// </summary>
+        public CCContentManager ContentManager { get { return CCContentManager.SharedContentManager; } }
 
         /// <summary>
         /// Gets or sets whether the view is paused.
@@ -181,6 +207,17 @@ namespace Cocos2D
         /// </summary>
         public GraphicsDevice GraphicsDevice { get { return _graphicsDevice; } }
 
+        /// <summary>
+        /// Gets or sets the root directory for content loading.
+        /// Must be set before calling StartGame().
+        /// Default is "Content".
+        /// </summary>
+        public string ContentRootDirectory
+        {
+            get { return _contentRootDirectory; }
+            set { _contentRootDirectory = value; }
+        }
+
         internal Viewport Viewport
         {
             get
@@ -245,24 +282,53 @@ namespace Cocos2D
 
         void InitialiseGraphicsDevice()
         {
-            var presParams = new PresentationParameters();
-            presParams.RenderTargetUsage = RenderTargetUsage.PreserveContents;
-            presParams.DepthStencilFormat = DepthFormat.Depth24Stencil8;
-            presParams.BackBufferFormat = SurfaceFormat.Color;
-            PlatformInitialiseGraphicsDevice(ref presParams);
+            // If a graphics device was already set (e.g., by desktop constructor), use it
+            if (_graphicsDevice == null)
+            {
+                var presParams = new PresentationParameters();
+                presParams.RenderTargetUsage = RenderTargetUsage.PreserveContents;
+                presParams.DepthStencilFormat = DepthFormat.Depth24Stencil8;
+                presParams.BackBufferFormat = SurfaceFormat.Color;
+                PlatformInitialiseGraphicsDevice(ref presParams);
 
-            // Try to create graphics device with hi-def profile
-            try
-            {
-                _graphicsDevice = new GraphicsDevice(GraphicsAdapter.DefaultAdapter, GraphicsProfile.HiDef, presParams);
-            }
-            // Otherwise, if unsupported defer to using the low-def profile
-            catch (NotSupportedException)
-            {
-                _graphicsDevice = new GraphicsDevice(GraphicsAdapter.DefaultAdapter, GraphicsProfile.Reach, presParams);
+                // Try to create graphics device with hi-def profile
+                try
+                {
+                    _graphicsDevice = new GraphicsDevice(GraphicsAdapter.DefaultAdapter, GraphicsProfile.HiDef, presParams);
+                }
+                // Otherwise, if unsupported defer to using the low-def profile
+                catch (NotSupportedException)
+                {
+                    _graphicsDevice = new GraphicsDevice(GraphicsAdapter.DefaultAdapter, GraphicsProfile.Reach, presParams);
+                }
             }
 
             CCDrawManager.Init(_graphicsDeviceService = new CCGraphicsDeviceService(_graphicsDevice));
+
+            // Initialize content manager if not already initialized
+            if (CCContentManager.SharedContentManager == null)
+            {
+                var serviceProvider = GetServiceProvider();
+                CCContentManager.Initialize(serviceProvider, _contentRootDirectory);
+            }
+        }
+
+        /// <summary>
+        /// Gets the service provider for content loading.
+        /// Desktop platforms may override this to use the Game's service provider.
+        /// </summary>
+        IServiceProvider GetServiceProvider()
+        {
+            IServiceProvider serviceProvider = null;
+            PlatformGetServiceProvider(ref serviceProvider);
+
+            if (serviceProvider == null)
+            {
+                // Create a simple service provider with our graphics device service
+                serviceProvider = new CCServiceProvider(_graphicsDeviceService);
+            }
+
+            return serviceProvider;
         }
 
         void InitialiseRunLoop()
@@ -280,6 +346,19 @@ namespace Cocos2D
         {
             if (_viewInitialised && _platformInitialised && !_gameLoaded && _viewCreated != null)
             {
+                // Ensure viewport and design resolution are set up before firing ViewCreated
+                // This ensures CCDirector.SharedDirector.WinSize has the correct value
+                if (_viewportDirty && ViewSize.Width > 0 && ViewSize.Height > 0)
+                {
+                    UpdateViewport();
+                }
+
+                // Also ensure CCDirector is properly initialized with the design resolution
+                if (CCDirector.SharedDirector.WinSize.Width <= 0 || CCDirector.SharedDirector.WinSize.Height <= 0)
+                {
+                    CCDirector.SharedDirector.SetOpenGlView();
+                }
+
                 _viewCreated(this, null);
                 _gameLoaded = true;
             }
@@ -300,7 +379,11 @@ namespace Cocos2D
         /// <summary>
         /// Disposes the view and releases all resources.
         /// </summary>
+#if ANDROID || IOS || __IOS__
+        public new void Dispose()
+#else
         public void Dispose()
+#endif
         {
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -310,7 +393,11 @@ namespace Cocos2D
         /// Disposes the view and releases resources.
         /// </summary>
         /// <param name="disposing">True if called from Dispose(), false if called from finalizer.</param>
+#if ANDROID || IOS || __IOS__
+        protected new virtual void Dispose(bool disposing)
+#else
         protected virtual void Dispose(bool disposing)
+#endif
         {
             if (_disposed)
                 return;
@@ -439,6 +526,10 @@ namespace Cocos2D
 
         void Draw()
         {
+            // Ensure viewport is updated before drawing
+            if (_viewportDirty)
+                UpdateViewport();
+
             if (CCDrawManager.BeginDraw())
             {
                 CCScene runningScene = Director.RunningScene;
@@ -559,6 +650,12 @@ namespace Cocos2D
             PlatformCanDisposeGraphicsDevice(ref canDispose);
             return canDispose;
         }
+
+        /// <summary>
+        /// Platform-specific service provider retrieval.
+        /// Desktop platforms should provide the Game's service provider.
+        /// </summary>
+        partial void PlatformGetServiceProvider(ref IServiceProvider serviceProvider);
 
         #endregion Platform-specific partial methods
     }

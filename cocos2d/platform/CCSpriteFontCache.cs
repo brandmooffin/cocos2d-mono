@@ -20,6 +20,7 @@ namespace Cocos2D
         private static Dictionary<string, int[]> _registeredFonts = new Dictionary<string, int[]>(StringComparer.OrdinalIgnoreCase);
         private static Dictionary<string, FontMapEntry> _loadedFontsMap = new Dictionary<string, FontMapEntry>();
         private static float _fontScale = 1.0f;
+        private static bool _initialized = false;
 
         public static void RegisterFont(string fontName, params int[] sizes)
         {
@@ -40,8 +41,36 @@ namespace Cocos2D
 
         static CCSpriteFontCache()
         {
-            var cm = CCApplication.SharedApplication.Content;
-            _contentManager = new ContentManager(cm.ServiceProvider, Path.Combine(cm.RootDirectory, FontRoot));
+            // Defer initialization until first use - supports both CCApplication and CCGameView
+        }
+
+        private static void EnsureInitialized()
+        {
+            if (_initialized)
+                return;
+
+            ContentManager cm = null;
+
+            // Try CCApplication first (traditional approach)
+            if (CCApplication.SharedApplication != null)
+            {
+                cm = CCApplication.SharedApplication.Content;
+            }
+            // Fall back to CCContentManager (CCGameView approach)
+            else if (CCContentManager.SharedContentManager != null)
+            {
+                cm = CCContentManager.SharedContentManager;
+            }
+
+            if (cm != null)
+            {
+                _contentManager = new ContentManager(cm.ServiceProvider, Path.Combine(cm.RootDirectory, FontRoot));
+                _initialized = true;
+            }
+            else
+            {
+                throw new InvalidOperationException("CCSpriteFontCache requires either CCApplication or CCContentManager to be initialized first.");
+            }
         }
 
         private string FontKey(string fontName, float fontSize)
@@ -55,6 +84,7 @@ namespace Cocos2D
 
         public SpriteFont GetFont(string fontName)
         {
+            EnsureInitialized();
             try
             {
                 return _contentManager.Load<SpriteFont>(fontName);
@@ -68,8 +98,9 @@ namespace Cocos2D
 
         public SpriteFont TryLoadFont(string fontName, float fontSize, out float loadedSize)
         {
+            EnsureInitialized();
             var key = FontKey(fontName, fontSize);
-            
+
             if (_loadedFontsMap.ContainsKey(key))
             {
                 //Already loaded
@@ -156,7 +187,10 @@ namespace Cocos2D
 
         public void Clear()
         {
-            _contentManager.Unload();
+            if (_initialized && _contentManager != null)
+            {
+                _contentManager.Unload();
+            }
             _loadedFontsMap.Clear();
         }
 

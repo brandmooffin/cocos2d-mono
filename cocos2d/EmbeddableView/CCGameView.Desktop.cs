@@ -48,7 +48,23 @@ namespace Cocos2D
             set { _mouseEnabled = value; }
         }
 
+        /// <summary>
+        /// Gets the MonoGame Game instance.
+        /// </summary>
+        public Game Game { get { return _game; } }
+
         #endregion Properties
+
+        /// <summary>
+        /// Updates the view size. Call this when the window is resized.
+        /// </summary>
+        /// <param name="width">New width in pixels.</param>
+        /// <param name="height">New height in pixels.</param>
+        public void UpdateViewSize(int width, int height)
+        {
+            ViewSize = new CCSize(width, height);
+            _viewportDirty = true;
+        }
 
         #region Initialisation
 
@@ -67,7 +83,12 @@ namespace Cocos2D
 
         partial void PlatformStartGame()
         {
-            // Desktop platforms typically use the MonoGame game loop directly
+            // Initialize the view if not already done
+            if (!_viewInitialised)
+            {
+                Initialise();
+                LoadGame();
+            }
         }
 
         partial void InitialiseInputHandling()
@@ -82,6 +103,52 @@ namespace Cocos2D
         partial void PlatformUpdatePaused()
         {
             // Desktop-specific pause handling if needed
+        }
+
+        /// <summary>
+        /// Call this from your MonoGame Game.Update() method to update the game state.
+        /// </summary>
+        /// <param name="gameTime">The game time from MonoGame.</param>
+        public void UpdateView(GameTime gameTime)
+        {
+            if (!_gameStarted || Paused)
+                return;
+
+            _gameTime = gameTime;
+
+            // Use Director.Update which handles scene transitions (SetNextScene)
+            // and scheduler updates
+            Director.Update(gameTime);
+
+            ProcessInput();
+        }
+
+        /// <summary>
+        /// Call this from your MonoGame Game.Draw() method to render the game.
+        /// </summary>
+        /// <param name="gameTime">The game time from MonoGame.</param>
+        public void DrawView(GameTime gameTime)
+        {
+            if (!_gameStarted || Paused)
+                return;
+
+            _gameTime = gameTime;
+
+            // Ensure viewport is updated before drawing
+            if (_viewportDirty)
+                UpdateViewport();
+
+            if (CCDrawManager.BeginDraw())
+            {
+                CCScene runningScene = Director.RunningScene;
+
+                if (runningScene != null)
+                {
+                    Director.MainLoop(gameTime);
+                }
+
+                CCDrawManager.EndDraw();
+            }
         }
 
         partial void ProcessInput()
@@ -171,6 +238,15 @@ namespace Cocos2D
         {
             // On desktop, the graphics device is typically managed by the Game
             canDispose = false;
+        }
+
+        partial void PlatformGetServiceProvider(ref IServiceProvider serviceProvider)
+        {
+            // On desktop, use the Game's service provider if available
+            if (_game != null && _game.Services != null)
+            {
+                serviceProvider = _game.Services;
+            }
         }
 
         #endregion Cleanup

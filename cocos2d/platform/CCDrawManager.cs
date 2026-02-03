@@ -1252,7 +1252,11 @@ namespace Cocos2D
 
             var clientBoundsX = 0;
 #if ANDROID
-            clientBoundsX = ((AndroidGameWindow)m_Game.Window).ClientBounds.X;
+            // When using CCGameView, m_Game may not be set
+            if (m_Game != null && m_Game.Window != null)
+            {
+                clientBoundsX = ((AndroidGameWindow)m_Game.Window).ClientBounds.X;
+            }
 #endif
 
             m_obViewPortRect = new CCRect(clientBoundsX + (m_obScreenSize.Width - viewPortW) / 2, (m_obScreenSize.Height - viewPortH) / 2, viewPortW, viewPortH);

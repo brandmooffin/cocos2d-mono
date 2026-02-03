@@ -15,10 +15,20 @@ namespace Cocos2D
         /// <returns></returns>
         public static string LoadContentFile(string file)
         {
+            // Get the content manager from CCApplication or CCContentManager (for CCGameView)
+            ContentManager contentManager = CCApplication.SharedApplication != null
+                ? CCApplication.SharedApplication.Content
+                : CCContentManager.SharedContentManager;
+
+            if (contentManager == null)
+            {
+                throw new InvalidOperationException("No content manager available. Initialize CCApplication or CCGameView first.");
+            }
+
             string content = null;
             try
             {
-                content = CCApplication.SharedApplication.Content.Load<string>(file);
+                content = contentManager.Load<string>(file);
             }
             catch (Exception)
             {
@@ -28,7 +38,7 @@ namespace Cocos2D
             {
                 try
                 {
-                    var data = CCApplication.SharedApplication.Content.Load<CCContent>(file);
+                    var data = contentManager.Load<CCContent>(file);
                     if (data != null && data.Content != null)
                     {
                         content = data.Content;
@@ -42,7 +52,7 @@ namespace Cocos2D
             {
                 try
                 {
-                    var dx = CCApplication.SharedApplication.Content.Load<CCContent>(file);
+                    var dx = contentManager.Load<CCContent>(file);
                     if (dx == null || dx.Content == null)
                     {
                         throw (new ContentLoadException("Could not load the contents of " + file + " as raw text."));
