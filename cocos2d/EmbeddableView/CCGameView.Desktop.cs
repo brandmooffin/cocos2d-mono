@@ -116,9 +116,27 @@ namespace Cocos2D
 
             _gameTime = gameTime;
 
-            // Use Director.Update which handles scene transitions (SetNextScene)
-            // and scheduler updates
-            Director.Update(gameTime);
+            // Handle view-owned scene transitions
+            if (_hasOwnScene && _nextViewScene != null)
+            {
+                SetNextViewScene();
+            }
+
+            if (_hasOwnScene)
+            {
+                // Update scheduler for view-owned scene
+                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (RunningScene != null)
+                {
+                    Scheduler.update(deltaTime);
+                }
+            }
+            else
+            {
+                // Use Director.Update which handles scene transitions (SetNextScene)
+                // and scheduler updates
+                Director.Update(gameTime);
+            }
 
             ProcessInput();
         }
@@ -134,20 +152,42 @@ namespace Cocos2D
 
             _gameTime = gameTime;
 
+            // Restore this view's state before drawing (for multi-view support)
+            if (_drawManagerState != null)
+            {
+                CCDrawManager.RestoreState(_drawManagerState);
+            }
+
             // Ensure viewport is updated before drawing
             if (_viewportDirty)
+            {
                 UpdateViewport();
+                // Save state after viewport update since it changes CCDrawManager state
+                _drawManagerState = CCDrawManager.SaveState();
+            }
 
             if (CCDrawManager.BeginDraw())
             {
-                CCScene runningScene = Director.RunningScene;
+                CCScene runningScene = RunningScene;
 
                 if (runningScene != null)
                 {
-                    Director.MainLoop(gameTime);
+                    if (_hasOwnScene)
+                    {
+                        // Draw view-owned scene directly
+                        runningScene.Visit();
+                    }
+                    else
+                    {
+                        // Use shared director's main loop
+                        Director.MainLoop(gameTime);
+                    }
                 }
 
                 CCDrawManager.EndDraw();
+
+                // Save state after drawing for next frame
+                _drawManagerState = CCDrawManager.SaveState();
             }
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -100,6 +101,24 @@ namespace Cocos2D
         Stopwatch _gameTimer;
         long _previousTicks;
 
+        // State management for multi-view support
+        CCDrawManagerState _drawManagerState;
+
+        // Per-view scene management for multi-view support
+        CCScene _viewScene;
+        CCScene _nextViewScene;
+        bool _hasOwnScene;
+
+        // Multi-view support - secondary views that share this view's game loop
+        List<CCGameView> _secondaryViews;
+        CCGameView _primaryView;
+
+        // Split-screen support - render two scenes side by side
+        CCScene _splitScreenScene;
+        CCScene _nextSplitScreenScene;
+        CCDrawManagerState _splitScreenState;
+        bool _splitScreenEnabled;
+
         #region Properties
 
         /// <summary>
@@ -126,6 +145,37 @@ namespace Cocos2D
         /// Gets the action manager.
         /// </summary>
         public CCActionManager ActionManager { get { return CCDirector.SharedDirector.ActionManager; } }
+
+        /// <summary>
+        /// Gets the scene running in this view.
+        /// If a view-specific scene is set, returns that; otherwise returns the shared director's scene.
+        /// </summary>
+        public CCScene RunningScene
+        {
+            get { return _hasOwnScene ? _viewScene : Director.RunningScene; }
+        }
+
+        /// <summary>
+        /// Gets or sets whether split-screen mode is enabled.
+        /// When enabled, the view renders two scenes side by side.
+        /// </summary>
+        public bool SplitScreenEnabled
+        {
+            get { return _splitScreenEnabled; }
+            set
+            {
+                _splitScreenEnabled = value;
+                _viewportDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets the secondary scene in split-screen mode.
+        /// </summary>
+        public CCScene SplitScreenScene
+        {
+            get { return _splitScreenScene; }
+        }
 
         /// <summary>
         /// Gets the content manager for loading assets.
@@ -251,13 +301,273 @@ namespace Cocos2D
 
         /// <summary>
         /// Starts the game and runs the specified scene.
+        /// When useViewScene is true, the scene runs independently in this view,
+        /// allowing multiple views to show different scenes.
         /// </summary>
         /// <param name="scene">The scene to run.</param>
-        public void RunWithScene(CCScene scene)
+        /// <param name="useViewScene">If true, the scene runs only in this view. Default is false for backward compatibility.</param>
+        public void RunWithScene(CCScene scene, bool useViewScene = false)
         {
             StartGame();
-            Director.RunWithScene(scene);
+
+            if (useViewScene)
+            {
+                // Run scene independently in this view
+                _nextViewScene = scene;
+                _hasOwnScene = true;
+            }
+            else
+            {
+                // Use the shared director (backward compatible)
+                Director.RunWithScene(scene);
+            }
         }
+
+        /// <summary>
+        /// Replaces the current scene running in this view.
+        /// Only works if the view is running its own scene (useViewScene was true).
+        /// </summary>
+        /// <param name="scene">The new scene to run.</param>
+        public void ReplaceScene(CCScene scene)
+        {
+            if (_hasOwnScene)
+            {
+                _nextViewScene = scene;
+            }
+            else
+            {
+                Director.ReplaceScene(scene);
+            }
+        }
+
+        /// <summary>
+        /// Sets the secondary scene for split-screen mode.
+        /// The primary scene renders on the left, the split-screen scene renders on the right.
+        /// </summary>
+        /// <param name="scene">The scene to render in the right half of the view.</param>
+        public void SetSplitScreenScene(CCScene scene)
+        {
+            _nextSplitScreenScene = scene;
+            _splitScreenEnabled = true;
+        }
+
+        /// <summary>
+        /// Replaces the split-screen scene.
+        /// </summary>
+        /// <param name="scene">The new scene to render in the right half.</param>
+        public void ReplaceSplitScreenScene(CCScene scene)
+        {
+            _nextSplitScreenScene = scene;
+        }
+
+        /// <summary>
+        /// Process pending scene transitions for view-owned scenes.
+        /// </summary>
+        void SetNextViewScene()
+        {
+            if (_nextViewScene == null)
+                return;
+
+            // Handle transition from current scene to next scene
+            if (_viewScene != null)
+            {
+                _viewScene.OnExitTransitionDidStart();
+                _viewScene.OnExit();
+
+                if (!_nextViewScene.IsTransition)
+                {
+                    _viewScene.Cleanup();
+                }
+            }
+
+            _viewScene = _nextViewScene;
+            _nextViewScene = null;
+
+            if (_viewScene != null && !(_viewScene is CCTransitionScene))
+            {
+                _viewScene.OnEnter();
+                _viewScene.OnEnterTransitionDidFinish();
+            }
+        }
+
+        /// <summary>
+        /// Process pending scene transitions for split-screen scenes.
+        /// </summary>
+        void SetNextSplitScreenScene()
+        {
+            if (_nextSplitScreenScene == null)
+                return;
+
+            // Handle transition from current scene to next scene
+            if (_splitScreenScene != null)
+            {
+                _splitScreenScene.OnExitTransitionDidStart();
+                _splitScreenScene.OnExit();
+                _splitScreenScene.Cleanup();
+            }
+
+            _splitScreenScene = _nextSplitScreenScene;
+            _nextSplitScreenScene = null;
+
+            if (_splitScreenScene != null)
+            {
+                _splitScreenScene.OnEnter();
+                _splitScreenScene.OnEnterTransitionDidFinish();
+            }
+        }
+
+        #region Multi-View Support
+
+        /// <summary>
+        /// Attaches a secondary view to share this view's game loop.
+        /// The secondary view will be updated and drawn when this view is updated/drawn.
+        /// Use this for side-by-side multi-view layouts where views share the same graphics device.
+        /// </summary>
+        /// <param name="secondaryView">The view to attach as a secondary view.</param>
+        public void AttachSecondaryView(CCGameView secondaryView)
+        {
+            if (secondaryView == null || secondaryView == this)
+                return;
+
+            if (_secondaryViews == null)
+                _secondaryViews = new List<CCGameView>();
+
+            if (!_secondaryViews.Contains(secondaryView))
+            {
+                _secondaryViews.Add(secondaryView);
+                secondaryView._primaryView = this;
+
+                // Share graphics device with secondary view
+                if (secondaryView._graphicsDevice == null && _graphicsDevice != null)
+                {
+                    secondaryView._graphicsDevice = _graphicsDevice;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Detaches a secondary view from this view's game loop.
+        /// </summary>
+        /// <param name="secondaryView">The view to detach.</param>
+        public void DetachSecondaryView(CCGameView secondaryView)
+        {
+            if (secondaryView == null || _secondaryViews == null)
+                return;
+
+            if (_secondaryViews.Remove(secondaryView))
+            {
+                secondaryView._primaryView = null;
+            }
+        }
+
+        /// <summary>
+        /// Gets whether this view is a secondary view attached to another view's game loop.
+        /// </summary>
+        public bool IsSecondaryView => _primaryView != null;
+
+        /// <summary>
+        /// Updates all attached secondary views.
+        /// Called by platform-specific update methods.
+        /// </summary>
+        protected void UpdateSecondaryViews(GameTime gameTime)
+        {
+            if (_secondaryViews == null)
+                return;
+
+            foreach (var view in _secondaryViews)
+            {
+                if (view._gameStarted && !view.Paused)
+                {
+                    view.UpdateViewInternal(gameTime);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draws all attached secondary views.
+        /// Called by platform-specific draw methods.
+        /// </summary>
+        protected void DrawSecondaryViews(GameTime gameTime)
+        {
+            if (_secondaryViews == null)
+                return;
+
+            foreach (var view in _secondaryViews)
+            {
+                if (view._gameStarted && !view.Paused)
+                {
+                    view.DrawViewInternal(gameTime);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Internal update for secondary views - handles scene transitions and scheduler.
+        /// </summary>
+        void UpdateViewInternal(GameTime gameTime)
+        {
+            _gameTime = gameTime;
+
+            // Handle view-owned scene transitions
+            if (_hasOwnScene && _nextViewScene != null)
+            {
+                SetNextViewScene();
+            }
+
+            if (_hasOwnScene)
+            {
+                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (RunningScene != null)
+                {
+                    Scheduler.update(deltaTime);
+                }
+            }
+
+            ProcessInput();
+        }
+
+        /// <summary>
+        /// Internal draw for secondary views - handles state save/restore and rendering.
+        /// </summary>
+        void DrawViewInternal(GameTime gameTime)
+        {
+            _gameTime = gameTime;
+
+            // Restore this view's state before drawing
+            if (_drawManagerState != null)
+            {
+                CCDrawManager.RestoreState(_drawManagerState);
+            }
+
+            // Ensure viewport is updated before drawing
+            if (_viewportDirty)
+            {
+                UpdateViewport();
+                _drawManagerState = CCDrawManager.SaveState();
+            }
+
+            if (CCDrawManager.BeginDraw())
+            {
+                CCScene runningScene = RunningScene;
+
+                if (runningScene != null)
+                {
+                    if (_hasOwnScene)
+                    {
+                        runningScene.Visit();
+                    }
+                    else
+                    {
+                        Director.MainLoop(gameTime);
+                    }
+                }
+
+                CCDrawManager.EndDraw();
+                _drawManagerState = CCDrawManager.SaveState();
+            }
+        }
+
+        #endregion Multi-View Support
 
         void Initialise()
         {
@@ -526,21 +836,134 @@ namespace Cocos2D
 
         void Draw()
         {
+            // Restore this view's state before drawing (for multi-view support)
+            if (_drawManagerState != null)
+            {
+                CCDrawManager.RestoreState(_drawManagerState);
+            }
+
             // Ensure viewport is updated before drawing
             if (_viewportDirty)
-                UpdateViewport();
-
-            if (CCDrawManager.BeginDraw())
             {
-                CCScene runningScene = Director.RunningScene;
+                UpdateViewport();
+                // Save state after viewport update since it changes CCDrawManager state
+                _drawManagerState = CCDrawManager.SaveState();
+            }
 
+            if (_splitScreenEnabled && _splitScreenScene != null)
+            {
+                // Split-screen mode: render two scenes side by side
+                DrawSplitScreen();
+            }
+            else
+            {
+                // Normal single-scene rendering
+                if (CCDrawManager.BeginDraw())
+                {
+                    CCScene runningScene = RunningScene;
+
+                    if (runningScene != null)
+                    {
+                        if (_hasOwnScene)
+                        {
+                            // Draw view-owned scene directly
+                            runningScene.Visit();
+                        }
+                        else
+                        {
+                            // Use shared director's main loop
+                            Director.MainLoop(_gameTime);
+                        }
+                    }
+
+                    CCDrawManager.EndDraw();
+
+                    // Save state after drawing for next frame
+                    _drawManagerState = CCDrawManager.SaveState();
+                }
+            }
+        }
+
+        void DrawSplitScreen()
+        {
+            int fullWidth = (int)ViewSize.Width;
+            int fullHeight = (int)ViewSize.Height;
+            int halfWidth = fullWidth / 2;
+
+            // Only call BeginDraw once - it clears the screen
+            if (!CCDrawManager.BeginDraw())
+                return;
+
+            // Calculate the projection for half-width viewports
+            float designWidth = _designResolution.Width;
+            float designHeight = _designResolution.Height;
+
+            // Draw left side (primary scene)
+            {
+                // Set viewport for left half
+                var leftViewport = new Viewport(0, 0, halfWidth, fullHeight);
+                _graphicsDevice.Viewport = leftViewport;
+
+                // Set up projection for this viewport
+                SetupSplitScreenProjection(halfWidth, fullHeight, designWidth, designHeight);
+
+                CCScene runningScene = RunningScene;
                 if (runningScene != null)
                 {
-                    Director.MainLoop(_gameTime);
+                    runningScene.Visit();
                 }
-
-                CCDrawManager.EndDraw();
             }
+
+            // Draw right side (split-screen scene)
+            {
+                // Set viewport for right half
+                var rightViewport = new Viewport(halfWidth, 0, halfWidth, fullHeight);
+                _graphicsDevice.Viewport = rightViewport;
+
+                // Set up projection for this viewport
+                SetupSplitScreenProjection(halfWidth, fullHeight, designWidth, designHeight);
+
+                if (_splitScreenScene != null)
+                {
+                    _splitScreenScene.Visit();
+                }
+            }
+
+            // Restore full viewport
+            _graphicsDevice.Viewport = new Viewport(0, 0, fullWidth, fullHeight);
+
+            CCDrawManager.EndDraw();
+
+            // Save primary state
+            _drawManagerState = CCDrawManager.SaveState();
+        }
+
+        void SetupSplitScreenProjection(int viewportWidth, int viewportHeight, float designWidth, float designHeight)
+        {
+            // Calculate scale to fit design resolution in viewport
+            float scaleX = viewportWidth / designWidth;
+            float scaleY = viewportHeight / designHeight;
+            float scale = Math.Min(scaleX, scaleY); // ShowAll policy
+
+            float scaledWidth = designWidth * scale;
+            float scaledHeight = designHeight * scale;
+
+            // Center the content in the viewport
+            float offsetX = (viewportWidth - scaledWidth) / 2f;
+            float offsetY = (viewportHeight - scaledHeight) / 2f;
+
+            // Set up orthographic projection centered on the design resolution
+            var projection = Matrix.CreateOrthographicOffCenter(
+                0, designWidth,
+                0, designHeight,
+                -1024f, 1024f);
+
+            // Set up view matrix with proper centering
+            var view = Matrix.Identity;
+
+            CCDrawManager.ProjectionMatrix = projection;
+            CCDrawManager.ViewMatrix = view;
+            CCDrawManager.WorldMatrix = Matrix.Identity;
         }
 
         #endregion Drawing
@@ -587,7 +1010,19 @@ namespace Cocos2D
         {
             float deltaTime = (float)_gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (Director.RunningScene != null)
+            // Handle view-owned scene transitions
+            if (_hasOwnScene && _nextViewScene != null)
+            {
+                SetNextViewScene();
+            }
+
+            // Handle split-screen scene transitions
+            if (_splitScreenEnabled && _nextSplitScreenScene != null)
+            {
+                SetNextSplitScreenScene();
+            }
+
+            if (RunningScene != null)
             {
                 Scheduler.update(deltaTime);
             }

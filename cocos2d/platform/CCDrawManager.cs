@@ -22,6 +22,42 @@ namespace Cocos2D
         BoundsWithRenderTarget
     }
 
+    /// <summary>
+    /// Holds the drawing state for a CCGameView instance.
+    /// Used to support multiple views by saving/restoring state between draws.
+    /// </summary>
+    public class CCDrawManagerState
+    {
+        public Matrix WorldMatrix;
+        public Matrix ViewMatrix;
+        public Matrix ProjectionMatrix;
+        public Matrix CombinedMatrix;
+        public Matrix[] MatrixStack;
+        public int StackIndex;
+        public CCSize DesignResolutionSize;
+        public CCSize ScreenSize;
+        public CCRect ViewPortRect;
+        public float ScaleX;
+        public float ScaleY;
+        public CCResolutionPolicy ResolutionPolicy;
+        public Viewport Viewport;
+        public bool DepthTest;
+
+        public CCDrawManagerState()
+        {
+            MatrixStack = new Matrix[100];
+            WorldMatrix = Matrix.Identity;
+            ViewMatrix = Matrix.Identity;
+            ProjectionMatrix = Matrix.Identity;
+            CombinedMatrix = Matrix.Identity;
+            StackIndex = 0;
+            ScaleX = 1.0f;
+            ScaleY = 1.0f;
+            DepthTest = true;
+            ResolutionPolicy = CCResolutionPolicy.UnKnown;
+        }
+    }
+
     public static class CCDrawManager
     {
         private const int DefaultQuadBufferSize = 1024 * 4;
@@ -1711,7 +1747,126 @@ namespace Cocos2D
 
             _maskLayer--;
         }
-        
+
+        #endregion
+
+        #region State Save/Restore for Multi-View Support
+
+        /// <summary>
+        /// Saves the current drawing state to a CCDrawManagerState object.
+        /// Used for multi-view support where each view maintains its own state.
+        /// </summary>
+        public static CCDrawManagerState SaveState()
+        {
+            var state = new CCDrawManagerState();
+
+            state.WorldMatrix = m_worldMatrix;
+            state.ViewMatrix = m_viewMatrix;
+            state.ProjectionMatrix = m_projectionMatrix;
+            state.CombinedMatrix = m_Matrix;
+            state.StackIndex = m_stackIndex;
+
+            // Copy matrix stack
+            for (int i = 0; i <= m_stackIndex && i < state.MatrixStack.Length; i++)
+            {
+                state.MatrixStack[i] = m_matrixStack[i];
+            }
+
+            state.DesignResolutionSize = m_obDesignResolutionSize;
+            state.ScreenSize = m_obScreenSize;
+            state.ViewPortRect = m_obViewPortRect;
+            state.ScaleX = m_fScaleX;
+            state.ScaleY = m_fScaleY;
+            state.ResolutionPolicy = m_eResolutionPolicy;
+            state.DepthTest = m_depthTest;
+
+            if (graphicsDevice != null)
+            {
+                state.Viewport = graphicsDevice.Viewport;
+            }
+
+            return state;
+        }
+
+        /// <summary>
+        /// Restores drawing state from a CCDrawManagerState object.
+        /// Used for multi-view support where each view maintains its own state.
+        /// </summary>
+        public static void RestoreState(CCDrawManagerState state)
+        {
+            if (state == null)
+                return;
+
+            m_worldMatrix = state.WorldMatrix;
+            m_viewMatrix = state.ViewMatrix;
+            m_projectionMatrix = state.ProjectionMatrix;
+            m_Matrix = state.CombinedMatrix;
+            m_stackIndex = state.StackIndex;
+
+            // Restore matrix stack
+            for (int i = 0; i <= state.StackIndex && i < m_matrixStack.Length; i++)
+            {
+                m_matrixStack[i] = state.MatrixStack[i];
+            }
+
+            m_obDesignResolutionSize = state.DesignResolutionSize;
+            m_obScreenSize = state.ScreenSize;
+            m_obViewPortRect = state.ViewPortRect;
+            m_fScaleX = state.ScaleX;
+            m_fScaleY = state.ScaleY;
+            m_eResolutionPolicy = state.ResolutionPolicy;
+            m_depthTest = state.DepthTest;
+
+            if (graphicsDevice != null && state.Viewport.Width > 0 && state.Viewport.Height > 0)
+            {
+                graphicsDevice.Viewport = state.Viewport;
+            }
+
+            // Mark matrices as changed so they get recalculated
+            m_worldMatrixChanged = true;
+            m_viewMatrixChanged = true;
+            m_projectionMatrixChanged = true;
+        }
+
+        /// <summary>
+        /// Creates a new state with default values for a view with the given size.
+        /// </summary>
+        public static CCDrawManagerState CreateStateForView(int width, int height, CCSize designResolution, CCResolutionPolicy policy)
+        {
+            var state = new CCDrawManagerState();
+
+            state.ScreenSize = new CCSize(width, height);
+            state.DesignResolutionSize = designResolution;
+            state.ResolutionPolicy = policy;
+            state.ViewPortRect = new CCRect(0, 0, width, height);
+            state.Viewport = new Viewport(0, 0, width, height);
+
+            // Calculate scale based on policy
+            float scaleX = width / designResolution.Width;
+            float scaleY = height / designResolution.Height;
+
+            switch (policy)
+            {
+                case CCResolutionPolicy.NoBorder:
+                    scaleX = scaleY = Math.Max(scaleX, scaleY);
+                    break;
+                case CCResolutionPolicy.ShowAll:
+                    scaleX = scaleY = Math.Min(scaleX, scaleY);
+                    break;
+                case CCResolutionPolicy.FixedHeight:
+                    scaleX = scaleY;
+                    break;
+                case CCResolutionPolicy.FixedWidth:
+                    scaleY = scaleX;
+                    break;
+            }
+
+            state.ScaleX = scaleX;
+            state.ScaleY = scaleY;
+
+            return state;
+        }
+
         #endregion
     }
 

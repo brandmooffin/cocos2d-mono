@@ -181,6 +181,29 @@ namespace Cocos2D
             _platformInitialised = true;
         }
 
+        /// <summary>
+        /// Creates a secondary CCGameView that will share another view's game loop.
+        /// Use AttachSecondaryView on the primary view to connect them.
+        /// </summary>
+        /// <param name="context">The Android context.</param>
+        /// <param name="primaryView">The primary view that will drive the game loop.</param>
+        public CCGameView(Context context, CCGameView primaryView)
+        {
+            _context = context;
+            _primaryView = primaryView;
+
+            // Share the graphics device from the primary view
+            _graphicsDevice = primaryView._graphicsDevice;
+
+            // Get default display size
+            var windowManager = context.GetSystemService(Context.WindowService).JavaCast<IWindowManager>();
+            var display = windowManager.DefaultDisplay;
+            var size = new Android.Graphics.Point();
+            display.GetSize(size);
+
+            ViewSize = new CCSize(size.X, size.Y);
+        }
+
         #endregion Constructors
 
         #region Properties
@@ -264,6 +287,33 @@ namespace Cocos2D
         }
 
         /// <summary>
+        /// Initializes this view as a secondary view attached to a primary view.
+        /// The secondary view will share the primary view's game loop and graphics device.
+        /// Call this instead of StartGame() and Run() for secondary views.
+        /// </summary>
+        public void StartAsSecondaryView()
+        {
+            if (_primaryView == null)
+            {
+                throw new InvalidOperationException("StartAsSecondaryView requires this view to have a primary view set. Use the CCGameView(context, primaryView) constructor.");
+            }
+
+            // Share graphics device from primary
+            _graphicsDevice = _primaryView._graphicsDevice;
+
+            // Initialize without creating internal game
+            Initialise();
+
+            // Attach to primary view
+            _primaryView.AttachSecondaryView(this);
+
+            _gameStarted = true;
+
+            // Fire ViewCreated event
+            LoadGame();
+        }
+
+        /// <summary>
         /// Called when the internal game has finished initializing.
         /// </summary>
         void OnInternalGameInitialized()
@@ -339,11 +389,38 @@ namespace Cocos2D
         {
             _gameTime = gameTime;
 
-            // Use Director.Update which handles scene transitions (SetNextScene)
-            // and scheduler updates
-            Director.Update(gameTime);
+            // Handle view-owned scene transitions
+            if (_hasOwnScene && _nextViewScene != null)
+            {
+                SetNextViewScene();
+            }
+
+            // Handle split-screen scene transitions
+            if (_splitScreenEnabled && _nextSplitScreenScene != null)
+            {
+                SetNextSplitScreenScene();
+            }
+
+            if (_hasOwnScene)
+            {
+                // Update scheduler for view-owned scene
+                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (RunningScene != null)
+                {
+                    Scheduler.update(deltaTime);
+                }
+            }
+            else
+            {
+                // Use Director.Update which handles scene transitions (SetNextScene)
+                // and scheduler updates
+                Director.Update(gameTime);
+            }
 
             ProcessInput();
+
+            // Update any secondary views attached to this primary view
+            UpdateSecondaryViews(gameTime);
         }
 
         /// <summary>
@@ -353,21 +430,55 @@ namespace Cocos2D
         {
             _gameTime = gameTime;
 
+            // Restore this view's state before drawing (for multi-view support)
+            if (_drawManagerState != null)
+            {
+                CCDrawManager.RestoreState(_drawManagerState);
+            }
+
             // Ensure viewport is updated before drawing
             if (_viewportDirty)
-                UpdateViewport();
-
-            if (CCDrawManager.BeginDraw())
             {
-                CCScene runningScene = Director.RunningScene;
-
-                if (runningScene != null)
-                {
-                    Director.MainLoop(gameTime);
-                }
-
-                CCDrawManager.EndDraw();
+                UpdateViewport();
+                // Save state after viewport update since it changes CCDrawManager state
+                _drawManagerState = CCDrawManager.SaveState();
             }
+
+            if (_splitScreenEnabled && _splitScreenScene != null)
+            {
+                // Split-screen mode: render two scenes side by side
+                DrawSplitScreen();
+            }
+            else
+            {
+                // Normal single-scene rendering
+                if (CCDrawManager.BeginDraw())
+                {
+                    CCScene runningScene = RunningScene;
+
+                    if (runningScene != null)
+                    {
+                        if (_hasOwnScene)
+                        {
+                            // Draw view-owned scene directly
+                            runningScene.Visit();
+                        }
+                        else
+                        {
+                            // Use shared director's main loop
+                            Director.MainLoop(gameTime);
+                        }
+                    }
+
+                    CCDrawManager.EndDraw();
+
+                    // Save state after drawing for next frame
+                    _drawManagerState = CCDrawManager.SaveState();
+                }
+            }
+
+            // Draw any secondary views attached to this primary view
+            DrawSecondaryViews(gameTime);
         }
 
         /// <summary>
