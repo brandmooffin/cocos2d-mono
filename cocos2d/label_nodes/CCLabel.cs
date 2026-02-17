@@ -42,7 +42,7 @@ namespace Cocos2D
 
         public string SystemFont
         {
-            get { return m_FontName; }
+            get { return m_FontName ?? "Arial"; }
             set
             {
                 if (m_FontName != value)
@@ -120,6 +120,11 @@ namespace Cocos2D
         }
 
         public CCLabel()
+        {
+        }
+
+        public CCLabel(string text, float fontSize) :
+            this(text, "Arial", fontSize, CCSize.Zero, CCTextAlignment.Left, CCVerticalTextAlignment.Top)
         {
         }
 
