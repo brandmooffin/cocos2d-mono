@@ -35,14 +35,14 @@ namespace Cocos2D
         
         protected static bool m_bTextureDirty = true;
 
-        protected string m_FontName;
+        protected string m_FontName = "arial";
         protected float m_FontSize;
         protected int m_FontSpacing;
         protected bool m_bFontDirty;
 
         public string SystemFont
         {
-            get { return m_FontName ?? "Arial"; }
+            get { return m_FontName; }
             set
             {
                 if (m_FontName != value)
@@ -124,7 +124,7 @@ namespace Cocos2D
         }
 
         public CCLabel(string text, float fontSize) :
-            this(text, "Arial", fontSize, CCSize.Zero, CCTextAlignment.Left, CCVerticalTextAlignment.Top)
+            this(text, "arial", fontSize, CCSize.Zero, CCTextAlignment.Left, CCVerticalTextAlignment.Top)
         {
         }
 
