@@ -1766,8 +1766,8 @@ namespace Cocos2D
             state.CombinedMatrix = m_Matrix;
             state.StackIndex = m_stackIndex;
 
-            // Copy matrix stack
-            for (int i = 0; i <= m_stackIndex && i < state.MatrixStack.Length; i++)
+            // Copy matrix stack (valid entries are [0, m_stackIndex))
+            for (int i = 0; i < m_stackIndex && i < state.MatrixStack.Length; i++)
             {
                 state.MatrixStack[i] = m_matrixStack[i];
             }
@@ -1803,8 +1803,8 @@ namespace Cocos2D
             m_Matrix = state.CombinedMatrix;
             m_stackIndex = state.StackIndex;
 
-            // Restore matrix stack
-            for (int i = 0; i <= state.StackIndex && i < m_matrixStack.Length; i++)
+            // Restore matrix stack (valid entries are [0, StackIndex))
+            for (int i = 0; i < state.StackIndex && i < m_matrixStack.Length; i++)
             {
                 m_matrixStack[i] = state.MatrixStack[i];
             }
@@ -1841,6 +1841,10 @@ namespace Cocos2D
             state.ViewPortRect = new CCRect(0, 0, width, height);
             state.Viewport = new Viewport(0, 0, width, height);
 
+            // Guard against zero design resolution to avoid division by zero
+            if (designResolution.Width == 0 || designResolution.Height == 0)
+                return state;
+
             // Calculate scale based on policy
             float scaleX = width / designResolution.Width;
             float scaleY = height / designResolution.Height;
@@ -1855,9 +1859,11 @@ namespace Cocos2D
                     break;
                 case CCResolutionPolicy.FixedHeight:
                     scaleX = scaleY;
+                    state.DesignResolutionSize = new CCSize((float)Math.Ceiling(width / scaleX), designResolution.Height);
                     break;
                 case CCResolutionPolicy.FixedWidth:
                     scaleY = scaleX;
+                    state.DesignResolutionSize = new CCSize(designResolution.Width, (float)Math.Ceiling(height / scaleY));
                     break;
             }
 

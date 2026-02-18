@@ -362,20 +362,24 @@ namespace Cocos2D
 
         /// <summary>
         /// Process pending scene transitions for view-owned scenes.
+        /// Mirrors Director.SetNextScene behavior: when transitioning via a CCTransitionScene,
+        /// the transition itself manages calling OnExit/OnEnter on the wrapped scenes.
         /// </summary>
         void SetNextViewScene()
         {
             if (_nextViewScene == null)
                 return;
 
-            // Handle transition from current scene to next scene
-            if (_viewScene != null)
-            {
-                _viewScene.OnExitTransitionDidStart();
-                _viewScene.OnExit();
+            bool runningIsTransition = _viewScene != null && _viewScene.IsTransition;
 
-                if (!_nextViewScene.IsTransition)
+            // If the next scene is not a transition, exit and clean up the current scene now.
+            // When the next scene IS a transition, it manages calling OnExit on the old scene itself.
+            if (!_nextViewScene.IsTransition)
+            {
+                if (_viewScene != null)
                 {
+                    _viewScene.OnExitTransitionDidStart();
+                    _viewScene.OnExit();
                     _viewScene.Cleanup();
                 }
             }
@@ -383,7 +387,9 @@ namespace Cocos2D
             _viewScene = _nextViewScene;
             _nextViewScene = null;
 
-            if (_viewScene != null && !(_viewScene is CCTransitionScene))
+            // If the old scene was a transition it already called OnEnter on the new scene;
+            // only call it here when we're doing a direct (non-transition) scene swap.
+            if (!runningIsTransition && _viewScene != null)
             {
                 _viewScene.OnEnter();
                 _viewScene.OnEnterTransitionDidFinish();
@@ -474,7 +480,9 @@ namespace Cocos2D
             if (_secondaryViews == null)
                 return;
 
-            foreach (var view in _secondaryViews)
+            // Snapshot the list to guard against modification during iteration
+            var views = _secondaryViews.ToArray();
+            foreach (var view in views)
             {
                 if (view._gameStarted && !view.Paused)
                 {
@@ -492,7 +500,9 @@ namespace Cocos2D
             if (_secondaryViews == null)
                 return;
 
-            foreach (var view in _secondaryViews)
+            // Snapshot the list to guard against modification during iteration
+            var views = _secondaryViews.ToArray();
+            foreach (var view in views)
             {
                 if (view._gameStarted && !view.Paused)
                 {
@@ -894,39 +904,22 @@ namespace Cocos2D
             if (!CCDrawManager.BeginDraw())
                 return;
 
-            // Calculate the projection for half-width viewports
             float designWidth = _designResolution.Width;
             float designHeight = _designResolution.Height;
 
             // Draw left side (primary scene)
+            SetupSplitScreenProjection(0, 0, halfWidth, fullHeight, designWidth, designHeight);
+            CCScene runningScene = RunningScene;
+            if (runningScene != null)
             {
-                // Set viewport for left half
-                var leftViewport = new Viewport(0, 0, halfWidth, fullHeight);
-                _graphicsDevice.Viewport = leftViewport;
-
-                // Set up projection for this viewport
-                SetupSplitScreenProjection(halfWidth, fullHeight, designWidth, designHeight);
-
-                CCScene runningScene = RunningScene;
-                if (runningScene != null)
-                {
-                    runningScene.Visit();
-                }
+                runningScene.Visit();
             }
 
             // Draw right side (split-screen scene)
+            SetupSplitScreenProjection(halfWidth, 0, halfWidth, fullHeight, designWidth, designHeight);
+            if (_splitScreenScene != null)
             {
-                // Set viewport for right half
-                var rightViewport = new Viewport(halfWidth, 0, halfWidth, fullHeight);
-                _graphicsDevice.Viewport = rightViewport;
-
-                // Set up projection for this viewport
-                SetupSplitScreenProjection(halfWidth, fullHeight, designWidth, designHeight);
-
-                if (_splitScreenScene != null)
-                {
-                    _splitScreenScene.Visit();
-                }
+                _splitScreenScene.Visit();
             }
 
             // Restore full viewport
@@ -938,31 +931,34 @@ namespace Cocos2D
             _drawManagerState = CCDrawManager.SaveState();
         }
 
-        void SetupSplitScreenProjection(int viewportWidth, int viewportHeight, float designWidth, float designHeight)
+        void SetupSplitScreenProjection(int viewportX, int viewportY, int viewportWidth, int viewportHeight, float designWidth, float designHeight)
         {
-            // Calculate scale to fit design resolution in viewport
+            // Calculate scale to fit design resolution in viewport (ShowAll policy)
             float scaleX = viewportWidth / designWidth;
             float scaleY = viewportHeight / designHeight;
-            float scale = Math.Min(scaleX, scaleY); // ShowAll policy
+            float scale = Math.Min(scaleX, scaleY);
 
             float scaledWidth = designWidth * scale;
             float scaledHeight = designHeight * scale;
 
-            // Center the content in the viewport
+            // Center the content within the viewport region
             float offsetX = (viewportWidth - scaledWidth) / 2f;
             float offsetY = (viewportHeight - scaledHeight) / 2f;
 
-            // Set up orthographic projection centered on the design resolution
+            // Apply centering by constraining the GPU viewport to the scaled content area
+            _graphicsDevice.Viewport = new Viewport(
+                viewportX + (int)offsetX,
+                viewportY + (int)offsetY,
+                (int)scaledWidth,
+                (int)scaledHeight);
+
             var projection = Matrix.CreateOrthographicOffCenter(
                 0, designWidth,
                 0, designHeight,
                 -1024f, 1024f);
 
-            // Set up view matrix with proper centering
-            var view = Matrix.Identity;
-
             CCDrawManager.ProjectionMatrix = projection;
-            CCDrawManager.ViewMatrix = view;
+            CCDrawManager.ViewMatrix = Matrix.Identity;
             CCDrawManager.WorldMatrix = Matrix.Identity;
         }
 
@@ -1022,9 +1018,18 @@ namespace Cocos2D
                 SetNextSplitScreenScene();
             }
 
-            if (RunningScene != null)
+            if (_hasOwnScene)
             {
-                Scheduler.update(deltaTime);
+                if (RunningScene != null)
+                {
+                    Scheduler.update(deltaTime);
+                }
+            }
+            else
+            {
+                // Director.Update handles SetNextScene for director-managed transitions
+                // as well as the scheduler update
+                Director.Update(time);
             }
 
             ProcessInput();

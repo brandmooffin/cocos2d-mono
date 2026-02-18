@@ -139,6 +139,9 @@ namespace Cocos2D
             }
 
             ProcessInput();
+
+            // Update any secondary views attached to this primary view
+            UpdateSecondaryViews(gameTime);
         }
 
         /// <summary>
@@ -189,6 +192,9 @@ namespace Cocos2D
                 // Save state after drawing for next frame
                 _drawManagerState = CCDrawManager.SaveState();
             }
+
+            // Draw any secondary views attached to this primary view
+            DrawSecondaryViews(gameTime);
         }
 
         partial void ProcessInput()
