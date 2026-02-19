@@ -112,6 +112,7 @@ namespace Cocos2D
         // Multi-view support - secondary views that share this view's game loop
         List<CCGameView> _secondaryViews;
         CCGameView _primaryView;
+        readonly object _secondaryViewsLock = new object();
 
         // Split-screen support - render two scenes side by side
         CCScene _splitScreenScene;
@@ -440,18 +441,21 @@ namespace Cocos2D
             if (secondaryView == null || secondaryView == this)
                 return;
 
-            if (_secondaryViews == null)
-                _secondaryViews = new List<CCGameView>();
-
-            if (!_secondaryViews.Contains(secondaryView))
+            lock (_secondaryViewsLock)
             {
-                _secondaryViews.Add(secondaryView);
-                secondaryView._primaryView = this;
+                if (_secondaryViews == null)
+                    _secondaryViews = new List<CCGameView>();
 
-                // Share graphics device with secondary view
-                if (secondaryView._graphicsDevice == null && _graphicsDevice != null)
+                if (!_secondaryViews.Contains(secondaryView))
                 {
-                    secondaryView._graphicsDevice = _graphicsDevice;
+                    _secondaryViews.Add(secondaryView);
+                    secondaryView._primaryView = this;
+
+                    // Share graphics device with secondary view
+                    if (secondaryView._graphicsDevice == null && _graphicsDevice != null)
+                    {
+                        secondaryView._graphicsDevice = _graphicsDevice;
+                    }
                 }
             }
         }
@@ -462,12 +466,18 @@ namespace Cocos2D
         /// <param name="secondaryView">The view to detach.</param>
         public void DetachSecondaryView(CCGameView secondaryView)
         {
-            if (secondaryView == null || _secondaryViews == null)
+            if (secondaryView == null)
                 return;
 
-            if (_secondaryViews.Remove(secondaryView))
+            lock (_secondaryViewsLock)
             {
-                secondaryView._primaryView = null;
+                if (_secondaryViews == null)
+                    return;
+
+                if (_secondaryViews.Remove(secondaryView))
+                {
+                    secondaryView._primaryView = null;
+                }
             }
         }
 
@@ -485,8 +495,12 @@ namespace Cocos2D
             if (_secondaryViews == null)
                 return;
 
-            // Snapshot the list to guard against modification during iteration
-            var views = _secondaryViews.ToArray();
+            CCGameView[] views;
+            lock (_secondaryViewsLock)
+            {
+                views = _secondaryViews.ToArray();
+            }
+
             foreach (var view in views)
             {
                 if (view._gameStarted && !view.Paused)
@@ -505,8 +519,12 @@ namespace Cocos2D
             if (_secondaryViews == null)
                 return;
 
-            // Snapshot the list to guard against modification during iteration
-            var views = _secondaryViews.ToArray();
+            CCGameView[] views;
+            lock (_secondaryViewsLock)
+            {
+                views = _secondaryViews.ToArray();
+            }
+
             foreach (var view in views)
             {
                 if (view._gameStarted && !view.Paused)
@@ -589,6 +607,8 @@ namespace Cocos2D
         {
             if (_viewInitialised)
                 return;
+
+            RemoveExistingView();
 
             PlatformInitialise();
 

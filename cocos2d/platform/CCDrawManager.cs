@@ -26,6 +26,12 @@ namespace Cocos2D
     /// Holds the drawing state for a CCGameView instance.
     /// Used to support multiple views by saving/restoring state between draws.
     /// </summary>
+    /// <remarks>
+    /// This state captures viewport, matrices, and resolution settings. It does not save
+    /// lower-level graphics state such as the current texture, effect, blend state, or render target.
+    /// Views sharing a graphics device should ensure compatible rendering states, or explicitly
+    /// set the required graphics state at the beginning of each draw call.
+    /// </remarks>
     public class CCDrawManagerState
     {
         public Matrix WorldMatrix;
