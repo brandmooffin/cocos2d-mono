@@ -398,24 +398,29 @@ namespace Cocos2D
 
         /// <summary>
         /// Process pending scene transitions for split-screen scenes.
+        /// Mirrors the transition-safe pattern used in SetNextViewScene.
         /// </summary>
         void SetNextSplitScreenScene()
         {
             if (_nextSplitScreenScene == null)
                 return;
 
-            // Handle transition from current scene to next scene
-            if (_splitScreenScene != null)
+            bool runningIsTransition = _splitScreenScene != null && _splitScreenScene.IsTransition;
+
+            if (!_nextSplitScreenScene.IsTransition)
             {
-                _splitScreenScene.OnExitTransitionDidStart();
-                _splitScreenScene.OnExit();
-                _splitScreenScene.Cleanup();
+                if (_splitScreenScene != null)
+                {
+                    _splitScreenScene.OnExitTransitionDidStart();
+                    _splitScreenScene.OnExit();
+                    _splitScreenScene.Cleanup();
+                }
             }
 
             _splitScreenScene = _nextSplitScreenScene;
             _nextSplitScreenScene = null;
 
-            if (_splitScreenScene != null)
+            if (!runningIsTransition && _splitScreenScene != null)
             {
                 _splitScreenScene.OnEnter();
                 _splitScreenScene.OnEnterTransitionDidFinish();
@@ -538,6 +543,9 @@ namespace Cocos2D
 
         /// <summary>
         /// Internal draw for secondary views - handles state save/restore and rendering.
+        /// Note: Secondary views intentionally skip BeginDraw/EndDraw because
+        /// BeginDraw resets the device and clears the backbuffer, which would
+        /// wipe the primary view's already-rendered frame.
         /// </summary>
         void DrawViewInternal(GameTime gameTime)
         {
@@ -556,7 +564,6 @@ namespace Cocos2D
                 _drawManagerState = CCDrawManager.SaveState();
             }
 
-            if (CCDrawManager.BeginDraw())
             {
                 CCScene runningScene = RunningScene;
 
@@ -572,7 +579,6 @@ namespace Cocos2D
                     }
                 }
 
-                CCDrawManager.EndDraw();
                 _drawManagerState = CCDrawManager.SaveState();
             }
         }

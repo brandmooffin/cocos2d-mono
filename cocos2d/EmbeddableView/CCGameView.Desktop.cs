@@ -122,6 +122,12 @@ namespace Cocos2D
                 SetNextViewScene();
             }
 
+            // Handle split-screen scene transitions
+            if (_splitScreenEnabled && _nextSplitScreenScene != null)
+            {
+                SetNextSplitScreenScene();
+            }
+
             if (_hasOwnScene)
             {
                 // Update scheduler for view-owned scene
@@ -169,28 +175,37 @@ namespace Cocos2D
                 _drawManagerState = CCDrawManager.SaveState();
             }
 
-            if (CCDrawManager.BeginDraw())
+            if (_splitScreenEnabled && _splitScreenScene != null)
             {
-                CCScene runningScene = RunningScene;
-
-                if (runningScene != null)
+                // Split-screen mode: render two scenes side by side
+                DrawSplitScreen();
+            }
+            else
+            {
+                // Normal single-scene rendering
+                if (CCDrawManager.BeginDraw())
                 {
-                    if (_hasOwnScene)
+                    CCScene runningScene = RunningScene;
+
+                    if (runningScene != null)
                     {
-                        // Draw view-owned scene directly
-                        runningScene.Visit();
+                        if (_hasOwnScene)
+                        {
+                            // Draw view-owned scene directly
+                            runningScene.Visit();
+                        }
+                        else
+                        {
+                            // Use shared director's main loop
+                            Director.MainLoop(gameTime);
+                        }
                     }
-                    else
-                    {
-                        // Use shared director's main loop
-                        Director.MainLoop(gameTime);
-                    }
+
+                    CCDrawManager.EndDraw();
+
+                    // Save state after drawing for next frame
+                    _drawManagerState = CCDrawManager.SaveState();
                 }
-
-                CCDrawManager.EndDraw();
-
-                // Save state after drawing for next frame
-                _drawManagerState = CCDrawManager.SaveState();
             }
 
             // Draw any secondary views attached to this primary view
