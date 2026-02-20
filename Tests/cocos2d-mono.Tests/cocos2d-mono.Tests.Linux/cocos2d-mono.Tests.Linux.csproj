@@ -10,7 +10,7 @@
     <AssemblyName>cocos2d-mono.Tests.Linux</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Linux</MonoGamePlatform>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>

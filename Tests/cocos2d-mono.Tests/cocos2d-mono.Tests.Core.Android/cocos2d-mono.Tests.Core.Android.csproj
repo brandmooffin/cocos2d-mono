@@ -6,7 +6,7 @@
     <AndroidApplication>true</AndroidApplication>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFramework>net9.0-android</TargetFramework>
+    <TargetFramework>net10.0-android</TargetFramework>
     <CheckEolWorkloads>false</CheckEolWorkloads>
     <OutputType>Exe</OutputType>
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
