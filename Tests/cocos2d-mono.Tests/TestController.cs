@@ -398,6 +398,9 @@ namespace tests
                 case (int)TestCases.TEST_TAP:
                     pScene = new TapTouchTestScene();
                     break;
+                case (int)TestCases.TEST_EMBEDDABLE_VIEW:
+                    pScene = new EmbeddableViewTestScene();
+                    break;
                 default:
                     break;
             }

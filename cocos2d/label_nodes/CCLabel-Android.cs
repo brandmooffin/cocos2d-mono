@@ -39,7 +39,11 @@ namespace Cocos2D
             var ext = System.IO.Path.GetExtension(fontName);
             if (!String.IsNullOrEmpty(ext) && ext.ToLower() == ".ttf")
             {
-                var path = System.IO.Path.Combine(CCApplication.SharedApplication.Game.Content.RootDirectory, fontName);
+                // Get content root directory from CCApplication or CCContentManager (for CCGameView)
+                string contentRoot = CCApplication.SharedApplication != null
+                    ? CCApplication.SharedApplication.Game.Content.RootDirectory
+                    : (CCContentManager.SharedContentManager != null ? CCContentManager.SharedContentManager.RootDirectory : "Content");
+                var path = System.IO.Path.Combine(contentRoot, fontName);
                 var activity = Game.Activity;
 
                 try

@@ -178,7 +178,12 @@ namespace Cocos2D
 
         private CCFocusManager()
         {
-            CCApplication.SharedApplication.GamePadDPadUpdate += new CCGamePadDPadDelegate(SharedApplication_GamePadDPadUpdate);
+            // GamePad focus management is only available when using CCApplication
+            // CCGameView handles input differently
+            if (CCApplication.SharedApplication != null)
+            {
+                CCApplication.SharedApplication.GamePadDPadUpdate += new CCGamePadDPadDelegate(SharedApplication_GamePadDPadUpdate);
+            }
         }
 
         private void SharedApplication_GamePadDPadUpdate(CCGamePadButtonStatus leftButton, CCGamePadButtonStatus upButton, CCGamePadButtonStatus rightButton, CCGamePadButtonStatus downButton, Microsoft.Xna.Framework.PlayerIndex player)
