@@ -54,6 +54,7 @@ namespace Cocos2D
         TEST_TRANSITIONS,
         //TEST_USERDEFAULT,
         TEST_ZWOPTEX,
+        TEST_EMBEDDABLE_VIEW,
 #if IOS || MACOS || WINDOWSGL || WINDOWS || ANDROID || NETFX_CORE || LINUX
         TEST_SYSTEM_FONTS,
 #endif
@@ -112,6 +113,7 @@ namespace Cocos2D
             "TransitionsTest",
             //"UserDefaultTest",
             "ZwoptexTest",
+            "EmbeddableViewTest",
 #if IOS || MACOS || WINDOWSGL || WINDOWS || ANDROID || NETFX_CORE || LINUX
 			"SystemFontTest",
 #endif

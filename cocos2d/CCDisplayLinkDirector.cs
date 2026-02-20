@@ -29,7 +29,12 @@ namespace Cocos2D
         public override void StartAnimation()
         {
             m_bInvalid = false;
-            CCApplication.SharedApplication.AnimationInterval = m_dAnimationInterval;
+            // When using CCGameView, CCApplication.SharedApplication may not exist
+            // Animation interval is managed by the game loop in that case
+            if (CCApplication.SharedApplication != null)
+            {
+                CCApplication.SharedApplication.AnimationInterval = m_dAnimationInterval;
+            }
         }
 
         public override void MainLoop(GameTime gameTime)

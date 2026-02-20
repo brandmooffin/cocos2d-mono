@@ -395,5 +395,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)touch_dispatcher\ICCStandardTouchDelegate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)touch_dispatcher\ICCTargetedTouchDelegate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)touch_dispatcher\ICCTouchDelegate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\CCViewResolutionPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\CCGameView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\CCGameView.Mobile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\CCGameView.Android.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\CCGameView.iOS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddableView\CCGameView.Desktop.cs" />
   </ItemGroup>
 </Project>

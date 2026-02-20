@@ -718,7 +718,12 @@ namespace Cocos2D
 
         public void EnableTouchDispatcher()
         {
-            CCApplication.SharedApplication.TouchDelegate = m_pTouchDispatcher;
+            // When using CCGameView, CCApplication.SharedApplication may not exist
+            // Touch events are handled by CCGameView in that case
+            if (CCApplication.SharedApplication != null)
+            {
+                CCApplication.SharedApplication.TouchDelegate = m_pTouchDispatcher;
+            }
             m_pTouchDispatcher.IsDispatchEvents = true;
         }
 
