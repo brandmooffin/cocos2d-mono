@@ -26,9 +26,9 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- Font cutoff fixes for CCLabelTTF
-- Add Support for RunActions on CCSprite
-- Add Support for CCSprite Repeat
+- Support for embeddable views and multi views using CCGameView 
+- Add Size prop to reduce code for using BoundingBox.Size
+- Support for simpler CCLabel initialization
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>

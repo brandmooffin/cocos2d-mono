@@ -9,9 +9,9 @@
     <CheckEolWorkloads>false</CheckEolWorkloads>
     <BaseIntermediateOutputPath>obj\iOS\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- Font cutoff fixes for CCLabelTTF
-- Add Support for RunActions on CCSprite
-- Add Support for CCSprite Repeat
+- Support for embeddable views and multi views using CCGameView 
+- Add Size prop to reduce code for using BoundingBox.Size
+- Support for simpler CCLabel initialization
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>

@@ -10,9 +10,9 @@
     <TargetFramework>net9.0-android35.0</TargetFramework>
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- Font cutoff fixes for CCLabelTTF
-- Add Support for RunActions on CCSprite
-- Add Support for CCSprite Repeat
+- Support for embeddable views and multi views using CCGameView 
+- Add Size prop to reduce code for using BoundingBox.Size
+- Support for simpler CCLabel initialization
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
     <Version>2.5.7</Version>
