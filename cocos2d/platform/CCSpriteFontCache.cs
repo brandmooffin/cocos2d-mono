@@ -21,6 +21,7 @@ namespace Cocos2D
         private static Dictionary<string, FontMapEntry> _loadedFontsMap = new Dictionary<string, FontMapEntry>();
         private static float _fontScale = 1.0f;
         private static bool _initialized = false;
+        private static readonly object _initLock = new object();
 
         public static void RegisterFont(string fontName, params int[] sizes)
         {
@@ -49,27 +50,33 @@ namespace Cocos2D
             if (_initialized)
                 return;
 
-            ContentManager cm = null;
+            lock (_initLock)
+            {
+                if (_initialized)
+                    return;
 
-            // Try CCApplication first (traditional approach)
-            if (CCApplication.SharedApplication != null)
-            {
-                cm = CCApplication.SharedApplication.Content;
-            }
-            // Fall back to CCContentManager (CCGameView approach)
-            else if (CCContentManager.SharedContentManager != null)
-            {
-                cm = CCContentManager.SharedContentManager;
-            }
+                ContentManager cm = null;
 
-            if (cm != null)
-            {
-                _contentManager = new ContentManager(cm.ServiceProvider, Path.Combine(cm.RootDirectory, FontRoot));
-                _initialized = true;
-            }
-            else
-            {
-                throw new InvalidOperationException("CCSpriteFontCache requires either CCApplication or CCContentManager to be initialized first.");
+                // Try CCApplication first (traditional approach)
+                if (CCApplication.SharedApplication != null)
+                {
+                    cm = CCApplication.SharedApplication.Content;
+                }
+                // Fall back to CCContentManager (CCGameView approach)
+                else if (CCContentManager.SharedContentManager != null)
+                {
+                    cm = CCContentManager.SharedContentManager;
+                }
+
+                if (cm != null)
+                {
+                    _contentManager = new ContentManager(cm.ServiceProvider, Path.Combine(cm.RootDirectory, FontRoot));
+                    _initialized = true;
+                }
+                else
+                {
+                    throw new InvalidOperationException("CCSpriteFontCache requires either CCApplication or CCContentManager to be initialized first.");
+                }
             }
         }
 
