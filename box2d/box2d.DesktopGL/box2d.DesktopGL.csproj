@@ -12,7 +12,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.5.6</Version>
+    <Version>2.5.7</Version>
     <PackageId>box2d.DesktopGL</PackageId>
     <Company>Broken Walls Studios</Company>
     <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
