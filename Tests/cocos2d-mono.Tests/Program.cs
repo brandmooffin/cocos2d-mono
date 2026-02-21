@@ -121,7 +121,7 @@ namespace tests
         AlwaysRetainTaskState = true,
         Icon = "@drawable/Icon",
         Theme = "@style/Theme.NoTitleBar",
-        ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape,
+        ScreenOrientation = Android.Content.PM.ScreenOrientation.SensorLandscape,
         LaunchMode = Android.Content.PM.LaunchMode.SingleInstance,
         MainLauncher = true,
         ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden)
@@ -131,6 +131,23 @@ namespace tests
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.P)
+            {
+                Window.Attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
+            }
+
+            Window.AddFlags(WindowManagerFlags.Fullscreen);
+            Window.AddFlags(WindowManagerFlags.LayoutNoLimits);
+
+            View decorView = Window.DecorView;
+            var uiOptions = (int)SystemUiFlags.LayoutStable
+                          | (int)SystemUiFlags.LayoutFullscreen
+                          | (int)SystemUiFlags.LayoutHideNavigation
+                          | (int)SystemUiFlags.Fullscreen
+                          | (int)SystemUiFlags.HideNavigation
+                          | (int)SystemUiFlags.ImmersiveSticky;
+            decorView.SystemUiVisibility = (StatusBarVisibility)uiOptions;
 
             var game = new Game1();
 
