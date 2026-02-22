@@ -14,7 +14,7 @@
     <DefineConstants>TRACE;DEBUG;OPENGL;MONOGAME;DESKTOPGL;LINUX;</DefineConstants>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageId>Cocos2D-Mono.Core.Linux</PackageId>
-    <Version>2.5.6</Version>
+    <Version>2.5.7</Version>
     <Description>Cocos2D-Mono for Core Linux</Description>
     <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
@@ -24,9 +24,9 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>
-- Font cutoff fixes for CCLabelTTF
-- Add Support for RunActions on CCSprite
-- Add Support for CCSprite Repeat
+- Support for embeddable views and multi views using CCGameView 
+- Add Size prop to reduce code for using BoundingBox.Size
+- Support for simpler CCLabel initialization
 	</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>

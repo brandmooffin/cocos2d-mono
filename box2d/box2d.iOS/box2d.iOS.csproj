@@ -9,15 +9,15 @@
     <AssemblyName>box2d.iOS</AssemblyName>
     <Title>box2d for iOS</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.5.6</Version>
+    <Version>2.5.7</Version>
     <Description>box2d for iOS</Description>
     <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageReleaseNotes>
-- Font cutoff fixes for CCLabelTTF
-- Add Support for RunActions on CCSprite
-- Add Support for CCSprite Repeat
+- Support for embeddable views and multi views using CCGameView 
+- Add Size prop to reduce code for using BoundingBox.Size
+- Support for simpler CCLabel initialization
 	</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
