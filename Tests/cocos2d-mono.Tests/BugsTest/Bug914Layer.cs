@@ -45,7 +45,7 @@ namespace tests
                 }
 
                 // create and initialize a Label
-                CCLabelTTF label = new CCLabelTTF("Hello World", "Marker Felt", 64);
+                CCLabelTTF label = new CCLabelTTF("Hello World", "arial", 64);
                 CCMenuItem item1 = new CCMenuItemFont("restart", restart);
 
                 CCMenu menu = new CCMenu(item1);
