@@ -56,7 +56,7 @@ namespace tests
                 m_plabel.RemoveFromParent();
             }
 
-            m_plabel = new CCLabelTTF(getCurrentAlignment(), "Marker Felt", 32,
+            m_plabel = new CCLabelTTF(getCurrentAlignment(), "arial", 32,
                                          blockSize, m_eHorizAlign, m_eVertAlign);
 
             m_plabel.AnchorPoint = new CCPoint(0, 0);

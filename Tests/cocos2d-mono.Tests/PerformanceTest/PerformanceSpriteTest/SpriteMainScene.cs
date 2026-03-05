@@ -38,7 +38,7 @@ namespace tests
             menu.Position = new CCPoint(s.Width / 2, s.Height - 65);
             AddChild(menu, 1);
 
-            CCLabelTTF infoLabel = new CCLabelTTF("0 nodes", "Marker Felt", 30);
+            CCLabelTTF infoLabel = new CCLabelTTF("0 nodes", "arial", 30);
             infoLabel.Color = new CCColor3B(0, 200, 20);
             infoLabel.Position = new CCPoint(s.Width / 2, s.Height - 90);
             AddChild(infoLabel, 1, PerformanceSpriteTest.kTagInfoLayer);

@@ -298,13 +298,13 @@
     <None Update="Assets\Content\ccb\logo.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\ccb\markerfelt24shadow.fnt">
+    <None Update="Assets\Content\ccb\arial16.fnt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\ccb\markerfelt24shadow.png">
+    <None Update="Assets\Content\ccb\arial16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\ccb\markerfelt24shadow.xnb">
+    <None Update="Assets\Content\ccb\arial16.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Content\ccb\particle-fire.png">
@@ -742,49 +742,49 @@
     <None Update="Assets\Content\fonts\larabie-16.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\Marker Felt.ttf">
+    <None Update="Assets\Content\fonts\arial.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\MarkerFelt Thin Plain.ttf">
+    <None Update="Assets\Content\fonts\arial.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\MarkerFelt-16.spritefont">
+    <None Update="Assets\Content\fonts\arial-16.spritefont">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\MarkerFelt-16.xnb">
+    <None Update="Assets\Content\fonts\arial-16.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\MarkerFelt-18.spritefont">
+    <None Update="Assets\Content\fonts\arial-18.spritefont">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\MarkerFelt-18.xnb">
+    <None Update="Assets\Content\fonts\arial-18.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\MarkerFelt-22.spritefont">
+    <None Update="Assets\Content\fonts\arial-22.spritefont">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\MarkerFelt-22.xnb">
+    <None Update="Assets\Content\fonts\arial-22.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\MarkerFelt-Thin-12.spritefont">
+    <None Update="Assets\Content\fonts\arial-12.spritefont">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\MarkerFelt-Thin-12.xnb">
+    <None Update="Assets\Content\fonts\arial-12.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\MarkerFelt-Thin-18.spritefont">
+    <None Update="Assets\Content\fonts\arial-18.spritefont">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\MarkerFelt-Thin-18.xnb">
+    <None Update="Assets\Content\fonts\arial-18.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\markerFelt.fnt">
+    <None Update="Assets\Content\fonts\arial16.fnt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\markerFelt.png">
+    <None Update="Assets\Content\fonts\arial16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\fonts\markerFelt.xnb">
+    <None Update="Assets\Content\fonts\arial16.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Content\fonts\Paint Boy-26.spritefont">
@@ -976,13 +976,13 @@
     <None Update="Assets\Content\hd\fonts\larabie-16.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\hd\fonts\markerFelt.fnt">
+    <None Update="Assets\Content\hd\fonts\arial16.fnt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\hd\fonts\markerFelt.png">
+    <None Update="Assets\Content\hd\fonts\arial16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Content\hd\fonts\markerFelt.xnb">
+    <None Update="Assets\Content\hd\fonts\arial16.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Content\hd\fonts\tuffy_bold_italic-charmap.plist">
