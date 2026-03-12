@@ -123,6 +123,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)base_nodes\CCNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)base_nodes\CCTapNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCCamera.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CCCamera2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCContent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCDirector.cs" />
@@ -212,6 +213,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)layers_scenes_transitions_nodes\CCLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)layers_scenes_transitions_nodes\CCLayerColor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)layers_scenes_transitions_nodes\CCLayerGradient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)layers_scenes_transitions_nodes\CCLayerMultiGradient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)layers_scenes_transitions_nodes\CCLayerMultiplex.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)layers_scenes_transitions_nodes\CCLayerRGBA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)layers_scenes_transitions_nodes\CCScene.cs" />
@@ -271,6 +273,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)misc_nodes\CCRenderTexture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)misc_nodes\CCSwappableNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)particle_nodes\CCParticleBatchNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)particle_nodes\CCParticleEmitterLight.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)particle_nodes\CCParticleExamples.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)particle_nodes\CCParticleSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)particle_nodes\CCParticleSystemQuad.cs" />
@@ -344,6 +347,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)sprite_nodes\CCSpriteFrameCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sprite_nodes\CCSpriteSheet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)sprite_nodes\CCSpriteSheetCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)support\CCCollision.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)support\CCObjectPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)support\CCTimer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)support\CCUserDefault.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)support\CCUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)support\Compression\Adler.cs" />

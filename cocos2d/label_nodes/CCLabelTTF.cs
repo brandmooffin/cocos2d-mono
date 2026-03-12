@@ -229,6 +229,9 @@ namespace Cocos2D
 
             if (result)
             {
+                // Preserve IsAntialiased setting from the old texture
+                bool wasAntialiased = Texture?.IsAntialiased ?? true;
+
                 // Dispose of the old texture, if it exists
                 if (Texture != null)
                 {
@@ -236,6 +239,7 @@ namespace Cocos2D
                 }
 
                 Texture = tex;
+                Texture.IsAntialiased = wasAntialiased;
 
                 CCRect rect = CCRect.Zero;
                 rect.Size = m_pobTexture.ContentSize;
