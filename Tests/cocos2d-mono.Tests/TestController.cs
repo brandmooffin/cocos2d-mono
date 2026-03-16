@@ -401,6 +401,21 @@ namespace tests
                 case (int)TestCases.TEST_EMBEDDABLE_VIEW:
                     pScene = new EmbeddableViewTestScene();
                     break;
+                case (int)TestCases.TEST_CAMERA2D:
+                    pScene = new Camera2DTestScene();
+                    break;
+                case (int)TestCases.TEST_PARTICLE_EMITTER_LIGHT:
+                    pScene = new ParticleEmitterLightTestScene();
+                    break;
+                case (int)TestCases.TEST_UTILITIES:
+                    pScene = new UtilitiesTestScene();
+                    break;
+                case (int)TestCases.TEST_GRADIENT:
+                    pScene = new GradientTestScene();
+                    break;
+                case (int)TestCases.TEST_PIXEL_PERFECT:
+                    pScene = new PixelPerfectTestScene();
+                    break;
                 default:
                     break;
             }
