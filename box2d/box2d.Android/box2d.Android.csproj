@@ -32,6 +32,7 @@
 - Fixed CCLabelTTF IsAntialiased reset on text changes
 - Fixed CCDrawNode DrawDot rendering as squares at large radii
 - Fixed CCDrawNode DrawCircle compositing artifacts
+- Fixed Accelerometer crash on iOS simulator by guarding against unsupported hardware and falling back to emulation mode
 	</PackageReleaseNotes>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
