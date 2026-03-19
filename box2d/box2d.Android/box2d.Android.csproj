@@ -10,7 +10,7 @@
     <BaseIntermediateOutputPath>obj\Android\Debug</BaseIntermediateOutputPath>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>2.5.7</Version>
+    <Version>2.5.8</Version>
     <Title>box2d for Android</Title>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
     <Description>box2d for Android</Description>
@@ -19,9 +19,19 @@
     <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <PackageReleaseNotes>
-- Support for embeddable views and multi views using CCGameView 
-- Add Size prop to reduce code for using BoundingBox.Size
-- Support for simpler CCLabel initialization
+- Added CCCamera2D with scroll, zoom, follow, screen shake, and viewport culling
+- Added CCObjectPool generic object pooling with ICCPoolable lifecycle
+- Added CCCollision static utility for AABB overlap and group collision checks
+- Added CCParticleEmitterLight struct-based zero-GC particle emitter
+- Added CCCooldownTimer value-type timer struct
+- Added CCLayerMultiGradient multi-stop gradient layer
+- Added DrawFilledCircle, DrawTriangle, and DrawRectOutline to CCDrawNode
+- Added per-effect volume, throttled playback, and background music fade to audio engine
+- Added CCTexture2D.DefaultAntialiased and CCDrawManager.DefaultSamplerState for global pixel-perfect rendering
+- Added CCDrawManager.ConvertScreenToGameCoords for screen-to-game coordinate conversion
+- Fixed CCLabelTTF IsAntialiased reset on text changes
+- Fixed CCDrawNode DrawDot rendering as squares at large radii
+- Fixed CCDrawNode DrawCircle compositing artifacts
 	</PackageReleaseNotes>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
