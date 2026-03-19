@@ -15,6 +15,7 @@ namespace Cocos2D
         TEST_BOX2DBED,
         TEST_BOX2DBED2,
         //TEST_BUGS,
+        TEST_CAMERA2D,
         //TEST_CHIPMUNK,
         TEST_CLICK_AND_MOVE,
         TEST_CLIPPINGNODE,
@@ -28,6 +29,7 @@ namespace Cocos2D
         TEST_EMBEDDABLE_VIEW,
         TEST_EXTENSIONS,
         TEST_FONTS,
+        TEST_GRADIENT,
         TEST_INTERVAL,
         //TEST_KEYPAD,
         TEST_LABEL,
@@ -38,8 +40,10 @@ namespace Cocos2D
         TEST_COCOSNODE,
         TEST_ORIENTATION,
         TEST_PARALLAX,
+        TEST_PARTICLE_EMITTER_LIGHT,
         TEST_PARTICLE,
         TEST_PERFORMANCE,
+        TEST_PIXEL_PERFECT,
         TEST_RENDERTEXTURE,
         TEST_ROTATE_WORLD,
         TEST_SCENE,
@@ -54,8 +58,9 @@ namespace Cocos2D
         TEST_TOUCHES,
         TEST_TRANSITIONS,
         //TEST_USERDEFAULT,
+        TEST_UTILITIES,
         TEST_ZWOPTEX,
-#if IOS || MACOS || WINDOWSGL || WINDOWS || ANDROID || NETFX_CORE || LINUX
+#if IOS || MACOS || WINDOWSGL || WINDOWS || (ANDROID && !OUYA) || NETFX_CORE
         TEST_SYSTEM_FONTS,
 #endif
         TESTS_COUNT,
@@ -74,6 +79,7 @@ namespace Cocos2D
             "Box2dTestBed(Farseer)",
             "Box2dTestBed(Box2D)",
             //"BugsTest",
+            "Camera2DTest",
             //"ChipmunkTest",
             "ClickAndMoveTest",
             "ClippingNodeTest",
@@ -87,6 +93,7 @@ namespace Cocos2D
             "EmbeddableViewTest",
             "ExtensionsTest",
             "FontTest",
+            "GradientTest",
             "IntervalTest",
             //"KeypadTest",
             "LabelTest",
@@ -97,8 +104,10 @@ namespace Cocos2D
             "NodeTest",
             "OrientationTest",
             "ParallaxTest",
+            "ParticleEmitterLightTest",
             "ParticleTest",
             "PerformanceTest",
+            "PixelPerfectTest",
             "RenderTextureTest",
             "RotateWorldTest",
             "SceneTest",
@@ -113,8 +122,9 @@ namespace Cocos2D
             "TouchesTest",
             "TransitionsTest",
             //"UserDefaultTest",
+            "UtilitiesTest",
             "ZwoptexTest",
-#if IOS || MACOS || WINDOWSGL || WINDOWS || ANDROID || NETFX_CORE || LINUX
+#if IOS || MACOS || WINDOWSGL || WINDOWS || (ANDROID && !OUYA) || NETFX_CORE
 			"SystemFontTest",
 #endif
         };

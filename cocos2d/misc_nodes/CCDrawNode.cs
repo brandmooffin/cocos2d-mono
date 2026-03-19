@@ -34,16 +34,25 @@ namespace Cocos2D
             return true;
         }
 
-        /** draw a dot at a position, with a given radius and color */
-
+        /// <summary>
+        /// Draws a dot at a position with a given radius and color. For small radii (less than 4px),
+        /// a fast quad is used. For larger radii, a geometry-based circle (triangle fan) is drawn
+        /// to avoid visible square artifacts.
+        /// </summary>
         public void DrawDot(CCPoint pos, float radius, CCColor4F color)
         {
+            if (radius >= 4f)
+            {
+                DrawFilledCircle(pos, radius, color);
+                return;
+            }
+
             var cl = new Color(color.R, color.G, color.B, color.A);
 
-            var a = new VertexPositionColor(new Vector3(pos.X - radius, pos.Y - radius, 0), cl); //{-1.0, -1.0}
-            var b = new VertexPositionColor(new Vector3(pos.X - radius, pos.Y + radius, 0), cl); //{-1.0,  1.0}
-            var c = new VertexPositionColor(new Vector3(pos.X + radius, pos.Y + radius, 0), cl); //{ 1.0,  1.0}
-            var d = new VertexPositionColor(new Vector3(pos.X + radius, pos.Y - radius, 0), cl); //{ 1.0, -1.0}
+            var a = new VertexPositionColor(new Vector3(pos.X - radius, pos.Y - radius, 0), cl);
+            var b = new VertexPositionColor(new Vector3(pos.X - radius, pos.Y + radius, 0), cl);
+            var c = new VertexPositionColor(new Vector3(pos.X + radius, pos.Y + radius, 0), cl);
+            var d = new VertexPositionColor(new Vector3(pos.X + radius, pos.Y - radius, 0), cl);
 
             m_pVertices.Add(a);
             m_pVertices.Add(b);
@@ -52,6 +61,53 @@ namespace Cocos2D
             m_pVertices.Add(a);
             m_pVertices.Add(c);
             m_pVertices.Add(d);
+
+            m_bDirty = true;
+        }
+
+        /// <summary>
+        /// Draws a filled circle using a triangle fan. Unlike DrawDot, this always renders
+        /// as a true circle regardless of radius.
+        /// </summary>
+        public void DrawFilledCircle(CCPoint center, float radius, CCColor4F color, int segments = 32)
+        {
+            if (segments < 3) segments = 3;
+
+            var cl = new Color(color.R, color.G, color.B, color.A);
+            var centerVertex = new VertexPositionColor(new Vector3(center.X, center.Y, 0), cl);
+
+            float increment = MathHelper.TwoPi / segments;
+
+            for (int i = 0; i < segments; i++)
+            {
+                float angle1 = i * increment;
+                float angle2 = (i + 1) * increment;
+
+                var v1 = new VertexPositionColor(
+                    new Vector3(center.X + (float)Math.Cos(angle1) * radius,
+                                center.Y + (float)Math.Sin(angle1) * radius, 0), cl);
+                var v2 = new VertexPositionColor(
+                    new Vector3(center.X + (float)Math.Cos(angle2) * radius,
+                                center.Y + (float)Math.Sin(angle2) * radius, 0), cl);
+
+                m_pVertices.Add(centerVertex);
+                m_pVertices.Add(v1);
+                m_pVertices.Add(v2);
+            }
+
+            m_bDirty = true;
+        }
+
+        /// <summary>
+        /// Draws a filled triangle with the given vertices and color.
+        /// </summary>
+        public void DrawTriangle(CCPoint a, CCPoint b, CCPoint c, CCColor4F color)
+        {
+            var cl = new Color(color.R, color.G, color.B, color.A);
+
+            m_pVertices.Add(new VertexPositionColor(new Vector3(a.X, a.Y, 0), cl));
+            m_pVertices.Add(new VertexPositionColor(new Vector3(b.X, b.Y, 0), cl));
+            m_pVertices.Add(new VertexPositionColor(new Vector3(c.X, c.Y, 0), cl));
 
             m_bDirty = true;
         }
@@ -210,28 +266,13 @@ namespace Cocos2D
 
         public void DrawCircle(CCPoint center, float radius, CCColor4B color)
         {
-            DrawCircle(center, radius, CCMacros.CCDegreesToRadians(360f), 360, color);
+            DrawCircle(center, radius, 32, color);
         }
 
-
-        public void DrawCircle(CCPoint center, float radius, float angle, int segments, CCColor4B color)
+        public void DrawCircle(CCPoint center, float radius, int segments, CCColor4B color)
         {
-            float increment = MathHelper.Pi * 2.0f / segments;
-            double theta = 0.0;
-
-            CCPoint v1;
-            CCPoint v2 = CCPoint.Zero;
-            List<CCPoint> verts = new List<CCPoint>();
-
-            for (int i = 0; i < segments; i++)
-            {
-                v1 = center + new CCPoint((float)Math.Cos(theta), (float)Math.Sin(theta)) * radius;
-                v2 = center + new CCPoint((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment)) * radius;
-                verts.Add(v1);
-                theta += increment;
-            }
-            CCColor4F cf = new CCColor4F(color.R/255f, color.G/255f, color.B/255f, color.A/255f);
-            DrawPolygon(verts.ToArray(), verts.Count, cf, 0, new CCColor4F(0f, 0f, 0f, 0f));
+            CCColor4F cf = new CCColor4F(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
+            DrawFilledCircle(center, radius, cf, segments);
         }
 
         public void DrawRect(CCRect rect, CCColor4B color)
@@ -253,11 +294,27 @@ namespace Cocos2D
 			float y1 = rect.MinY;
 			float x2 = rect.MaxX;
 			float y2 = rect.MaxY;
-			CCPoint[] pt = new CCPoint[] { 
+			CCPoint[] pt = new CCPoint[] {
 				new CCPoint(x1,y1), new CCPoint(x2,y1), new CCPoint(x2,y2), new CCPoint(x1,y2)
 			};
 			DrawPolygon(pt, 4, color, borderWidth, borderColor);
 		}
+
+        /// <summary>
+        /// Draws a rectangle outline (no fill) with the given line width and color.
+        /// </summary>
+        public void DrawRectOutline(CCRect rect, float lineWidth, CCColor4F color)
+        {
+            var bl = new CCPoint(rect.MinX, rect.MinY);
+            var br = new CCPoint(rect.MaxX, rect.MinY);
+            var tr = new CCPoint(rect.MaxX, rect.MaxY);
+            var tl = new CCPoint(rect.MinX, rect.MaxY);
+
+            DrawSegment(bl, br, lineWidth, color);
+            DrawSegment(br, tr, lineWidth, color);
+            DrawSegment(tr, tl, lineWidth, color);
+            DrawSegment(tl, bl, lineWidth, color);
+        }
 
         public void DrawPolygon(CCPoint[] verts, int count, CCColor4F fillColor, float borderWidth,
                                 CCColor4F borderColor)

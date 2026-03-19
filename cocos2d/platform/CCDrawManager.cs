@@ -117,6 +117,14 @@ namespace Cocos2D
         private static CCIndexBuffer<short> m_quadsIndexBuffer;
 
         public static int DrawCount;
+
+        /// <summary>
+        /// Default sampler state for rendering. Set to SamplerState.PointClamp for pixel-perfect rendering.
+        /// Must be set before CCDrawManager.Initialize() is called, or call it and then re-initialize.
+        /// Default is SamplerState.LinearClamp.
+        /// </summary>
+        public static SamplerState DefaultSamplerState { get; set; } = SamplerState.LinearClamp;
+
         private static CCV3F_C4B_T2F[] m_quadVertices;
         private static float m_fScaleX;
         private static float m_fScaleY;
@@ -337,6 +345,17 @@ namespace Cocos2D
         public static float ScaleY
         {
             get { return m_fScaleY; }
+        }
+
+        /// <summary>
+        /// Converts screen coordinates (pixels from top-left) to game/design coordinates
+        /// using the current resolution policy and scale factors.
+        /// </summary>
+        public static CCPoint ConvertScreenToGameCoords(float screenX, float screenY)
+        {
+            float gameX = (screenX - m_obViewPortRect.Origin.X) / m_fScaleX;
+            float gameY = (m_obScreenSize.Height - screenY - m_obViewPortRect.Origin.Y) / m_fScaleY;
+            return new CCPoint(gameX, gameY);
         }
 
         private static IGraphicsDeviceService m_graphicsService;
@@ -613,7 +632,7 @@ namespace Cocos2D
             graphicsDevice.SetRenderTarget(m_renderTarget);
             graphicsDevice.Indices = null;
 
-            graphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+            graphicsDevice.SamplerStates[0] = DefaultSamplerState;
             graphicsDevice.RasterizerState = RasterizerState.CullNone;
             graphicsDevice.BlendState = BlendState.AlphaBlend;
 
@@ -890,7 +909,7 @@ namespace Cocos2D
             {
                 if (tex == null)
                 {
-                    graphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+                    graphicsDevice.SamplerStates[0] = DefaultSamplerState;
                     TextureEnabled = false;
                 }
                 else
