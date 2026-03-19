@@ -86,7 +86,7 @@ namespace tests
                 case 29: return new LabelBMFontHDMemoryLeak4();
                 case 30: return (new ScrollViewLabelTest());
                 case 31: return new SystemLabelTest();
-                case 32: return new LabelTTFAutoSizeTest();
+                case 32: return new LabelTTFAntialiasedTest();
                 default:
                     break;
             }
