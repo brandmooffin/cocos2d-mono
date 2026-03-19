@@ -195,11 +195,8 @@ namespace Cocos2D
             float y = -ScrollY + ShakeOffset.Y;
             layer.Position = new CCPoint(x, y);
 
-            if (Math.Abs(Zoom - 1f) > float.Epsilon)
-            {
-                layer.ScaleX = Zoom;
-                layer.ScaleY = Zoom;
-            }
+            layer.ScaleX = Zoom;
+            layer.ScaleY = Zoom;
         }
     }
 }

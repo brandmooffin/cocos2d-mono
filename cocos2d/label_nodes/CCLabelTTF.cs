@@ -230,7 +230,7 @@ namespace Cocos2D
             if (result)
             {
                 // Preserve IsAntialiased setting from the old texture
-                bool wasAntialiased = Texture?.IsAntialiased ?? true;
+                bool wasAntialiased = Texture?.IsAntialiased ?? CCTexture2D.DefaultAntialiased;
 
                 // Dispose of the old texture, if it exists
                 if (Texture != null)

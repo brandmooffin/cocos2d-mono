@@ -60,7 +60,7 @@ namespace Cocos2D
         //TEST_USERDEFAULT,
         TEST_UTILITIES,
         TEST_ZWOPTEX,
-#if IOS || MACOS || WINDOWSGL || WINDOWS || ANDROID || NETFX_CORE
+#if IOS || MACOS || WINDOWSGL || WINDOWS || (ANDROID && !OUYA) || NETFX_CORE
         TEST_SYSTEM_FONTS,
 #endif
         TESTS_COUNT,

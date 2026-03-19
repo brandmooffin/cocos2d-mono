@@ -100,6 +100,20 @@ namespace CocosDenshion
                 return;
             }
 
+            // For non-looping sounds without instance control, use the lightweight static Play
+            if (!bLoop)
+            {
+                m_effect.Play(Math.Max(0f, Math.Min(1f, volume)), 0f, 0f);
+                return;
+            }
+
+            // Dispose previous instance to prevent resource leaks
+            if (_sfxInstance != null && !_sfxInstance.IsDisposed)
+            {
+                _sfxInstance.Stop();
+                _sfxInstance.Dispose();
+            }
+
             _sfxInstance = m_effect.CreateInstance();
             _sfxInstance.IsLooped = bLoop;
             _sfxInstance.Volume = Math.Max(0f, Math.Min(1f, volume));

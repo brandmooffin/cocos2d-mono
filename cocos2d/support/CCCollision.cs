@@ -36,6 +36,7 @@ namespace Cocos2D
         public static CCRect GetShrunkBounds(CCNode node, float shrinkFactor)
         {
             var box = node.BoundingBox;
+            shrinkFactor = Math.Max(0f, Math.Min(1f, shrinkFactor));
             if (shrinkFactor >= 1f)
                 return box;
 

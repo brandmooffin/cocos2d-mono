@@ -71,6 +71,8 @@ namespace Cocos2D
         /// </summary>
         public void DrawFilledCircle(CCPoint center, float radius, CCColor4F color, int segments = 32)
         {
+            if (segments < 3) segments = 3;
+
             var cl = new Color(color.R, color.G, color.B, color.A);
             var centerVertex = new VertexPositionColor(new Vector3(center.X, center.Y, 0), cl);
 
