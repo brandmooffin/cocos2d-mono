@@ -266,7 +266,7 @@ namespace Cocos2D
 
         public void DrawCircle(CCPoint center, float radius, CCColor4B color)
         {
-            DrawCircle(center, radius, 360, color);
+            DrawCircle(center, radius, 32, color);
         }
 
         public void DrawCircle(CCPoint center, float radius, int segments, CCColor4B color)
