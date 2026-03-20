@@ -14,8 +14,12 @@ namespace CocosDenshion
 
         private static Dictionary<int, CCEffectPlayer> s_List = new Dictionary<int, CCEffectPlayer>();
         private static CCMusicPlayer s_Music = new CCMusicPlayer();
-        private static CCSimpleAudioEngine _Instance = new CCSimpleAudioEngine();
+        private static CCSimpleAudioEngine _Instance;
         private static bool _NoAudioHardware = false;
+
+        // Throttling: tracks last play time per effect for minInterval support
+        private Dictionary<int, float> _lastPlayTime = new Dictionary<int, float>();
+        private static float _globalTime = 0f;
 
 
         /// <summary>
@@ -41,11 +45,27 @@ namespace CocosDenshion
         }
 
         /// <summary>
-        /// The singleton instance of this class.
+        /// The singleton instance of this class. This property never throws.
         /// </summary>
         public static CCSimpleAudioEngine SharedEngine
         {
-            get { return _Instance; }
+            get
+            {
+                if (_Instance == null)
+                {
+                    try
+                    {
+                        _Instance = new CCSimpleAudioEngine();
+                    }
+                    catch (Exception ex)
+                    {
+                        CCLog.Log("Failed to initialize audio engine: {0}", ex.Message);
+                        _NoAudioHardware = true;
+                        _Instance = new CCSimpleAudioEngine();
+                    }
+                }
+                return _Instance;
+            }
         }
 
         public float BackgroundMusicVolume
@@ -390,6 +410,65 @@ namespace CocosDenshion
         }
 
         /// <summary>
+        /// Plays the sound effect at the given volume (0.0 to 1.0).
+        /// </summary>
+        public int PlayEffect(string pszFilePath, float volume)
+        {
+            if (_NoAudioHardware) return (-1);
+            int nId = pszFilePath.GetHashCode();
+
+            PreloadEffect(pszFilePath);
+
+            lock (SharedList)
+            {
+                try
+                {
+                    if (SharedList.ContainsKey(nId))
+                    {
+                        SharedList[nId].Play(false, volume);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    CCLog.Log("Unexpected exception while playing a SoundEffect: {0}", pszFilePath);
+                    CCLog.Log(ex.ToString());
+                }
+            }
+
+            return nId;
+        }
+
+        /// <summary>
+        /// Plays the sound effect only if the minimum interval (in seconds) has elapsed
+        /// since the last time this effect was played. Useful for preventing sound stacking.
+        /// </summary>
+        public int PlayEffect(string pszFilePath, float volume, float minInterval)
+        {
+            if (_NoAudioHardware) return (-1);
+            int nId = pszFilePath.GetHashCode();
+
+            lock (_lastPlayTime)
+            {
+                if (_lastPlayTime.TryGetValue(nId, out float lastTime))
+                {
+                    if (_globalTime - lastTime < minInterval)
+                        return nId;
+                }
+                _lastPlayTime[nId] = _globalTime;
+            }
+
+            return PlayEffect(pszFilePath, volume);
+        }
+
+        /// <summary>
+        /// Call this each frame with the delta time to enable throttled playback via minInterval.
+        /// </summary>
+        public void UpdateThrottleTimers(float dt)
+        {
+            _globalTime += dt;
+        }
+
+        /// <summary>
         /// Stops the sound effect with the given id. 
         /// </summary>
         /// <param name="nSoundId"></param>
@@ -496,5 +575,55 @@ namespace CocosDenshion
             }
         }
 
+        #region Background Music Fade
+
+        private float _fadeTargetVolume;
+        private float _fadeStartVolume;
+        private float _fadeDuration;
+        private float _fadeElapsed;
+        private bool _isFading;
+
+        /// <summary>
+        /// Whether a background music fade is currently in progress.
+        /// </summary>
+        public bool IsFading => _isFading;
+
+        /// <summary>
+        /// Fades the background music volume from the current level to a target level over a duration.
+        /// Call UpdateFade(dt) each frame while fading.
+        /// </summary>
+        /// <param name="targetVolume">Target volume (0.0 to 1.0).</param>
+        /// <param name="duration">Fade duration in seconds.</param>
+        public void FadeBackgroundMusic(float targetVolume, float duration)
+        {
+            if (_NoAudioHardware) return;
+            _fadeStartVolume = BackgroundMusicVolume;
+            _fadeTargetVolume = Math.Max(0f, Math.Min(1f, targetVolume));
+            _fadeDuration = Math.Max(0.01f, duration);
+            _fadeElapsed = 0f;
+            _isFading = true;
+        }
+
+        /// <summary>
+        /// Updates the background music fade. Call once per frame.
+        /// Also updates throttle timers. Can be called unconditionally.
+        /// </summary>
+        public void Update(float dt)
+        {
+            UpdateThrottleTimers(dt);
+
+            if (!_isFading) return;
+
+            _fadeElapsed += dt;
+            float t = Math.Min(_fadeElapsed / _fadeDuration, 1f);
+            BackgroundMusicVolume = _fadeStartVolume + (_fadeTargetVolume - _fadeStartVolume) * t;
+
+            if (t >= 1f)
+            {
+                _isFading = false;
+            }
+        }
+
+        #endregion
     }
 }

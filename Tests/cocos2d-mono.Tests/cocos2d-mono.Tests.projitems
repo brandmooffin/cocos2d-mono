@@ -274,6 +274,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ClickAndMoveTest\ClickAndMoveTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClippingNodeTest\ClippingNodeTestScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CocosDenshionTest\CocosDenshionTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CocosDenshionTest\CocosDenshionExtendedTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\SystemLabelTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SpriteTest\SpriteReset.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SpriteTest\SpriteContentSize.cs" />
@@ -287,6 +288,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)EmbeddableViewTest\SplitScreenViewTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DrawPrimitivesTest\DrawPrimitivesTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DrawPrimitivesTest\DrawPrimitivesTestScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DrawPrimitivesTest\DrawNodeNewMethodsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EffectsAdvancedTest\Effect1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EffectsAdvancedTest\Effect2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EffectsAdvancedTest\Effect3.cs" />
@@ -376,6 +378,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\LabelTTFMultiline.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\LabelTTFAutoSizeTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\LabelTTFTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LabelTest\LabelTTFAntialiasedTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\TTFFontInit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LayerTest\LayerGradient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LayerTest\LayerScaleTest.cs" />
@@ -567,5 +570,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)ZwoptexTest\ZwoptexGenericTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ZwoptexTest\ZwoptexTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ZwoptexTest\ZwoptexTestScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Camera2DTest\Camera2DTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Camera2DTest\Camera2DTestScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParticleEmitterLightTest\ParticleEmitterLightTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParticleEmitterLightTest\ParticleEmitterLightTestScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UtilitiesTest\UtilitiesTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UtilitiesTest\UtilitiesTestScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GradientTest\GradientTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GradientTest\GradientTestScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelPerfectTest\PixelPerfectTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelPerfectTest\PixelPerfectTestScene.cs" />
   </ItemGroup>
 </Project>

@@ -199,21 +199,47 @@ namespace tests
 
     public class CocosDenshionTestScene : TestScene
     {
-        protected override void NextTestCase()
-        {
-        }
-        protected override void PreviousTestCase()
-        {
-        }
-        protected override void RestTestCase()
-        {
-        }
+        private static int sceneIdx = -1;
+        private static int MAX_LAYER = 2;
+
+        protected override void NextTestCase() { nextTestAction(); }
+        protected override void PreviousTestCase() { backTestAction(); }
+        protected override void RestTestCase() { restartTestAction(); }
+
         public override void runThisTest()
         {
-	        CCLayer pLayer = new CocosDenshionTest();
+	        CCLayer pLayer = nextTestAction();
 	        AddChild(pLayer);
-
 	        CCDirector.SharedDirector.ReplaceScene(this);
+        }
+
+        public static CCLayer createTestLayer(int nIndex)
+        {
+            switch (nIndex)
+            {
+                case 0: return new CocosDenshionTest();
+                case 1: return new CocosDenshionExtendedTest();
+            }
+            return null;
+        }
+
+        public static CCLayer nextTestAction()
+        {
+            sceneIdx++;
+            sceneIdx = sceneIdx % MAX_LAYER;
+            return createTestLayer(sceneIdx);
+        }
+
+        public static CCLayer backTestAction()
+        {
+            sceneIdx--;
+            if (sceneIdx < 0) sceneIdx += MAX_LAYER;
+            return createTestLayer(sceneIdx);
+        }
+
+        public static CCLayer restartTestAction()
+        {
+            return createTestLayer(sceneIdx);
         }
     }
 }

@@ -218,6 +218,20 @@ namespace Cocos2D
             return new CCColor4B(point.R, point.G, point.B, 255);
         }
 
+        public static implicit operator CCColor4F(CCColor4B point)
+        {
+            return new CCColor4F(point.R / 255f, point.G / 255f, point.B / 255f, point.A / 255f);
+        }
+
+        public static implicit operator CCColor4B(CCColor4F point)
+        {
+            return new CCColor4B(
+                (byte)Math.Min(point.R * 255f, 255f),
+                (byte)Math.Min(point.G * 255f, 255f),
+                (byte)Math.Min(point.B * 255f, 255f),
+                (byte)Math.Min(point.A * 255f, 255f));
+        }
+
         public static CCColor4B Lerp(CCColor4B value1, CCColor4B value2, float amount)
         {
             CCColor4B color;
@@ -267,6 +281,17 @@ namespace Cocos2D
     /// </summary>
     public struct CCColor4F
     {
+        public static readonly CCColor4F White = new CCColor4F(1f, 1f, 1f, 1f);
+        public static readonly CCColor4F Black = new CCColor4F(0f, 0f, 0f, 1f);
+        public static readonly CCColor4F Red = new CCColor4F(1f, 0f, 0f, 1f);
+        public static readonly CCColor4F Green = new CCColor4F(0f, 1f, 0f, 1f);
+        public static readonly CCColor4F Blue = new CCColor4F(0f, 0f, 1f, 1f);
+        public static readonly CCColor4F Yellow = new CCColor4F(1f, 1f, 0f, 1f);
+        public static readonly CCColor4F Magenta = new CCColor4F(1f, 0f, 1f, 1f);
+        public static readonly CCColor4F Orange = new CCColor4F(1f, 0.5f, 0f, 1f);
+        public static readonly CCColor4F Gray = new CCColor4F(0.65f, 0.65f, 0.65f, 1f);
+        public static readonly CCColor4F Transparent = new CCColor4F(0f, 0f, 0f, 0f);
+
         public CCColor4F(float inr, float ing, float inb, float ina)
         {
             R = inr;

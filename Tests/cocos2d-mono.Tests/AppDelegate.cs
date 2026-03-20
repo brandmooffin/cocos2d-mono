@@ -46,8 +46,8 @@ namespace tests
 
             CCSpriteFontCache.FontScale = 0.6f;
             CCSpriteFontCache.RegisterFont("arial", 12, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 38, 50, 64);
-            //CCSpriteFontCache.RegisterFont("MarkerFelt", 16, 18, 22);
-            //CCSpriteFontCache.RegisterFont("MarkerFelt-Thin", 12, 18);
+            //CCSpriteFontCache.RegisterFont("arial", 16, 18, 22);
+            //CCSpriteFontCache.RegisterFont("arial", 12, 18);
             //CCSpriteFontCache.RegisterFont("Paint Boy", 26);
             //CCSpriteFontCache.RegisterFont("Schwarzwald Regular", 26);
             //CCSpriteFontCache.RegisterFont("Scissor Cuts", 26);
