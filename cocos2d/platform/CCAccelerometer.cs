@@ -25,10 +25,18 @@ namespace Cocos2D
 #if !WINDOWS && !PSM && !XBOX && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
             try
             {
-                accelerometer = new MonoGame.Framework.Devices.Sensors.Accelerometer();
+                if (MonoGame.Framework.Devices.Sensors.Accelerometer.IsSupported)
+                {
+                    accelerometer = new MonoGame.Framework.Devices.Sensors.Accelerometer();
+                }
+                else
+                {
+                    CCLog.Log("Accelerometer not supported on this device. CCAccelerometer will default to emulation code.");
+                }
             }
             catch (Exception ex)
             {
+                accelerometer = null;
                 CCLog.Log(ex.ToString());
                 CCLog.Log("No accelerometer on platform. CCAccelerometer will default to emulation code.");
             }
@@ -51,7 +59,7 @@ namespace Cocos2D
 #if !WINDOWS && !PSM && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
                     try
                 {
-                    if (MonoGame.Framework.Devices.Sensors.Accelerometer.IsSupported)
+                    if (accelerometer != null && MonoGame.Framework.Devices.Sensors.Accelerometer.IsSupported)
                     {
                         accelerometer.CurrentValueChanged += accelerometer_CurrentValueChanged;
                         accelerometer.Start();
@@ -62,8 +70,9 @@ namespace Cocos2D
                         m_bActive = false;
                     }
                 }
-                catch (MonoGame.Framework.Devices.Sensors.AccelerometerFailedException)
+                catch (Exception)
                 {
+                    accelerometer = null;
                     m_bActive = false;
                 }
 #endif
