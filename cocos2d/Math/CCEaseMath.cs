@@ -5,6 +5,51 @@ namespace Cocos2D
 {
     public static class CCEaseMath
     {
+        public static float Linear(float time)
+        {
+            return time;
+        }
+
+        public static float QuadIn(float time)
+        {
+            return time * time;
+        }
+
+        public static float QuadOut(float time)
+        {
+            return time * (2f - time);
+        }
+
+        public static float QuadInOut(float time)
+        {
+            if (time < 0.5f)
+            {
+                return 2f * time * time;
+            }
+            return -1f + (4f - 2f * time) * time;
+        }
+
+        public static float CubicIn(float time)
+        {
+            return time * time * time;
+        }
+
+        public static float CubicOut(float time)
+        {
+            time -= 1f;
+            return time * time * time + 1f;
+        }
+
+        public static float CubicInOut(float time)
+        {
+            if (time < 0.5f)
+            {
+                return 4f * time * time * time;
+            }
+            time -= 1f;
+            return 1f + 4f * time * time * time;
+        }
+
         public static float BackIn(float time)
         {
             const float overshoot = 1.70158f;
@@ -165,5 +210,54 @@ namespace Cocos2D
             }
         }
 
+        /// <summary>
+        /// Elastic ease-in with default period (0.3).
+        /// </summary>
+        public static float ElasticIn(float time)
+        {
+            return ElasticIn(time, 0.3f);
+        }
+
+        /// <summary>
+        /// Elastic ease-out with default period (0.3).
+        /// </summary>
+        public static float ElasticOut(float time)
+        {
+            return ElasticOut(time, 0.3f);
+        }
+
+        /// <summary>
+        /// Elastic ease-in-out with default period (0.3), matching CCEaseElasticInOut.
+        /// </summary>
+        public static float ElasticInOut(float time)
+        {
+            return ElasticInOut(time, 0.3f);
+        }
+
+        /// <summary>
+        /// Linearly interpolates between a and b by t.
+        /// Delegates to MathHelper.Lerp.
+        /// </summary>
+        public static float Lerp(float a, float b, float t)
+        {
+            return MathHelper.Lerp(a, b, t);
+        }
+
+        /// <summary>
+        /// Exponential smoothing towards a target value. Frame-rate independent.
+        /// Smoothing controls how much of the remaining distance is kept each second:
+        /// lower values (e.g. 0.01) converge quickly, higher values (e.g. 0.99) converge slowly.
+        /// </summary>
+        /// <param name="current">Current value.</param>
+        /// <param name="target">Target value.</param>
+        /// <param name="smoothing">Smoothing factor, clamped to (0, 1).</param>
+        /// <param name="dt">Delta time in seconds (must be >= 0).</param>
+        public static float ExpSmooth(float current, float target, float smoothing, float dt)
+        {
+            smoothing = MathHelper.Clamp(smoothing, 0.0001f, 0.9999f);
+            if (dt < 0f) dt = 0f;
+            return MathHelper.Lerp(current, target, 1f - (float)Math.Pow(smoothing, dt));
+        }
     }
 }
+
