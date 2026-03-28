@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Cocos2D
 {
@@ -29,8 +30,9 @@ namespace Cocos2D
 
         /// <summary>
         /// Registers a TTF font file path for use with CCLabel.
-        /// The path should be relative to the content root (e.g. "fonts/myfont.ttf").
-        /// The TTF file must be included in your content directory.
+        /// The path must be relative to the content root (e.g. "fonts/myfont.ttf").
+        /// Rooted paths and directory traversal (e.g. "..") are rejected.
+        /// The TTF file must exist in your content directory.
         /// </summary>
         /// <param name="relativePath">Path relative to content root, e.g. "fonts/myfont.ttf".</param>
         /// <returns>True if the font file exists and was registered.</returns>
@@ -38,6 +40,12 @@ namespace Cocos2D
         {
             if (string.IsNullOrEmpty(relativePath))
                 return false;
+
+            if (Path.IsPathRooted(relativePath) || relativePath.Contains(".."))
+            {
+                CCLog.Log("CCFontManager: Rejected path '{0}' — must be relative with no '..' traversal", relativePath);
+                return false;
+            }
 
             string fullPath = ResolveFontPath(relativePath);
 
@@ -60,19 +68,26 @@ namespace Cocos2D
         }
 
         /// <summary>
-        /// Returns all registered TTF font paths.
+        /// Returns a copy of all registered TTF font paths.
         /// </summary>
         public static IEnumerable<string> RegisteredTTFFonts
         {
-            get { return s_registeredTTFPaths; }
+            get { return s_registeredTTFPaths.ToList(); }
         }
 
         /// <summary>
-        /// Resolves a font-relative path to a full filesystem path.
-        /// Returns null if the content manager is not initialized.
+        /// Resolves a content-relative font path to a full filesystem path.
+        /// Rejects rooted paths and directory traversal.
+        /// Returns null if the content manager is not initialized or the path is invalid.
         /// </summary>
         public static string ResolveFontPath(string relativePath)
         {
+            if (string.IsNullOrEmpty(relativePath))
+                return null;
+
+            if (Path.IsPathRooted(relativePath) || relativePath.Contains(".."))
+                return null;
+
             try
             {
                 string rootDir = null;
@@ -83,13 +98,26 @@ namespace Cocos2D
                 }
                 else if (CCApplication.SharedApplication != null)
                 {
-                    rootDir = CCApplication.SharedApplication.Content.RootDirectory;
+                    var content = CCApplication.SharedApplication.Content;
+                    if (content != null)
+                    {
+                        rootDir = content.RootDirectory;
+                    }
                 }
 
                 if (rootDir != null)
                 {
                     string appPath = AppDomain.CurrentDomain.BaseDirectory;
-                    return Path.Combine(appPath, rootDir, relativePath);
+                    string contentRoot = Path.GetFullPath(Path.Combine(appPath, rootDir));
+                    string fullPath = Path.GetFullPath(Path.Combine(contentRoot, relativePath));
+
+                    // Verify resolved path stays within the content root
+                    if (fullPath.StartsWith(contentRoot, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return fullPath;
+                    }
+
+                    CCLog.Log("CCFontManager: Resolved path escapes content root");
                 }
             }
             catch (Exception ex)
@@ -113,10 +141,9 @@ namespace Cocos2D
 
         /// <summary>
         /// Creates the appropriate label type for a given font.
-        /// If the font name ends with .ttf, creates a CCLabel (native TTF rendering).
-        /// Otherwise, creates a CCLabelTTF (content pipeline SpriteFont rendering).
-        /// This is the recommended way to create labels when you want automatic
-        /// content pipeline fallback.
+        /// If the font name ends with .ttf, creates a CCLabel (native TTF rendering,
+        /// bypasses the content pipeline). Otherwise, creates a CCLabelTTF
+        /// (content pipeline SpriteFont rendering).
         /// </summary>
         /// <param name="text">Text to display.</param>
         /// <param name="fontName">Font name or TTF path (e.g. "arial" or "fonts/myfont.ttf").</param>
@@ -133,6 +160,7 @@ namespace Cocos2D
 
         /// <summary>
         /// Creates the appropriate label type with alignment support.
+        /// If the font name ends with .ttf, creates a CCLabel. Otherwise, creates a CCLabelTTF.
         /// </summary>
         public static CCNode CreateLabel(string text, string fontName, float fontSize,
             CCSize dimensions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment)
