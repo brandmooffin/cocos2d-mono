@@ -296,6 +296,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)platform\CCRawList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\CCReusedObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\CCSAXParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)platform\CCFontManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\CCSpriteFontCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\CCTask.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\ContentReaders\CCBMFontPaddingReader.cs" />
