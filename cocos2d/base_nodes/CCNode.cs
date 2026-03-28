@@ -97,6 +97,8 @@ namespace Cocos2D
         protected float m_fVertexZ;
         internal protected uint m_uOrderOfArrival;
         private int m_nTag;
+        private uint m_collisionLayer = 0xFFFFFFFF;
+        private uint m_collisionMask = 0xFFFFFFFF;
         internal int m_nZOrder;
         protected CCActionManager m_pActionManager;
         protected CCCamera m_pCamera;
@@ -386,6 +388,26 @@ namespace Cocos2D
                     m_nTag = value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Bitmask identifying which collision layer(s) this node belongs to.
+        /// Defaults to 0xFFFFFFFF (all layers).
+        /// </summary>
+        public uint CollisionLayer
+        {
+            get { return m_collisionLayer; }
+            set { m_collisionLayer = value; }
+        }
+
+        /// <summary>
+        /// Bitmask identifying which collision layers this node can collide with.
+        /// Defaults to 0xFFFFFFFF (all layers).
+        /// </summary>
+        public uint CollisionMask
+        {
+            get { return m_collisionMask; }
+            set { m_collisionMask = value; }
         }
 
         public object UserData

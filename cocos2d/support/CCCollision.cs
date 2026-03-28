@@ -50,6 +50,17 @@ namespace Cocos2D
         }
 
         /// <summary>
+        /// Checks whether two nodes should test for collision based on their
+        /// CollisionLayer and CollisionMask bitmasks.
+        /// Returns true if either node's layer matches the other's mask.
+        /// </summary>
+        public static bool ShouldCollide(CCNode a, CCNode b)
+        {
+            return (a.CollisionLayer & b.CollisionMask) != 0
+                || (b.CollisionLayer & a.CollisionMask) != 0;
+        }
+
+        /// <summary>
         /// Checks a single node against a list of nodes for collisions.
         /// Calls the handler for each collision found.
         /// </summary>
@@ -60,6 +71,28 @@ namespace Cocos2D
             {
                 var other = group[i];
                 if (!other.Visible) continue;
+
+                var otherBox = GetShrunkBounds(other, shrink);
+                if (singleBox.IntersectsRect(otherBox))
+                {
+                    onCollision(single, other);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks a single node against a list of nodes for collisions,
+        /// respecting CollisionLayer/CollisionMask filtering.
+        /// Only tests pairs where ShouldCollide returns true.
+        /// </summary>
+        public static void CheckCollisionsFiltered<T>(CCNode single, IList<T> group, float shrink, Action<CCNode, T> onCollision) where T : CCNode
+        {
+            var singleBox = GetShrunkBounds(single, shrink);
+            for (int i = group.Count - 1; i >= 0; i--)
+            {
+                var other = group[i];
+                if (!other.Visible) continue;
+                if (!ShouldCollide(single, other)) continue;
 
                 var otherBox = GetShrunkBounds(other, shrink);
                 if (singleBox.IntersectsRect(otherBox))
@@ -88,6 +121,37 @@ namespace Cocos2D
                 {
                     var b = groupB[j];
                     if (!b.Visible) continue;
+
+                    var boxB = GetShrunkBounds(b, shrink);
+                    if (boxA.IntersectsRect(boxB))
+                    {
+                        onCollision(a, b);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks two groups of nodes against each other for collisions,
+        /// respecting CollisionLayer/CollisionMask filtering.
+        /// Only tests pairs where ShouldCollide returns true.
+        /// </summary>
+        public static void CheckGroupCollisionsFiltered<TA, TB>(IList<TA> groupA, IList<TB> groupB, float shrink, Action<TA, TB> onCollision)
+            where TA : CCNode
+            where TB : CCNode
+        {
+            for (int i = groupA.Count - 1; i >= 0; i--)
+            {
+                var a = groupA[i];
+                if (!a.Visible) continue;
+
+                var boxA = GetShrunkBounds(a, shrink);
+
+                for (int j = groupB.Count - 1; j >= 0; j--)
+                {
+                    var b = groupB[j];
+                    if (!b.Visible) continue;
+                    if (!ShouldCollide(a, b)) continue;
 
                     var boxB = GetShrunkBounds(b, shrink);
                     if (boxA.IntersectsRect(boxB))
