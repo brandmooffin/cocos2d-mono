@@ -25,7 +25,9 @@ namespace Cocos2D
 
     /// <summary>
     /// A retained-mode draw node where individual shapes can be added, moved,
-    /// recolored, or removed without clearing and rebuilding the entire buffer.
+    /// recolored, or removed independently. Shape modifications (move, recolor,
+    /// opacity) update vertices in-place. The draw buffer array is rebuilt from
+    /// the vertex list on the next Draw() call when any change occurs.
     ///
     /// Use this instead of CCDrawNode when you have many shapes and only a few
     /// change per frame. The immediate-mode Clear() + redraw pattern still works
@@ -34,8 +36,8 @@ namespace Cocos2D
     /// <code>
     /// var node = new CCDrawNodeRetained();
     /// var dot = node.AddDot(center, 10f, CCColor4F.Red);
-    /// // Later, move or recolor without full rebuild:
-    /// node.MoveShape(dot, newCenter);
+    /// // Later, move or recolor:
+    /// node.SetShapePosition(dot, newCenter);
     /// node.RecolorShape(dot, CCColor4F.Blue);
     /// node.RemoveShape(dot);
     /// </code>
@@ -48,6 +50,7 @@ namespace Cocos2D
         private List<CCShapeHandle> m_shapes;
         private CCBlendFunc m_blendFunc;
         private VertexPositionColor[] m_drawBuffer;
+        private int m_drawBufferCount;
         private bool m_dirty;
 
         public CCDrawNodeRetained()
@@ -258,6 +261,7 @@ namespace Cocos2D
         public void SetShapePosition(CCShapeHandle handle, CCPoint position)
         {
             ValidateHandle(handle);
+            if (handle.VertexCount == 0) return;
 
             // Compute current centroid
             float cx = 0, cy = 0;
@@ -317,9 +321,9 @@ namespace Cocos2D
 
         /// <summary>
         /// Removes a shape from the draw node. This compacts the vertex buffer
-        /// and invalidates all handles that were added after this shape.
+        /// and adjusts indices on all remaining handles so they stay valid.
         /// For best performance, remove shapes in reverse order of creation
-        /// or use Clear() when removing many shapes.
+        /// or use Clear() when removing many shapes at once.
         /// </summary>
         public void RemoveShape(CCShapeHandle handle)
         {
@@ -364,19 +368,27 @@ namespace Cocos2D
 
         public override void Draw()
         {
-            if (m_vertices.Count == 0) return;
+            int vertCount = m_vertices.Count;
+            if (vertCount == 0) return;
 
             if (m_dirty)
             {
                 m_dirty = false;
-                m_drawBuffer = m_vertices.ToArray();
+                m_drawBufferCount = vertCount;
+
+                // Reuse existing array if large enough, otherwise grow
+                if (m_drawBuffer == null || m_drawBuffer.Length < vertCount)
+                {
+                    m_drawBuffer = new VertexPositionColor[vertCount];
+                }
+                m_vertices.CopyTo(m_drawBuffer);
             }
 
-            if (m_drawBuffer != null && m_drawBuffer.Length >= 3)
+            if (m_drawBuffer != null && m_drawBufferCount >= 3)
             {
                 CCDrawManager.TextureEnabled = false;
                 CCDrawManager.BlendFunc(m_blendFunc);
-                CCDrawManager.DrawPrimitives(PrimitiveType.TriangleList, m_drawBuffer, 0, m_drawBuffer.Length / 3);
+                CCDrawManager.DrawPrimitives(PrimitiveType.TriangleList, m_drawBuffer, 0, m_drawBufferCount / 3);
             }
         }
 
