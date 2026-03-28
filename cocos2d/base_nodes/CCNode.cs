@@ -97,8 +97,8 @@ namespace Cocos2D
         protected float m_fVertexZ;
         internal protected uint m_uOrderOfArrival;
         private int m_nTag;
-        private uint m_collisionLayer = 0xFFFFFFFF;
-        private uint m_collisionMask = 0xFFFFFFFF;
+        private uint m_collisionCategory = 0xFFFFFFFF;
+        private uint m_collisionCategoryMask = 0xFFFFFFFF;
         internal int m_nZOrder;
         protected CCActionManager m_pActionManager;
         protected CCCamera m_pCamera;
@@ -293,6 +293,8 @@ namespace Cocos2D
             CCSerialization.SerializeData(m_bReorderChildDirty, sw);
             CCSerialization.SerializeData(m_uOrderOfArrival, sw);
             CCSerialization.SerializeData(m_nTag, sw);
+            CCSerialization.SerializeData(unchecked((int)m_collisionCategory), sw);
+            CCSerialization.SerializeData(unchecked((int)m_collisionCategoryMask), sw);
             CCSerialization.SerializeData(m_nZOrder, sw);
             CCSerialization.SerializeData(m_obAnchorPoint, sw);
             CCSerialization.SerializeData(m_obContentSize, sw);
@@ -336,6 +338,8 @@ namespace Cocos2D
             m_bReorderChildDirty = CCSerialization.DeSerializeBool(sr);
             m_uOrderOfArrival = (uint)CCSerialization.DeSerializeInt(sr);
             m_nTag = CCSerialization.DeSerializeInt(sr);
+            m_collisionCategory = unchecked((uint)CCSerialization.DeSerializeInt(sr));
+            m_collisionCategoryMask = unchecked((uint)CCSerialization.DeSerializeInt(sr));
             m_nZOrder = CCSerialization.DeSerializeInt(sr);
             AnchorPoint = CCSerialization.DeSerializePoint(sr);
             ContentSize = CCSerialization.DeSerializeSize(sr);
@@ -391,23 +395,23 @@ namespace Cocos2D
         }
 
         /// <summary>
-        /// Bitmask identifying which collision layer(s) this node belongs to.
-        /// Defaults to 0xFFFFFFFF (all layers).
+        /// Bitmask identifying which collision category this node belongs to.
+        /// Defaults to 0xFFFFFFFF (all categories).
         /// </summary>
-        public uint CollisionLayer
+        public uint CollisionCategory
         {
-            get { return m_collisionLayer; }
-            set { m_collisionLayer = value; }
+            get { return m_collisionCategory; }
+            set { m_collisionCategory = value; }
         }
 
         /// <summary>
-        /// Bitmask identifying which collision layers this node can collide with.
-        /// Defaults to 0xFFFFFFFF (all layers).
+        /// Bitmask identifying which collision categories this node can collide with.
+        /// Defaults to 0xFFFFFFFF (all categories).
         /// </summary>
-        public uint CollisionMask
+        public uint CollisionCategoryMask
         {
-            get { return m_collisionMask; }
-            set { m_collisionMask = value; }
+            get { return m_collisionCategoryMask; }
+            set { m_collisionCategoryMask = value; }
         }
 
         public object UserData

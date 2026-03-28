@@ -51,13 +51,13 @@ namespace Cocos2D
 
         /// <summary>
         /// Checks whether two nodes should test for collision based on their
-        /// CollisionLayer and CollisionMask bitmasks.
-        /// Returns true if either node's layer matches the other's mask.
+        /// CollisionCategory and CollisionCategoryMask bitmasks.
+        /// Returns true only if both nodes' categories match the other's mask (bilateral).
         /// </summary>
         public static bool ShouldCollide(CCNode a, CCNode b)
         {
-            return (a.CollisionLayer & b.CollisionMask) != 0
-                || (b.CollisionLayer & a.CollisionMask) != 0;
+            return (a.CollisionCategory & b.CollisionCategoryMask) != 0
+                && (b.CollisionCategory & a.CollisionCategoryMask) != 0;
         }
 
         /// <summary>
@@ -82,11 +82,13 @@ namespace Cocos2D
 
         /// <summary>
         /// Checks a single node against a list of nodes for collisions,
-        /// respecting CollisionLayer/CollisionMask filtering.
+        /// respecting CollisionCategory/CollisionCategoryMask filtering.
         /// Only tests pairs where ShouldCollide returns true.
         /// </summary>
         public static void CheckCollisionsFiltered<T>(CCNode single, IList<T> group, float shrink, Action<CCNode, T> onCollision) where T : CCNode
         {
+            if (!single.Visible) return;
+
             var singleBox = GetShrunkBounds(single, shrink);
             for (int i = group.Count - 1; i >= 0; i--)
             {
@@ -133,7 +135,7 @@ namespace Cocos2D
 
         /// <summary>
         /// Checks two groups of nodes against each other for collisions,
-        /// respecting CollisionLayer/CollisionMask filtering.
+        /// respecting CollisionCategory/CollisionCategoryMask filtering.
         /// Only tests pairs where ShouldCollide returns true.
         /// </summary>
         public static void CheckGroupCollisionsFiltered<TA, TB>(IList<TA> groupA, IList<TB> groupB, float shrink, Action<TA, TB> onCollision)
