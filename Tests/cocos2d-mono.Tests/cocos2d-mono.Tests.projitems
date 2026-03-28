@@ -379,6 +379,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\LabelTTFAutoSizeTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\LabelTTFTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\LabelTTFAntialiasedTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LabelTest\PixelLabelTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LabelTest\TTFFontInit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LayerTest\LayerGradient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LayerTest\LayerScaleTest.cs" />
