@@ -289,6 +289,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DrawPrimitivesTest\DrawPrimitivesTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DrawPrimitivesTest\DrawPrimitivesTestScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DrawPrimitivesTest\DrawNodeNewMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DrawPrimitivesTest\DrawNodeRetainedTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EffectsAdvancedTest\Effect1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EffectsAdvancedTest\Effect2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EffectsAdvancedTest\Effect3.cs" />

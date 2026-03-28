@@ -5,7 +5,7 @@ namespace tests
     public class UtilitiesTestScene : TestScene
     {
         private static int sceneIdx = -1;
-        private static int MAX_LAYER = 3;
+        private static int MAX_LAYER = 5;
 
         public override void runThisTest()
         {
@@ -21,6 +21,8 @@ namespace tests
                 case 0: return new ObjectPoolTest();
                 case 1: return new CollisionTest();
                 case 2: return new CooldownTimerTest();
+                case 3: return new CollisionFilterTest();
+                case 4: return new EasingMathTest();
             }
             return null;
         }
