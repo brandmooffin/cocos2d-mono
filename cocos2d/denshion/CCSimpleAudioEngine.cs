@@ -469,7 +469,53 @@ namespace CocosDenshion
         }
 
         /// <summary>
-        /// Stops the sound effect with the given id. 
+        /// Plays a sound effect and returns a handle for per-instance control
+        /// (volume, pan, pitch, stop, pause, resume).
+        /// Returns null if audio hardware is unavailable or the effect cannot be played.
+        /// </summary>
+        /// <param name="pszFilePath">Path to the sound effect file.</param>
+        /// <param name="volume">Volume from 0.0 to 1.0.</param>
+        /// <param name="bLoop">Whether to loop the sound.</param>
+        public CCSoundHandle PlayEffectHandled(string pszFilePath, float volume = 1f, bool bLoop = false)
+        {
+            if (_NoAudioHardware) return null;
+
+            int nId = pszFilePath.GetHashCode();
+            PreloadEffect(pszFilePath);
+
+            lock (SharedList)
+            {
+                try
+                {
+                    if (SharedList.ContainsKey(nId))
+                    {
+                        var instance = SharedList[nId].CreateInstance();
+                        if (instance == null) return null;
+
+                        instance.Volume = Math.Max(0f, Math.Min(1f, volume));
+                        instance.IsLooped = bLoop;
+                        instance.Play();
+
+                        if (bLoop)
+                        {
+                            _LoopedSounds[nId] = nId;
+                        }
+
+                        return new CCSoundHandle(instance, nId);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    CCLog.Log("Unexpected exception while playing a SoundEffect: {0}", pszFilePath);
+                    CCLog.Log(ex.ToString());
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Stops the sound effect with the given id.
         /// </summary>
         /// <param name="nSoundId"></param>
         public void StopEffect(int nSoundId)
