@@ -7,6 +7,8 @@ namespace CocosDenshion
     /// A handle to an individual sound effect instance, providing per-instance
     /// control over volume, pan, pitch, and playback state.
     /// Obtained from CCSimpleAudioEngine.PlayEffectHandled().
+    /// The caller owns this handle and must call Dispose() when finished
+    /// to release the underlying SoundEffectInstance.
     /// </summary>
     public class CCSoundHandle : IDisposable
     {
