@@ -18,19 +18,18 @@ namespace Cocos2D
         private static readonly Dictionary<string, float> s_heightCache
             = new Dictionary<string, float>();
 
-        private readonly Dictionary<char, CCTexture2D> m_charTextures;
-        private readonly Dictionary<char, float> m_charWidths;
-        private readonly float m_charHeight;
+        private Dictionary<char, CCTexture2D> m_charTextures;
+        private Dictionary<char, float> m_charWidths;
+        private float m_charHeight;
 
         private CCSprite[] m_glyphs;
         private int m_maxChars;
         private string m_text = "";
         private CCTextAlignment m_alignment;
-        private CCColor3B m_color = new CCColor3B(255, 255, 255);
-        private byte m_opacity = 255;
         private bool m_antialiased;
         private string m_fontName;
         private float m_fontSize;
+        private string m_cacheKey;
 
         private const string DefaultCharSet =
             "0123456789+-/:*x[](){}ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,!?@#$%&=<>\"'`~^_;\\| ";
@@ -47,6 +46,7 @@ namespace Cocos2D
                 string newText = value ?? "";
                 if (m_text == newText) return;
                 m_text = newText;
+                CacheCharacters(m_text);
                 Layout();
             }
         }
@@ -70,10 +70,10 @@ namespace Cocos2D
         /// </summary>
         public override CCColor3B Color
         {
-            get { return m_color; }
+            get { return base.Color; }
             set
             {
-                m_color = value;
+                base.Color = value;
                 for (int i = 0; i < m_glyphs.Length; i++)
                     m_glyphs[i].Color = value;
             }
@@ -84,10 +84,10 @@ namespace Cocos2D
         /// </summary>
         public override byte Opacity
         {
-            get { return m_opacity; }
+            get { return base.Opacity; }
             set
             {
-                m_opacity = value;
+                base.Opacity = value;
                 for (int i = 0; i < m_glyphs.Length; i++)
                     m_glyphs[i].Opacity = value;
             }
@@ -128,7 +128,10 @@ namespace Cocos2D
             {
                 m_antialiased = value;
                 for (int i = 0; i < m_glyphs.Length; i++)
-                    m_glyphs[i].IsAntialiased = value;
+                {
+                    if (m_glyphs[i].Texture != null)
+                        m_glyphs[i].IsAntialiased = value;
+                }
             }
         }
 
@@ -150,12 +153,12 @@ namespace Cocos2D
             m_alignment = alignment;
             m_antialiased = antialiased;
             m_maxChars = maxChars;
+            m_cacheKey = fontName + "_" + fontSize;
 
-            string cacheKey = fontName + "_" + fontSize;
-
-            if (!s_fontCache.TryGetValue(cacheKey, out m_charTextures))
+            Dictionary<char, CCTexture2D> textures;
+            if (!s_fontCache.TryGetValue(m_cacheKey, out textures))
             {
-                m_charTextures = new Dictionary<char, CCTexture2D>();
+                textures = new Dictionary<char, CCTexture2D>();
                 var widths = new Dictionary<char, float>();
                 float maxH = 0;
 
@@ -166,27 +169,31 @@ namespace Cocos2D
                     var label = new CCLabelTTF(c.ToString(), fontName, fontSize);
                     if (label.Texture != null)
                     {
-                        m_charTextures[c] = label.Texture;
-                        float w = label.Texture.ContentSizeInPixels.Width;
-                        float h = label.Texture.ContentSizeInPixels.Height;
+                        textures[c] = label.Texture;
+                        float w = label.Texture.ContentSize.Width;
+                        float h = label.Texture.ContentSize.Height;
                         widths[c] = w;
                         if (h > maxH) maxH = h;
                     }
                 }
 
-                s_fontCache[cacheKey] = m_charTextures;
-                s_widthCache[cacheKey] = widths;
-                s_heightCache[cacheKey] = maxH;
+                s_fontCache[m_cacheKey] = textures;
+                s_widthCache[m_cacheKey] = widths;
+                s_heightCache[m_cacheKey] = maxH;
             }
 
-            m_charWidths = s_widthCache[cacheKey];
-            m_charHeight = s_heightCache[cacheKey];
+            m_charTextures = textures;
+            m_charWidths = s_widthCache[m_cacheKey];
+            m_charHeight = s_heightCache[m_cacheKey];
 
             AllocateGlyphs(maxChars);
 
             m_text = text ?? "";
             if (m_text.Length > 0)
+            {
+                CacheCharacters(m_text);
                 Layout();
+            }
         }
 
         /// <summary>
@@ -207,8 +214,6 @@ namespace Cocos2D
         /// </summary>
         public void CacheCharacters(string characters)
         {
-            string cacheKey = m_fontName + "_" + m_fontSize;
-
             foreach (char c in characters)
             {
                 if (c == ' ' || m_charTextures.ContainsKey(c))
@@ -218,8 +223,15 @@ namespace Cocos2D
                 if (label.Texture != null)
                 {
                     m_charTextures[c] = label.Texture;
-                    float w = label.Texture.ContentSizeInPixels.Width;
+                    float w = label.Texture.ContentSize.Width;
+                    float h = label.Texture.ContentSize.Height;
                     m_charWidths[c] = w;
+
+                    if (h > m_charHeight)
+                    {
+                        m_charHeight = h;
+                        s_heightCache[m_cacheKey] = h;
+                    }
                 }
             }
         }
@@ -231,7 +243,6 @@ namespace Cocos2D
         {
             if (maxChars <= m_maxChars) return;
 
-            // Hide and remove old glyphs
             for (int i = 0; i < m_glyphs.Length; i++)
             {
                 RemoveChild(m_glyphs[i], true);
@@ -243,10 +254,12 @@ namespace Cocos2D
         }
 
         /// <summary>
-        /// Measures the pixel width of a string without rendering it.
+        /// Measures the width of a string in points without rendering it.
         /// </summary>
         public float MeasureString(string text)
         {
+            if (text == null) return 0f;
+
             float width = 0;
             for (int i = 0; i < text.Length; i++)
             {
@@ -260,11 +273,20 @@ namespace Cocos2D
         }
 
         /// <summary>
-        /// Clears all static font caches. Call this when changing scenes or
-        /// when you need to free memory from fonts that are no longer used.
+        /// Clears all static font caches and disposes cached textures.
+        /// Call this when changing scenes or when you need to free memory
+        /// from fonts that are no longer used.
         /// </summary>
         public static void PurgeCachedData()
         {
+            foreach (var fontEntry in s_fontCache.Values)
+            {
+                foreach (var texture in fontEntry.Values)
+                {
+                    texture.Dispose();
+                }
+            }
+
             s_fontCache.Clear();
             s_widthCache.Clear();
             s_heightCache.Clear();
@@ -284,11 +306,9 @@ namespace Cocos2D
 
         private void Layout()
         {
-            int count = Math.Min(m_text.Length, m_maxChars);
-
-            // First pass: measure total width
+            // First pass: measure total width across full string
             float totalWidth = 0;
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < m_text.Length; i++)
             {
                 char c = m_text[i];
                 if (c == ' ')
@@ -311,11 +331,12 @@ namespace Cocos2D
 
             float offsetY = -m_charHeight;
 
-            // Second pass: position glyphs
+            // Second pass: position glyphs, iterating the full string
+            // and only counting rendered characters against the sprite budget
             float x = offsetX;
             int glyphIdx = 0;
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < m_text.Length; i++)
             {
                 char c = m_text[i];
                 if (c == ' ')
@@ -335,8 +356,8 @@ namespace Cocos2D
                 glyph.AnchorPoint = CCPoint.Zero;
                 glyph.PositionX = x;
                 glyph.PositionY = offsetY;
-                glyph.Color = m_color;
-                glyph.Opacity = m_opacity;
+                glyph.Color = base.Color;
+                glyph.Opacity = base.Opacity;
                 glyph.Visible = true;
                 glyphIdx++;
 
