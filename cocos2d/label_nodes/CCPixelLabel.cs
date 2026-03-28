@@ -126,12 +126,46 @@ namespace Cocos2D
             get { return m_antialiased; }
             set
             {
+                if (m_antialiased == value) return;
+
                 m_antialiased = value;
-                for (int i = 0; i < m_glyphs.Length; i++)
+                m_cacheKey = m_fontName + "_" + m_fontSize + (value ? "_aa" : "_px");
+
+                // Switch to a separate texture cache for this filtering mode
+                // so shared textures are not mutated across labels
+                Dictionary<char, CCTexture2D> textures;
+                if (!s_fontCache.TryGetValue(m_cacheKey, out textures))
                 {
-                    if (m_glyphs[i].Texture != null)
-                        m_glyphs[i].IsAntialiased = value;
+                    textures = new Dictionary<char, CCTexture2D>();
+                    var widths = new Dictionary<char, float>();
+                    float maxH = 0;
+
+                    foreach (char c in DefaultCharSet)
+                    {
+                        if (c == ' ') continue;
+
+                        var label = new CCLabelTTF(c.ToString(), m_fontName, m_fontSize);
+                        if (label.Texture != null)
+                        {
+                            label.Texture.IsAntialiased = value;
+                            textures[c] = label.Texture;
+                            float w = label.Texture.ContentSize.Width;
+                            float h = label.Texture.ContentSize.Height;
+                            widths[c] = w;
+                            if (h > maxH) maxH = h;
+                        }
+                    }
+
+                    s_fontCache[m_cacheKey] = textures;
+                    s_widthCache[m_cacheKey] = widths;
+                    s_heightCache[m_cacheKey] = maxH;
                 }
+
+                m_charTextures = textures;
+                m_charWidths = s_widthCache[m_cacheKey];
+                m_charHeight = s_heightCache[m_cacheKey];
+
+                Layout();
             }
         }
 
@@ -153,7 +187,7 @@ namespace Cocos2D
             m_alignment = alignment;
             m_antialiased = antialiased;
             m_maxChars = maxChars;
-            m_cacheKey = fontName + "_" + fontSize;
+            m_cacheKey = fontName + "_" + fontSize + (antialiased ? "_aa" : "_px");
 
             Dictionary<char, CCTexture2D> textures;
             if (!s_fontCache.TryGetValue(m_cacheKey, out textures))
@@ -169,6 +203,7 @@ namespace Cocos2D
                     var label = new CCLabelTTF(c.ToString(), fontName, fontSize);
                     if (label.Texture != null)
                     {
+                        label.Texture.IsAntialiased = antialiased;
                         textures[c] = label.Texture;
                         float w = label.Texture.ContentSize.Width;
                         float h = label.Texture.ContentSize.Height;
@@ -222,6 +257,7 @@ namespace Cocos2D
                 var label = new CCLabelTTF(c.ToString(), m_fontName, m_fontSize);
                 if (label.Texture != null)
                 {
+                    label.Texture.IsAntialiased = m_antialiased;
                     m_charTextures[c] = label.Texture;
                     float w = label.Texture.ContentSize.Width;
                     float h = label.Texture.ContentSize.Height;
