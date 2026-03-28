@@ -138,6 +138,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)denshion\CCEffectPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)denshion\CCMusicPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)denshion\CCSimpleAudioEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)denshion\CCSoundHandle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)effects\CCGrabber.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)effects\CCGrid3D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)effects\CCGridBase.cs" />

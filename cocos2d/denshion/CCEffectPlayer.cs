@@ -120,6 +120,16 @@ namespace CocosDenshion
             _sfxInstance.Play();
         }
 
+        /// <summary>
+        /// Creates a new SoundEffectInstance for this effect.
+        /// Returns null if no effect is loaded.
+        /// </summary>
+        internal SoundEffectInstance CreateInstance()
+        {
+            if (m_effect == null) return null;
+            return m_effect.CreateInstance();
+        }
+
         public void Close()
         {
             Stop();
