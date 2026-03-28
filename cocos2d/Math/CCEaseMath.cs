@@ -23,7 +23,9 @@ namespace Cocos2D
         public static float QuadInOut(float time)
         {
             if (time < 0.5f)
+            {
                 return 2f * time * time;
+            }
             return -1f + (4f - 2f * time) * time;
         }
 
@@ -41,7 +43,9 @@ namespace Cocos2D
         public static float CubicInOut(float time)
         {
             if (time < 0.5f)
+            {
                 return 4f * time * time * time;
+            }
             time -= 1f;
             return 1f + 4f * time * time * time;
         }
@@ -223,29 +227,36 @@ namespace Cocos2D
         }
 
         /// <summary>
-        /// Elastic ease-in-out with default period (0.3 * 1.5).
+        /// Elastic ease-in-out with default period (0.3), matching CCEaseElasticInOut.
         /// </summary>
         public static float ElasticInOut(float time)
         {
-            return ElasticInOut(time, 0.3f * 1.5f);
+            return ElasticInOut(time, 0.3f);
         }
 
         /// <summary>
         /// Linearly interpolates between a and b by t.
+        /// Delegates to MathHelper.Lerp.
         /// </summary>
         public static float Lerp(float a, float b, float t)
         {
-            return a + (b - a) * t;
+            return MathHelper.Lerp(a, b, t);
         }
 
         /// <summary>
-        /// Exponential smoothing towards a target value.
-        /// Smoothing is typically in the range [0.01, 0.99] where lower values
-        /// give faster convergence. Frame-rate independent.
+        /// Exponential smoothing towards a target value. Frame-rate independent.
+        /// Smoothing controls how much of the remaining distance is kept each second:
+        /// lower values (e.g. 0.01) converge quickly, higher values (e.g. 0.99) converge slowly.
         /// </summary>
-        public static float SmoothDamp(float current, float target, float smoothing, float dt)
+        /// <param name="current">Current value.</param>
+        /// <param name="target">Target value.</param>
+        /// <param name="smoothing">Smoothing factor, clamped to (0, 1).</param>
+        /// <param name="dt">Delta time in seconds (must be >= 0).</param>
+        public static float ExpSmooth(float current, float target, float smoothing, float dt)
         {
-            return Lerp(current, target, 1f - (float)Math.Pow(smoothing, dt));
+            smoothing = MathHelper.Clamp(smoothing, 0.0001f, 0.9999f);
+            if (dt < 0f) dt = 0f;
+            return MathHelper.Lerp(current, target, 1f - (float)Math.Pow(smoothing, dt));
         }
     }
 }
