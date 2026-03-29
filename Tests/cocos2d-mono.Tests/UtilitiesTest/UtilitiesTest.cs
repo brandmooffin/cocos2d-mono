@@ -348,4 +348,204 @@ namespace tests
             draw.DrawRect(new CCRect(x, y, w * progress, h), fillColor);
         }
     }
+
+    /// <summary>
+    /// Tests collision category filtering: two groups where only specific
+    /// category/mask pairs collide. Green pairs collide, gray pairs are filtered out.
+    /// </summary>
+    public class CollisionFilterTest : BaseUtilitiesTest
+    {
+        private List<CCDrawNode> _bullets = new List<CCDrawNode>();
+        private List<CCDrawNode> _enemies = new List<CCDrawNode>();
+        private List<CCDrawNode> _friendlies = new List<CCDrawNode>();
+        private CCDrawNode _overlay;
+        private CCLabelTTF _statusLabel;
+
+        const uint CAT_BULLET = 1 << 0;
+        const uint CAT_ENEMY = 1 << 1;
+        const uint CAT_FRIENDLY = 1 << 2;
+
+        public override string title() { return "Collision Categories"; }
+        public override string subtitle() { return "Bullets hit enemies (green), skip friendlies (gray)"; }
+
+        public override bool Init()
+        {
+            base.Init();
+            CCSize s = CCDirector.SharedDirector.WinSize;
+
+            _overlay = new CCDrawNode();
+            AddChild(_overlay, 20);
+
+            // Bullets: category=BULLET, mask=ENEMY only
+            for (int i = 0; i < 3; i++)
+            {
+                var node = CreateNode(new CCColor4B(255, 255, 0, 200), 12);
+                node.Position = new CCPoint(100 + i * 80, s.Height * 0.5f);
+                node.CollisionCategory = CAT_BULLET;
+                node.CollisionCategoryMask = CAT_ENEMY; // only collide with enemies
+                _bullets.Add(node);
+            }
+
+            // Enemies: category=ENEMY, mask=BULLET
+            for (int i = 0; i < 3; i++)
+            {
+                var node = CreateNode(new CCColor4B(255, 60, 60, 200), 18);
+                node.Position = new CCPoint(200 + i * 100, s.Height * 0.5f);
+                node.CollisionCategory = CAT_ENEMY;
+                node.CollisionCategoryMask = CAT_BULLET;
+                _enemies.Add(node);
+            }
+
+            // Friendlies: category=FRIENDLY, mask=0 (collide with nothing)
+            // Same Y lane as bullets so AABBs can overlap — filtering should prevent hits
+            for (int i = 0; i < 3; i++)
+            {
+                var node = CreateNode(new CCColor4B(60, 60, 255, 200), 18);
+                node.Position = new CCPoint(200 + i * 100, s.Height * 0.5f);
+                node.CollisionCategory = CAT_FRIENDLY;
+                node.CollisionCategoryMask = 0; // collide with nothing
+                _friendlies.Add(node);
+            }
+
+            _statusLabel = new CCLabelTTF("", "arial", 16);
+            _statusLabel.Position = new CCPoint(s.Width / 2, 60);
+            AddChild(_statusLabel, 100);
+
+            Schedule(UpdateTest);
+            return true;
+        }
+
+        private CCDrawNode CreateNode(CCColor4B color, float size)
+        {
+            var node = new CCDrawNode();
+            node.DrawRect(new CCRect(-size, -size, size * 2, size * 2), color);
+            node.ContentSize = new CCSize(size * 2, size * 2);
+            node.AnchorPoint = CCPoint.AnchorMiddle;
+            AddChild(node, 10);
+            return node;
+        }
+
+        private void UpdateTest(float dt)
+        {
+            _overlay.Clear();
+
+            // Move bullets slowly right
+            foreach (var b in _bullets)
+            {
+                var p = b.Position;
+                p.X += 40f * dt;
+                CCSize s = CCDirector.SharedDirector.WinSize;
+                if (p.X > s.Width - 30) p.X = 30;
+                b.Position = p;
+            }
+
+            int hitEnemy = 0;
+            int hitFriendly = 0;
+
+            // Filtered: bullets vs enemies (should collide)
+            CCCollision.CheckGroupCollisionsFiltered(_bullets, _enemies, 0.8f, (a, b) =>
+            {
+                hitEnemy++;
+                _overlay.DrawRect(b.BoundingBox, new CCColor4B(0, 255, 0, 150));
+            });
+
+            // Filtered: bullets vs friendlies (should NOT collide due to mask)
+            CCCollision.CheckGroupCollisionsFiltered(_bullets, _friendlies, 0.8f, (a, b) =>
+            {
+                hitFriendly++;
+                _overlay.DrawRect(b.BoundingBox, new CCColor4B(255, 0, 0, 150));
+            });
+
+            _statusLabel.Text = string.Format("Enemy hits: {0} | Friendly hits: {1} (should be 0)",
+                hitEnemy, hitFriendly);
+        }
+    }
+
+    /// <summary>
+    /// Tests CCEaseMath standalone easing functions visually.
+    /// Dots animate along curves using different easing functions.
+    /// </summary>
+    public class EasingMathTest : BaseUtilitiesTest
+    {
+        private CCDrawNode _drawNode;
+        private float _elapsed;
+
+        private static readonly string[] _names = {
+            "Linear", "QuadIn", "QuadOut", "CubicIn", "CubicOut",
+            "SineIn", "SineOut", "BounceOut", "ElasticOut", "BackOut"
+        };
+
+        public override string title() { return "CCEaseMath"; }
+        public override string subtitle() { return "Standalone easing curves"; }
+
+        public override bool Init()
+        {
+            base.Init();
+
+            CCSize s = CCDirector.SharedDirector.WinSize;
+
+            _drawNode = new CCDrawNode();
+            AddChild(_drawNode, 10);
+
+            // Draw labels
+            for (int i = 0; i < _names.Length; i++)
+            {
+                float y = s.Height - 70 - i * ((s.Height - 120) / _names.Length);
+                var label = new CCLabelTTF(_names[i], "arial", 12);
+                label.Position = new CCPoint(60, y);
+                label.AnchorPoint = new CCPoint(1f, 0.5f);
+                AddChild(label, 100);
+            }
+
+            _elapsed = 0;
+            Schedule(UpdateEasing);
+            return true;
+        }
+
+        private void UpdateEasing(float dt)
+        {
+            _elapsed += dt;
+            float t = (_elapsed % 2f) / 2f; // 0→1 over 2 seconds
+
+            CCSize s = CCDirector.SharedDirector.WinSize;
+            _drawNode.Clear();
+
+            float startX = 80;
+            float endX = s.Width - 40;
+            float range = endX - startX;
+
+            for (int i = 0; i < _names.Length; i++)
+            {
+                float y = s.Height - 70 - i * ((s.Height - 120) / _names.Length);
+                float eased = ApplyEasing(i, t);
+
+                // Draw track line
+                _drawNode.DrawSegment(new CCPoint(startX, y), new CCPoint(endX, y), 1f,
+                    new CCColor4F(0.3f, 0.3f, 0.3f, 0.5f));
+
+                // Draw dot at eased position
+                float x = startX + eased * range;
+                _drawNode.DrawFilledCircle(new CCPoint(x, y), 6f,
+                    new CCColor4F(1f, 0.8f, 0f, 1f));
+            }
+        }
+
+        private float ApplyEasing(int index, float t)
+        {
+            switch (index)
+            {
+                case 0: return CCEaseMath.Linear(t);
+                case 1: return CCEaseMath.QuadIn(t);
+                case 2: return CCEaseMath.QuadOut(t);
+                case 3: return CCEaseMath.CubicIn(t);
+                case 4: return CCEaseMath.CubicOut(t);
+                case 5: return CCEaseMath.SineIn(t);
+                case 6: return CCEaseMath.SineOut(t);
+                case 7: return CCEaseMath.BounceOut(t);
+                case 8: return CCEaseMath.ElasticOut(t);
+                case 9: return CCEaseMath.BackOut(t);
+                default: return t;
+            }
+        }
+    }
 }

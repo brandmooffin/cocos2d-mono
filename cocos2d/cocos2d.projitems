@@ -266,6 +266,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)menu_nodes\CCMenuItemToggle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)misc_nodes\CCClippingNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)misc_nodes\CCDrawNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)misc_nodes\CCDrawNodeRetained.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)misc_nodes\CCLightning.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)misc_nodes\CCLightningStreak.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)misc_nodes\CCMotionStreak.cs" />
