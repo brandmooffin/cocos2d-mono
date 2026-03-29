@@ -191,6 +191,13 @@ namespace Cocos2D
         /// </summary>
         public CCShapeHandle AddSegment(CCPoint from, CCPoint to, float radius, CCColor4F color)
         {
+            // Guard against zero-length segments which would produce NaN from Normalize
+            var delta = from - to;
+            if (delta.X * delta.X + delta.Y * delta.Y <= 1e-6f)
+            {
+                return AddDot(from, radius, color);
+            }
+
             int start = m_vertices.Count;
             var cl = new Color(color.R, color.G, color.B, color.A);
 

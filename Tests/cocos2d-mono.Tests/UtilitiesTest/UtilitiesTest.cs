@@ -390,17 +390,18 @@ namespace tests
             for (int i = 0; i < 3; i++)
             {
                 var node = CreateNode(new CCColor4B(255, 60, 60, 200), 18);
-                node.Position = new CCPoint(200 + i * 100, s.Height * 0.65f);
+                node.Position = new CCPoint(200 + i * 100, s.Height * 0.5f);
                 node.CollisionCategory = CAT_ENEMY;
                 node.CollisionCategoryMask = CAT_BULLET;
                 _enemies.Add(node);
             }
 
             // Friendlies: category=FRIENDLY, mask=0 (collide with nothing)
+            // Same Y lane as bullets so AABBs can overlap — filtering should prevent hits
             for (int i = 0; i < 3; i++)
             {
                 var node = CreateNode(new CCColor4B(60, 60, 255, 200), 18);
-                node.Position = new CCPoint(200 + i * 100, s.Height * 0.35f);
+                node.Position = new CCPoint(200 + i * 100, s.Height * 0.5f);
                 node.CollisionCategory = CAT_FRIENDLY;
                 node.CollisionCategoryMask = 0; // collide with nothing
                 _friendlies.Add(node);
