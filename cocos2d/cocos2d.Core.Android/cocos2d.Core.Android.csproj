@@ -21,7 +21,7 @@
     <Version>2.5.9</Version>
     <Title>Cocos2D-Mono for Core Android</Title>
     <Description>Cocos2D-Mono for Core Android</Description>
-    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Copyright>Copyright © 2026 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageProjectUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</RepositoryUrl>
     <PackageTags>mono monogame cocos2d game</PackageTags>

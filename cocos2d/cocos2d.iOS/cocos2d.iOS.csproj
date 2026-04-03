@@ -22,7 +22,7 @@
     <Version>2.5.9</Version>
     <Description>Cocos2D-Mono for iOS</Description>
     <Title>Cocos2D-Mono for iOS</Title>
-    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Copyright>Copyright © 2026 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageTags>mono monogame cocos2d game</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

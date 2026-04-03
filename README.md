@@ -1,6 +1,6 @@
 <div align="center">
 
-![Cocos2D-Mono](https://raw.githubusercontent.com/brandmooffin/cocos2d-mono/master/Logos/logo-full-200.png)
+![Cocos2D-Mono](https://raw.githubusercontent.com/Cocos2D-Mono/cocos2d-mono/master/Logos/logo-full-200.png)
 
 ### MonoGame powered built the cocos2d way!
 

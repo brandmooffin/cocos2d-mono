@@ -22,7 +22,7 @@
 - Added CCCollision category/mask filtering with CollisionCategory and CollisionCategoryMask on CCNode
 - Added CCEaseMath standalone easing utilities (Quad, Cubic, Lerp, ExpSmooth)
     </releaseNotes>
-    <copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
+    <copyright>Copyright © 2026 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
     <dependencies>
       <dependency id="MonoGame.Framework.DesktopGL" version="3.8.4.1" />
