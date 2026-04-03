@@ -2,33 +2,25 @@
 <package >
   <metadata>
     <id>Cocos2D-Mono.macOS</id>
-    <version>2.5.8</version>
+    <version>2.5.9</version>
     <icon>images\logo-small.png</icon>
     <readme>docs\README.md</readme>
     <title>Cocos2D-Mono for macOS</title>
     <authors>Cocos2D-Mono Team, Broken Walls Studios</authors>
     <owners>Cocos2D-Mono Team, Broken Walls Studios</owners>
     <license type="expression">AGPL-3.0-only</license>
-    <projectUrl>https://github.com/brandmooffin/cocos2d-mono</projectUrl>
+    <projectUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</projectUrl>
     <iconUrl>https://pbs.twimg.com/profile_images/1112234186457473024/G7S7ARjA_400x400.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Cocos2D-Mono for macOS</description>
-    <repository url="https://github.com/brandmooffin/cocos2d-mono" />
+    <repository url="https://github.com/Cocos2D-Mono/cocos2d-mono" />
     <releaseNotes>
-- Added CCCamera2D with scroll, zoom, follow, screen shake, and viewport culling
-- Added CCObjectPool generic object pooling with ICCPoolable lifecycle
-- Added CCCollision static utility for AABB overlap and group collision checks
-- Added CCParticleEmitterLight struct-based zero-GC particle emitter
-- Added CCCooldownTimer value-type timer struct
-- Added CCLayerMultiGradient multi-stop gradient layer
-- Added DrawFilledCircle, DrawTriangle, and DrawRectOutline to CCDrawNode
-- Added per-effect volume, throttled playback, and background music fade to audio engine
-- Added CCTexture2D.DefaultAntialiased and CCDrawManager.DefaultSamplerState for global pixel-perfect rendering
-- Added CCDrawManager.ConvertScreenToGameCoords for screen-to-game coordinate conversion
-- Fixed CCLabelTTF IsAntialiased reset on text changes
-- Fixed CCDrawNode DrawDot rendering as squares at large radii
-- Fixed CCDrawNode DrawCircle compositing artifacts
-- Fixed Accelerometer crash on iOS simulator by guarding against unsupported hardware and falling back to emulation mode
+- Added CCDrawNodeRetained for retained-mode drawing with shape handles (move, recolor, remove without Clear)
+- Added CCPixelLabel optimized for frequent text updates with pre-cached character textures
+- Added CCSoundHandle for per-instance audio control (volume, pan, pitch, stop, pause)
+- Added CCFontManager for easy switching between content pipeline and direct TTF font loading
+- Added CCCollision category/mask filtering with CollisionCategory and CollisionCategoryMask on CCNode
+- Added CCEaseMath standalone easing utilities (Quad, Cubic, Lerp, ExpSmooth)
     </releaseNotes>
     <copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</copyright>
     <tags>mono monogame cocos2d game</tags>
