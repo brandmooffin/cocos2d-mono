@@ -6,7 +6,7 @@ namespace tests
     public class AtlasTestScene : TestScene
     {
         static int sceneIdx = -1;
-        static readonly int MAX_LAYER = 33;
+        static readonly int MAX_LAYER = 34;
 
         protected override void NextTestCase()
         {
@@ -87,6 +87,7 @@ namespace tests
                 case 30: return (new ScrollViewLabelTest());
                 case 31: return new SystemLabelTest();
                 case 32: return new LabelTTFAntialiasedTest();
+                case 33: return new PixelLabelTest();
                 default:
                     break;
             }

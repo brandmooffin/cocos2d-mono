@@ -42,7 +42,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <PackageId>Cocos2D-Mono Tests for Core Linux</PackageId>
-    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Copyright>Copyright © 2026 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Version>2.3.10.0</Version>
     <Product>cocos2d-mono.Tests.Core.Linux</Product>
     <Company>Broken Walls Studios</Company>
