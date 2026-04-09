@@ -117,7 +117,6 @@ namespace Cocos2D
         // Split-screen support - render two scenes side by side
         CCScene _splitScreenScene;
         CCScene _nextSplitScreenScene;
-        CCDrawManagerState _splitScreenState;
         bool _splitScreenEnabled;
 
         #region Properties
@@ -799,6 +798,9 @@ namespace Cocos2D
 
             if (_resolutionPolicy != CCViewResolutionPolicy.Custom)
             {
+                if (_designResolution.Width <= 0 || _designResolution.Height <= 0)
+                    return;
+
                 float resolutionScaleX = width / _designResolution.Width;
                 float resolutionScaleY = height / _designResolution.Height;
 

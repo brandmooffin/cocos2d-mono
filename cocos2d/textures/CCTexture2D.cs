@@ -71,12 +71,18 @@ namespace Cocos2D
         private bool m_bManaged;
         private bool m_bAntialiased;
 
+        /// <summary>
+        /// Default antialiased state for newly created textures. Set to false for pixel-perfect rendering.
+        /// Default is true (bilinear filtering).
+        /// </summary>
+        public static bool DefaultAntialiased { get; set; } = true;
+
         public Action OnReInit;
 
         public CCTexture2D()
         {
-            m_samplerState = SamplerState.LinearClamp;
-            IsAntialiased = true;  // We will set this to true by default
+            m_samplerState = DefaultAntialiased ? SamplerState.LinearClamp : SamplerState.PointClamp;
+            IsAntialiased = DefaultAntialiased;
 
             RefreshAntialiasSetting ();
         }

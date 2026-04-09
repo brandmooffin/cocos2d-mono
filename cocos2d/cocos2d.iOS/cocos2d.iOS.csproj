@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <TargetFramework>net10.0-ios26.0</TargetFramework>
     <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
@@ -13,13 +13,13 @@
 - Upgrade to .NET 10
 - Small fixes and improvements
 	</PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</PackageProjectUrl>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
     <Version>2.6.0-preview.4</Version>
     <Description>Cocos2D-Mono for iOS</Description>
     <Title>Cocos2D-Mono for iOS</Title>
-    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Copyright>Copyright © 2026 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <PackageTags>mono monogame cocos2d game</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

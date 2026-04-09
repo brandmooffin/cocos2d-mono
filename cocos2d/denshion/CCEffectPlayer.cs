@@ -88,6 +88,48 @@ namespace CocosDenshion
             Play(false);
         }
 
+        /// <summary>
+        /// Plays the sound effect with per-instance volume control.
+        /// </summary>
+        /// <param name="bLoop">Whether to loop the sound.</param>
+        /// <param name="volume">Volume from 0.0 to 1.0.</param>
+        public void Play(bool bLoop, float volume)
+        {
+            if (null == m_effect)
+            {
+                return;
+            }
+
+            // For non-looping sounds without instance control, use the lightweight static Play
+            if (!bLoop)
+            {
+                m_effect.Play(Math.Max(0f, Math.Min(1f, volume)), 0f, 0f);
+                return;
+            }
+
+            // Dispose previous instance to prevent resource leaks
+            if (_sfxInstance != null && !_sfxInstance.IsDisposed)
+            {
+                _sfxInstance.Stop();
+                _sfxInstance.Dispose();
+            }
+
+            _sfxInstance = m_effect.CreateInstance();
+            _sfxInstance.IsLooped = bLoop;
+            _sfxInstance.Volume = Math.Max(0f, Math.Min(1f, volume));
+            _sfxInstance.Play();
+        }
+
+        /// <summary>
+        /// Creates a new SoundEffectInstance for this effect.
+        /// Returns null if no effect is loaded.
+        /// </summary>
+        internal SoundEffectInstance CreateInstance()
+        {
+            if (m_effect == null) return null;
+            return m_effect.CreateInstance();
+        }
+
         public void Close()
         {
             Stop();

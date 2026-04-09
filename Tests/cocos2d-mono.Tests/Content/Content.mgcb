@@ -431,7 +431,7 @@
 /processorParam:TextureFormat=Color
 /build:ccb/logo-icon.png
 
-#begin ccb/markerfelt24shadow.png
+#begin ccb/arial16.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -441,7 +441,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:ccb/markerfelt24shadow.png
+/build:ccb/arial16.png
 
 #begin ccb/particle-fire.png
 /importer:TextureImporter
@@ -1155,16 +1155,16 @@
 /processorParam:TextureFormat=Color
 /build:fonts/larabie-16.png
 
-#begin fonts/Marker Felt.ttf
-/copy:fonts/Marker Felt.ttf
+#begin fonts/arial.ttf
+/copy:fonts/arial.ttf
 
-#begin fonts/MarkerFelt Thin Plain.ttf
-/copy:fonts/MarkerFelt Thin Plain.ttf
+#begin fonts/arial.ttf
+/copy:fonts/arial.ttf
 
-#begin fonts/markerFelt.fnt
-/copy:fonts/markerFelt.fnt
+#begin fonts/arial16.fnt
+/copy:fonts/arial16.fnt
 
-#begin fonts/markerFelt.png
+#begin fonts/arial16.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1174,42 +1174,42 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:fonts/markerFelt.png
+/build:fonts/arial16.png
 
-#begin fonts/MarkerFelt-16.spritefont
+#begin fonts/arial-16.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:fonts/MarkerFelt-16.spritefont
+/build:fonts/arial-16.spritefont
 
-#begin fonts/MarkerFelt-18.spritefont
+#begin fonts/arial-18.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:fonts/MarkerFelt-18.spritefont
+/build:fonts/arial-18.spritefont
 
-#begin fonts/MarkerFelt-22.spritefont
+#begin fonts/arial-22.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:fonts/MarkerFelt-22.spritefont
+/build:fonts/arial-22.spritefont
 
-#begin fonts/MarkerFelt-Thin-12.spritefont
+#begin fonts/arial-12.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:fonts/MarkerFelt-Thin-12.spritefont
+/build:fonts/arial-12.spritefont
 
-#begin fonts/MarkerFelt-Thin-18.spritefont
+#begin fonts/arial-18.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:fonts/MarkerFelt-Thin-18.spritefont
+/build:fonts/arial-18.spritefont
 
 #begin fonts/Paint Boy.ttf
 /copy:fonts/Paint Boy.ttf
@@ -1561,10 +1561,10 @@
 /processorParam:TextureFormat=Color
 /build:hd/fonts/larabie-16.png
 
-#begin hd/fonts/markerFelt.fnt
-/copy:hd/fonts/markerFelt.fnt
+#begin hd/fonts/arial16.fnt
+/copy:hd/fonts/arial16.fnt
 
-#begin hd/fonts/markerFelt.png
+#begin hd/fonts/arial16.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1574,7 +1574,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:hd/fonts/markerFelt.png
+/build:hd/fonts/arial16.png
 
 #begin hd/fonts/tuffy_bold_italic-charmap.plist
 /copy:hd/fonts/tuffy_bold_italic-charmap.plist

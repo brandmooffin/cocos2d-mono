@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -16,7 +16,7 @@
     <PackageId>Cocos2D-Mono.Windows</PackageId>
     <Version>2.6.0-preview.4</Version>
     <Description>Cocos2D-Mono for Windows (DX)</Description>
-    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <Copyright>Copyright © 2026 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
     <Authors>Broken Walls Studios; Cocos2d-Mono Team</Authors>
     <Company>Broken Walls Studios</Company>
     <Product>cocos2d-mono for Windows</Product>
@@ -28,8 +28,8 @@
 - Upgrade to .NET 10
 - Small fixes and improvements
 	</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</RepositoryUrl>
     <PackageIcon>logo-small.png</PackageIcon>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Title>Cocos2D-Mono.Windows</Title>

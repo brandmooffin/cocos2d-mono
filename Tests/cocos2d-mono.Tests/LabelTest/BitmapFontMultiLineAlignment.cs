@@ -41,7 +41,7 @@ namespace tests
             CCSize size = CCDirector.SharedDirector.WinSize;
 
             // create and initialize a Label
-            m_pLabelShouldRetain = new CCLabelBMFont(LongSentencesExample, "fonts/markerFelt.fnt", size.Width / 1.5f,
+            m_pLabelShouldRetain = new CCLabelBMFont(LongSentencesExample, "fonts/arial16.fnt", size.Width / 1.5f,
                                                         CCTextAlignment.Center);
 
             m_pArrowsBarShouldRetain = new CCSprite("Images/arrowsBar");

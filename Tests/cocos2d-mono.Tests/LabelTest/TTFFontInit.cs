@@ -10,7 +10,7 @@ namespace tests
 
             var font = new CCLabelTTF();
             font.Init();
-            font.FontName = "Marker Felt";
+            font.FontName = "arial";
             font.FontSize = 38;
             font.Text = ("It is working!");
             AddChild(font);

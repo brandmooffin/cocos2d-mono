@@ -618,7 +618,7 @@ namespace tests
             box.IgnoreAnchorPointForPosition = false;
             box.Position = new CCPoint(s.Width / 2, s.Height - 100 - box.ContentSize.Height / 2);
             this.AddChild(box);
-            CCLabelTTF label = new CCLabelTTF("Standard cocos2d Skew", "Marker Felt", 16);
+            CCLabelTTF label = new CCLabelTTF("Standard cocos2d Skew", "arial", 16);
             label.Position = new CCPoint(s.Width / 2, s.Height - 100 + label.ContentSize.Height);
             this.AddChild(label);
             CCSkewBy actionTo = new CCSkewBy(2, 360, 0);
@@ -632,7 +632,7 @@ namespace tests
             box.IgnoreAnchorPointForPosition = false;
             box.Position = new CCPoint(s.Width / 2, s.Height - 250 - box.ContentSize.Height / 2);
             this.AddChild(box);
-            label = new CCLabelTTF("Rotational Skew", "Marker Felt", 16);
+            label = new CCLabelTTF("Rotational Skew", "arial", 16);
             label.Position = new CCPoint(s.Width / 2, s.Height - 250 + label.ContentSize.Height / 2);
             this.AddChild(label);
             CCRotateBy actionTo2 = new CCRotateBy(2, 360, 0);

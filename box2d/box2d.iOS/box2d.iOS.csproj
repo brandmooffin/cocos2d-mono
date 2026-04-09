@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <TargetFramework>net10.0-ios</TargetFramework>
     <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
@@ -11,9 +11,9 @@
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
     <Version>2.6.0-preview.4</Version>
     <Description>box2d for iOS</Description>
-    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
-    <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
+    <Copyright>Copyright © 2026 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <PackageProjectUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</RepositoryUrl>
     <PackageReleaseNotes>
 - Updated to support MonoGame 3.8.5 prerelease (3.8.5-preview.2)
 - Upgrade to .NET 10

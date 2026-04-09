@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <RootNamespace>cocos2d_mono.Core.Android</RootNamespace>
@@ -18,9 +18,9 @@
     <Version>2.6.0-preview.4</Version>
     <Title>Cocos2D-Mono for Core Android</Title>
     <Description>Cocos2D-Mono for Core Android</Description>
-    <Copyright>Copyright © 2025 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
-    <PackageProjectUrl>https://github.com/brandmooffin/cocos2d-mono</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/brandmooffin/cocos2d-mono</RepositoryUrl>
+    <Copyright>Copyright © 2026 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <PackageProjectUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</RepositoryUrl>
     <PackageTags>mono monogame cocos2d game</PackageTags>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>

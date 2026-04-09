@@ -1448,7 +1448,7 @@ namespace tests
 
             CCSize size = CCDirector.SharedDirector.WinSize;
 
-            CCLabelTTF label = new CCLabelTTF("Loading...", "Marker Felt", 32);
+            CCLabelTTF label = new CCLabelTTF("Loading...", "arial", 32);
             label.Position = size.Center;
             AddChild(label, 10);
 
@@ -1527,7 +1527,7 @@ namespace tests
 
             CCSize size = CCDirector.SharedDirector.WinSize;
 
-            CCLabelTTF label = new CCLabelTTF("Loading...", "Marker Felt", 32);
+            CCLabelTTF label = new CCLabelTTF("Loading...", "arial", 32);
             label.Position = size.Center;
             AddChild(label, 10);
 
