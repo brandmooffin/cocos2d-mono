@@ -309,20 +309,12 @@ namespace Cocos2D
         }
 
         /// <summary>
-        /// Clears all static font caches and disposes cached textures.
-        /// Call this when changing scenes or when you need to free memory
-        /// from fonts that are no longer used.
+        /// Clears all static font caches. Cached textures are released for GC
+        /// once no live labels reference them. Call this when changing scenes
+        /// or when you need to free memory from fonts that are no longer used.
         /// </summary>
         public static void PurgeCachedData()
         {
-            foreach (var fontEntry in s_fontCache.Values)
-            {
-                foreach (var texture in fontEntry.Values)
-                {
-                    texture.Dispose();
-                }
-            }
-
             s_fontCache.Clear();
             s_widthCache.Clear();
             s_heightCache.Clear();
