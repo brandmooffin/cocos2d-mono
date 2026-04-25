@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
@@ -86,7 +87,7 @@ namespace Cocos2D
             {
                 return fontName;
             }
-            return String.Format("{0}-{1}", fontName, fontSize);
+            return fontName + "-" + fontSize.ToString("R", CultureInfo.InvariantCulture);
         }
 
         public SpriteFont GetFont(string fontName)
