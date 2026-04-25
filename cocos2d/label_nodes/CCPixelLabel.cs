@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Cocos2D
 {
@@ -129,7 +130,7 @@ namespace Cocos2D
                 if (m_antialiased == value) return;
 
                 m_antialiased = value;
-                m_cacheKey = m_fontName + "_" + m_fontSize + (value ? "_aa" : "_px");
+                m_cacheKey = BuildCacheKey(m_fontName, m_fontSize, value);
 
                 // Switch to a separate texture cache for this filtering mode
                 // so shared textures are not mutated across labels
@@ -187,7 +188,7 @@ namespace Cocos2D
             m_alignment = alignment;
             m_antialiased = antialiased;
             m_maxChars = maxChars;
-            m_cacheKey = fontName + "_" + fontSize + (antialiased ? "_aa" : "_px");
+            m_cacheKey = BuildCacheKey(fontName, fontSize, antialiased);
 
             Dictionary<char, CCTexture2D> textures;
             if (!s_fontCache.TryGetValue(m_cacheKey, out textures))
@@ -318,6 +319,12 @@ namespace Cocos2D
             s_fontCache.Clear();
             s_widthCache.Clear();
             s_heightCache.Clear();
+        }
+
+        private static string BuildCacheKey(string fontName, float fontSize, bool antialiased)
+        {
+            return fontName + "_" + fontSize.ToString("R", CultureInfo.InvariantCulture)
+                + (antialiased ? "_aa" : "_px");
         }
 
         private void AllocateGlyphs(int count)
