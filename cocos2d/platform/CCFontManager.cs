@@ -28,6 +28,11 @@ namespace Cocos2D
     {
         private static readonly HashSet<string> s_registeredTTFPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+        private static readonly StringComparison s_pathComparison =
+            Environment.OSVersion.Platform == PlatformID.Win32NT
+                ? StringComparison.OrdinalIgnoreCase
+                : StringComparison.Ordinal;
+
         /// <summary>
         /// Registers a TTF font file path for use with CCLabel.
         /// The path must be relative to the content root (e.g. "fonts/myfont.ttf").
@@ -114,7 +119,7 @@ namespace Cocos2D
                     string fullPath = Path.GetFullPath(Path.Combine(contentRoot, relativePath));
 
                     // Verify resolved path stays within the content root
-                    if (fullPath.StartsWith(contentRoot, StringComparison.OrdinalIgnoreCase))
+                    if (fullPath.StartsWith(contentRoot, s_pathComparison))
                     {
                         return fullPath;
                     }
