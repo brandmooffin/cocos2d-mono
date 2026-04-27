@@ -39,21 +39,29 @@ namespace Cocos2D
             var ext = System.IO.Path.GetExtension(fontName);
             if (!String.IsNullOrEmpty(ext) && ext.ToLower() == ".ttf")
             {
-                // Get content root directory from CCApplication or CCContentManager (for CCGameView)
-                string contentRoot = CCApplication.SharedApplication != null
-                    ? CCApplication.SharedApplication.Game.Content.RootDirectory
-                    : (CCContentManager.SharedContentManager != null ? CCContentManager.SharedContentManager.RootDirectory : "Content");
-                var path = System.IO.Path.Combine(contentRoot, fontName);
-                var activity = Game.Activity;
-
-                try
+                if (System.IO.Path.IsPathRooted(fontName) || fontName.Contains(".."))
                 {
-                    var typeface = Typeface.CreateFromAsset(activity.Assets, path);
-                    _paint.SetTypeface(typeface);
-                }
-                catch (Exception)
-                {
+                    CCLog.Log("CCLabel-Android: Rejected font path '{0}' — must be relative with no '..' traversal", fontName);
                     _paint.SetTypeface(Typeface.Create(fontName, TypefaceStyle.Normal));
+                }
+                else
+                {
+                    // Get content root directory from CCApplication or CCContentManager (for CCGameView)
+                    string contentRoot = CCApplication.SharedApplication != null
+                        ? CCApplication.SharedApplication.Game.Content.RootDirectory
+                        : (CCContentManager.SharedContentManager != null ? CCContentManager.SharedContentManager.RootDirectory : "Content");
+                    var path = System.IO.Path.Combine(contentRoot, fontName);
+                    var activity = Game.Activity;
+
+                    try
+                    {
+                        var typeface = Typeface.CreateFromAsset(activity.Assets, path);
+                        _paint.SetTypeface(typeface);
+                    }
+                    catch (Exception)
+                    {
+                        _paint.SetTypeface(Typeface.Create(fontName, TypefaceStyle.Normal));
+                    }
                 }
             }
             else
