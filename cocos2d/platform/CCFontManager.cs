@@ -109,6 +109,8 @@ namespace Cocos2D
                 {
                     string appPath = AppDomain.CurrentDomain.BaseDirectory;
                     string contentRoot = Path.GetFullPath(Path.Combine(appPath, rootDir));
+                    if (!contentRoot.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                        contentRoot += Path.DirectorySeparatorChar;
                     string fullPath = Path.GetFullPath(Path.Combine(contentRoot, relativePath));
 
                     // Verify resolved path stays within the content root
