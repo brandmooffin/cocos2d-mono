@@ -293,12 +293,12 @@ namespace Cocos2D
             CCSerialization.SerializeData(m_bReorderChildDirty, sw);
             CCSerialization.SerializeData(m_uOrderOfArrival, sw);
             CCSerialization.SerializeData(m_nTag, sw);
-            CCSerialization.SerializeData(unchecked((int)m_collisionCategory), sw);
-            CCSerialization.SerializeData(unchecked((int)m_collisionCategoryMask), sw);
             CCSerialization.SerializeData(m_nZOrder, sw);
             CCSerialization.SerializeData(m_obAnchorPoint, sw);
             CCSerialization.SerializeData(m_obContentSize, sw);
             CCSerialization.SerializeData(Position, sw);
+            CCSerialization.SerializeData(unchecked((int)m_collisionCategory), sw);
+            CCSerialization.SerializeData(unchecked((int)m_collisionCategoryMask), sw);
             if (m_pChildren != null)
             {
                 CCSerialization.SerializeData(m_pChildren.Count, sw);
@@ -338,18 +338,24 @@ namespace Cocos2D
             m_bReorderChildDirty = CCSerialization.DeSerializeBool(sr);
             m_uOrderOfArrival = (uint)CCSerialization.DeSerializeInt(sr);
             m_nTag = CCSerialization.DeSerializeInt(sr);
-            m_collisionCategory = unchecked((uint)CCSerialization.DeSerializeInt(sr));
-            m_collisionCategoryMask = unchecked((uint)CCSerialization.DeSerializeInt(sr));
             m_nZOrder = CCSerialization.DeSerializeInt(sr);
             AnchorPoint = CCSerialization.DeSerializePoint(sr);
             ContentSize = CCSerialization.DeSerializeSize(sr);
             Position = CCSerialization.DeSerializePoint(sr);
+            // Collision fields appended after the original field set; older saves
+            // omit them and fall back to the all-categories default.
+            m_collisionCategory = sr.EndOfStream
+                ? uint.MaxValue
+                : unchecked((uint)CCSerialization.DeSerializeInt(sr));
+            m_collisionCategoryMask = sr.EndOfStream
+                ? uint.MaxValue
+                : unchecked((uint)CCSerialization.DeSerializeInt(sr));
             // m_UserData is handled by the specialized class.
             // TODO: Serializze the action manager
             // TODO :Serialize the grid
             // TODO: Serialize the camera
             string s;
-            int count = CCSerialization.DeSerializeInt(sr);
+            int count = sr.EndOfStream ? 0 : CCSerialization.DeSerializeInt(sr);
             for (int i = 0; i < count; i++)
             {
                 s = sr.ReadLine();
