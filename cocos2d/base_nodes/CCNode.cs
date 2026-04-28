@@ -293,8 +293,6 @@ namespace Cocos2D
             CCSerialization.SerializeData(m_bReorderChildDirty, sw);
             CCSerialization.SerializeData(m_uOrderOfArrival, sw);
             CCSerialization.SerializeData(m_nTag, sw);
-            CCSerialization.SerializeData(unchecked((int)m_collisionCategory), sw);
-            CCSerialization.SerializeData(unchecked((int)m_collisionCategoryMask), sw);
             CCSerialization.SerializeData(m_nZOrder, sw);
             CCSerialization.SerializeData(m_obAnchorPoint, sw);
             CCSerialization.SerializeData(m_obContentSize, sw);
@@ -315,6 +313,10 @@ namespace Cocos2D
             {
                 CCSerialization.SerializeData(0, sw); // No children
             }
+            // Appended after the children block so older saves (which end with
+            // children) still deserialize cleanly via the EndOfStream guard.
+            CCSerialization.SerializeData(unchecked((int)m_collisionCategory), sw);
+            CCSerialization.SerializeData(unchecked((int)m_collisionCategoryMask), sw);
         }
 
         /// <summary>
@@ -338,8 +340,6 @@ namespace Cocos2D
             m_bReorderChildDirty = CCSerialization.DeSerializeBool(sr);
             m_uOrderOfArrival = (uint)CCSerialization.DeSerializeInt(sr);
             m_nTag = CCSerialization.DeSerializeInt(sr);
-            m_collisionCategory = unchecked((uint)CCSerialization.DeSerializeInt(sr));
-            m_collisionCategoryMask = unchecked((uint)CCSerialization.DeSerializeInt(sr));
             m_nZOrder = CCSerialization.DeSerializeInt(sr);
             AnchorPoint = CCSerialization.DeSerializePoint(sr);
             ContentSize = CCSerialization.DeSerializeSize(sr);
@@ -357,7 +357,15 @@ namespace Cocos2D
                 CCNode scene = Activator.CreateInstance(screenType) as CCNode;
                 AddChild(scene);
                 scene.Deserialize(stream);
-        }
+            }
+            // Collision fields appended after the children block; older saves
+            // end here and fall back to the all-categories default.
+            m_collisionCategory = sr.EndOfStream
+                ? uint.MaxValue
+                : unchecked((uint)CCSerialization.DeSerializeInt(sr));
+            m_collisionCategoryMask = sr.EndOfStream
+                ? uint.MaxValue
+                : unchecked((uint)CCSerialization.DeSerializeInt(sr));
         }
 
 
