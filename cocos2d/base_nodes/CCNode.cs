@@ -297,8 +297,6 @@ namespace Cocos2D
             CCSerialization.SerializeData(m_obAnchorPoint, sw);
             CCSerialization.SerializeData(m_obContentSize, sw);
             CCSerialization.SerializeData(Position, sw);
-            CCSerialization.SerializeData(unchecked((int)m_collisionCategory), sw);
-            CCSerialization.SerializeData(unchecked((int)m_collisionCategoryMask), sw);
             if (m_pChildren != null)
             {
                 CCSerialization.SerializeData(m_pChildren.Count, sw);
@@ -315,6 +313,10 @@ namespace Cocos2D
             {
                 CCSerialization.SerializeData(0, sw); // No children
             }
+            // Appended after the children block so older saves (which end with
+            // children) still deserialize cleanly via the EndOfStream guard.
+            CCSerialization.SerializeData(unchecked((int)m_collisionCategory), sw);
+            CCSerialization.SerializeData(unchecked((int)m_collisionCategoryMask), sw);
         }
 
         /// <summary>
@@ -342,20 +344,12 @@ namespace Cocos2D
             AnchorPoint = CCSerialization.DeSerializePoint(sr);
             ContentSize = CCSerialization.DeSerializeSize(sr);
             Position = CCSerialization.DeSerializePoint(sr);
-            // Collision fields appended after the original field set; older saves
-            // omit them and fall back to the all-categories default.
-            m_collisionCategory = sr.EndOfStream
-                ? uint.MaxValue
-                : unchecked((uint)CCSerialization.DeSerializeInt(sr));
-            m_collisionCategoryMask = sr.EndOfStream
-                ? uint.MaxValue
-                : unchecked((uint)CCSerialization.DeSerializeInt(sr));
             // m_UserData is handled by the specialized class.
             // TODO: Serializze the action manager
             // TODO :Serialize the grid
             // TODO: Serialize the camera
             string s;
-            int count = sr.EndOfStream ? 0 : CCSerialization.DeSerializeInt(sr);
+            int count = CCSerialization.DeSerializeInt(sr);
             for (int i = 0; i < count; i++)
             {
                 s = sr.ReadLine();
@@ -363,7 +357,15 @@ namespace Cocos2D
                 CCNode scene = Activator.CreateInstance(screenType) as CCNode;
                 AddChild(scene);
                 scene.Deserialize(stream);
-        }
+            }
+            // Collision fields appended after the children block; older saves
+            // end here and fall back to the all-categories default.
+            m_collisionCategory = sr.EndOfStream
+                ? uint.MaxValue
+                : unchecked((uint)CCSerialization.DeSerializeInt(sr));
+            m_collisionCategoryMask = sr.EndOfStream
+                ? uint.MaxValue
+                : unchecked((uint)CCSerialization.DeSerializeInt(sr));
         }
 
 
