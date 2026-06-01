@@ -1,0 +1,99 @@
+name: build (matrix)
+
+# Phase 1 matrix workflow. Replaces 12 platform-specific workflows once the
+# legacy csprojs are deleted in Phase 1c. During the transition it runs ALONGSIDE
+# the legacy *_build.yml files so we can compare results before deleting them.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.tfm }} (${{ matrix.configuration }}) on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, Release]
+        include:
+          # DesktopGL (Linux host covers Linux + macOS targets and validates
+          # net9.0 cross-platform code at minimum cost).
+          - os: ubuntu-latest
+            tfm: net9.0
+            workloads: ""
+
+          # WindowsDX requires net9.0-windows7.0 which only restores on Windows.
+          - os: windows-latest
+            tfm: net9.0-windows7.0
+            workloads: ""
+
+          # Android workload is available on Linux runners and is cheaper than Windows.
+          - os: ubuntu-latest
+            tfm: net9.0-android35.0
+            workloads: "android"
+
+          # iOS requires macOS host (Apple toolchain).
+          - os: macos-latest
+            tfm: net9.0-ios18.0
+            workloads: "ios"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Setup Java (Android only)
+        if: matrix.tfm == 'net9.0-android35.0'
+        uses: actions/setup-java@v4
+        with:
+          distribution: microsoft
+          java-version: "17"
+
+      - name: Install .NET workloads
+        if: matrix.workloads != ''
+        run: dotnet workload install ${{ matrix.workloads }} --ignore-failed-sources
+
+      - name: Restore (Cocos2DMono.sln)
+        run: dotnet restore Cocos2DMono.sln
+
+      - name: Build Box2D
+        run: dotnet build src/Box2D/Box2D.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} --no-restore
+
+      - name: Build Cocos2DMono
+        run: dotnet build src/Cocos2DMono/Cocos2DMono.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} --no-restore
+
+  pack:
+    name: Pack NuGet (preview)
+    needs: build
+    runs-on: windows-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || startsWith(github.ref, 'refs/heads/modernization/'))
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - name: Install mobile workloads
+        run: dotnet workload install android ios --ignore-failed-sources
+      - name: Restore
+        run: dotnet restore Cocos2DMono.sln
+      - name: Pack Box2D
+        run: dotnet pack src/Box2D/Box2D.csproj -c Release --no-restore -o artifacts
+      - name: Pack Cocos2DMono
+        run: dotnet pack src/Cocos2DMono/Cocos2DMono.csproj -c Release --no-restore -o artifacts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: artifacts/*.nupkg

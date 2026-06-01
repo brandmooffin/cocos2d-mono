@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Central Package Management for the modernized cocos2d-mono build (Phase 1).
+
+  Scoped to src/ deliberately so the legacy csprojs under cocos2d/, box2d/, and
+  Tests/ (which still set per-PackageReference Version="…") are unaffected
+  during the side-by-side transition. After the legacy csprojs are deleted in
+  Phase 1c this file will be promoted to the repository root.
+
+  Versions: highest stable seen across the 30 legacy csprojs.
+    System.Drawing.Common  →  8.0.11  (was inconsistent 5.0.3 / 8.0.8 / 8.0.11)
+    SharpZipLib            →  1.4.2   (was inconsistent 1.3.3 / 1.4.2)
+    MonoGame.*             →  $(MonoGameVersion) — pinned in Directory.Build.props
+-->
+<Project>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- MonoGame -->
+    <PackageVersion Include="MonoGame.Framework.DesktopGL" Version="$(MonoGameVersion)" />
+    <PackageVersion Include="MonoGame.Framework.WindowsDX"  Version="$(MonoGameVersion)" />
+    <PackageVersion Include="MonoGame.Framework.Android"    Version="$(MonoGameVersion)" />
+    <PackageVersion Include="MonoGame.Framework.iOS"        Version="$(MonoGameVersion)" />
+    <PackageVersion Include="MonoGame.Content.Builder.Task" Version="$(MonoGameVersion)" />
+
+    <!-- Graphics / imaging -->
+    <PackageVersion Include="SkiaSharp"                    Version="3.116.1" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.macOS" Version="3.116.1" />
+    <PackageVersion Include="System.Drawing.Common"        Version="8.0.11" />
+    <PackageVersion Include="BitMiracle.LibTiff.NET"       Version="2.4.639" />
+
+    <!-- Input / GL bindings -->
+    <PackageVersion Include="OpenTK" Version="4.9.4" />
+
+    <!-- Zip / compression — required by CCParticleSystem.cs (using ICSharpCode.SharpZipLib.Zip).
+         The vendored copy under cocos2d/external lib/ICSharpCodeSource/ is NOT compiled by
+         the legacy build (cocos2d.projitems has no Include for it) and is intentionally
+         excluded from the new csproj's compile glob. -->
+    <PackageVersion Include="SharpZipLib" Version="1.4.2" />
+
+    <!-- Build / publish niceties -->
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

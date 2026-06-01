@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Shared MSBuild properties for the modernized cocos2d-mono build (Phase 1).
+
+  Scoped to src/ so the legacy csprojs under cocos2d/ and box2d/ continue to
+  inherit only the repo-root Directory.Build.props (just MonoGameVersion).
+  Promoted to the repo root in Phase 1c once legacy is deleted.
+-->
+<Project>
+
+  <!-- Inherit MonoGameVersion (and any other future common props) from the root. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..'))"
+          Condition="Exists('$([MSBuild]::GetPathOfFileAbove(`Directory.Build.props`, `$(MSBuildThisFileDirectory)..`))')" />
+
+  <PropertyGroup>
+    <!-- ==================== Toolchain ==================== -->
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <!--
+      Warnings to ignore for the new csproj build:
+        CS1591 – missing XML doc on a public member (not yet a priority; Phase 3 will tighten)
+        CA1416 – platform-compat (cross-platform code intentionally references Win32 APIs under #if WINDOWS)
+        NU1701 – package compatible-with-warning (legacy MonoGame packages declare older TFMs)
+        NU5119 – snupkg empty (mobile workloads emit non-portable PDBs; symbol pack is disabled on mobile anyway)
+    -->
+    <NoWarn>$(NoWarn);CS1591;CA1416;NU1701;NU5119</NoWarn>
+
+    <!-- ==================== Shared NuGet metadata (override per-package) ==================== -->
+    <Version>3.0.0-alpha.1</Version>
+    <Authors>Broken Walls Studios; Cocos2D-Mono Team</Authors>
+    <Company>Broken Walls Studios</Company>
+    <Copyright>Copyright © 2026 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <PackageProjectUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageTags>mono monogame cocos2d game gamedev 2d</PackageTags>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+
+    <!-- ==================== Symbol packages & source link ==================== -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+</Project>
