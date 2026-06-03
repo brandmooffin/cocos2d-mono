@@ -1,0 +1,341 @@
+Release x64	Set up job	﻿2026-06-03T17:46:24.8456747Z Current runner version: '2.334.0'
+Release x64	Set up job	2026-06-03T17:46:24.8911513Z ##[group]Runner Image Provisioner
+Release x64	Set up job	2026-06-03T17:46:24.8912314Z Hosted Compute Agent
+Release x64	Set up job	2026-06-03T17:46:24.8912749Z Version: 20260520.533
+Release x64	Set up job	2026-06-03T17:46:24.8913241Z Commit: 189110e25284a9812c124fd27b339e2fb4f2f9db
+Release x64	Set up job	2026-06-03T17:46:24.8913826Z Build Date: 2026-05-20T17:44:04Z
+Release x64	Set up job	2026-06-03T17:46:24.8914432Z Worker ID: {6b175180-bd78-4f30-9c18-2c55f36d1361}
+Release x64	Set up job	2026-06-03T17:46:24.8915045Z Azure Region: westus3
+Release x64	Set up job	2026-06-03T17:46:24.8915532Z ##[endgroup]
+Release x64	Set up job	2026-06-03T17:46:24.8916642Z ##[group]Operating System
+Release x64	Set up job	2026-06-03T17:46:24.8917197Z Microsoft Windows Server 2025
+Release x64	Set up job	2026-06-03T17:46:24.8917705Z 10.0.26100
+Release x64	Set up job	2026-06-03T17:46:24.8918196Z Datacenter
+Release x64	Set up job	2026-06-03T17:46:24.8918741Z ##[endgroup]
+Release x64	Set up job	2026-06-03T17:46:24.8919167Z ##[group]Runner Image
+Release x64	Set up job	2026-06-03T17:46:24.8919970Z Image: windows-2025-vs2026
+Release x64	Set up job	2026-06-03T17:46:24.8920425Z Version: 20260525.121.1
+Release x64	Set up job	2026-06-03T17:46:24.8921437Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20260525.121/images/windows/Windows2025-VS2026-Readme.md
+Release x64	Set up job	2026-06-03T17:46:24.8922727Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20260525.121
+Release x64	Set up job	2026-06-03T17:46:24.8923539Z ##[endgroup]
+Release x64	Set up job	2026-06-03T17:46:24.8925177Z ##[group]GITHUB_TOKEN Permissions
+Release x64	Set up job	2026-06-03T17:46:24.8926880Z Contents: read
+Release x64	Set up job	2026-06-03T17:46:24.8927318Z Metadata: read
+Release x64	Set up job	2026-06-03T17:46:24.8927740Z Packages: read
+Release x64	Set up job	2026-06-03T17:46:24.8928198Z ##[endgroup]
+Release x64	Set up job	2026-06-03T17:46:24.8930317Z Secret source: Actions
+Release x64	Set up job	2026-06-03T17:46:24.8930979Z Prepare workflow directory
+Release x64	Set up job	2026-06-03T17:46:24.9173681Z Prepare all required actions
+Release x64	Set up job	2026-06-03T17:46:24.9198749Z Getting action download info
+Release x64	Set up job	2026-06-03T17:46:25.4478075Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+Release x64	Set up job	2026-06-03T17:46:25.5524715Z Download action repository 'microsoft/setup-msbuild@v2' (SHA:6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce)
+Release x64	Set up job	2026-06-03T17:46:26.0148202Z Download action repository 'NuGet/setup-nuget@v2' (SHA:d105a947828025cd7a980103c35ba2bfae586d0f)
+Release x64	Set up job	2026-06-03T17:46:26.5511583Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+Release x64	Set up job	2026-06-03T17:46:27.0273918Z Complete job name: Release x64
+Release x64	Checkout (with submodule)	﻿2026-06-03T17:46:27.1460051Z ##[group]Run actions/checkout@v4
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1460707Z with:
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1460845Z   fetch-depth: 0
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1460988Z   submodules: recursive
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1461149Z   repository: Cocos2D-Mono/Cocos2D-Mono.UWP
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1463236Z   token: ***
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1463367Z   ssh-strict: true
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1463501Z   ssh-user: git
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1463640Z   persist-credentials: true
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1463790Z   clean: true
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1463951Z   sparse-checkout-cone-mode: true
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1464116Z   fetch-tags: false
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1464255Z   show-progress: true
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1464396Z   lfs: false
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1464526Z   set-safe-directory: true
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.1464788Z ##[endgroup]
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.2938614Z Syncing repository: Cocos2D-Mono/Cocos2D-Mono.UWP
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.2940168Z ##[group]Getting Git version info
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.2940595Z Working directory is 'D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP'
+Release x64	Checkout (with submodule)	2026-06-03T17:46:27.5455705Z [command]"C:\Program Files\Git\bin\git.exe" version
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.1069223Z git version 2.54.0.windows.1
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.1118905Z ##[endgroup]
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.1137312Z Temporarily overriding HOME='D:\a\_temp\605ff8a0-88c0-415f-ab0b-d2d45e4dc506' before making global git config changes
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.1137844Z Adding repository directory to the temporary git global config as a safe directory
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.1146191Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.1723850Z Deleting the contents of 'D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP'
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.1729297Z ##[group]Initializing the repository
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.1737090Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.2546543Z Initialized empty Git repository in D:/a/Cocos2D-Mono.UWP/Cocos2D-Mono.UWP/.git/
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.2589435Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/Cocos2D-Mono/Cocos2D-Mono.UWP
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.3019485Z ##[endgroup]
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.3019862Z ##[group]Disabling automatic garbage collection
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.3027934Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.3268367Z ##[endgroup]
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.3268710Z ##[group]Setting up auth
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.3279281Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+Release x64	Checkout (with submodule)	2026-06-03T17:46:28.3512482Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+Release x64	Checkout (with submodule)	2026-06-03T17:46:29.9025352Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Release x64	Checkout (with submodule)	2026-06-03T17:46:29.9276481Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+Release x64	Checkout (with submodule)	2026-06-03T17:46:30.3487621Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+Release x64	Checkout (with submodule)	2026-06-03T17:46:30.3689496Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+Release x64	Checkout (with submodule)	2026-06-03T17:46:30.7544913Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+Release x64	Checkout (with submodule)	2026-06-03T17:46:30.7782026Z ##[endgroup]
+Release x64	Checkout (with submodule)	2026-06-03T17:46:30.7782418Z ##[group]Fetching the repository
+Release x64	Checkout (with submodule)	2026-06-03T17:46:30.7793274Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+Release x64	Checkout (with submodule)	2026-06-03T17:46:31.9959654Z From https://github.com/Cocos2D-Mono/Cocos2D-Mono.UWP
+Release x64	Checkout (with submodule)	2026-06-03T17:46:31.9962532Z  * [new branch]      main       -> origin/main
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.0271455Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/main
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.0507069Z   origin/main
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.0544495Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/main
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.0764711Z 1ab61730a37b5216e0d5093b9906dbb46e19f9ea
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.0791157Z ##[endgroup]
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.0791627Z ##[group]Determining the checkout info
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.0792772Z ##[endgroup]
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.0800865Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.1075504Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.1265607Z ##[group]Checking out the ref
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.1272963Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.1635136Z Switched to a new branch 'main'
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.1690975Z branch 'main' set up to track 'origin/main'.
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.1727493Z ##[endgroup]
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.1727747Z ##[group]Setting up auth for fetching submodules
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.1736906Z [command]"C:\Program Files\Git\bin\git.exe" config --global http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.1952591Z [command]"C:\Program Files\Git\bin\git.exe" config --global --unset-all url.https://github.com/.insteadOf
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.2153948Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add url.https://github.com/.insteadOf git@github.com:
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.2364049Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add url.https://github.com/.insteadOf org-270655195@github.com:
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.2561008Z ##[endgroup]
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.2561339Z ##[group]Fetching submodules
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.2569383Z [command]"C:\Program Files\Git\bin\git.exe" submodule sync --recursive
+Release x64	Checkout (with submodule)	2026-06-03T17:46:32.6680744Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 submodule update --init --force --recursive
+Release x64	Checkout (with submodule)	2026-06-03T17:46:33.0496658Z Submodule 'external/cocos2d-mono' (https://github.com/Cocos2D-Mono/cocos2d-mono.git) registered for path 'external/cocos2d-mono'
+Release x64	Checkout (with submodule)	2026-06-03T17:46:33.0851204Z Cloning into 'D:/a/Cocos2D-Mono.UWP/Cocos2D-Mono.UWP/external/cocos2d-mono'...
+Release x64	Checkout (with submodule)	2026-06-03T17:46:40.9350453Z Submodule path 'external/cocos2d-mono': checked out 'c30f5ec360ee061300f31fa41d36ecc0f6904be4'
+Release x64	Checkout (with submodule)	2026-06-03T17:46:40.9535657Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local gc.auto 0"
+Release x64	Checkout (with submodule)	2026-06-03T17:46:41.3555215Z Entering 'external/cocos2d-mono'
+Release x64	Checkout (with submodule)	2026-06-03T17:46:41.4052102Z ##[endgroup]
+Release x64	Checkout (with submodule)	2026-06-03T17:46:41.4052478Z ##[group]Persisting credentials for submodules
+Release x64	Checkout (with submodule)	2026-06-03T17:46:41.4062961Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'url\.https\:\/\/github\.com\/\.insteadOf' && git config --local --unset-all 'url.https://github.com/.insteadOf' || :\""
+Release x64	Checkout (with submodule)	2026-06-03T17:46:41.7902706Z Entering 'external/cocos2d-mono'
+Release x64	Checkout (with submodule)	2026-06-03T17:46:41.8557038Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local 'http.https://github.com/.extraheader' 'AUTHORIZATION: basic ***' && git config --local --show-origin --name-only --get-regexp remote.origin.url\""
+Release x64	Checkout (with submodule)	2026-06-03T17:46:42.2795801Z Entering 'external/cocos2d-mono'
+Release x64	Checkout (with submodule)	2026-06-03T17:46:42.3310118Z file:D:/a/Cocos2D-Mono.UWP/Cocos2D-Mono.UWP/.git/modules/external/cocos2d-mono/config	remote.origin.url
+Release x64	Checkout (with submodule)	2026-06-03T17:46:42.3532794Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --add 'url.https://github.com/.insteadOf' 'git@github.com:'"
+Release x64	Checkout (with submodule)	2026-06-03T17:46:42.7448425Z Entering 'external/cocos2d-mono'
+Release x64	Checkout (with submodule)	2026-06-03T17:46:42.7916875Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --add 'url.https://github.com/.insteadOf' 'org-270655195@github.com:'"
+Release x64	Checkout (with submodule)	2026-06-03T17:46:43.1678805Z Entering 'external/cocos2d-mono'
+Release x64	Checkout (with submodule)	2026-06-03T17:46:43.2086825Z ##[endgroup]
+Release x64	Checkout (with submodule)	2026-06-03T17:46:43.2379116Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+Release x64	Checkout (with submodule)	2026-06-03T17:46:43.2551868Z 1ab61730a37b5216e0d5093b9906dbb46e19f9ea
+Release x64	Add MSBuild to PATH	﻿2026-06-03T17:46:43.2813117Z ##[group]Run microsoft/setup-msbuild@v2
+Release x64	Add MSBuild to PATH	2026-06-03T17:46:43.2813326Z with:
+Release x64	Add MSBuild to PATH	2026-06-03T17:46:43.2813444Z   msbuild-architecture: x86
+Release x64	Add MSBuild to PATH	2026-06-03T17:46:43.2813573Z ##[endgroup]
+Release x64	Add MSBuild to PATH	2026-06-03T17:46:43.3546816Z [command]C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest
+Release x64	Add MSBuild to PATH	2026-06-03T17:46:43.6936305Z C:\Program Files\Microsoft Visual Studio\18\Enterprise
+Release x64	Setup NuGet	﻿2026-06-03T17:46:43.7139025Z ##[group]Run NuGet/setup-nuget@v2
+Release x64	Setup NuGet	2026-06-03T17:46:43.7139257Z with:
+Release x64	Setup NuGet	2026-06-03T17:46:43.7139374Z   nuget-version: latest
+Release x64	Setup NuGet	2026-06-03T17:46:43.7139504Z ##[endgroup]
+Release x64	Setup NuGet	2026-06-03T17:46:44.0322753Z Installed nuget.exe version 7.6.0
+Release x64	Restore	﻿2026-06-03T17:46:44.0524370Z ##[group]Run nuget restore Cocos2D-Mono.Uwp.sln
+Release x64	Restore	2026-06-03T17:46:44.0524672Z [36;1mnuget restore Cocos2D-Mono.Uwp.sln[0m
+Release x64	Restore	2026-06-03T17:46:44.1417660Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+Release x64	Restore	2026-06-03T17:46:44.1417927Z env:
+Release x64	Restore	2026-06-03T17:46:44.1418097Z   NUGET: C:\hostedtoolcache\windows\nuget.exe\7.6.0\x64/nuget.exe
+Release x64	Restore	2026-06-03T17:46:44.1418275Z ##[endgroup]
+Release x64	Restore	2026-06-03T17:46:51.4635402Z MSBuild auto-detection: using msbuild version '18.6.3.22110' from 'C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\Bin'.
+Release x64	Restore	2026-06-03T17:46:58.8689553Z Restoring packages for D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Cocos2D.Uwp\Cocos2D.Uwp.csproj...
+Release x64	Restore	2026-06-03T17:46:58.8690674Z Restoring packages for D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Box2D.Uwp\Box2D.Uwp.csproj...
+Release x64	Restore	2026-06-03T17:46:59.3156149Z   GET https://api.nuget.org/v3-flatcontainer/sharpziplib/index.json
+Release x64	Restore	2026-06-03T17:46:59.3181275Z   GET https://api.nuget.org/v3-flatcontainer/microsoft.netcore.universalwindowsplatform/index.json
+Release x64	Restore	2026-06-03T17:46:59.3214002Z   GET https://api.nuget.org/v3-flatcontainer/monogame.framework.windowsuniversal/index.json
+Release x64	Restore	2026-06-03T17:46:59.3218331Z   GET https://api.nuget.org/v3-flatcontainer/monogame.content.builder.task/index.json
+Release x64	Restore	2026-06-03T17:46:59.3218782Z   GET https://api.nuget.org/v3-flatcontainer/sharpdx.mathematics/index.json
+Release x64	Restore	2026-06-03T17:46:59.3363102Z   OK https://api.nuget.org/v3-flatcontainer/sharpziplib/index.json 21ms
+Release x64	Restore	2026-06-03T17:46:59.4255760Z   GET https://api.nuget.org/v3-flatcontainer/sharpziplib/1.3.3/sharpziplib.1.3.3.nupkg
+Release x64	Restore	2026-06-03T17:46:59.4485366Z   OK https://api.nuget.org/v3-flatcontainer/sharpziplib/1.3.3/sharpziplib.1.3.3.nupkg 22ms
+Release x64	Restore	2026-06-03T17:46:59.4544585Z   OK https://api.nuget.org/v3-flatcontainer/microsoft.netcore.universalwindowsplatform/index.json 136ms
+Release x64	Restore	2026-06-03T17:46:59.4568048Z   OK https://api.nuget.org/v3-flatcontainer/sharpdx.mathematics/index.json 134ms
+Release x64	Restore	2026-06-03T17:46:59.4568872Z   OK https://api.nuget.org/v3-flatcontainer/monogame.framework.windowsuniversal/index.json 135ms
+Release x64	Restore	2026-06-03T17:46:59.5476425Z   GET https://api.nuget.org/v3-flatcontainer/microsoft.netcore.universalwindowsplatform/6.2.11/microsoft.netcore.universalwindowsplatform.6.2.11.nupkg
+Release x64	Restore	2026-06-03T17:46:59.5477553Z   GET https://api.nuget.org/v3-flatcontainer/sharpdx.mathematics/4.0.1/sharpdx.mathematics.4.0.1.nupkg
+Release x64	Restore	2026-06-03T17:46:59.5703621Z   OK https://api.nuget.org/v3-flatcontainer/sharpdx.mathematics/4.0.1/sharpdx.mathematics.4.0.1.nupkg 22ms
+Release x64	Restore	2026-06-03T17:46:59.5710076Z   OK https://api.nuget.org/v3-flatcontainer/microsoft.netcore.universalwindowsplatform/6.2.11/microsoft.netcore.universalwindowsplatform.6.2.11.nupkg 23ms
+Release x64	Restore	2026-06-03T17:46:59.6077926Z   OK https://api.nuget.org/v3-flatcontainer/monogame.content.builder.task/index.json 285ms
+Release x64	Restore	2026-06-03T17:46:59.6136160Z   GET https://api.nuget.org/v3-flatcontainer/monogame.content.builder.task/3.8.2.1105/monogame.content.builder.task.3.8.2.1105.nupkg
+Release x64	Restore	2026-06-03T17:46:59.6527366Z   GET https://api.nuget.org/v3-flatcontainer/microsoft.net.native.compiler/index.json
+Release x64	Restore	2026-06-03T17:46:59.6794462Z   GET https://api.nuget.org/v3-flatcontainer/microsoft.net.uwpcoreruntimesdk/index.json
+Release x64	Restore	2026-06-03T17:46:59.7174690Z   OK https://api.nuget.org/v3-flatcontainer/monogame.content.builder.task/3.8.2.1105/monogame.content.builder.task.3.8.2.1105.nupkg 103ms
+Release x64	Restore	2026-06-03T17:46:59.7344250Z   GET https://api.nuget.org/v3-flatcontainer/sharpdx/index.json
+Release x64	Restore	2026-06-03T17:46:59.7730728Z   OK https://api.nuget.org/v3-flatcontainer/microsoft.net.uwpcoreruntimesdk/index.json 93ms
+Release x64	Restore	2026-06-03T17:46:59.7745018Z   GET https://api.nuget.org/v3-flatcontainer/microsoft.net.uwpcoreruntimesdk/2.2.11/microsoft.net.uwpcoreruntimesdk.2.2.11.nupkg
+Release x64	Restore	2026-06-03T17:46:59.7783724Z   OK https://api.nuget.org/v3-flatcontainer/sharpdx/index.json 43ms
+Release x64	Restore	2026-06-03T17:46:59.7796829Z   GET https://api.nuget.org/v3-flatcontainer/sharpdx/4.0.1/sharpdx.4.0.1.nupkg
+Release x64	Restore	2026-06-03T17:46:59.7955546Z   OK https://api.nuget.org/v3-flatcontainer/microsoft.net.uwpcoreruntimesdk/2.2.11/microsoft.net.uwpcoreruntimesdk.2.2.11.nupkg 20ms
+Release x64	Restore	2026-06-03T17:46:59.7989904Z   OK https://api.nuget.org/v3-flatcontainer/microsoft.net.native.compiler/index.json 146ms
+Release x64	Restore	2026-06-03T17:46:59.8009195Z   OK https://api.nuget.org/v3-flatcontainer/sharpdx/4.0.1/sharpdx.4.0.1.nupkg 21ms
+Release x64	Restore	2026-06-03T17:46:59.8023154Z   GET https://api.nuget.org/v3-flatcontainer/microsoft.net.native.compiler/2.2.9-rel-29512-01/microsoft.net.native.compiler.2.2.9-rel-29512-01.nupkg
+Release x64	Restore	2026-06-03T17:46:59.8501934Z   OK https://api.nuget.org/v3-flatcontainer/microsoft.net.native.compiler/2.2.9-rel-29512-01/microsoft.net.native.compiler.2.2.9-rel-29512-01.nupkg 47ms
+Release x64	Restore	2026-06-03T17:47:00.1776742Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.net.native.compiler/index.json
+Release x64	Restore	2026-06-03T17:47:00.1854916Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.net.native.compiler/index.json
+Release x64	Restore	2026-06-03T17:47:00.1931627Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.net.native.compiler/index.json
+Release x64	Restore	2026-06-03T17:47:00.2024957Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm64.microsoft.net.native.compiler/index.json
+Release x64	Restore	2026-06-03T17:47:00.2101414Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.net.uwpcoreruntimesdk/index.json
+Release x64	Restore	2026-06-03T17:47:00.2212927Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.net.uwpcoreruntimesdk/index.json
+Release x64	Restore	2026-06-03T17:47:00.2290584Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.net.uwpcoreruntimesdk/index.json
+Release x64	Restore	2026-06-03T17:47:00.2689590Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.net.native.compiler/index.json 91ms
+Release x64	Restore	2026-06-03T17:47:00.2721994Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.net.native.compiler/2.2.9-rel-29512-01/runtime.win10-arm.microsoft.net.native.compiler.2.2.9-rel-29512-01.nupkg
+Release x64	Restore	2026-06-03T17:47:00.2754305Z   GET https://api.nuget.org/v3-flatcontainer/microsoft.netcore.platforms/index.json
+Release x64	Restore	2026-06-03T17:47:00.2799752Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.net.native.compiler/index.json 94ms
+Release x64	Restore	2026-06-03T17:47:00.2813512Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.net.native.compiler/2.2.9-rel-29512-01/runtime.win10-x64.microsoft.net.native.compiler.2.2.9-rel-29512-01.nupkg
+Release x64	Restore	2026-06-03T17:47:00.2860737Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.net.native.compiler/index.json 92ms
+Release x64	Restore	2026-06-03T17:47:00.2874950Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.net.native.compiler/2.2.9-rel-29512-01/runtime.win10-x86.microsoft.net.native.compiler.2.2.9-rel-29512-01.nupkg
+Release x64	Restore	2026-06-03T17:47:00.2928707Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.net.native.compiler/2.2.9-rel-29512-01/runtime.win10-arm.microsoft.net.native.compiler.2.2.9-rel-29512-01.nupkg 20ms
+Release x64	Restore	2026-06-03T17:47:00.2982336Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm64.microsoft.net.native.compiler/index.json 95ms
+Release x64	Restore	2026-06-03T17:47:00.3044159Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.net.native.compiler/2.2.9-rel-29512-01/runtime.win10-x64.microsoft.net.native.compiler.2.2.9-rel-29512-01.nupkg 22ms
+Release x64	Restore	2026-06-03T17:47:00.3055278Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm64.microsoft.net.native.compiler/2.2.9-rel-29512-01/runtime.win10-arm64.microsoft.net.native.compiler.2.2.9-rel-29512-01.nupkg
+Release x64	Restore	2026-06-03T17:47:00.3087464Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.net.native.compiler/2.2.9-rel-29512-01/runtime.win10-x86.microsoft.net.native.compiler.2.2.9-rel-29512-01.nupkg 21ms
+Release x64	Restore	2026-06-03T17:47:00.3168249Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.net.uwpcoreruntimesdk/index.json 106ms
+Release x64	Restore	2026-06-03T17:47:00.3190146Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.net.uwpcoreruntimesdk/2.2.11/runtime.win10-arm.microsoft.net.uwpcoreruntimesdk.2.2.11.nupkg
+Release x64	Restore	2026-06-03T17:47:00.3467816Z   OK https://api.nuget.org/v3-flatcontainer/microsoft.netcore.platforms/index.json 71ms
+Release x64	Restore	2026-06-03T17:47:00.3487713Z   GET https://api.nuget.org/v3-flatcontainer/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg
+Release x64	Restore	2026-06-03T17:47:00.3604115Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.net.uwpcoreruntimesdk/index.json 139ms
+Release x64	Restore	2026-06-03T17:47:00.3658548Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm64.microsoft.net.native.compiler/2.2.9-rel-29512-01/runtime.win10-arm64.microsoft.net.native.compiler.2.2.9-rel-29512-01.nupkg 60ms
+Release x64	Restore	2026-06-03T17:47:00.3661032Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.net.uwpcoreruntimesdk/2.2.11/runtime.win10-x64.microsoft.net.uwpcoreruntimesdk.2.2.11.nupkg
+Release x64	Restore	2026-06-03T17:47:00.3821645Z   OK https://api.nuget.org/v3-flatcontainer/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg 33ms
+Release x64	Restore	2026-06-03T17:47:00.3825146Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.net.uwpcoreruntimesdk/index.json 153ms
+Release x64	Restore	2026-06-03T17:47:00.3869436Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.net.uwpcoreruntimesdk/2.2.11/runtime.win10-x86.microsoft.net.uwpcoreruntimesdk.2.2.11.nupkg
+Release x64	Restore	2026-06-03T17:47:00.3914590Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.net.uwpcoreruntimesdk/2.2.11/runtime.win10-x64.microsoft.net.uwpcoreruntimesdk.2.2.11.nupkg 25ms
+Release x64	Restore	2026-06-03T17:47:00.5783186Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.net.uwpcoreruntimesdk/2.2.11/runtime.win10-arm.microsoft.net.uwpcoreruntimesdk.2.2.11.nupkg 259ms
+Release x64	Restore	2026-06-03T17:47:00.7054595Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.net.native.sharedlibrary/index.json
+Release x64	Restore	2026-06-03T17:47:00.7142708Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.net.native.sharedlibrary/index.json
+Release x64	Restore	2026-06-03T17:47:00.7232675Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.net.native.sharedlibrary/index.json
+Release x64	Restore	2026-06-03T17:47:00.7854828Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.net.uwpcoreruntimesdk/2.2.11/runtime.win10-x86.microsoft.net.uwpcoreruntimesdk.2.2.11.nupkg 398ms
+Release x64	Restore	2026-06-03T17:47:00.8004639Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.net.native.sharedlibrary/index.json 94ms
+Release x64	Restore	2026-06-03T17:47:00.8023135Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.net.native.sharedlibrary/2.2.8-rel-29512-01/runtime.win10-arm.microsoft.net.native.sharedlibrary.2.2.8-rel-29512-01.nupkg
+Release x64	Restore	2026-06-03T17:47:00.8051994Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.net.native.sharedlibrary/index.json 90ms
+Release x64	Restore	2026-06-03T17:47:00.8062277Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.net.native.sharedlibrary/2.2.8-rel-29512-01/runtime.win10-x64.microsoft.net.native.sharedlibrary.2.2.8-rel-29512-01.nupkg
+Release x64	Restore	2026-06-03T17:47:00.8248885Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.net.native.sharedlibrary/2.2.8-rel-29512-01/runtime.win10-arm.microsoft.net.native.sharedlibrary.2.2.8-rel-29512-01.nupkg 22ms
+Release x64	Restore	2026-06-03T17:47:00.8345848Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.net.native.sharedlibrary/index.json 111ms
+Release x64	Restore	2026-06-03T17:47:00.8359530Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.net.native.sharedlibrary/2.2.8-rel-29512-01/runtime.win10-x86.microsoft.net.native.sharedlibrary.2.2.8-rel-29512-01.nupkg
+Release x64	Restore	2026-06-03T17:47:00.8545776Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.net.native.sharedlibrary/2.2.8-rel-29512-01/runtime.win10-x64.microsoft.net.native.sharedlibrary.2.2.8-rel-29512-01.nupkg 48ms
+Release x64	Restore	2026-06-03T17:47:01.0084647Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.net.native.sharedlibrary/2.2.8-rel-29512-01/runtime.win10-x86.microsoft.net.native.sharedlibrary.2.2.8-rel-29512-01.nupkg 172ms
+Release x64	Restore	2026-06-03T17:47:02.1325795Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm64.microsoft.net.native.sharedlibrary/index.json
+Release x64	Restore	2026-06-03T17:47:02.2274846Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm64.microsoft.net.native.sharedlibrary/index.json 94ms
+Release x64	Restore	2026-06-03T17:47:02.2289552Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm64.microsoft.net.native.sharedlibrary/2.2.8-rel-29512-01/runtime.win10-arm64.microsoft.net.native.sharedlibrary.2.2.8-rel-29512-01.nupkg
+Release x64	Restore	2026-06-03T17:47:02.2479632Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm64.microsoft.net.native.sharedlibrary/2.2.8-rel-29512-01/runtime.win10-arm64.microsoft.net.native.sharedlibrary.2.2.8-rel-29512-01.nupkg 18ms
+Release x64	Restore	2026-06-03T17:47:05.9058430Z Installed MonoGame.Content.Builder.Task 3.8.2.1105 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\monogame.content.builder.task\3.8.2.1105 with content hash wNlkLaITOqMs9MmCYLp3Qc7QfFng3FhIq/b+njdYV3cTVpLYgs/i56FYtJjm8jLoUA/2sJ36Qo/uqWpgW+jBuQ==.
+Release x64	Restore	2026-06-03T17:47:07.2495521Z Installed Microsoft.NETCore.Platforms 1.1.0 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\microsoft.netcore.platforms\1.1.0 with content hash kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==.
+Release x64	Restore	2026-06-03T17:47:07.3678135Z Installed Microsoft.Net.UWPCoreRuntimeSdk 2.2.11 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\microsoft.net.uwpcoreruntimesdk\2.2.11 with content hash B1p3txWKwmO+Csf126X9y1gVQej/zOfUUAOE90iOmEHFMieIle/XfKrrAtlHIIo5snylwB8LgDsRn0kWlDsHhg==.
+Release x64	Restore	2026-06-03T17:47:07.7653280Z Installed SharpZipLib 1.3.3 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\sharpziplib\1.3.3 with content hash N8+hwhsKZm25tDJfWpBSW7EGhH/R7EMuiX+KJ4C4u+fCWVc1lJ5zg1u3S1RPPVYgTqhx/C3hxrqUpi6RwK5+Tg==.
+Release x64	Restore	2026-06-03T17:47:07.7694871Z Installed SharpDX.Mathematics 4.0.1 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\sharpdx.mathematics\4.0.1 with content hash txMROd5A4mICHRRPf5KHA5MVNEqFUdOg2ZYfqNqjQM1n2jfe+sxDG3Xs+aO5zAShJAZFD6xO5R7yGfn9CzHckQ==.
+Release x64	Restore	2026-06-03T17:47:09.9076494Z Installed runtime.win10-x64.Microsoft.Net.UWPCoreRuntimeSdk 2.2.11 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-x64.microsoft.net.uwpcoreruntimesdk\2.2.11 with content hash 7e8MH4/tzwVV25dUvq+eYgvH31Tyi7kpGNcsqfzfJDYxA6hpGijhfZFFn2QHjORRoTu/BVxGM/9xc/bP4J0vRg==.
+Release x64	Restore	2026-06-03T17:47:09.9682431Z Installed SharpDX 4.0.1 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\sharpdx\4.0.1 with content hash 8YA1VFg1/K8Emb8FEZDobojcv1BLuppVo7CRJQEgA1V748VIMPBru0i0OnsCjLSThzTn7juOvH85qjFL9Grl1w==.
+Release x64	Restore	2026-06-03T17:47:11.6612409Z Installed runtime.win10-arm.Microsoft.Net.UWPCoreRuntimeSdk 2.2.11 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-arm.microsoft.net.uwpcoreruntimesdk\2.2.11 with content hash R1RaI4RSc+H9E5Pq9pndWzAv4dxztym4+TAII4VrsReePMGRM8eoJByg47BAPM4Y9mBv7esR0KhYc5J1/hpUIw==.
+Release x64	Restore	2026-06-03T17:47:11.7960722Z Installed runtime.win10-x86.Microsoft.Net.UWPCoreRuntimeSdk 2.2.11 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-x86.microsoft.net.uwpcoreruntimesdk\2.2.11 with content hash NF8tUTxFfwd8MXiA6ygCVuT7dVgEkaHpuwFnDeP1L2i1SIOxhk5w4HHySjmvbRSYtnjLA9BlOtwjGIJCztOHeg==.
+Release x64	Restore	2026-06-03T17:47:12.6418205Z Installed Microsoft.Net.Native.Compiler 2.2.9-rel-29512-01 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\microsoft.net.native.compiler\2.2.9-rel-29512-01 with content hash xjK9G8qoKaN1kUvOp/PuqYYxk6uGTZFwHUsHLrLXLyFVxnoHq/woqWyVb/n22uNWYtAoioeXlm6hZ0M8/f7eXw==.
+Release x64	Restore	2026-06-03T17:47:25.6973734Z Installed runtime.win10-arm64.Microsoft.Net.Native.Compiler 2.2.9-rel-29512-01 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-arm64.microsoft.net.native.compiler\2.2.9-rel-29512-01 with content hash 8ex2blgQcIw/MoaJH7hqRJdekTWgMUz5Qb+xmVeGvbB/lWl4BPv6/J9+cmcFxEM+Z7OA8xilFH1kwWFMyvak1A==.
+Release x64	Restore	2026-06-03T17:47:33.3633873Z Installed Microsoft.NETCore.UniversalWindowsPlatform 6.2.11 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\microsoft.netcore.universalwindowsplatform\6.2.11 with content hash YeOCD+m2tfqkYzQ2hAKZ52cTrHWU0HRS4/2vf3SeZ+KHWq+unmskH+TrRktaIj/pChwPUMwLdCTU5/+4WeQcWQ==.
+Release x64	Restore	2026-06-03T17:47:36.7409705Z Installed runtime.win10-x64.Microsoft.Net.Native.Compiler 2.2.9-rel-29512-01 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-x64.microsoft.net.native.compiler\2.2.9-rel-29512-01 with content hash sgiiODHWt4WZ9mDpZd+XkCdWYCBZukjZPNz3XJdeKeeNcRA4y4OTtd2+STWytXDxWAXUNRjImDF5XP48jNXj8A==.
+Release x64	Restore	2026-06-03T17:47:36.8574059Z Installed runtime.win10-x86.Microsoft.Net.Native.Compiler 2.2.9-rel-29512-01 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-x86.microsoft.net.native.compiler\2.2.9-rel-29512-01 with content hash M586UCPkXEXFbbC7dNznyN9/uNSWNjOeWWHrKNhwztaIl5iCaqr9ITDu55hd7tRdsoi/mPthAH470k4Vml/UrA==.
+Release x64	Restore	2026-06-03T17:47:37.1516440Z Installed runtime.win10-arm.Microsoft.Net.Native.Compiler 2.2.9-rel-29512-01 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-arm.microsoft.net.native.compiler\2.2.9-rel-29512-01 with content hash p+v2gthEgj5Tgm4Cl05mfV0w6Q7IFMdOQXZQsiZRg4wBkKSdVoW9lgaxF8bVffBJYes2Vm8ovKpxwTrmEXRzFg==.
+Release x64	Restore	2026-06-03T17:47:39.8582735Z Installed runtime.win10-x64.Microsoft.Net.Native.SharedLibrary 2.2.8-rel-29512-01 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-x64.microsoft.net.native.sharedlibrary\2.2.8-rel-29512-01 with content hash JoJavADSFAHk8KQo/bIHT+TTM1gn26X7A3DBltr0ocxcR+6FEnrFa1dLev2tFWmUcndeoyTklndZKwBkSFfEDw==.
+Release x64	Restore	2026-06-03T17:47:39.9246968Z Installed runtime.win10-arm64.Microsoft.Net.Native.SharedLibrary 2.2.8-rel-29512-01 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-arm64.microsoft.net.native.sharedlibrary\2.2.8-rel-29512-01 with content hash iYqXJq6hpg07RqAqq8RAffVU1308cQ2ta4ZZtfWI8tbVXGuKOU6he52AMgz4JfcP/Yb/khy9Gdxl62MVXcctzg==.
+Release x64	Restore	2026-06-03T17:47:39.9714629Z Installed runtime.win10-x86.Microsoft.Net.Native.SharedLibrary 2.2.8-rel-29512-01 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-x86.microsoft.net.native.sharedlibrary\2.2.8-rel-29512-01 with content hash s+oRLOdFSD8FS/hG2MBLzcdPzvBOzQqydYGLl/E+jaB7ijqYs8Dd3yeK72HgWLmKvp3rtkPhCHeRqYhA54+1YQ==.
+Release x64	Restore	2026-06-03T17:47:39.9929715Z Installed runtime.win10-arm.Microsoft.Net.Native.SharedLibrary 2.2.8-rel-29512-01 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-arm.microsoft.net.native.sharedlibrary\2.2.8-rel-29512-01 with content hash GUQ7Ubf9ts1XfNNaDrJUnmpsKfpcyZ+8NeZoDyYlImgT/UukkW1cYaxqbxM8VH+g5iIGXeO7suVv8tkwE862FA==.
+Release x64	Restore	2026-06-03T17:47:40.3190243Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.netcore.universalwindowsplatform/index.json
+Release x64	Restore	2026-06-03T17:47:40.4134997Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.netcore.universalwindowsplatform/index.json 94ms
+Release x64	Restore	2026-06-03T17:47:40.4155026Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-arm.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg
+Release x64	Restore	2026-06-03T17:47:40.4355111Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-arm.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg 19ms
+Release x64	Restore	2026-06-03T17:47:40.5455083Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm-aot.microsoft.netcore.universalwindowsplatform/index.json
+Release x64	Restore	2026-06-03T17:47:40.6407629Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm-aot.microsoft.netcore.universalwindowsplatform/index.json 95ms
+Release x64	Restore	2026-06-03T17:47:40.6424057Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm-aot.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-arm-aot.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg
+Release x64	Restore	2026-06-03T17:47:40.6717698Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm-aot.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-arm-aot.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg 29ms
+Release x64	Restore	2026-06-03T17:47:40.7487787Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm64-aot.microsoft.netcore.universalwindowsplatform/index.json
+Release x64	Restore	2026-06-03T17:47:40.8444168Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm64-aot.microsoft.netcore.universalwindowsplatform/index.json 95ms
+Release x64	Restore	2026-06-03T17:47:40.8462458Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-arm64-aot.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-arm64-aot.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg
+Release x64	Restore	2026-06-03T17:47:40.8662001Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-arm64-aot.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-arm64-aot.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg 19ms
+Release x64	Restore	2026-06-03T17:47:40.9378828Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.netcore.universalwindowsplatform/index.json
+Release x64	Restore	2026-06-03T17:47:41.0413604Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.netcore.universalwindowsplatform/index.json 103ms
+Release x64	Restore	2026-06-03T17:47:41.0426031Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-x64.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg
+Release x64	Restore	2026-06-03T17:47:41.0656431Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x64.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-x64.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg 23ms
+Release x64	Restore	2026-06-03T17:47:41.1449025Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x64-aot.microsoft.netcore.universalwindowsplatform/index.json
+Release x64	Restore	2026-06-03T17:47:41.2406779Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x64-aot.microsoft.netcore.universalwindowsplatform/index.json 95ms
+Release x64	Restore	2026-06-03T17:47:41.2425871Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x64-aot.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-x64-aot.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg
+Release x64	Restore	2026-06-03T17:47:41.2643447Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x64-aot.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-x64-aot.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg 21ms
+Release x64	Restore	2026-06-03T17:47:41.8968742Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.netcore.universalwindowsplatform/index.json
+Release x64	Restore	2026-06-03T17:47:42.0015524Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.netcore.universalwindowsplatform/index.json 104ms
+Release x64	Restore	2026-06-03T17:47:42.0032291Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-x86.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg
+Release x64	Restore	2026-06-03T17:47:42.0258681Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x86.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-x86.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg 22ms
+Release x64	Restore	2026-06-03T17:47:42.0984303Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x86-aot.microsoft.netcore.universalwindowsplatform/index.json
+Release x64	Restore	2026-06-03T17:47:42.1922515Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x86-aot.microsoft.netcore.universalwindowsplatform/index.json 93ms
+Release x64	Restore	2026-06-03T17:47:42.1956534Z   GET https://api.nuget.org/v3-flatcontainer/runtime.win10-x86-aot.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-x86-aot.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg
+Release x64	Restore	2026-06-03T17:47:42.2165936Z   OK https://api.nuget.org/v3-flatcontainer/runtime.win10-x86-aot.microsoft.netcore.universalwindowsplatform/6.2.11/runtime.win10-x86-aot.microsoft.netcore.universalwindowsplatform.6.2.11.nupkg 20ms
+Release x64	Restore	2026-06-03T17:47:54.2856533Z Installed runtime.win10-x86.Microsoft.NETCore.UniversalWindowsPlatform 6.2.11 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-x86.microsoft.netcore.universalwindowsplatform\6.2.11 with content hash Svwt46NcUEBhH+LNdg+9J+phHiWW3mmfuKrKT1RGI9QCownxaFg0kI5NCT0YhoMcndFT6fLsUA5VLswApg3/HA==.
+Release x64	Restore	2026-06-03T17:47:54.3916623Z Installed runtime.win10-x86-aot.Microsoft.NETCore.UniversalWindowsPlatform 6.2.11 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-x86-aot.microsoft.netcore.universalwindowsplatform\6.2.11 with content hash 2Yz+NstJwZlo4+9jfpQ+5fVuowPVIOG/Lp2yABPtfmh4VhbxoKyiAjeRo7bZUMk1RdwZL+LjJ5zg2l2Sh3ZhEA==.
+Release x64	Restore	2026-06-03T17:47:54.4844977Z Installed runtime.win10-arm64-aot.Microsoft.NETCore.UniversalWindowsPlatform 6.2.11 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-arm64-aot.microsoft.netcore.universalwindowsplatform\6.2.11 with content hash 07IvykpRbKdON7JjrBxshOKTqkJ39h7b6xc6AE09h8DaoP8CsUkyn+IBRlMGAzfVNnQwaoCKf+EWoSCueBKaqQ==.
+Release x64	Restore	2026-06-03T17:47:54.4960693Z Installed runtime.win10-x64.Microsoft.NETCore.UniversalWindowsPlatform 6.2.11 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-x64.microsoft.netcore.universalwindowsplatform\6.2.11 with content hash EqfKqHuQsosS4oPFBaKlUFMSV2ZSLh2VoxWnLkPiydVK9jIh31c2Au1csZ5ucQmXOra3vEuZLToOK4XNVLW2wQ==.
+Release x64	Restore	2026-06-03T17:47:54.4980954Z Installed runtime.win10-x64-aot.Microsoft.NETCore.UniversalWindowsPlatform 6.2.11 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-x64-aot.microsoft.netcore.universalwindowsplatform\6.2.11 with content hash PfST4gE/8rgl0tPMlGYp7BqzFjrhSGMQd+V68P4IMze9V6cnlkyXof4apD9MDzl7MPMPO0wwlkMj89+4+vXP3A==.
+Release x64	Restore	2026-06-03T17:47:54.5076180Z Installed runtime.win10-arm-aot.Microsoft.NETCore.UniversalWindowsPlatform 6.2.11 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-arm-aot.microsoft.netcore.universalwindowsplatform\6.2.11 with content hash Sn/jnBh7ggB1TqoxrsEM2S+JpFM8FOO8lXRfdp9LWbUI1Vgzb+a5wpS1bXki1lJK6cFrVldDjbZv4D4NEfJuyg==.
+Release x64	Restore	2026-06-03T17:47:54.5294872Z Installed runtime.win10-arm.Microsoft.NETCore.UniversalWindowsPlatform 6.2.11 from https://api.nuget.org/v3/index.json to C:\Users\runneradmin\.nuget\packages\runtime.win10-arm.microsoft.netcore.universalwindowsplatform\6.2.11 with content hash TMXtd4TVwVgENc4tFWZ+rfnJXZfwRmeL9vkkwMjyCK6+dknZaFuiRMnZ9ggPDMZ4qtq4eKXDqhp7GIVzLkmTxQ==.
+Release x64	Restore	2026-06-03T17:47:54.5862368Z NU1102: Unable to find package MonoGame.Framework.WindowsUniversal with version (>= 3.8.2.1105)
+Release x64	Restore	2026-06-03T17:47:54.5862854Z   - Found 11 version(s) in nuget.org [ Nearest version: 3.8.1.303 ]
+Release x64	Restore	2026-06-03T17:47:54.5863182Z   - Found 0 version(s) in Microsoft Visual Studio Offline Packages
+Release x64	Restore	2026-06-03T17:47:54.5864046Z NU1102: Unable to find package MonoGame.Framework.WindowsUniversal with version (>= 3.8.2.1105)
+Release x64	Restore	2026-06-03T17:47:54.5864481Z   - Found 11 version(s) in nuget.org [ Nearest version: 3.8.1.303 ]
+Release x64	Restore	2026-06-03T17:47:54.5864783Z   - Found 0 version(s) in Microsoft Visual Studio Offline Packages
+Release x64	Restore	2026-06-03T17:47:54.6038383Z   GET https://api.nuget.org/v3/vulnerabilities/index.json
+Release x64	Restore	2026-06-03T17:47:54.6216203Z   OK https://api.nuget.org/v3/vulnerabilities/index.json 17ms
+Release x64	Restore	2026-06-03T17:47:54.6481022Z   GET https://api.nuget.org/v3-vulnerabilities/2026.06.03.05.52.25/vulnerability.base.json
+Release x64	Restore	2026-06-03T17:47:54.6490768Z   GET https://api.nuget.org/v3-vulnerabilities/2026.06.03.05.52.25/2026.06.03.05.52.25/vulnerability.update.json
+Release x64	Restore	2026-06-03T17:47:54.6659129Z   OK https://api.nuget.org/v3-vulnerabilities/2026.06.03.05.52.25/vulnerability.base.json 17ms
+Release x64	Restore	2026-06-03T17:47:54.6711799Z   OK https://api.nuget.org/v3-vulnerabilities/2026.06.03.05.52.25/2026.06.03.05.52.25/vulnerability.update.json 22ms
+Release x64	Restore	2026-06-03T17:47:55.1189691Z Generating MSBuild file D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Box2D.Uwp\obj\Box2D.Uwp.csproj.nuget.g.props.
+Release x64	Restore	2026-06-03T17:47:55.1193161Z Generating MSBuild file D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Cocos2D.Uwp\obj\Cocos2D.Uwp.csproj.nuget.g.props.
+Release x64	Restore	2026-06-03T17:47:55.1206188Z Generating MSBuild file D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Cocos2D.Uwp\obj\Cocos2D.Uwp.csproj.nuget.g.targets.
+Release x64	Restore	2026-06-03T17:47:55.1210103Z Writing assets file to disk. Path: D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Cocos2D.Uwp\obj\project.assets.json
+Release x64	Restore	2026-06-03T17:47:55.1210957Z Generating MSBuild file D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Box2D.Uwp\obj\Box2D.Uwp.csproj.nuget.g.targets.
+Release x64	Restore	2026-06-03T17:47:55.1213833Z Writing assets file to disk. Path: D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Box2D.Uwp\obj\project.assets.json
+Release x64	Restore	2026-06-03T17:47:55.2076593Z Failed to restore D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Box2D.Uwp\Box2D.Uwp.csproj (in 56.33 sec).
+Release x64	Restore	2026-06-03T17:47:55.2077232Z Failed to restore D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Cocos2D.Uwp\Cocos2D.Uwp.csproj (in 56.33 sec).
+Release x64	Restore	2026-06-03T17:47:55.2116053Z 
+Release x64	Restore	2026-06-03T17:47:55.2116914Z Errors in D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Box2D.Uwp\Box2D.Uwp.csproj
+Release x64	Restore	2026-06-03T17:47:55.2121924Z     NU1102: Unable to find package MonoGame.Framework.WindowsUniversal with version (>= 3.8.2.1105)
+Release x64	Restore	2026-06-03T17:47:55.2122310Z       - Found 11 version(s) in nuget.org [ Nearest version: 3.8.1.303 ]
+Release x64	Restore	2026-06-03T17:47:55.2122658Z       - Found 0 version(s) in Microsoft Visual Studio Offline Packages
+Release x64	Restore	2026-06-03T17:47:55.2124447Z Errors in D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Cocos2D.Uwp\Cocos2D.Uwp.csproj
+Release x64	Restore	2026-06-03T17:47:55.2124725Z 
+Release x64	Restore	2026-06-03T17:47:55.2124904Z     NU1102: Unable to find package MonoGame.Framework.WindowsUniversal with version (>= 3.8.2.1105)
+Release x64	Restore	2026-06-03T17:47:55.2125184Z       - Found 11 version(s) in nuget.org [ Nearest version: 3.8.1.303 ]
+Release x64	Restore	2026-06-03T17:47:55.2125402Z       - Found 0 version(s) in Microsoft Visual Studio Offline Packages
+Release x64	Restore	2026-06-03T17:47:55.2125803Z 
+Release x64	Restore	2026-06-03T17:47:55.2125893Z NuGet Config files used:
+Release x64	Restore	2026-06-03T17:47:55.2126111Z     C:\Users\runneradmin\AppData\Roaming\NuGet\NuGet.Config
+Release x64	Restore	2026-06-03T17:47:55.2126534Z     C:\Program Files (x86)\NuGet\Config\Microsoft.VisualStudio.FallbackLocation.config
+Release x64	Restore	2026-06-03T17:47:55.2126912Z     C:\Program Files (x86)\NuGet\Config\Microsoft.VisualStudio.Offline.config
+Release x64	Restore	2026-06-03T17:47:55.2127064Z 
+Release x64	Restore	2026-06-03T17:47:55.2127112Z Feeds used:
+Release x64	Restore	2026-06-03T17:47:55.2127246Z     C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\
+Release x64	Restore	2026-06-03T17:47:55.2127436Z     https://api.nuget.org/v3/index.json
+Release x64	Restore	2026-06-03T17:47:55.2133073Z 
+Release x64	Restore	2026-06-03T17:47:55.2133828Z Installed:
+Release x64	Restore	2026-06-03T17:47:55.2149994Z     23 package(s) to D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Box2D.Uwp\Box2D.Uwp.csproj
+Release x64	Restore	2026-06-03T17:47:55.2150386Z     26 package(s) to D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP\src\Cocos2D.Uwp\Cocos2D.Uwp.csproj
+Release x64	Restore	2026-06-03T17:47:55.6078166Z ##[error]Process completed with exit code 1.
+Release x64	Post Checkout (with submodule)	﻿2026-06-03T17:47:55.6224168Z Post job cleanup.
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:55.7454754Z [command]"C:\Program Files\Git\bin\git.exe" version
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:55.7671009Z git version 2.54.0.windows.1
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:55.7727661Z Temporarily overriding HOME='D:\a\_temp\b442a1cb-6b6c-4489-a0f2-9852e6989c6c' before making global git config changes
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:55.7728085Z Adding repository directory to the temporary git global config as a safe directory
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:55.7735822Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Cocos2D-Mono.UWP\Cocos2D-Mono.UWP
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:55.7966611Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:55.8184814Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:56.2323866Z Entering 'external/cocos2d-mono'
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:56.2996927Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:56.3196536Z http.https://github.com/.extraheader
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:56.3239952Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:56.3486070Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:56.9288697Z Entering 'external/cocos2d-mono'
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:56.9723952Z http.https://github.com/.extraheader
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:57.0114030Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:57.0318210Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:57.7588007Z Entering 'external/cocos2d-mono'
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:57.7806536Z file:D:/a/Cocos2D-Mono.UWP/Cocos2D-Mono.UWP/.git/modules/external/cocos2d-mono/config	remote.origin.url
+Release x64	Post Checkout (with submodule)	2026-06-03T17:47:57.8008070Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:/a/Cocos2D-Mono.UWP/Cocos2D-Mono.UWP/.git/modules/external/cocos2d-mono/config --name-only --get-regexp ^includeIf\.gitdir:
+Release x64	Complete job	﻿2026-06-03T17:47:57.8357280Z Cleaning up orphan processes
+Release x64	Complete job	2026-06-03T17:47:57.8429701Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, microsoft/setup-msbuild@v2, NuGet/setup-nuget@v2. Actions will be forced to run with Node.js 24 by default starting June 16th, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

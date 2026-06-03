@@ -84,6 +84,13 @@ jobs:
       - name: Build Cocos2DMono
         run: dotnet build src/Cocos2DMono/Cocos2DMono.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} -p:TargetFrameworks=${{ matrix.tfm }}
 
+      # Phase 1b step 1: build the consolidated IntegrationTests harness on
+      # desktop TFMs (net9.0 + net9.0-windows7.0) only. Android + iOS TFMs are
+      # added in step 2 once resource moves and the iOS AppDelegate land.
+      - name: Build IntegrationTests
+        if: matrix.tfm == 'net9.0' || matrix.tfm == 'net9.0-windows7.0'
+        run: dotnet build tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} -p:TargetFrameworks=${{ matrix.tfm }}
+
   pack:
     name: Pack NuGet (preview)
     needs: build

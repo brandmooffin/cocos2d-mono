@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      Phase 1b step 1: desktop-only consolidation. Replaces the desktop half
+      of the 13 legacy test projects:
+        cocos2d-mono.Tests.DesktopGL / cocos2d-mono.Tests.Core.DesktopGL
+        cocos2d-mono.Tests.Linux    / cocos2d-mono.Tests.Core.Linux
+        cocos2d-mono.Tests.macOS    / cocos2d-mono.Tests.Core.macOS    (folds into net9.0 DesktopGL on macOS)
+        cocos2d-mono.Tests.Windows  / cocos2d-mono.Tests.Core.Windows
+
+      Android + iOS legs land in a follow-up commit (Phase 1b step 2) once
+      desktop is CI-green. Mobile requires resource moves from
+      Tests/cocos2d-mono.Tests.Android/ and Tests/cocos2d-mono.Tests.iOS/ which
+      cannot be validated locally without the corresponding .NET workloads.
+
+      Source still lives under Tests/cocos2d-mono.Tests/ during the side-by-side
+      transition; this csproj globs it. Legacy test csprojs continue to work in
+      parallel until Phase 1c.
+    -->
+    <TargetFrameworks>$(Cocos2DBaseTfm);$(Cocos2DWindowsTfm)</TargetFrameworks>
+    <RootNamespace>tests</RootNamespace>
+    <AssemblyName>Cocos2DMono.IntegrationTests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <ApplicationManifest>..\..\Tests\cocos2d-mono.Tests\app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\Tests\cocos2d-mono.Tests\Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Per-TFM platform defines (mirror Cocos2DMono.csproj exactly).
+       ============================================================ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)'">
+    <OutputType>WinExe</OutputType>
+    <DefineConstants>$(DefineConstants);OPENGL;MONOGAME;DESKTOPGL</DefineConstants>
+    <MonoGamePlatform>DesktopGL</MonoGamePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`Windows`))' == 'true'">
+    <DefineConstants>$(DefineConstants);WINDOWSGL</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`OSX`))' == 'true'">
+    <DefineConstants>$(DefineConstants);MACOS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`Linux`))' == 'true'">
+    <DefineConstants>$(DefineConstants);LINUX</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DWindowsTfm)'">
+    <OutputType>WinExe</OutputType>
+    <!-- Mirrors Cocos2DMono.csproj net9.0-windows7.0 DefineConstants: WINDOWS;XNA
+         only (no MONOGAME — see Cocos2DMono.csproj rationale around CCContentManager
+         accessibility). -->
+    <DefineConstants>$(DefineConstants);WINDOWS;XNA</DefineConstants>
+    <UseWindowsForms>true</UseWindowsForms>
+    <MonoGamePlatform>Windows</MonoGamePlatform>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Source globbing (replaces cocos2d-mono.Tests.projitems)
+       ============================================================ -->
+  <PropertyGroup>
+    <TestsSourceRoot>..\..\Tests\cocos2d-mono.Tests\</TestsSourceRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Glob the shared Tests source. Exclusions:
+        bin/ obj/                        build artifacts
+        cocos2d-mono.Tests.*             legacy per-platform test csproj folders
+        Properties\AssemblyInfo*.cs      SDK auto-generates assembly info.
+        **\*.Designer.cs                 generated; none today, glob is defensive.
+
+      Both Box2DTestBet/ (Farseer Physics 3.3 XNA, self-contained namespaces
+      FarseerPhysics.* / Poly2Tri.* / tests.classes.tests.Box2DTestBet) AND
+      Box2DTestBet(Box2D)/ (modern Box2D port, namespace Box2D.TestBed) are
+      INCLUDED. TestController.cs:350/352 reference both — Farseer's
+      tests.classes.tests.Box2DTestBet.Box2dTestBedScene and the modern
+      Box2D.TestBed.Box2dTestBedScene — for a runtime switch between the two
+      test beds. No type collisions: types live in different namespaces.
+    -->
+    <Compile Include="$(TestsSourceRoot)**\*.cs"
+             Exclude="$(TestsSourceRoot)bin\**;$(TestsSourceRoot)obj\**;$(TestsSourceRoot)cocos2d-mono.Tests.*\**;$(TestsSourceRoot)Properties\AssemblyInfo*.cs;$(TestsSourceRoot)**\*.Designer.cs" />
+  </ItemGroup>
+
+  <!-- Embedded resources (icons, .config) at the Tests root. -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\Tests\cocos2d-mono.Tests\Icon.bmp"
+                     Link="Icon.bmp" />
+    <EmbeddedResource Include="..\..\Tests\cocos2d-mono.Tests\Icon.ico"
+                     Link="Icon.ico" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       Project references
+       ============================================================ -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Cocos2DMono\Cocos2DMono.csproj" />
+    <ProjectReference Include="..\..\src\Box2D\Box2D.csproj" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       MGCB content reference
+
+       Deferred to Phase 1b step 2: building Content.mgcb requires the
+       dotnet-mgcb tool (3.8.4.1) restored via a local tool manifest at
+       .config/dotnet-tools.json. The desktop build/CI validates source
+       compilation only — the test harness is not executed in CI. When
+       mobile bits land, the tool manifest is added alongside.
+       ============================================================ -->
+  <!--
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="$(MonoGameVersion)" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="..\..\Tests\cocos2d-mono.Tests\Content\Content.mgcb">
+      <Link>Content\Content.mgcb</Link>
+    </MonoGameContentReference>
+  </ItemGroup>
+  -->
+
+
+</Project>
