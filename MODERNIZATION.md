@@ -318,64 +318,81 @@ steps:
 
 ---
 
-## Phase 1.5 — Fork `cocos2d-mono-uwp` as a pinned consumer
+## Phase 1.5 — Fork `cocos2d-mono-uwp` as the source-of-truth for `Cocos2D-Mono.Uwp`
 
-> **Goal:** Preserve UWP / Xbox (UWP-flavored) targeting in a separate repo so the mainline can free itself of dormant `#if NETFX_CORE` code. **No mainline code changes** in this phase — it's a one-time repo creation tied to a known-good mainline tag.
+> **Goal:** Move the UWP / Xbox UWP build into its own repository so mainline can free itself of dormant `#if NETFX_CORE` code in Phase 2. **No mainline code changes** in this phase — it's a one-time repo creation, plus a single mainline tag.
 >
-> **Risk:** Low. Mainline is unaffected. UWP repo starts as an archive that pins MonoGame and Cocos2D-Mono to specific versions.
+> **Risk:** Low. Mainline is unaffected. The new repo is the build host for the existing `Cocos2D-Mono.Uwp` NuGet package (latest pre-split: [2.4.8.3](https://www.nuget.org/packages/Cocos2D-Mono.Uwp/2.4.8.3), Jan 14 2025).
 >
-> **Estimated effort:** 1 day.
+> **Estimated effort:** 1 day (repo authoring complete; deferred items below).
 >
 > **Breaking?** No.
 
 ### Context
 
-The legacy `cocos2d-mono.UWP` csproj was removed from `dev` some time ago. The 59 surviving `#if NETFX_CORE` blocks across 23 files have no csproj that defines `NETFX_CORE`, so they compile to nothing on every current build target. MonoGame upstream dropped UWP after 3.8.0; no current MonoGame release supports UWP. Keeping the `NETFX_CORE` guards in `dev` is pure carrying cost.
+The legacy `cocos2d.Uwp/` and `box2d.Uwp/` csprojs were removed from mainline `dev` on 2024-12-01 in commit [`ea6a2d76`](https://github.com/Cocos2D-Mono/cocos2d-mono/commit/ea6a2d76). The 59 surviving `#if NETFX_CORE` blocks across 23 files have no csproj that defines `NETFX_CORE` — they compile to nothing on every current build target. MonoGame upstream dropped UWP after 3.8.2; no newer MonoGame release supports UWP. Keeping the `NETFX_CORE` guards in `dev` is pure carrying cost.
 
-### Approach: pinned consumer, not active fork
+However, `Cocos2D-Mono.Uwp` continues to be published to NuGet (the latest version 2.4.8.3 shipped over a month *after* the mainline removal). The package needs a permanent build home.
 
-`cocos2d-mono-uwp` is a **new repo that consumes mainline cocos2d-mono as a pinned NuGet dependency**, plus a thin `Cocos2D.UWP.csproj` wrapper that targets `uap10.0` and supplies the platform glue. It does NOT receive ongoing merges from mainline. Effectively a *frozen archive* with a tiny adapter shell.
+### Approach: separate repo, mainline source via pinned submodule
+
+`cocos2d-mono-uwp` is a **new repo that produces the `Cocos2D-Mono.Uwp` and `Cocos2D-Mono.Box2D.Uwp` NuGet packages**. It contains only the UWP-specific csprojs, AssemblyInfo, nuspecs, and CI; mainline cocos2d-mono source is consumed via a **git submodule pinned to commit `c30f5ec3`** (the parent of the UWP-removal commit — the last commit with full `#if NETFX_CORE` source intact).
 
 ```
-cocos2d-mono-uwp/                       (NEW repo)
-├── src/Cocos2D.UWP/
-│   ├── Cocos2D.UWP.csproj              (TargetFramework=uap10.0; defines NETFX_CORE)
-│   └── (UWP-specific entry points + platform glue)
-├── samples/
-└── README.md                            (clearly labels: frozen-archive status, pinned versions)
+cocos2d-mono-uwp/                                       (NEW repo)
+├── Directory.Build.props                               (pinned MonoGame.WindowsUniversal etc.)
+├── Cocos2D-Mono.Uwp.sln                                (Cocos2D.Uwp + Box2D.Uwp)
+├── external/
+│   └── cocos2d-mono/                                   (submodule pinned to c30f5ec3)
+├── src/
+│   ├── Cocos2D.Uwp/Cocos2D.Uwp.csproj                  (pre-SDK; TargetPlatformIdentifier=UAP)
+│   ├── Cocos2D.Uwp/Properties/AssemblyInfo.cs
+│   ├── Box2D.Uwp/Box2D.Uwp.csproj                      (pre-SDK; TargetPlatformIdentifier=UAP)
+│   └── Box2D.Uwp/Properties/AssemblyInfo.cs
+├── nuget/
+│   ├── Cocos2D-Mono.Uwp.nuspec                         (v2.4.8.4 — continues from 2.4.8.3)
+│   └── Cocos2D-Mono.Box2D.Uwp.nuspec                   (companion split)
+└── .github/workflows/build.yml                         (windows-latest matrix: x64, ARM)
 ```
 
-`Cocos2D.UWP.csproj` highlights:
+The csprojs use **pre-SDK MSBuild format** because UWP class libraries require `TargetPlatformIdentifier=UAP`, which the modern SDK-style csproj format does not support cleanly. Each csproj has the per-architecture (`AnyCPU` / `x86` / `x64` / `ARM`) `PropertyGroup` set required for UWP `.NET Native` builds.
 
-```xml
-<TargetFramework>uap10.0</TargetFramework>
-<DefineConstants>NETFX_CORE;WINDOWS_UWP;...</DefineConstants>
-<ItemGroup>
-  <PackageReference Include="Cocos2D-Mono.Windows" Version="2.5.9" />      <!-- last legacy SKU with NETFX_CORE -->
-  <PackageReference Include="MonoGame.Framework.WindowsUniversal" Version="3.8.0" />  <!-- last UWP MG -->
-</ItemGroup>
-```
+Source is consumed via `<Compile Include="..\..\external\cocos2d-mono\cocos2d\**\*.cs" Exclude="...">` — the historical `<Import Project="..\cocos2d.projitems" />` pattern is replaced with explicit globbing. Exclusions: mainline per-platform csproj folders, `external lib/**` (vendored ICSharpCode), `Properties/AssemblyInfo*.cs` (supplied locally), and `platform/Tuple.cs` (dead WP/Xbox360 code).
 
-### Pin point: existing `v2.5.9`
+### Pinned versions
 
-The current mainline release tag `2.5.9` is already a clean pin point — it has the `#if NETFX_CORE` paths intact and is published to NuGet as `Cocos2D-Mono.Windows`. No additional tagging is required on mainline.
-
-After Phase 1c lands the consolidated `Cocos2D-Mono` (single multi-target NuGet ID), the UWP repo continues to pin to the legacy `Cocos2D-Mono.Windows 2.5.9` package. The repo is honest about being archive-only.
+| Dependency | Version | Rationale |
+|---|---|---|
+| `MonoGame.Framework.WindowsUniversal` | `3.8.2.1105` | Final MonoGame release with UWP support. |
+| `Microsoft.NETCore.UniversalWindowsPlatform` | `6.2.11` | Final stable UWP runtime. |
+| `SharpDX.Mathematics` | `4.0.1` | UWP-compatible. |
+| `SharpZipLib` | `1.3.3` | Last UWP-compatible version. |
+| mainline `cocos2d-mono` (submodule) | commit `c30f5ec3` | Parent of UWP-removal commit; full `#if NETFX_CORE` source intact. |
+| `Cocos2D-Mono.Uwp` package | starts at `2.4.8.4` | Continues the NuGet version line from 2.4.8.3 (last pre-split release). |
 
 ### Migration steps
 
-1. **Verify pin viability**: confirm `Cocos2D-Mono.Windows 2.5.9` is still published on NuGet.org and includes the `NETFX_CORE`-guarded sources.
-2. **Create `Cocos2D-Mono/cocos2d-mono-uwp` repo** with the `Cocos2D.UWP.csproj` skeleton, README, and a minimal sample.
-3. **Resurrect the UWP entry-point glue** (the original `cocos2d-mono.UWP/` folder from git history). `git log --diff-filter=D --summary | grep cocos2d-mono.UWP` in mainline to recover the deleted files; copy into the new repo.
-4. **Publish `Cocos2D-Mono.UWP 1.0.0`** to NuGet as a separate package family.
-5. **Mark the repo as archived / read-only** once stable. Critical security cherry-picks may still be applied manually.
+1. **Author the new repo locally** (`c:/Projects/cocos2d-mono-uwp/` — completed). All scaffolding files committed at `c0eb596`.
+2. **Create `Cocos2D-Mono/cocos2d-mono-uwp` empty repo on GitHub** (manual step — requires org owner permissions).
+3. **Push initial commit**: `git remote add origin git@github.com:Cocos2D-Mono/cocos2d-mono-uwp.git && git push -u origin main`.
+4. **Verify the build runs** via the new repo's CI workflow on `windows-latest` with the `Universal Windows Platform development` VS workload. Reference build target: `msbuild Cocos2D-Mono.Uwp.sln /p:Configuration=Release /p:Platform=x64 /restore`.
+5. **Publish `Cocos2D-Mono.Uwp 2.4.8.4`** and **`Cocos2D-Mono.Box2D.Uwp 2.4.8.4`** to NuGet.org from this repo's `pack` workflow.
+6. **Update mainline `README.md`** to point UWP/Xbox users at the new repo.
+7. **Mark mainline `#if NETFX_CORE` blocks as removable** — Phase 2 cleanup is now unblocked.
+
+### Decision: license
+
+The new repo is `MIT`, matching the `<PackageLicenseExpression>MIT</PackageLicenseExpression>` declared in every published `Cocos2D-Mono.Uwp.nuspec`. Mainline's top-level `LICENSE` is `AGPL-3.0`, which is a pre-existing inconsistency in mainline — flagged in the new repo's README so the discrepancy is visible.
 
 ### Acceptance criteria
 
-- [ ] `Cocos2D-Mono/cocos2d-mono-uwp` repo exists with a working `uap10.0` build.
-- [ ] One published `Cocos2D-Mono.UWP` NuGet package.
-- [ ] README documents the frozen-archive status and pinned versions.
-- [ ] After this phase completes, Phase 2 can freely delete `#if NETFX_CORE` blocks from mainline.
+- [x] Local `cocos2d-mono-uwp` repo authored with Cocos2D.Uwp + Box2D.Uwp pre-SDK csprojs, nuspecs, sln, README, LICENSE, CI workflow.
+- [x] Submodule `external/cocos2d-mono` pinned to mainline commit `c30f5ec3`.
+- [ ] `Cocos2D-Mono/cocos2d-mono-uwp` repo created on GitHub and initial commit pushed.
+- [ ] CI builds green on `windows-latest` for `x64` and `ARM` in both `Debug` and `Release`.
+- [ ] `Cocos2D-Mono.Uwp 2.4.8.4` published to NuGet.org from this repo.
+- [ ] Mainline `README.md` updated to reference the new UWP repo.
+- [ ] After all the above, Phase 2 can freely delete `#if NETFX_CORE` blocks from mainline.
 
 ---
 
@@ -719,7 +736,7 @@ Phase 4 should not start until Phase 3's NRT pass is complete — designing comp
 - Save-file compatibility: are there shipped games with `CCSerialization`-format save files that need to load on the new serializer? If yes, Phase 2 needs a one-time legacy reader.
 - ~~Render backend bet~~: **Resolved** — Option A (stay on upstream MonoGame). The `release/2.6.0-preview` branch's move to MonoGame 3.8.5 confirms this. Phase 4 still routes rendering through a component boundary so the door stays open.
 - Cadence: is this modernization a continuous effort, or driven by specific releases? Affects whether `[Obsolete]` shims live for one minor or three.
-- UWP repo bootstrapping: does the `Cocos2D-Mono.Windows 2.5.9` NuGet package (the proposed pin point for the UWP fork) still contain compileable `#if NETFX_CORE` source paths, or only compiled binaries for `net9.0-windows`? If only binaries, the UWP repo will need to consume **source from a tagged git revision** instead of NuGet — adjusts Phase 1.5's first migration step.
+- ~~UWP repo bootstrapping~~: **Resolved** — the UWP repo is a *source-of-truth*, not a NuGet consumer. It uses a git submodule pinned to mainline commit `c30f5ec3` to vendor cocos2d-mono source. See Phase 1.5 for details. The `Cocos2D-Mono.Uwp` NuGet package family continues with version 2.4.8.4 from the new repo.
 
 ---
 
