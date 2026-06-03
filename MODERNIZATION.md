@@ -8,7 +8,7 @@ A reference document describing how the framework will be modernized over a seri
 
 1. [Codebase snapshot](#codebase-snapshot)
 2. [Phase 1 — Project structure consolidation](#phase-1--project-structure-consolidation)
-3. [Phase 1.5 — Fork `cocos2d-mono-uwp` as a pinned consumer](#phase-15--fork-cocos2d-mono-uwp-as-a-pinned-consumer)
+3. [Phase 1.5 — Fork `Cocos2D-Mono.UWP` as the source-of-truth for `Cocos2D-Mono.Uwp`](#phase-15--fork-cocos2d-monouwp-as-the-source-of-truth-for-cocos2d-monouwp)
 4. [Phase 2 — Dead code, dead conditionals, BCL replacements](#phase-2--dead-code-dead-conditionals-bcl-replacements)
 5. [Phase 3 — Language-level modernization](#phase-3--language-level-modernization)
 6. [Phase 4 — Architectural refactor](#phase-4--architectural-refactor)
@@ -318,7 +318,7 @@ steps:
 
 ---
 
-## Phase 1.5 — Fork `cocos2d-mono-uwp` as the source-of-truth for `Cocos2D-Mono.Uwp`
+## Phase 1.5 — Fork `Cocos2D-Mono.UWP` as the source-of-truth for `Cocos2D-Mono.Uwp`
 
 > **Goal:** Move the UWP / Xbox UWP build into its own repository so mainline can free itself of dormant `#if NETFX_CORE` code in Phase 2. **No mainline code changes** in this phase — it's a one-time repo creation, plus a single mainline tag.
 >
@@ -336,10 +336,10 @@ However, `Cocos2D-Mono.Uwp` continues to be published to NuGet (the latest versi
 
 ### Approach: separate repo, mainline source via pinned submodule
 
-`cocos2d-mono-uwp` is a **new repo that produces the `Cocos2D-Mono.Uwp` and `Cocos2D-Mono.Box2D.Uwp` NuGet packages**. It contains only the UWP-specific csprojs, AssemblyInfo, nuspecs, and CI; mainline cocos2d-mono source is consumed via a **git submodule pinned to commit `c30f5ec3`** (the parent of the UWP-removal commit — the last commit with full `#if NETFX_CORE` source intact).
+`Cocos2D-Mono.UWP` is a **new repo that produces the `Cocos2D-Mono.Uwp` and `Cocos2D-Mono.Box2D.Uwp` NuGet packages** (the repo name uses all-caps `UWP`; the package IDs keep the existing mixed-case `Uwp` for version-line continuity). It contains only the UWP-specific csprojs, AssemblyInfo, nuspecs, and CI; mainline cocos2d-mono source is consumed via a **git submodule pinned to commit `c30f5ec3`** (the parent of the UWP-removal commit — the last commit with full `#if NETFX_CORE` source intact).
 
 ```
-cocos2d-mono-uwp/                                       (NEW repo)
+Cocos2D-Mono.UWP/                                       (NEW repo)
 ├── Directory.Build.props                               (pinned MonoGame.WindowsUniversal etc.)
 ├── Cocos2D-Mono.Uwp.sln                                (Cocos2D.Uwp + Box2D.Uwp)
 ├── external/
@@ -373,8 +373,8 @@ Source is consumed via `<Compile Include="..\..\external\cocos2d-mono\cocos2d\**
 ### Migration steps
 
 1. **Author the new repo locally** (`c:/Projects/cocos2d-mono-uwp/` — completed). All scaffolding files committed at `c0eb596`.
-2. **Create `Cocos2D-Mono/cocos2d-mono-uwp` empty repo on GitHub** (manual step — requires org owner permissions).
-3. **Push initial commit**: `git remote add origin git@github.com:Cocos2D-Mono/cocos2d-mono-uwp.git && git push -u origin main`.
+2. **Create `Cocos2D-Mono/Cocos2D-Mono.UWP` empty repo on GitHub** (manual step — requires org owner permissions).
+3. **Push initial commit**: `git remote add origin git@github.com:Cocos2D-Mono/Cocos2D-Mono.UWP.git && git push -u origin main`.
 4. **Verify the build runs** via the new repo's CI workflow on `windows-latest` with the `Universal Windows Platform development` VS workload. Reference build target: `msbuild Cocos2D-Mono.Uwp.sln /p:Configuration=Release /p:Platform=x64 /restore`.
 5. **Publish `Cocos2D-Mono.Uwp 2.4.8.4`** and **`Cocos2D-Mono.Box2D.Uwp 2.4.8.4`** to NuGet.org from this repo's `pack` workflow.
 6. **Update mainline `README.md`** to point UWP/Xbox users at the new repo.
@@ -386,9 +386,9 @@ The new repo is `MIT`, matching the `<PackageLicenseExpression>MIT</PackageLicen
 
 ### Acceptance criteria
 
-- [x] Local `cocos2d-mono-uwp` repo authored with Cocos2D.Uwp + Box2D.Uwp pre-SDK csprojs, nuspecs, sln, README, LICENSE, CI workflow.
+- [x] Local `Cocos2D-Mono.UWP` repo authored with Cocos2D.Uwp + Box2D.Uwp pre-SDK csprojs, nuspecs, sln, README, LICENSE, CI workflow.
 - [x] Submodule `external/cocos2d-mono` pinned to mainline commit `c30f5ec3`.
-- [ ] `Cocos2D-Mono/cocos2d-mono-uwp` repo created on GitHub and initial commit pushed.
+- [ ] `Cocos2D-Mono/Cocos2D-Mono.UWP` repo created on GitHub and initial commit pushed.
 - [ ] CI builds green on `windows-latest` for `x64` and `ARM` in both `Debug` and `Release`.
 - [ ] `Cocos2D-Mono.Uwp 2.4.8.4` published to NuGet.org from this repo.
 - [ ] Mainline `README.md` updated to reference the new UWP repo.
@@ -713,7 +713,7 @@ Defined when the phase is scheduled — depends on which strategic options are c
 | Phase | Risk | Effort | Breaks public API? | Can run in parallel with… |
 |---|---|---|---|---|
 | 1. Project consolidation (1a → 1b → 1c → 1d) | Low | 1–2 weeks | NuGet IDs change in 1c (3.0 release); 1d is the `release/2.6.0-preview` reconciliation | Phase 5 setup |
-| 1.5. Fork `cocos2d-mono-uwp` | Low | 1 day | No (mainline untouched) | Standalone — runs between 1c and 2 |
+| 1.5. Fork `Cocos2D-Mono.UWP` | Low | 1 day | No (mainline untouched) | Standalone — runs between 1c and 2 |
 | 2. Dead code / BCL replacement | Low | 2–3 weeks | No | Phase 5, Phase 3 setup |
 | 3. Language modernization | Medium | 4–6 weeks | Field renames; mitigated by `[Obsolete]` shims | Phase 5 |
 | 4. Architectural refactor | High | 8–12+ weeks | Yes (4.0 release) | Late Phase 3 |
