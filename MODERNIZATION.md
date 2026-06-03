@@ -372,7 +372,7 @@ Source is consumed via `<Compile Include="..\..\external\cocos2d-mono\cocos2d\**
 
 ### Migration steps
 
-1. **Author the new repo locally** (`c:/Projects/cocos2d-mono-uwp/` — completed). All scaffolding files committed at `c0eb596`.
+1. **Author the new repo locally** (`c:/Projects/Cocos2D-Mono.UWP/` — completed). All scaffolding files committed at `c0eb596`.
 2. **Create `Cocos2D-Mono/Cocos2D-Mono.UWP` empty repo on GitHub** (manual step — requires org owner permissions).
 3. **Push initial commit**: `git remote add origin git@github.com:Cocos2D-Mono/Cocos2D-Mono.UWP.git && git push -u origin main`.
 4. **Verify the build runs** via the new repo's CI workflow on `windows-2022` with the `Universal Windows Platform development` VS workload. (`windows-latest` is unusable: it redirects to VS 2026 which dropped the UAP SDK; `windows-2022` retains the VS 2022 UWP workload with UAP 10.0.19041.) Reference build target: `msbuild Cocos2D-Mono.Uwp.sln /p:Configuration=Release /p:Platform=AnyCPU /restore`.
