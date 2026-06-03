@@ -8,12 +8,13 @@ A reference document describing how the framework will be modernized over a seri
 
 1. [Codebase snapshot](#codebase-snapshot)
 2. [Phase 1 — Project structure consolidation](#phase-1--project-structure-consolidation)
-3. [Phase 2 — Dead code, dead conditionals, BCL replacements](#phase-2--dead-code-dead-conditionals-bcl-replacements)
-4. [Phase 3 — Language-level modernization](#phase-3--language-level-modernization)
-5. [Phase 4 — Architectural refactor](#phase-4--architectural-refactor)
-6. [Phase 5 — Quality infrastructure](#phase-5--quality-infrastructure)
-7. [Phase 6 — Forward-looking platform decisions](#phase-6--forward-looking-platform-decisions)
-8. [Suggested ordering and effort](#suggested-ordering-and-effort)
+3. [Phase 1.5 — Fork `cocos2d-mono-uwp` as a pinned consumer](#phase-15--fork-cocos2d-mono-uwp-as-a-pinned-consumer)
+4. [Phase 2 — Dead code, dead conditionals, BCL replacements](#phase-2--dead-code-dead-conditionals-bcl-replacements)
+5. [Phase 3 — Language-level modernization](#phase-3--language-level-modernization)
+6. [Phase 4 — Architectural refactor](#phase-4--architectural-refactor)
+7. [Phase 5 — Quality infrastructure](#phase-5--quality-infrastructure)
+8. [Phase 6 — Forward-looking platform decisions](#phase-6--forward-looking-platform-decisions)
+9. [Suggested ordering and effort](#suggested-ordering-and-effort)
 
 ---
 
@@ -34,6 +35,8 @@ Findings as of the start of the modernization effort.
 | Inheritance | `CCNode` implements 7 interfaces, holds `m_pChildren` + manually-synced `m_pChildrenByTag` index |
 | Public mutable fields | `CCNode.m_sTransform`, `CCRawList<T>.Elements` |
 | CI | 13 GitHub Actions workflow files, one per platform × Core/non-Core variant |
+| Preview branch | `release/2.6.0-preview` exists on upstream. Structurally identical to `dev` (same 30 csprojs, same `.projitems`); only changes are `MonoGameVersion 3.8.4.1 → 3.8.5-preview.2`, every TFM `net9.0* → net10.0*`, workflows `dotnet-version 9.0.x → 10.0.x`, and `global.json` deletion. Periodically refreshed via `Merge dev → release/2.6.0-preview`. |
+| UWP / Xbox surface | The UWP `csproj` was removed from `dev` some time ago. However, 59 `#if NETFX_CORE` blocks across 23 files still survive as dormant code (top: `CCApplication.cs` 7, `cocoa/CCGeometry.cs` 6, `support/CCUserDefault.cs` 6, `platform/PList/PlistDocument.cs` 6, `CCDirector.cs` 5, `platform/CCAccelerometer.cs` 5). Nothing currently defines `NETFX_CORE` in any csproj, so these paths compile to nothing today. |
 
 The `Core` vs non-`Core` packaging split appears to be purely about whether `MonoGame.Content.Builder.Task` (and a couple of native deps) are baked in. The shared code is identical via `.projitems`.
 
@@ -49,15 +52,16 @@ The `Core` vs non-`Core` packaging split appears to be purely about whether `Mon
 >
 > **Breaking?** No, if NuGet package IDs stay the same.
 
-### Rollout strategy: 1a → 1b → 1c
+### Rollout strategy: 1a → 1b → 1c → 1d
 
-Phase 1 ships as three commits to keep blast radius bounded and the legacy build available as a safety net:
+Phase 1 ships as four commits to keep blast radius bounded and the legacy build available as a safety net:
 
 | Sub-phase | What changes | Reversible? |
 |---|---|---|
-| **1a** *(this PR)* | **Add** new files under `src/`, new `Cocos2DMono.sln`, new matrix `.github/workflows/build.yml`. Legacy build is untouched. New build runs **side-by-side** with legacy. | Yes — delete `src/`, the new `.sln`, the new workflow. Legacy untouched. |
+| **1a** *(this PR)* | **Add** new files under `src/`, new `Cocos2DMono.sln`, new matrix `.github/workflows/build.yml`. Legacy build is untouched. New build runs **side-by-side** with legacy. TFMs are parameterized via `Cocos2DBaseTfm`/`Cocos2DWindowsTfm`/`Cocos2DAndroidTfm`/`Cocos2DIosTfm` properties so a future .NET / MonoGame bump is a four-property edit. | Yes — delete `src/`, the new `.sln`, the new workflow. Legacy untouched. |
 | **1b** | Consolidate `Tests/` into `tests/Cocos2DMono.IntegrationTests/`. Includes iOS/Android resource moves and a new iOS `AppDelegate.cs` to replace the `#if IPHONE` branch of `Tests/cocos2d-mono.Tests/Program.cs`. | Mostly — `git mv` history is preserved. |
 | **1c** | **Delete** legacy: 12 cocos2d csprojs, 4 box2d csprojs, 13 tests csprojs, 6 projitems/shproj, 4 AssemblyInfo files, 13 legacy CI workflows, the vestigial `cocos2d/external lib/ICSharpCodeSource/ICSharpCode.SharpZLib.WP8.csproj`. Promote `src/Directory.Packages.props` and `src/Directory.Build.props` to the repo root. | After this commit `cocos2d-mono.All.sln` is deleted; the new `Cocos2DMono.sln` is canonical. |
+| **1d** | **Reconcile `release/2.6.0-preview`** with the consolidated layout. Tiny PR against `release/2.6.0-preview`: bump the four `Cocos2D*Tfm` properties in `Directory.Build.props` from `net9.0*` → `net10.0*`, bump `MonoGameVersion` to `3.8.5-preview.*`, bump CI matrix `dotnet-version` to `10.0.x`. No csproj edits required because of the TFM parameterization in 1a. Replaces the old "preview-branch maintenance" pattern of editing 30 csprojs per .NET bump. | Yes — revert the props edit. |
 
 ### 1a — Status
 
@@ -66,7 +70,7 @@ Completed on branch `modernization/phase-1-project-consolidation`. Files added:
 | File | Purpose |
 |---|---|
 | `src/Directory.Packages.props` | Central Package Management for new csprojs. Reconciles version inconsistencies (`SharpZipLib` 1.3.3→1.4.2, `System.Drawing.Common` 5.0.3/8.0.8→8.0.11). Scoped to `src/` so legacy projects are unaffected. |
-| `src/Directory.Build.props` | Shared metadata: `LangVersion=latest`, deterministic builds, NuGet metadata, source-link/symbol packages. Inherits `MonoGameVersion` from the repo-root `Directory.Build.props`. |
+| `src/Directory.Build.props` | Shared metadata: `LangVersion=latest`, deterministic builds, NuGet metadata, source-link/symbol packages. Inherits `MonoGameVersion` from the repo-root `Directory.Build.props`. Defines the parameterized TFM dials (`Cocos2DBaseTfm`, `Cocos2DWindowsTfm`, `Cocos2DAndroidTfm`, `Cocos2DIosTfm`, and `Cocos2DTargetFrameworks` derived from them). |
 | `src/Cocos2DMono/Cocos2DMono.csproj` | Multi-targeted (`net9.0;net9.0-windows7.0;net9.0-android35.0;net9.0-ios18.0`). Replaces 12 legacy `cocos2d.{Platform}` + `cocos2d.Core.{Platform}` csprojs. Globs `..\..\cocos2d\**\*.cs` and applies platform exclusions for the small set of `-Platform.cs` files. |
 | `src/Box2D/Box2D.csproj` | Same TFM set. Replaces 4 legacy `box2d.{Platform}` csprojs. |
 | `Cocos2DMono.sln` | New solution referencing only `src/*`. Coexists with the legacy `cocos2d-mono.All.sln`. |
@@ -309,7 +313,69 @@ steps:
 - [ ] CI matrix workflow green on every TFM.
 - [ ] Tests project consolidated to `tests/Cocos2DMono.IntegrationTests/` and runs identically on every platform (1b).
 - [ ] `cocos2d.projitems`, `cocos2d.shproj`, all `cocos2d.{Platform}` and `cocos2d.Core.{Platform}` folders deleted (1c).
+- [ ] `release/2.6.0-preview` rebased onto post-1c dev: TFM dials bumped to net10.0, MonoGameVersion → 3.8.5-preview, CI dotnet-version → 10.0.x (1d).
 - [x] `MODERNIZATION.md` updated with the actual final shape vs the plan (1a).
+
+---
+
+## Phase 1.5 — Fork `cocos2d-mono-uwp` as a pinned consumer
+
+> **Goal:** Preserve UWP / Xbox (UWP-flavored) targeting in a separate repo so the mainline can free itself of dormant `#if NETFX_CORE` code. **No mainline code changes** in this phase — it's a one-time repo creation tied to a known-good mainline tag.
+>
+> **Risk:** Low. Mainline is unaffected. UWP repo starts as an archive that pins MonoGame and Cocos2D-Mono to specific versions.
+>
+> **Estimated effort:** 1 day.
+>
+> **Breaking?** No.
+
+### Context
+
+The legacy `cocos2d-mono.UWP` csproj was removed from `dev` some time ago. The 59 surviving `#if NETFX_CORE` blocks across 23 files have no csproj that defines `NETFX_CORE`, so they compile to nothing on every current build target. MonoGame upstream dropped UWP after 3.8.0; no current MonoGame release supports UWP. Keeping the `NETFX_CORE` guards in `dev` is pure carrying cost.
+
+### Approach: pinned consumer, not active fork
+
+`cocos2d-mono-uwp` is a **new repo that consumes mainline cocos2d-mono as a pinned NuGet dependency**, plus a thin `Cocos2D.UWP.csproj` wrapper that targets `uap10.0` and supplies the platform glue. It does NOT receive ongoing merges from mainline. Effectively a *frozen archive* with a tiny adapter shell.
+
+```
+cocos2d-mono-uwp/                       (NEW repo)
+├── src/Cocos2D.UWP/
+│   ├── Cocos2D.UWP.csproj              (TargetFramework=uap10.0; defines NETFX_CORE)
+│   └── (UWP-specific entry points + platform glue)
+├── samples/
+└── README.md                            (clearly labels: frozen-archive status, pinned versions)
+```
+
+`Cocos2D.UWP.csproj` highlights:
+
+```xml
+<TargetFramework>uap10.0</TargetFramework>
+<DefineConstants>NETFX_CORE;WINDOWS_UWP;...</DefineConstants>
+<ItemGroup>
+  <PackageReference Include="Cocos2D-Mono.Windows" Version="2.5.9" />      <!-- last legacy SKU with NETFX_CORE -->
+  <PackageReference Include="MonoGame.Framework.WindowsUniversal" Version="3.8.0" />  <!-- last UWP MG -->
+</ItemGroup>
+```
+
+### Pin point: existing `v2.5.9`
+
+The current mainline release tag `2.5.9` is already a clean pin point — it has the `#if NETFX_CORE` paths intact and is published to NuGet as `Cocos2D-Mono.Windows`. No additional tagging is required on mainline.
+
+After Phase 1c lands the consolidated `Cocos2D-Mono` (single multi-target NuGet ID), the UWP repo continues to pin to the legacy `Cocos2D-Mono.Windows 2.5.9` package. The repo is honest about being archive-only.
+
+### Migration steps
+
+1. **Verify pin viability**: confirm `Cocos2D-Mono.Windows 2.5.9` is still published on NuGet.org and includes the `NETFX_CORE`-guarded sources.
+2. **Create `Cocos2D-Mono/cocos2d-mono-uwp` repo** with the `Cocos2D.UWP.csproj` skeleton, README, and a minimal sample.
+3. **Resurrect the UWP entry-point glue** (the original `cocos2d-mono.UWP/` folder from git history). `git log --diff-filter=D --summary | grep cocos2d-mono.UWP` in mainline to recover the deleted files; copy into the new repo.
+4. **Publish `Cocos2D-Mono.UWP 1.0.0`** to NuGet as a separate package family.
+5. **Mark the repo as archived / read-only** once stable. Critical security cherry-picks may still be applied manually.
+
+### Acceptance criteria
+
+- [ ] `Cocos2D-Mono/cocos2d-mono-uwp` repo exists with a working `uap10.0` build.
+- [ ] One published `Cocos2D-Mono.UWP` NuGet package.
+- [ ] README documents the frozen-archive status and pinned versions.
+- [ ] After this phase completes, Phase 2 can freely delete `#if NETFX_CORE` blocks from mainline.
 
 ---
 
@@ -323,8 +389,11 @@ steps:
 
 ### 2.1 Dead-platform conditional removal
 
-Remove every `#if WINDOWS_PHONE / XBOX / PSM / WP8 / SILVERLIGHT` block. These platforms have been EOL for years and their guarded code paths are unreachable. Files known to contain these blocks:
+> **Prerequisite:** Phase 1.5 (UWP repo) must exist before `NETFX_CORE` deletion. The other constants below are unambiguously dead and can be removed without coordination.
 
+Remove every `#if WINDOWS_PHONE / XBOX / PSM / WP8 / SILVERLIGHT / NETFX_CORE / WINDOWS_UWP / WINRT` block. These platforms have been EOL or are no longer supported on mainline; their guarded code paths are unreachable. Files known to contain these blocks:
+
+**`WINDOWS_PHONE / XBOX / PSM / WP8 / SILVERLIGHT`** (13 files):
 - `cocos2d/denshion/CCMusicPlayer.cs`
 - `cocos2d/extentions/Box2D/CCDraw.cs`
 - `cocos2d/label_nodes/CCLabelBMFont.cs`
@@ -338,6 +407,10 @@ Remove every `#if WINDOWS_PHONE / XBOX / PSM / WP8 / SILVERLIGHT` block. These p
 - `cocos2d/support/zip_support/ZipUtils.cs`
 - `cocos2d/textures/CCTexture2D.cs`
 - `cocos2d/touch_dispatcher/CCTouchDispatcher.cs`
+
+**`NETFX_CORE / WINDOWS_UWP / WINRT`** (23 files, 59 occurrences — UWP support migrated to [[Phase 1.5 UWP repo]]):
+- Concentrated in `cocos2d/platform/CCApplication.cs` (7), `cocos2d/cocoa/CCGeometry.cs` (6), `cocos2d/support/CCUserDefault.cs` (6), `cocos2d/platform/PList/PlistDocument.cs` (6), `cocos2d/CCDirector.cs` (5), `cocos2d/platform/CCAccelerometer.cs` (5).
+- Remaining hits distributed across `CCDrawManager.cs`, `CCTexture2D.cs`, `CCInputState.cs`, `CCPrimitiveBatch.cs`, `CCMusicPlayer.cs`, `CCLayer.cs`, `CCTouchDelegate.cs`, `CCTextFieldTTF.cs`, `CCConfiguration.cs`, `CCGameView.Mobile.cs`, `support/CCUtils.cs`, `support/Converters/*Converter.cs` (3), `support/Compression/ZlibBaseStream.cs`, `platform/Zlib/ZInputStream.cs`, `platform/Zlib/ZOutputStream.cs`.
 
 ### 2.2 BCL replacements
 
@@ -581,23 +654,27 @@ Lets consumers step into framework source from their debugger.
 >
 > **Estimated effort:** TBD; depends on direction chosen.
 
-### 6.1 MonoGame future
+### 6.1 MonoGame future *(downgraded to maintenance — decision already made)*
 
-MonoGame 3.8.4.1 still works but the ecosystem is fragmenting (KNI fork, FNA divergence, Microsoft's own movement). Decide:
+The existence of `release/2.6.0-preview` on MonoGame `3.8.5-preview.2` + .NET 10 makes this an *implicit decision already in flight*: **Option A — stay on upstream MonoGame**. The 30-csproj-per-bump pattern that the preview branch needed for this version churn is exactly what Phase 1 eliminates (see Phase 1d).
 
-- **Option A — Stay locked to MonoGame**: simplest, lowest effort, accepts whatever ceiling MonoGame has.
-- **Option B — Thin rendering abstraction**: introduce an `ICCRenderBackend` that today wraps MonoGame, tomorrow could wrap KNI / Veldrid / Silk.NET. Significant work; pays off only if MonoGame stalls.
-- **Option C — Migrate to KNI / FNA**: pick a winner now, port. Risky bet.
+Forward action items:
+- **Track upstream MonoGame cadence**: keep `release/<next-version>-preview` branches alive as small TFM/version-property bumps after Phase 1.
+- **Keep an internal rendering abstraction option open**: during the Phase 4 componentization, route rendering through a `Renderer` component rather than direct MonoGame calls in `CCSprite`/etc. That preserves Option B (swap renderer) without committing to it now.
+- **KNI / FNA migration (Option C)**: explicitly off the table. Reconsider only if upstream MonoGame stalls for >12 months.
 
-Recommendation: stay on MonoGame, but during Phase 4 refactor, route all rendering through a small internal abstraction so Option B is achievable without another full rewrite.
+### 6.2 Native AOT viability *(potentially advanced to Phase 4)*
 
-### 6.2 Native AOT viability
-
-Most code is reflection-light, but two things block AOT today:
+Most code is reflection-light, but three things block AOT today:
 - `CCSerialization`'s `Type.GetType(typeName)` + `Activator.CreateInstance` (see [CCNode.cs:362-363](cocos2d/base_nodes/CCNode.cs#L362-L363)).
 - The PList parser uses reflection for type lookup.
+- MonoGame's `ContentTypeReader<T>` discovery (mitigated today by `TrimmerRootAssembly` in the new csprojs).
 
-If AOT matters, the Phase 2 serializer redesign should target AOT compatibility from day one (e.g., `System.Text.Json` source generators, type-registry pattern instead of `Type.GetType`).
+The `release/2.6.0-preview` move to **.NET 10** materially improves AOT support — trim warnings are more accurate, AOT diagnostics are better, and `System.Text.Json`'s source generator covers more scenarios. This pulls AOT viability earlier in the timeline:
+
+- **Phase 2 serializer redesign MUST target AOT compatibility from day one** (`System.Text.Json` source generators, type-registry pattern instead of `Type.GetType`).
+- **Phase 4 componentization** should use static-DI patterns (`IServiceProvider` with explicit registrations) rather than reflection-based discovery.
+- **Phase 6.2's role downgrades to "verify AOT works end-to-end and add a CI matrix slot for `PublishAot=true`"** — the prep work happens in earlier phases.
 
 ### 6.3 New hosting surfaces
 
@@ -618,12 +695,13 @@ Defined when the phase is scheduled — depends on which strategic options are c
 
 | Phase | Risk | Effort | Breaks public API? | Can run in parallel with… |
 |---|---|---|---|---|
-| 1. Project consolidation | Low | 1–2 weeks | NuGet IDs only | Phase 5 setup |
+| 1. Project consolidation (1a → 1b → 1c → 1d) | Low | 1–2 weeks | NuGet IDs change in 1c (3.0 release); 1d is the `release/2.6.0-preview` reconciliation | Phase 5 setup |
+| 1.5. Fork `cocos2d-mono-uwp` | Low | 1 day | No (mainline untouched) | Standalone — runs between 1c and 2 |
 | 2. Dead code / BCL replacement | Low | 2–3 weeks | No | Phase 5, Phase 3 setup |
 | 3. Language modernization | Medium | 4–6 weeks | Field renames; mitigated by `[Obsolete]` shims | Phase 5 |
-| 4. Architectural refactor | High | 8–12+ weeks | Yes (3.0 / 4.0 release) | Late Phase 3 |
+| 4. Architectural refactor | High | 8–12+ weeks | Yes (4.0 release) | Late Phase 3 |
 | 5. Quality infrastructure | Low | Ongoing | No | All other phases |
-| 6. Strategic | High | TBD | Depends | After Phase 4 |
+| 6. Strategic | Lower than before (Option A locked in) | TBD | Depends | After Phase 4 |
 
 ### Recommended starting point
 
@@ -639,8 +717,9 @@ Phase 4 should not start until Phase 3's NRT pass is complete — designing comp
 
 - Public API consumers: who uses `Cocos2D-Mono.Core.{Platform}` versus `Cocos2D-Mono.{Platform}`? Answer determines whether Phase 1 collapses to one package or keeps a Core variant.
 - Save-file compatibility: are there shipped games with `CCSerialization`-format save files that need to load on the new serializer? If yes, Phase 2 needs a one-time legacy reader.
-- Render backend bet: pick before Phase 4 starts so component design can target it.
+- ~~Render backend bet~~: **Resolved** — Option A (stay on upstream MonoGame). The `release/2.6.0-preview` branch's move to MonoGame 3.8.5 confirms this. Phase 4 still routes rendering through a component boundary so the door stays open.
 - Cadence: is this modernization a continuous effort, or driven by specific releases? Affects whether `[Obsolete]` shims live for one minor or three.
+- UWP repo bootstrapping: does the `Cocos2D-Mono.Windows 2.5.9` NuGet package (the proposed pin point for the UWP fork) still contain compileable `#if NETFX_CORE` source paths, or only compiled binaries for `net9.0-windows`? If only binaries, the UWP repo will need to consume **source from a tagged git revision** instead of NuGet — adjusts Phase 1.5's first migration step.
 
 ---
 

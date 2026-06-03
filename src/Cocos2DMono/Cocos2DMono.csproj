@@ -18,7 +18,10 @@
       exclusions for the small set of -Platform.cs files. The legacy
       cocos2d/cocos2d.* and cocos2d/cocos2d.Core.* csproj folders are excluded.
     -->
-    <TargetFrameworks>net9.0;net9.0-windows7.0;net9.0-android35.0;net9.0-ios18.0</TargetFrameworks>
+    <!-- TFMs come from src/Directory.Build.props ($(Cocos2DBaseTfm) etc.) so a
+         .NET / MonoGame bump (e.g., the release/2.6.0-preview branch's move to
+         net10.0 + MonoGame 3.8.5) is a four-property change in one file. -->
+    <TargetFrameworks>$(Cocos2DTargetFrameworks)</TargetFrameworks>
     <OutputType>Library</OutputType>
     <RootNamespace>Cocos2D</RootNamespace>
     <AssemblyName>Cocos2D</AssemblyName>
@@ -42,22 +45,22 @@
   <!-- ============================================================
        Per-TFM platform defines
        ============================================================ -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)'">
     <!-- DesktopGL covers Linux, macOS, and Windows-GL hosts. OS-specific constants
          are added below via MSBuild::IsOSPlatform so a single net9.0 build is portable. -->
     <DefineConstants>$(DefineConstants);OPENGL;MONOGAME;DESKTOPGL</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0' and '$([MSBuild]::IsOSPlatform(`Windows`))' == 'true'">
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`Windows`))' == 'true'">
     <DefineConstants>$(DefineConstants);WINDOWSGL</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0' and '$([MSBuild]::IsOSPlatform(`OSX`))' == 'true'">
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`OSX`))' == 'true'">
     <DefineConstants>$(DefineConstants);MACOS</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0' and '$([MSBuild]::IsOSPlatform(`Linux`))' == 'true'">
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`Linux`))' == 'true'">
     <DefineConstants>$(DefineConstants);LINUX</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-windows7.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DWindowsTfm)'">
     <!-- Matches legacy cocos2d.Windows.csproj exactly: XNA path, no MONOGAME.
          MonoGame's MonoGame.Framework.WindowsDX runtime still loads — the constant
          only gates source-level branches. CCContentManager.ReloadGraphicsAssets is
@@ -68,13 +71,13 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android35.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
     <DefineConstants>$(DefineConstants);ANDROID;OPENGL;GLES;MONOGAME</DefineConstants>
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
     <CheckEolWorkloads>false</CheckEolWorkloads>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios18.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
     <DefineConstants>$(DefineConstants);__IOS__;__MOBILE__;__UNIFIED__;IPHONE;IOS;GLES;OPENGL;MONOGAME</DefineConstants>
     <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
     <CheckEolWorkloads>false</CheckEolWorkloads>
@@ -83,7 +86,7 @@
 
   <!-- Mobile TFMs: drop .snupkg generation. Apple/Android workloads emit
        platform-specific symbol formats and would trip NU5119 on pack. -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios18.0' or '$(TargetFramework)' == 'net9.0-android35.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)' or '$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
     <IncludeSymbols>false</IncludeSymbols>
   </PropertyGroup>
 
@@ -114,13 +117,13 @@
   </ItemGroup>
 
   <!-- Android-only files. -->
-  <ItemGroup Condition="!$(TargetFramework.StartsWith('net9.0-android'))">
+  <ItemGroup Condition="!$(TargetFramework.Contains('-android'))">
     <Compile Remove="$(Cocos2DSourceRoot)EmbeddableView\CCGameView.Android.cs" />
     <Compile Remove="$(Cocos2DSourceRoot)label_nodes\CCLabel-Android.cs" />
   </ItemGroup>
 
   <!-- iOS-only files. -->
-  <ItemGroup Condition="!$(TargetFramework.StartsWith('net9.0-ios'))">
+  <ItemGroup Condition="!$(TargetFramework.Contains('-ios'))">
     <Compile Remove="$(Cocos2DSourceRoot)EmbeddableView\CCGameView.iOS.cs" />
     <Compile Remove="$(Cocos2DSourceRoot)label_nodes\CCLabel-CoreGraphics.cs" />
     <Compile Remove="$(Cocos2DSourceRoot)label_nodes\CCLabelUtilities-CoreGraphics.cs" />
@@ -141,11 +144,11 @@
 
   <!-- Mobile vs Desktop EmbeddableView split. Each file is empty when its `#if`
        doesn't match, but excluding outright keeps build output clean. -->
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) or $(TargetFramework.StartsWith('net9.0-ios'))">
+  <ItemGroup Condition="$(TargetFramework.Contains('-android')) or $(TargetFramework.Contains('-ios'))">
     <Compile Remove="$(Cocos2DSourceRoot)EmbeddableView\CCGameView.Desktop.cs"
              Condition="Exists('$(Cocos2DSourceRoot)EmbeddableView\CCGameView.Desktop.cs')" />
   </ItemGroup>
-  <ItemGroup Condition="!$(TargetFramework.StartsWith('net9.0-android')) and !$(TargetFramework.StartsWith('net9.0-ios'))">
+  <ItemGroup Condition="!$(TargetFramework.Contains('-android')) and !$(TargetFramework.Contains('-ios'))">
     <Compile Remove="$(Cocos2DSourceRoot)EmbeddableView\CCGameView.Mobile.cs"
              Condition="Exists('$(Cocos2DSourceRoot)EmbeddableView\CCGameView.Mobile.cs')" />
   </ItemGroup>
@@ -161,7 +164,7 @@
   </ItemGroup>
 
   <!-- DesktopGL (net9.0) -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)'">
     <PackageReference Include="MonoGame.Framework.DesktopGL" />
     <PackageReference Include="OpenTK" />
     <PackageReference Include="SkiaSharp" />
@@ -171,20 +174,20 @@
   </ItemGroup>
 
   <!-- WindowsDX (net9.0-windows7.0) -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-windows7.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DWindowsTfm)'">
     <PackageReference Include="MonoGame.Framework.WindowsDX" />
     <PackageReference Include="BitMiracle.LibTiff.NET" />
     <PackageReference Include="System.Drawing.Common" />
   </ItemGroup>
 
   <!-- Android -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android35.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
     <PackageReference Include="MonoGame.Framework.Android" />
     <PackageReference Include="OpenTK" />
   </ItemGroup>
 
   <!-- iOS -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-ios18.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
     <PackageReference Include="MonoGame.Framework.iOS" />
     <PackageReference Include="OpenTK" />
   </ItemGroup>
