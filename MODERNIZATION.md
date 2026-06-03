@@ -391,7 +391,7 @@ The new repo is `MIT`, matching the `<PackageLicenseExpression>MIT</PackageLicen
 - [ ] `Cocos2D-Mono/Cocos2D-Mono.UWP` repo created on GitHub and initial commit pushed.
 - [ ] CI builds green on `windows-latest` for `x64` and `ARM` in both `Debug` and `Release`.
 - [ ] `Cocos2D-Mono.Uwp 2.4.8.4` published to NuGet.org from this repo.
-- [ ] Mainline `README.md` updated to reference the new UWP repo.
+- [x] Mainline `README.md` updated to reference the new UWP repo.
 - [ ] After all the above, Phase 2 can freely delete `#if NETFX_CORE` blocks from mainline.
 
 ---
