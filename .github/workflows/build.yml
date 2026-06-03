@@ -66,14 +66,23 @@ jobs:
         if: matrix.workloads != ''
         run: dotnet workload install ${{ matrix.workloads }} --ignore-failed-sources
 
-      - name: Restore (Cocos2DMono.sln)
-        run: dotnet restore Cocos2DMono.sln
-
+      # Restore + build per-TFM so non-Windows hosts never evaluate the
+      # net9.0-windows7.0 TFM. dotnet restore Cocos2DMono.sln (the previous
+      # step) evaluated every TFM in every project's <TargetFrameworks>,
+      # which on macOS raised NETSDK1100 ("To build a project targeting
+      # Windows on this operating system, set EnableWindowsTargeting=true")
+      # when it hit the Windows TFM — failing every iOS matrix leg before
+      # the build step could run.
+      #
+      # -p:TargetFrameworks=<tfm> narrows the project to the single TFM
+      # being built. We drop --no-restore so build does an implicit restore
+      # with that narrowed list. Box2D is restored first so Cocos2DMono's
+      # ProjectReference resolves from a populated cache.
       - name: Build Box2D
-        run: dotnet build src/Box2D/Box2D.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} --no-restore
+        run: dotnet build src/Box2D/Box2D.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} -p:TargetFrameworks=${{ matrix.tfm }}
 
       - name: Build Cocos2DMono
-        run: dotnet build src/Cocos2DMono/Cocos2DMono.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} --no-restore
+        run: dotnet build src/Cocos2DMono/Cocos2DMono.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} -p:TargetFrameworks=${{ matrix.tfm }}
 
   pack:
     name: Pack NuGet (preview)
