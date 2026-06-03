@@ -363,7 +363,7 @@ Source is consumed via `<Compile Include="..\..\external\cocos2d-mono\cocos2d\**
 
 | Dependency | Version | Rationale |
 |---|---|---|
-| `MonoGame.Framework.WindowsUniversal` | `3.8.2.1105` | Final MonoGame release with UWP support. |
+| `MonoGame.Framework.WindowsUniversal` | `3.8.1.303` | Last MonoGame UWP package actually published to nuget.org. (Mainline csprojs/nuspecs reference `3.8.2.1105` but that version was never published — see `Cocos2D-Mono.UWP` repo for the resolution.) |
 | `Microsoft.NETCore.UniversalWindowsPlatform` | `6.2.11` | Final stable UWP runtime. |
 | `SharpDX.Mathematics` | `4.0.1` | UWP-compatible. |
 | `SharpZipLib` | `1.3.3` | Last UWP-compatible version. |
@@ -375,7 +375,7 @@ Source is consumed via `<Compile Include="..\..\external\cocos2d-mono\cocos2d\**
 1. **Author the new repo locally** (`c:/Projects/cocos2d-mono-uwp/` — completed). All scaffolding files committed at `c0eb596`.
 2. **Create `Cocos2D-Mono/Cocos2D-Mono.UWP` empty repo on GitHub** (manual step — requires org owner permissions).
 3. **Push initial commit**: `git remote add origin git@github.com:Cocos2D-Mono/Cocos2D-Mono.UWP.git && git push -u origin main`.
-4. **Verify the build runs** via the new repo's CI workflow on `windows-latest` with the `Universal Windows Platform development` VS workload. Reference build target: `msbuild Cocos2D-Mono.Uwp.sln /p:Configuration=Release /p:Platform=x64 /restore`.
+4. **Verify the build runs** via the new repo's CI workflow on `windows-2022` with the `Universal Windows Platform development` VS workload. (`windows-latest` is unusable: it redirects to VS 2026 which dropped the UAP SDK; `windows-2022` retains the VS 2022 UWP workload with UAP 10.0.19041.) Reference build target: `msbuild Cocos2D-Mono.Uwp.sln /p:Configuration=Release /p:Platform=AnyCPU /restore`.
 5. **Publish `Cocos2D-Mono.Uwp 2.4.8.4`** and **`Cocos2D-Mono.Box2D.Uwp 2.4.8.4`** to NuGet.org from this repo's `pack` workflow.
 6. **Update mainline `README.md`** to point UWP/Xbox users at the new repo.
 7. **Mark mainline `#if NETFX_CORE` blocks as removable** — Phase 2 cleanup is now unblocked.
@@ -388,8 +388,8 @@ The new repo is `MIT`, matching the `<PackageLicenseExpression>MIT</PackageLicen
 
 - [x] Local `Cocos2D-Mono.UWP` repo authored with Cocos2D.Uwp + Box2D.Uwp pre-SDK csprojs, nuspecs, sln, README, LICENSE, CI workflow.
 - [x] Submodule `external/cocos2d-mono` pinned to mainline commit `c30f5ec3`.
-- [ ] `Cocos2D-Mono/Cocos2D-Mono.UWP` repo created on GitHub and initial commit pushed.
-- [ ] CI builds green on `windows-latest` for `x64` and `ARM` in both `Debug` and `Release`.
+- [x] `Cocos2D-Mono/Cocos2D-Mono.UWP` repo created on GitHub and initial commit pushed.
+- [x] CI builds green on `windows-2022` for `x64` and `ARM` in both `Debug` and `Release`. (First end-to-end success: run [26908466543](https://github.com/Cocos2D-Mono/Cocos2D-Mono.UWP/actions/runs/26908466543), commit `5c0ffe8`.)
 - [ ] `Cocos2D-Mono.Uwp 2.4.8.4` published to NuGet.org from this repo.
 - [x] Mainline `README.md` updated to reference the new UWP repo.
 - [ ] After all the above, Phase 2 can freely delete `#if NETFX_CORE` blocks from mainline.
