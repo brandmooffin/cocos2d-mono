@@ -87,9 +87,14 @@ jobs:
       # Phase 1b step 1: build the consolidated IntegrationTests harness on
       # desktop TFMs (net9.0 + net9.0-windows7.0) only. Android + iOS TFMs are
       # added in step 2 once resource moves and the iOS AppDelegate land.
+      # Path is Tests/ (capital T) because Windows-fs created the folder
+      # inside the existing Tests/ tree. Linux CI is case-sensitive — the
+      # path must match what git stored. Phase 1c can rename Tests/ → tests/
+      # once Tests/cocos2d-mono.Tests/ is deleted and the folder can be
+      # case-renamed without collision.
       - name: Build IntegrationTests
         if: matrix.tfm == 'net9.0' || matrix.tfm == 'net9.0-windows7.0'
-        run: dotnet build tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} -p:TargetFrameworks=${{ matrix.tfm }}
+        run: dotnet build Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} -p:TargetFrameworks=${{ matrix.tfm }}
 
   pack:
     name: Pack NuGet (preview)
