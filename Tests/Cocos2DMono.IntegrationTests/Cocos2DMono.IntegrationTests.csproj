@@ -3,28 +3,28 @@
 
   <PropertyGroup>
     <!--
-      Phase 1b step 1: desktop-only consolidation. Replaces the desktop half
-      of the 13 legacy test projects:
-        cocos2d-mono.Tests.DesktopGL / cocos2d-mono.Tests.Core.DesktopGL
-        cocos2d-mono.Tests.Linux    / cocos2d-mono.Tests.Core.Linux
-        cocos2d-mono.Tests.macOS    / cocos2d-mono.Tests.Core.macOS    (folds into net9.0 DesktopGL on macOS)
-        cocos2d-mono.Tests.Windows  / cocos2d-mono.Tests.Core.Windows
-
-      Android + iOS legs land in a follow-up commit (Phase 1b step 2) once
-      desktop is CI-green. Mobile requires resource moves from
-      Tests/cocos2d-mono.Tests.Android/ and Tests/cocos2d-mono.Tests.iOS/ which
-      cannot be validated locally without the corresponding .NET workloads.
+      Phase 1b step 2: full consolidation. Replaces all 13 legacy test projects
+      with a single multi-targeted exe-host.
 
       Source still lives under Tests/cocos2d-mono.Tests/ during the side-by-side
-      transition; this csproj globs it. Legacy test csprojs continue to work in
-      parallel until Phase 1c.
+      transition; this csproj globs it and references the legacy per-platform
+      resource folders (AndroidManifest.xml, Resources/, Info.plist, etc.) in
+      place via Link. The actual file moves happen in Phase 1c when the legacy
+      test csprojs are deleted.
+
+      Mobile (Android + iOS) cannot be locally validated without the .NET
+      workloads; CI is the validator.
     -->
-    <TargetFrameworks>$(Cocos2DBaseTfm);$(Cocos2DWindowsTfm)</TargetFrameworks>
+    <TargetFrameworks>$(Cocos2DTargetFrameworks)</TargetFrameworks>
     <RootNamespace>tests</RootNamespace>
     <AssemblyName>Cocos2DMono.IntegrationTests</AssemblyName>
     <IsPackable>false</IsPackable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <!-- Desktop-only manifest + icon. Android / iOS have their own. -->
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' or '$(TargetFramework)' == '$(Cocos2DWindowsTfm)'">
     <ApplicationManifest>..\..\Tests\cocos2d-mono.Tests\app.manifest</ApplicationManifest>
     <ApplicationIcon>..\..\Tests\cocos2d-mono.Tests\Icon.ico</ApplicationIcon>
   </PropertyGroup>
@@ -56,6 +56,54 @@
     <UseWindowsForms>true</UseWindowsForms>
     <MonoGamePlatform>Windows</MonoGamePlatform>
   </PropertyGroup>
+
+  <!-- ============================================================
+       Android (net9.0-android35.0)
+       ============================================================ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
+    <OutputType>Exe</OutputType>
+    <DefineConstants>$(DefineConstants);ANDROID;OPENGL;GLES;MONOGAME</DefineConstants>
+    <MonoGamePlatform>Android</MonoGamePlatform>
+    <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
+    <AndroidApplication>true</AndroidApplication>
+    <AndroidManifest>..\cocos2d-mono.Tests\cocos2d-mono.Tests.Android\AndroidManifest.xml</AndroidManifest>
+    <MonoAndroidResourcePrefix>..\cocos2d-mono.Tests\cocos2d-mono.Tests.Android\Resources</MonoAndroidResourcePrefix>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
+    <!-- AndroidResource items pulled in from the legacy folder; Phase 1c moves
+         them into Tests/Cocos2DMono.IntegrationTests/Android/Resources/. -->
+    <AndroidResource Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.Android\Resources\**\*.xml" />
+    <AndroidResource Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.Android\Resources\**\*.axml" />
+    <AndroidResource Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.Android\Resources\**\*.png" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       iOS (net9.0-ios18.0)
+       ============================================================ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
+    <OutputType>Exe</OutputType>
+    <DefineConstants>$(DefineConstants);__IOS__;__MOBILE__;__UNIFIED__;IPHONE;IOS;GLES;OPENGL;MONOGAME</DefineConstants>
+    <MonoGamePlatform>iOS</MonoGamePlatform>
+    <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
+    <IPhoneResourcePrefix>..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS</IPhoneResourcePrefix>
+    <CodesignEntitlements>..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS\Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
+    <!-- iOS app bundle inputs pulled from the legacy folder. -->
+    <None Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS\Info.plist" Link="Info.plist" LogicalName="Info.plist" />
+    <None Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS\Entitlements.plist" Link="Entitlements.plist" />
+    <InterfaceDefinition Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS\LaunchScreen.storyboard" Link="LaunchScreen.storyboard" />
+    <ImageAsset Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS\Assets.xcassets\**\*.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS\Assets.xcassets\**\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+  </ItemGroup>
 
   <!-- ============================================================
        Source globbing (replaces cocos2d-mono.Tests.projitems)
