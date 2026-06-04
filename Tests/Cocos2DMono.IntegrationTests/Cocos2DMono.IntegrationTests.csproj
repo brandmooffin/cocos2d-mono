@@ -149,24 +149,25 @@
   </ItemGroup>
 
   <!-- ============================================================
-       MGCB content reference
+       MGCB content reference (Phase 1b step 3)
 
-       Deferred to Phase 1b step 2: building Content.mgcb requires the
-       dotnet-mgcb tool (3.8.4.1) restored via a local tool manifest at
-       .config/dotnet-tools.json. The desktop build/CI validates source
-       compilation only — the test harness is not executed in CI. When
-       mobile bits land, the tool manifest is added alongside.
+       MGCB needs the `dotnet-mgcb` tool from .config/dotnet-tools.json.
+       The RestoreDotnetTools target invokes `dotnet tool restore` before
+       MSBuild's Restore phase so the tool is available when MGCB runs.
        ============================================================ -->
-  <!--
   <ItemGroup>
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="$(MonoGameVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="..\..\Tests\cocos2d-mono.Tests\Content\Content.mgcb">
+    <MonoGameContentReference Include="..\cocos2d-mono.Tests\Content\Content.mgcb">
       <Link>Content\Content.mgcb</Link>
     </MonoGameContentReference>
   </ItemGroup>
-  -->
 
+  <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
+    <Exec Command="dotnet tool restore"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
+          ConsoleToMSBuild="true" />
+  </Target>
 
 </Project>
