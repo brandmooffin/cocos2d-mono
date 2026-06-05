@@ -1,0 +1,50 @@
+name: Android
+
+# Lightweight status reflector for net9.0-android35.0 matrix cells. See
+# .github/workflows/status-desktopgl.yml for design notes.
+
+on:
+  workflow_run:
+    workflows: ["build (matrix)"]
+    types: [completed]
+    branches: ["**"]
+
+permissions:
+  actions: read
+
+jobs:
+  status:
+    name: Reflect Android matrix cells
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror Android matrix-cell conclusions
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runId = context.payload.workflow_run.id;
+            core.info(`Upstream run ${runId}`);
+            const { data } = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: runId,
+              per_page: 100,
+            });
+            const matching = data.jobs.filter(j =>
+              j.name.startsWith('net9.0-android35.0 (')
+            );
+            core.info(`Matched ${matching.length} Android cell(s):`);
+            for (const j of matching) core.info(`  - ${j.name}: ${j.conclusion}`);
+            if (matching.length === 0) {
+              core.setFailed(`No Android cells found in upstream run ${runId}`);
+              return;
+            }
+            const failed = matching.filter(j => j.conclusion === 'failure' || j.conclusion === 'cancelled' || j.conclusion === 'timed_out');
+            if (failed.length > 0) {
+              core.setFailed(`${failed.length} Android cell(s) failed: ${failed.map(j => j.name).join(', ')}`);
+              return;
+            }
+            if (!matching.every(j => j.conclusion === 'success')) {
+              core.setFailed(`Not every Android cell reached success: ${matching.map(j => `${j.name}=${j.conclusion}`).join(', ')}`);
+              return;
+            }
+            core.info('All Android cells passed.');

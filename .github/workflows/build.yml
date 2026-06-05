@@ -1,8 +1,8 @@
 name: build (matrix)
 
-# Phase 1 matrix workflow. Replaces 12 platform-specific workflows once the
-# legacy csprojs are deleted in Phase 1c. During the transition it runs ALONGSIDE
-# the legacy *_build.yml files so we can compare results before deleting them.
+# Single canonical CI gate. Per-platform visibility (badges, at-a-glance
+# pass/fail in the Actions tab) is provided by the small status-*.yml
+# workflows triggered by workflow_run on this workflow's completion.
 
 on:
   push:
@@ -17,33 +17,28 @@ concurrency:
 
 jobs:
   build:
-    name: ${{ matrix.tfm }} (${{ matrix.configuration }}) on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.target.tfm }} (${{ matrix.configuration }}) on ${{ matrix.target.os }}
+    runs-on: ${{ matrix.target.os }}
     strategy:
       fail-fast: false
       matrix:
+        # Two REAL top-level dimensions (configuration × target) so that
+        # GitHub Actions produces a true cartesian product. The earlier
+        # `configuration: [...]` + `include:` shape collapsed to 2 cells
+        # because each include entry added the same key set without varying
+        # an existing dimension, so later includes overwrote earlier ones —
+        # leaving only the LAST include (iOS) materialized. See
+        # MODERNIZATION.md Phase 1c-a follow-up notes.
         configuration: [Debug, Release]
-        include:
-          # DesktopGL (Linux host covers Linux + macOS targets and validates
-          # net9.0 cross-platform code at minimum cost).
-          - os: ubuntu-latest
-            tfm: net9.0
-            workloads: ""
-
+        target:
+          # DesktopGL on Linux validates net9.0 cross-platform code.
+          - { os: ubuntu-latest, tfm: net9.0, workloads: '' }
           # WindowsDX requires net9.0-windows7.0 which only restores on Windows.
-          - os: windows-latest
-            tfm: net9.0-windows7.0
-            workloads: ""
-
-          # Android workload is available on Linux runners and is cheaper than Windows.
-          - os: ubuntu-latest
-            tfm: net9.0-android35.0
-            workloads: "android"
-
-          # iOS requires macOS host (Apple toolchain).
-          - os: macos-latest
-            tfm: net9.0-ios18.0
-            workloads: "ios"
+          - { os: windows-latest, tfm: net9.0-windows7.0, workloads: '' }
+          # Android workload installs on Linux runners (cheaper than Windows).
+          - { os: ubuntu-latest, tfm: net9.0-android35.0, workloads: android }
+          # iOS requires a macOS host (Apple toolchain).
+          - { os: macos-latest, tfm: net9.0-ios18.0, workloads: ios }
 
     steps:
       - uses: actions/checkout@v4
@@ -56,43 +51,32 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Setup Java (Android only)
-        if: matrix.tfm == 'net9.0-android35.0'
+        if: matrix.target.tfm == 'net9.0-android35.0'
         uses: actions/setup-java@v4
         with:
           distribution: microsoft
           java-version: "17"
 
       - name: Install .NET workloads
-        if: matrix.workloads != ''
-        run: dotnet workload install ${{ matrix.workloads }} --ignore-failed-sources
+        if: matrix.target.workloads != ''
+        run: dotnet workload install ${{ matrix.target.workloads }} --ignore-failed-sources
 
       # Restore + build per-TFM so non-Windows hosts never evaluate the
-      # net9.0-windows7.0 TFM. dotnet restore Cocos2DMono.sln (the previous
-      # step) evaluated every TFM in every project's <TargetFrameworks>,
-      # which on macOS raised NETSDK1100 ("To build a project targeting
-      # Windows on this operating system, set EnableWindowsTargeting=true")
-      # when it hit the Windows TFM — failing every iOS matrix leg before
-      # the build step could run.
-      #
-      # -p:TargetFrameworks=<tfm> narrows the project to the single TFM
-      # being built. We drop --no-restore so build does an implicit restore
-      # with that narrowed list. Box2D is restored first so Cocos2DMono's
-      # ProjectReference resolves from a populated cache.
+      # net9.0-windows7.0 TFM. dotnet restore Cocos2DMono.sln would evaluate
+      # every TFM in every project's <TargetFrameworks> and on macOS raise
+      # NETSDK1100 ("To build a project targeting Windows on this operating
+      # system, set EnableWindowsTargeting=true") when it hit the Windows
+      # TFM. -p:TargetFrameworks=<tfm> narrows the project to the single TFM
+      # being built. Box2D is restored first so Cocos2DMono's ProjectReference
+      # resolves from a populated cache.
       - name: Build Box2D
-        run: dotnet build src/Box2D/Box2D.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} -p:TargetFrameworks=${{ matrix.tfm }}
+        run: dotnet build src/Box2D/Box2D.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
 
       - name: Build Cocos2DMono
-        run: dotnet build src/Cocos2DMono/Cocos2DMono.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} -p:TargetFrameworks=${{ matrix.tfm }}
+        run: dotnet build src/Cocos2DMono/Cocos2DMono.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
 
-      # Phase 1b step 1: build the consolidated IntegrationTests harness on
-      # desktop TFMs (net9.0 + net9.0-windows7.0) only. Android + iOS TFMs are
-      # added in step 2 once resource moves and the iOS AppDelegate land.
-      # Path is Tests/ (capital T) — case rename to lowercase tests/ happens
-      # in Phase 1c once Tests/cocos2d-mono.Tests/ is deleted and the
-      # Windows-fs case collision goes away. Phase 1b step 2 enables this on
-      # all four TFMs; mobile relies on CI for validation.
       - name: Build IntegrationTests
-        run: dotnet build Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -c ${{ matrix.configuration }} -f ${{ matrix.tfm }} -p:TargetFrameworks=${{ matrix.tfm }}
+        run: dotnet build Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
 
   pack:
     name: Pack NuGet (preview)

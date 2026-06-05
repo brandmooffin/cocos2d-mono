@@ -1,0 +1,353 @@
+{
+  "total_count": 3,
+  "jobs": [
+    {
+      "id": 79609143727,
+      "run_id": 26977804161,
+      "workflow_name": "build (matrix)",
+      "head_branch": "modernization/phase-1-project-consolidation",
+      "run_url": "https://api.github.com/repos/Cocos2D-Mono/cocos2d-mono/actions/runs/26977804161",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOCjpw6M8AAAASiRMhrw",
+      "head_sha": "abc6a259b1e2bd675a478a7fc4912112c142f906",
+      "url": "https://api.github.com/repos/Cocos2D-Mono/cocos2d-mono/actions/jobs/79609143727",
+      "html_url": "https://github.com/Cocos2D-Mono/cocos2d-mono/actions/runs/26977804161/job/79609143727",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-06-04T20:31:31Z",
+      "started_at": "2026-06-04T20:31:35Z",
+      "completed_at": "2026-06-04T20:37:39Z",
+      "name": "net9.0-ios18.0 (Debug) on macos-latest",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-06-04T20:31:35Z",
+          "completed_at": "2026-06-04T20:31:38Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-06-04T20:31:38Z",
+          "completed_at": "2026-06-04T20:31:51Z"
+        },
+        {
+          "name": "Setup .NET 9",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-06-04T20:31:51Z",
+          "completed_at": "2026-06-04T20:31:53Z"
+        },
+        {
+          "name": "Setup Java (Android only)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-06-04T20:31:53Z",
+          "completed_at": "2026-06-04T20:31:53Z"
+        },
+        {
+          "name": "Install .NET workloads",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-06-04T20:31:53Z",
+          "completed_at": "2026-06-04T20:32:19Z"
+        },
+        {
+          "name": "Build Box2D",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-06-04T20:32:19Z",
+          "completed_at": "2026-06-04T20:32:26Z"
+        },
+        {
+          "name": "Build Cocos2DMono",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-06-04T20:32:26Z",
+          "completed_at": "2026-06-04T20:32:31Z"
+        },
+        {
+          "name": "Build IntegrationTests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-06-04T20:32:31Z",
+          "completed_at": "2026-06-04T20:37:35Z"
+        },
+        {
+          "name": "Post Setup .NET 9",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-06-04T20:37:35Z",
+          "completed_at": "2026-06-04T20:37:36Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-06-04T20:37:36Z",
+          "completed_at": "2026-06-04T20:37:37Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-06-04T20:37:37Z",
+          "completed_at": "2026-06-04T20:37:38Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Cocos2D-Mono/cocos2d-mono/check-runs/79609143727",
+      "labels": [
+        "macos-latest"
+      ],
+      "runner_id": 1000000408,
+      "runner_name": "GitHub Actions 1000000408",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 79609143769,
+      "run_id": 26977804161,
+      "workflow_name": "build (matrix)",
+      "head_branch": "modernization/phase-1-project-consolidation",
+      "run_url": "https://api.github.com/repos/Cocos2D-Mono/cocos2d-mono/actions/runs/26977804161",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOCjpw6M8AAAASiRMh2Q",
+      "head_sha": "abc6a259b1e2bd675a478a7fc4912112c142f906",
+      "url": "https://api.github.com/repos/Cocos2D-Mono/cocos2d-mono/actions/jobs/79609143769",
+      "html_url": "https://github.com/Cocos2D-Mono/cocos2d-mono/actions/runs/26977804161/job/79609143769",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-06-04T20:31:31Z",
+      "started_at": "2026-06-04T20:31:34Z",
+      "completed_at": "2026-06-04T21:13:22Z",
+      "name": "net9.0-ios18.0 (Release) on macos-latest",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-06-04T20:31:34Z",
+          "completed_at": "2026-06-04T20:31:37Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-06-04T20:31:37Z",
+          "completed_at": "2026-06-04T20:31:51Z"
+        },
+        {
+          "name": "Setup .NET 9",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-06-04T20:31:51Z",
+          "completed_at": "2026-06-04T20:31:53Z"
+        },
+        {
+          "name": "Setup Java (Android only)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-06-04T20:31:53Z",
+          "completed_at": "2026-06-04T20:31:53Z"
+        },
+        {
+          "name": "Install .NET workloads",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-06-04T20:31:53Z",
+          "completed_at": "2026-06-04T20:32:18Z"
+        },
+        {
+          "name": "Build Box2D",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-06-04T20:32:18Z",
+          "completed_at": "2026-06-04T20:32:23Z"
+        },
+        {
+          "name": "Build Cocos2DMono",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-06-04T20:32:23Z",
+          "completed_at": "2026-06-04T20:32:31Z"
+        },
+        {
+          "name": "Build IntegrationTests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-06-04T20:32:31Z",
+          "completed_at": "2026-06-04T21:13:16Z"
+        },
+        {
+          "name": "Post Setup .NET 9",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-06-04T21:13:16Z",
+          "completed_at": "2026-06-04T21:13:17Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-06-04T21:13:17Z",
+          "completed_at": "2026-06-04T21:13:18Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-06-04T21:13:18Z",
+          "completed_at": "2026-06-04T21:13:20Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Cocos2D-Mono/cocos2d-mono/check-runs/79609143769",
+      "labels": [
+        "macos-latest"
+      ],
+      "runner_id": 1000000409,
+      "runner_name": "GitHub Actions 1000000409",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 79616435221,
+      "run_id": 26977804161,
+      "workflow_name": "build (matrix)",
+      "head_branch": "modernization/phase-1-project-consolidation",
+      "run_url": "https://api.github.com/repos/Cocos2D-Mono/cocos2d-mono/actions/runs/26977804161",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOCjpw6M8AAAASiYJkFQ",
+      "head_sha": "abc6a259b1e2bd675a478a7fc4912112c142f906",
+      "url": "https://api.github.com/repos/Cocos2D-Mono/cocos2d-mono/actions/jobs/79616435221",
+      "html_url": "https://github.com/Cocos2D-Mono/cocos2d-mono/actions/runs/26977804161/job/79616435221",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-06-04T21:13:22Z",
+      "started_at": "2026-06-04T21:13:25Z",
+      "completed_at": "2026-06-04T21:16:22Z",
+      "name": "Pack NuGet (preview)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-06-04T21:13:25Z",
+          "completed_at": "2026-06-04T21:13:27Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-06-04T21:13:27Z",
+          "completed_at": "2026-06-04T21:13:42Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-06-04T21:13:42Z",
+          "completed_at": "2026-06-04T21:13:50Z"
+        },
+        {
+          "name": "Install mobile workloads",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-06-04T21:13:50Z",
+          "completed_at": "2026-06-04T21:15:09Z"
+        },
+        {
+          "name": "Restore",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-06-04T21:15:09Z",
+          "completed_at": "2026-06-04T21:15:40Z"
+        },
+        {
+          "name": "Pack Box2D",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-06-04T21:15:40Z",
+          "completed_at": "2026-06-04T21:15:57Z"
+        },
+        {
+          "name": "Pack Cocos2DMono",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-06-04T21:15:57Z",
+          "completed_at": "2026-06-04T21:16:16Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-06-04T21:16:16Z",
+          "completed_at": "2026-06-04T21:16:18Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-06-04T21:16:18Z",
+          "completed_at": "2026-06-04T21:16:18Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-06-04T21:16:18Z",
+          "completed_at": "2026-06-04T21:16:21Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-06-04T21:16:21Z",
+          "completed_at": "2026-06-04T21:16:21Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/Cocos2D-Mono/cocos2d-mono/check-runs/79616435221",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000000410,
+      "runner_name": "GitHub Actions 1000000410",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

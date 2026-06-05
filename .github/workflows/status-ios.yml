@@ -1,0 +1,50 @@
+name: iOS
+
+# Lightweight status reflector for net9.0-ios18.0 matrix cells. See
+# .github/workflows/status-desktopgl.yml for design notes.
+
+on:
+  workflow_run:
+    workflows: ["build (matrix)"]
+    types: [completed]
+    branches: ["**"]
+
+permissions:
+  actions: read
+
+jobs:
+  status:
+    name: Reflect iOS matrix cells
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror iOS matrix-cell conclusions
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runId = context.payload.workflow_run.id;
+            core.info(`Upstream run ${runId}`);
+            const { data } = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: runId,
+              per_page: 100,
+            });
+            const matching = data.jobs.filter(j =>
+              j.name.startsWith('net9.0-ios18.0 (')
+            );
+            core.info(`Matched ${matching.length} iOS cell(s):`);
+            for (const j of matching) core.info(`  - ${j.name}: ${j.conclusion}`);
+            if (matching.length === 0) {
+              core.setFailed(`No iOS cells found in upstream run ${runId}`);
+              return;
+            }
+            const failed = matching.filter(j => j.conclusion === 'failure' || j.conclusion === 'cancelled' || j.conclusion === 'timed_out');
+            if (failed.length > 0) {
+              core.setFailed(`${failed.length} iOS cell(s) failed: ${failed.map(j => j.name).join(', ')}`);
+              return;
+            }
+            if (!matching.every(j => j.conclusion === 'success')) {
+              core.setFailed(`Not every iOS cell reached success: ${matching.map(j => `${j.name}=${j.conclusion}`).join(', ')}`);
+              return;
+            }
+            core.info('All iOS cells passed.');

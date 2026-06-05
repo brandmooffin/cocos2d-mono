@@ -1,0 +1,64 @@
+name: DesktopGL
+
+# Lightweight status reflector. Triggered by completion of the canonical
+# `build (matrix)` workflow; reads the per-cell conclusions from the GitHub
+# API and exits with the worst conclusion across the cells that match this
+# platform (`net9.0` matrix.target.tfm). Produces a stable badge URL for
+# README/docs and an at-a-glance entry in the Actions tab.
+
+on:
+  workflow_run:
+    workflows: ["build (matrix)"]
+    types: [completed]
+    branches: ["**"]
+
+permissions:
+  actions: read
+
+jobs:
+  status:
+    name: Reflect DesktopGL matrix cells
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror DesktopGL matrix-cell conclusions
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runId = context.payload.workflow_run.id;
+            const head_sha = context.payload.workflow_run.head_sha;
+            const branch = context.payload.workflow_run.head_branch;
+            core.info(`Upstream run ${runId} on ${branch}@${head_sha.slice(0,8)}`);
+
+            const { data } = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: runId,
+              per_page: 100,
+            });
+
+            // Match net9.0 (Debug|Release) on ubuntu-latest. The prefix
+            // 'net9.0 (' uniquely excludes net9.0-windows7.0, net9.0-android35.0,
+            // and net9.0-ios18.0 — they all start with 'net9.0-' not 'net9.0 ('.
+            const matching = data.jobs.filter(j =>
+              j.name.startsWith('net9.0 (') && j.name.includes('on ubuntu-latest')
+            );
+
+            core.info(`Matched ${matching.length} DesktopGL cell(s):`);
+            for (const j of matching) {
+              core.info(`  - ${j.name}: ${j.conclusion}`);
+            }
+
+            if (matching.length === 0) {
+              core.setFailed(`No DesktopGL cells found in upstream run ${runId}`);
+              return;
+            }
+            const failed = matching.filter(j => j.conclusion === 'failure' || j.conclusion === 'cancelled' || j.conclusion === 'timed_out');
+            if (failed.length > 0) {
+              core.setFailed(`${failed.length} DesktopGL cell(s) failed: ${failed.map(j => j.name).join(', ')}`);
+              return;
+            }
+            if (!matching.every(j => j.conclusion === 'success')) {
+              core.setFailed(`Not every DesktopGL cell reached success: ${matching.map(j => `${j.name}=${j.conclusion}`).join(', ')}`);
+              return;
+            }
+            core.info('All DesktopGL cells passed.');

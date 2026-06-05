@@ -6,7 +6,10 @@
 
 [Check out the docs!](https://cocos2d-mono.dev)
 
-[![build (matrix)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/build.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/build.yml)
+[![DesktopGL](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-desktopgl.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-desktopgl.yml)
+[![Windows](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-windows.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-windows.yml)
+[![Android](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-android.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-android.yml)
+[![iOS](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-ios.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-ios.yml)
 
 </div>
 
