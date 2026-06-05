@@ -56,12 +56,13 @@ The `Core` vs non-`Core` packaging split appears to be purely about whether `Mon
 
 Phase 1 ships as four commits to keep blast radius bounded and the legacy build available as a safety net:
 
-| Sub-phase | What changes | Reversible? |
-|---|---|---|
-| **1a** *(this PR)* | **Add** new files under `src/`, new `Cocos2DMono.sln`, new matrix `.github/workflows/build.yml`. Legacy build is untouched. New build runs **side-by-side** with legacy. TFMs are parameterized via `Cocos2DBaseTfm`/`Cocos2DWindowsTfm`/`Cocos2DAndroidTfm`/`Cocos2DIosTfm` properties so a future .NET / MonoGame bump is a four-property edit. | Yes — delete `src/`, the new `.sln`, the new workflow. Legacy untouched. |
-| **1b** | Consolidate `Tests/` into `tests/Cocos2DMono.IntegrationTests/`. Includes iOS/Android resource moves and a new iOS `AppDelegate.cs` to replace the `#if IPHONE` branch of `Tests/cocos2d-mono.Tests/Program.cs`. | Mostly — `git mv` history is preserved. |
-| **1c** | **Delete** legacy: 12 cocos2d csprojs, 4 box2d csprojs, 13 tests csprojs, 6 projitems/shproj, 4 AssemblyInfo files, 13 legacy CI workflows, the vestigial `cocos2d/external lib/ICSharpCodeSource/ICSharpCode.SharpZLib.WP8.csproj`. Promote `src/Directory.Packages.props` and `src/Directory.Build.props` to the repo root. | After this commit `cocos2d-mono.All.sln` is deleted; the new `Cocos2DMono.sln` is canonical. |
-| **1d** | **Reconcile `release/2.6.0-preview`** with the consolidated layout. Tiny PR against `release/2.6.0-preview`: bump the four `Cocos2D*Tfm` properties in `Directory.Build.props` from `net9.0*` → `net10.0*`, bump `MonoGameVersion` to `3.8.5-preview.*`, bump CI matrix `dotnet-version` to `10.0.x`. No csproj edits required because of the TFM parameterization in 1a. Replaces the old "preview-branch maintenance" pattern of editing 30 csprojs per .NET bump. | Yes — revert the props edit. |
+| Sub-phase | Status | What changes | Reversible? |
+|---|---|---|---|
+| **1a** | ✅ | **Add** new files under `src/`, new `Cocos2DMono.sln`, new matrix `.github/workflows/build.yml`. Legacy build is untouched. New build runs **side-by-side** with legacy. TFMs are parameterized via `Cocos2DBaseTfm`/`Cocos2DWindowsTfm`/`Cocos2DAndroidTfm`/`Cocos2DIosTfm` properties so a future .NET / MonoGame bump is a four-property edit. | Yes — delete `src/`, the new `.sln`, the new workflow. Legacy untouched. |
+| **1b** | ✅ | Consolidate `Tests/` into `Tests/Cocos2DMono.IntegrationTests/`. Pre-SDK tests/ rename deferred to a follow-up after 1c-b lands the resource moves. | Mostly — `git mv` history is preserved. |
+| **1c-a** | ✅ *(this commit)* | **Delete** legacy: 12 cocos2d csprojs, 4 box2d csprojs, 4 AssemblyInfo files, 12 legacy CI workflows, the vestigial `cocos2d/external lib/ICSharpCodeSource/ICSharpCode.SharpZLib.WP8.csproj`, 2 projitems + 2 shproj (cocos2d + box2d), 7 root `cocos2d-mono.*/` meta-folders with their `.sln` files, 12 `Nuget Packages/Cocos2D.*.nuspec`, 2 `Tools/*.ps1` scripts. 53 deletions total. | After this commit `cocos2d-mono.All.sln` is gone; the new `Cocos2DMono.sln` is canonical. |
+| **1c-b** | ⏳ | `git mv` Android resources from `Tests/cocos2d-mono.Tests/cocos2d-mono.Tests.Android/` and iOS resources from `Tests/cocos2d-mono.Tests/cocos2d-mono.Tests.iOS/` into `Tests/Cocos2DMono.IntegrationTests/`, update csproj references, then `git rm` the now-orphaned legacy Tests folders (12 csproj folders + projitems/shproj). After this commit, the case rename `Tests/` → `tests/` becomes possible. | Mostly — `git mv` history is preserved. |
+| **1d** | ⏳ | **Reconcile `release/2.6.0-preview`** with the consolidated layout. Tiny PR against `release/2.6.0-preview`: bump the four `Cocos2D*Tfm` properties in `Directory.Build.props` from `net9.0*` → `net10.0*`, bump `MonoGameVersion` to `3.8.5-preview.*`, bump CI matrix `dotnet-version` to `10.0.x`. No csproj edits required because of the TFM parameterization in 1a. Replaces the old "preview-branch maintenance" pattern of editing 30 csprojs per .NET bump. | Yes — revert the props edit. |
 
 ### 1a — Status
 
@@ -73,7 +74,7 @@ Completed on branch `modernization/phase-1-project-consolidation`. Files added:
 | `src/Directory.Build.props` | Shared metadata: `LangVersion=latest`, deterministic builds, NuGet metadata, source-link/symbol packages. Inherits `MonoGameVersion` from the repo-root `Directory.Build.props`. Defines the parameterized TFM dials (`Cocos2DBaseTfm`, `Cocos2DWindowsTfm`, `Cocos2DAndroidTfm`, `Cocos2DIosTfm`, and `Cocos2DTargetFrameworks` derived from them). |
 | `src/Cocos2DMono/Cocos2DMono.csproj` | Multi-targeted (`net9.0;net9.0-windows7.0;net9.0-android35.0;net9.0-ios18.0`). Replaces 12 legacy `cocos2d.{Platform}` + `cocos2d.Core.{Platform}` csprojs. Globs `..\..\cocos2d\**\*.cs` and applies platform exclusions for the small set of `-Platform.cs` files. |
 | `src/Box2D/Box2D.csproj` | Same TFM set. Replaces 4 legacy `box2d.{Platform}` csprojs. |
-| `Cocos2DMono.sln` | New solution referencing only `src/*`. Coexists with the legacy `cocos2d-mono.All.sln`. |
+| `Cocos2DMono.sln` | New solution referencing only `src/*`. Coexisted with the legacy `cocos2d-mono.All.sln` during the 1a→1c side-by-side window; that legacy `.sln` was removed in 1c-a. |
 | `.github/workflows/build.yml` | Single matrix workflow covering all 4 TFMs × `[Debug, Release]`. Runs alongside the 13 legacy `*_build.yml` workflows during the transition. |
 
 **Local verification on Windows host**:
