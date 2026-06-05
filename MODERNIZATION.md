@@ -35,7 +35,7 @@ Findings as of the start of the modernization effort.
 | Inheritance | `CCNode` implements 7 interfaces, holds `m_pChildren` + manually-synced `m_pChildrenByTag` index |
 | Public mutable fields | `CCNode.m_sTransform`, `CCRawList<T>.Elements` |
 | CI | 13 GitHub Actions workflow files, one per platform × Core/non-Core variant |
-| Preview branch | `release/2.6.0-preview` exists on upstream. Structurally identical to `dev` (same 30 csprojs, same `.projitems`); only changes are `MonoGameVersion 3.8.4.1 → 3.8.5-preview.2`, every TFM `net9.0* → net10.0*`, workflows `dotnet-version 9.0.x → 10.0.x`, and `global.json` deletion. Periodically refreshed via `Merge dev → release/2.6.0-preview`. |
+| Preview branch | `release/2.6.0-preview` exists on upstream. **As of the Phase 1 closeout (this commit on `modernization/phase-1-project-consolidation`), the consolidated layout lives on the modernization branch but has not yet merged to `dev` or propagated to `release/2.6.0-preview`.** Preview branch state at the time of the snapshot: still on the legacy 30-csproj layout, with `MonoGameVersion 3.8.4.1 → 3.8.5-preview.2`, every TFM `net9.0* → net10.0*` (Android `net10.0-android36.0`, iOS `net10.0-ios26.0`), per-platform workflows `dotnet-version 9.0.x → 10.0.x`, and `global.json` deletion — all applied via direct csproj edits. Periodically refreshed via `Merge dev → release/2.6.0-preview`; after the modernization branch merges, the next such refresh propagates the consolidated layout and 1d (§1.7a) becomes applicable. |
 | UWP / Xbox surface | The UWP `csproj` was removed from `dev` some time ago. However, 59 `#if NETFX_CORE` blocks across 23 files still survive as dormant code (top: `CCApplication.cs` 7, `cocoa/CCGeometry.cs` 6, `support/CCUserDefault.cs` 6, `platform/PList/PlistDocument.cs` 6, `CCDirector.cs` 5, `platform/CCAccelerometer.cs` 5). Nothing currently defines `NETFX_CORE` in any csproj, so these paths compile to nothing today. |
 
 The `Core` vs non-`Core` packaging split appears to be purely about whether `MonoGame.Content.Builder.Task` (and a couple of native deps) are baked in. The shared code is identical via `.projitems`.
@@ -44,6 +44,8 @@ The `Core` vs non-`Core` packaging split appears to be purely about whether `Mon
 
 ## Phase 1 — Project structure consolidation
 
+> **Status as of `56370c2a`:** 1a / 1b / 1c-a / 1c-b complete; CI green on every cell of the matrix build plus the pack job. 1d is pre-staged in §1.7a and gated on the next `dev → release/2.6.0-preview` merge bringing the consolidated layout over.
+>
 > **Goal:** Reduce ~30 csprojs to ~3, eliminate `.projitems`/`.shproj`, centralize package versions, halve the CI matrix while preserving all output packages.
 >
 > **Risk:** Low. No code changes; only build/packaging plumbing.
@@ -61,8 +63,8 @@ Phase 1 ships as four commits to keep blast radius bounded and the legacy build 
 | **1a** | ✅ | **Add** new files under `src/`, new `Cocos2DMono.sln`, new matrix `.github/workflows/build.yml`. Legacy build is untouched. New build runs **side-by-side** with legacy. TFMs are parameterized via `Cocos2DBaseTfm`/`Cocos2DWindowsTfm`/`Cocos2DAndroidTfm`/`Cocos2DIosTfm` properties so a future .NET / MonoGame bump is a four-property edit. | Yes — delete `src/`, the new `.sln`, the new workflow. Legacy untouched. |
 | **1b** | ✅ | Consolidate `Tests/` into `Tests/Cocos2DMono.IntegrationTests/`. `Tests/` stays PascalCase — matches the prevailing convention in this repo and the sibling `Cocos2DMono.sln`, `Cocos2DMono.csproj`, `Cocos2DMono.IntegrationTests.csproj` naming. | Mostly — `git mv` history is preserved. |
 | **1c-a** | ✅ | **Delete** legacy: 12 cocos2d csprojs, 4 box2d csprojs, 4 AssemblyInfo files, 12 legacy CI workflows, the vestigial `cocos2d/external lib/ICSharpCodeSource/ICSharpCode.SharpZLib.WP8.csproj`, 2 projitems + 2 shproj (cocos2d + box2d), 7 root `cocos2d-mono.*/` meta-folders with their `.sln` files, 12 `Nuget Packages/Cocos2D.*.nuspec`, 2 `Tools/*.ps1` scripts. 53 deletions total. | After this commit `cocos2d-mono.All.sln` is gone; the new `Cocos2DMono.sln` is canonical. |
-| **1c-b** | ✅ *(this commit)* | `git mv` Android resources from `Tests/cocos2d-mono.Tests/cocos2d-mono.Tests.Android/` and iOS resources from `Tests/cocos2d-mono.Tests/cocos2d-mono.Tests.iOS/` into `Tests/Cocos2DMono.IntegrationTests/{Android,iOS}/`, updated the csproj to local paths, then `git rm` the now-orphaned 12 legacy per-platform test subfolders + projitems/shproj + 6 sibling root `.sln` meta-folders (`Tests/cocos2d-mono.Tests.{Android,DesktopGL,iOS,Linux,Windows,macOS}/`). | Mostly — `git mv` history is preserved. |
-| **1d** | ⏳ | **Reconcile `release/2.6.0-preview`** with the consolidated layout. Tiny PR against `release/2.6.0-preview`: bump the four `Cocos2D*Tfm` properties in `Directory.Build.props` from `net9.0*` → `net10.0*`, bump `MonoGameVersion` to `3.8.5-preview.*`, bump CI matrix `dotnet-version` to `10.0.x`. No csproj edits required because of the TFM parameterization in 1a. Replaces the old "preview-branch maintenance" pattern of editing 30 csprojs per .NET bump. | Yes — revert the props edit. |
+| **1c-b** | ✅ | `git mv` Android resources from `Tests/cocos2d-mono.Tests/cocos2d-mono.Tests.Android/` and iOS resources from `Tests/cocos2d-mono.Tests/cocos2d-mono.Tests.iOS/` into `Tests/Cocos2DMono.IntegrationTests/{Android,iOS}/`, updated the csproj to local paths, then `git rm` the now-orphaned 12 legacy per-platform test subfolders + projitems/shproj + 6 sibling root `.sln` meta-folders (`Tests/cocos2d-mono.Tests.{Android,DesktopGL,iOS,Linux,Windows,macOS}/`). | Mostly — `git mv` history is preserved. |
+| **1d** | ⏳ *(gated — apply reference in §1.7a)* | **Reconcile `release/2.6.0-preview`** with the consolidated layout. Cannot apply yet: the preview branch still carries the legacy 30-csproj layout (no `src/`, no parameterized `Cocos2D*Tfm` props, no matrix `build.yml`). Unblocks once `dev` is merged into `release/2.6.0-preview` so the consolidated layout exists there; the post-merge edit is then the three apply steps in §1.7a — four `Cocos2D*Tfm` property bumps + `MonoGameVersion` → `3.8.5-preview.2` in `Directory.Build.props`, CI `dotnet-version` → `10.0.x` in `.github/workflows/build.yml`, and `git rm global.json` (resolving the dev-vs-preview modify/delete conflict). *No csproj edits.* Replaces the old "preview-branch maintenance" pattern of editing 30 csprojs per .NET bump. | Yes — revert the `Directory.Build.props` edit, revert `build.yml` `dotnet-version` back to `9.0.x`, and restore `global.json`. |
 
 ### 1a — Status
 
@@ -105,7 +107,7 @@ Three corrections were applied based on adversarial review and verification:
 - [x] Matrix CI workflow at `.github/workflows/build.yml`.
 - [x] Local `dotnet pack` produces a versioned `.nupkg` + `.snupkg`.
 - [x] Legacy build untouched and reversible.
-- [ ] Mobile TFMs (`net9.0-android35.0`, `net9.0-ios18.0`) verified in CI.
+- [x] Mobile TFMs (`net9.0-android35.0`, `net9.0-ios18.0`) verified in CI. *(Green on `56370c2a` — every matrix cell of `build (matrix)` plus the pack job.)*
 
 ### 1.1 Why the current layout exists
 
@@ -306,18 +308,39 @@ steps:
 8. **Verify NuGet output**: produce package with same `PackageId` (`Cocos2D-Mono`) — note this means the multi-targeted package replaces the previous `Cocos2D-Mono.DesktopGL`, `Cocos2D-Mono.Windows`, etc. SKUs. **This is the only consumer-visible change in Phase 1** and it warrants a major version bump (3.0.0). Document the migration in `CHANGELOG.md`.
 9. **Delete the old `cocos2d/cocos2d.{Platform}/` and `cocos2d/cocos2d.Core.{Platform}/` directories** after all artifacts verified.
 
+### 1.7a Phase 1d apply reference (deferred)
+
+1d's edit is staged here so the post-merge apply is mechanical. It cannot run yet: `release/2.6.0-preview` does not have the consolidated layout. After `dev` is merged into `release/2.6.0-preview` (bringing `src/Cocos2DMono/`, the parameterized `Cocos2D*Tfm` properties in the root `Directory.Build.props`, the matrix `.github/workflows/build.yml`, and inadvertently `global.json` — see step 3), apply the following three changes — and *only* these three. The actual files remain the source of truth; only the property *values* listed below change.
+
+1. **Root `Directory.Build.props`** — change four TFM dial property values and bump `MonoGameVersion`:
+   - `Cocos2DBaseTfm`: `net9.0` → `net10.0`
+   - `Cocos2DWindowsTfm`: `net9.0-windows7.0` → `net10.0-windows7.0`
+   - `Cocos2DAndroidTfm`: `net9.0-android35.0` → `net10.0-android36.0`
+   - `Cocos2DIosTfm`: `net9.0-ios18.0` → `net10.0-ios26.0`
+   - `MonoGameVersion`: `3.8.4.1` → `3.8.5-preview.2`
+2. **`.github/workflows/build.yml`** — change the value of every `dotnet-version:` field from `9.0.x` to `10.0.x` (two occurrences: the build job's setup-dotnet step and the pack job's setup-dotnet step). No new keys; existing block-style YAML structure is preserved.
+3. **Delete `global.json`** at the repo root. The modernization branch carries a `global.json` (inherited from `dev`/`master`) pinning SDK to `9.0.305` with `allowPrerelease: false`. `release/2.6.0-preview` previously deleted its `global.json` for exactly this reason: a non-prerelease 9.0.x pin would override the `setup-dotnet` install of .NET 10 and break restore. The `dev → release/2.6.0-preview` merge surfaces a modify/delete conflict on `global.json`; resolve by accepting the deletion (the preview branch's intent). Equivalently: `git rm global.json` after the merge, before pushing.
+
+**Nothing else.** No csproj edits — the four TFM dials feed every consolidated csproj's `<TargetFrameworks>` element. No `Directory.Packages.props` edit — MonoGame package versions flow from `$(MonoGameVersion)`. No `SupportedOSPlatformVersion` edit by 1d itself; note that the consolidated `src/Cocos2DMono/Cocos2DMono.csproj` already pins iOS `SupportedOSPlatformVersion=13.0` (Android stays at `21.0`). That iOS value is a deliberate raise from `release/2.6.0-preview`'s legacy per-platform `11.0` and matches the modernization branch's iOS Info.plist `MinimumOSVersion=13.0`; it travels with the merge as part of the consolidation, not as a separate 1d edit.
+
+The Android `net10.0-android36.0` and iOS `net10.0-ios26.0` TFM strings mirror the values already used in `release/2.6.0-preview`'s legacy per-platform csprojs verbatim, so the bump is dial-aligning, not capability-bumping.
+
+`MonoGameVersion` pinned to `3.8.5-preview.2` to match what `release/2.6.0-preview` currently validates against. Newer `3.8.5-preview.*` revisions exist; re-evaluating them is a post-1d follow-up, not part of the closeout edit. The 3.8.5-preview.2 `MonoGame.Framework.*` assets target `net8.0-<platform>` and resolve onto `net10.0-*` consumers through NuGet's platform-compat table, which is empirically green on the preview branch today.
+
+Verification gate for 1d: the matrix `build.yml` on `release/2.6.0-preview` after this edit must reproduce the `56370c2a` baseline — green across every matrix cell of the build job plus the pack job.
+
 ### 1.8 Acceptance criteria for Phase 1 (full)
 
 - [x] `dotnet restore Cocos2DMono.sln` succeeds (1a).
 - [x] `dotnet build src/Cocos2DMono/Cocos2DMono.csproj -f net9.0` succeeds on Windows host (1a).
 - [x] `dotnet build src/Cocos2DMono/Cocos2DMono.csproj -f net9.0-windows7.0` succeeds (1a).
-- [ ] `dotnet build` succeeds on `net9.0-android35.0` (CI verification, 1a).
-- [ ] `dotnet build` succeeds on `net9.0-ios18.0` (CI verification, 1a).
-- [ ] `dotnet pack` produces a single multi-targeted `Cocos2D-Mono.{version}.nupkg` containing all platform builds (1c, after legacy deletion lets us pack the full TFM set).
-- [ ] CI matrix workflow green on every TFM.
+- [x] `dotnet build` succeeds on `net9.0-android35.0` (CI verification, 1a). *(Green on `56370c2a`.)*
+- [x] `dotnet build` succeeds on `net9.0-ios18.0` (CI verification, 1a). *(Green on `56370c2a`.)*
+- [x] `dotnet pack` produces a multi-targeted `Cocos2D-Mono.{version}.nupkg` containing all platform builds (1c, after legacy deletion lets us pack the full TFM set). *(Pack job on `56370c2a` runs `dotnet workload install android ios` then `dotnet restore Cocos2DMono.sln`, so the resulting `Cocos2D-Mono` nupkg covers all four TFMs. The metapackage `Cocos2D-Mono.Core` and `Cocos2D-Mono.Box2D` are produced alongside it.)*
+- [x] CI matrix workflow green on every TFM. *(Every matrix cell of `build (matrix)` green on `56370c2a` across Debug/Release × four TFMs.)*
 - [x] Tests project consolidated to `Tests/Cocos2DMono.IntegrationTests/` and runs identically on every platform (1b + 1c-b).
-- [ ] `cocos2d.projitems`, `cocos2d.shproj`, all `cocos2d.{Platform}` and `cocos2d.Core.{Platform}` folders deleted (1c).
-- [ ] `release/2.6.0-preview` rebased onto post-1c dev: TFM dials bumped to net10.0, MonoGameVersion → 3.8.5-preview, CI dotnet-version → 10.0.x (1d).
+- [x] `cocos2d.projitems`, `cocos2d.shproj`, all `cocos2d.{Platform}` and `cocos2d.Core.{Platform}` folders deleted (1c). *(Completed in 1c-a — 53 deletions; see rollout table.)*
+- [ ] `release/2.6.0-preview` rebased onto post-1c `dev`: TFM dials bumped to net10.0 + `MonoGameVersion` → `3.8.5-preview.2` in `Directory.Build.props`, CI `dotnet-version` → `10.0.x` in `build.yml`, and `global.json` deleted (1d). *(Gated — full three-step apply reference in §1.7a. Cannot proceed until the modernization branch lands on `dev` and the next `dev → release/2.6.0-preview` merge brings the consolidated layout over.)*
 - [x] `MODERNIZATION.md` updated with the actual final shape vs the plan (1a).
 
 ---
@@ -736,7 +759,7 @@ Phase 4 should not start until Phase 3's NRT pass is complete — designing comp
 
 ## Open questions
 
-- Public API consumers: who uses `Cocos2D-Mono.Core.{Platform}` versus `Cocos2D-Mono.{Platform}`? Answer determines whether Phase 1 collapses to one package or keeps a Core variant.
+- ~~Public API consumers: who uses `Cocos2D-Mono.Core.{Platform}` versus `Cocos2D-Mono.{Platform}`?~~ **Resolved** in §1.5 — the Core/non-Core distinction is preserved as a payload-free metapackage (`Cocos2D-Mono.Core`) whose only dependency is `Cocos2D-Mono` with `ExcludeAssets="build"`. One compile artifact, two consumer-facing packages, with the MGCB-vs-no-MGCB choice expressed entirely through NuGet asset-flow rules.
 - Save-file compatibility: are there shipped games with `CCSerialization`-format save files that need to load on the new serializer? If yes, Phase 2 needs a one-time legacy reader.
 - ~~Render backend bet~~: **Resolved** — Option A (stay on upstream MonoGame). The `release/2.6.0-preview` branch's move to MonoGame 3.8.5 confirms this. Phase 4 still routes rendering through a component boundary so the door stays open.
 - Cadence: is this modernization a continuous effort, or driven by specific releases? Affects whether `[Obsolete]` shims live for one minor or three.
