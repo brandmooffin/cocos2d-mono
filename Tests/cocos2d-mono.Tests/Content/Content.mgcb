@@ -10,7 +10,10 @@
 
 #-------------------------------- References --------------------------------#
 
-/reference:..\..\packages\MonoGame.Extended.Content.Pipeline.1.1.0\tools\MonoGame.Extended.Content.Pipeline.dll
+# MonoGame.Extended.Content.Pipeline reference removed: no MonoGame.Extended
+# importers/processors are actually used in this file (only WavImporter and
+# SongProcessor, both built into MonoGame). The reference also hard-coded a
+# packages.config-era path that doesn't resolve under modern PackageReference.
 
 #---------------------------------- Content ---------------------------------#
 
