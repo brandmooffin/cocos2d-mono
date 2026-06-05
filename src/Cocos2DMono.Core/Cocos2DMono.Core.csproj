@@ -59,8 +59,11 @@
 - See https://github.com/Cocos2D-Mono/cocos2d-mono for the full changelog.
     </PackageReleaseNotes>
     <PackageTags>mono monogame cocos2d game gamedev 2d no-content-pipeline</PackageTags>
-    <PackageIcon>logo-small.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <!-- PackageIcon + PackageReadmeFile are intentionally omitted on the
+         metapackage. IncludeBuildOutput=false interferes with <None Pack=True>
+         items, causing NU5046 'icon file does not exist in the package'.
+         The metapackage shows up as a bare NuGet card; the main Cocos2D-Mono
+         package keeps the icon + readme. -->
   </PropertyGroup>
 
   <!-- ============================================================
@@ -79,10 +82,6 @@
                       ExcludeAssets="build" />
   </ItemGroup>
 
-  <!-- Pack the README + logo (referenced by PackageReadmeFile / PackageIcon). -->
-  <ItemGroup>
-    <None Include="..\..\Logos\logo-small.png" Pack="True" PackagePath="" Visible="false" />
-    <None Include="..\..\README.md"            Pack="True" PackagePath="" Visible="false" Condition="Exists('..\..\README.md')" />
-  </ItemGroup>
+  <!-- Logo + README intentionally NOT packed here (see PackageIcon comment above). -->
 
 </Project>
