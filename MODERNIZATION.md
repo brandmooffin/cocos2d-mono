@@ -259,15 +259,18 @@ Create `Directory.Packages.props` at the repo root:
 
 This eliminates the need to track versions in 30 csprojs and resolves the current inconsistencies (e.g. `SharpZipLib` ranges from 1.3.3 to 1.4.2 across projects; `System.Drawing.Common` from 5.0.3 to 8.0.11).
 
-### 1.5 The Core vs non-Core split
+### 1.5 The Core vs non-Core split — restored as a metapackage
 
-The two SKUs differ only in:
-- Whether `MonoGame.Content.Builder.Task` is referenced (non-Core has it; Core does not).
-- Some Windows-only auxiliary deps.
+Empirical analysis of the legacy nuspec pairs (recovered from `git show` at the parent of Phase 1c-a) confirmed the only structural delta between `Cocos2D-Mono.{Platform}` and `Cocos2D-Mono.Core.{Platform}` was the presence/absence of `MonoGame.Content.Builder.Task`. Runtime DLL closure (MonoGame.Framework.*, OpenTK, SkiaSharp, System.Drawing.Common, BitMiracle.LibTiff.NET, SharpZipLib) was identical. Box2D never shipped as a separate `.Core` variant.
 
-Recommendation: **collapse to one library and one package.** Move the content-pipeline tooling into a separate optional package `Cocos2D-Mono.ContentPipeline` (or just document that consumers bring their own MGCB workload). Eliminates 6 csprojs and 6 CI workflows immediately.
+The original "collapse to one package" recommendation here was wrong — it would have removed a real consumer-facing choice. Restored as a **payload-free metapackage**:
 
-If consumer feedback shows the Core variant is genuinely depended on, keep it as a metapackage that excludes the MGCB transitive — but don't duplicate the source project.
+- `src/Cocos2DMono/Cocos2DMono.csproj` is the sole owner of the compile glob, per-TFM defines, runtime PackageReferences, and the MGCB PackageReference. It produces `Cocos2D-Mono` with `lib/<tfm>/Cocos2D.dll`.
+- `src/Cocos2DMono.Core/Cocos2DMono.Core.csproj` is a payload-free metapackage with `IncludeBuildOutput=false`. Its only dependency is `<PackageReference Include="Cocos2D-Mono" Version="[$(Version)]" ExcludeAssets="build" />`. The `ExcludeAssets="build"` suppresses the MGCB MSBuild targets while the runtime DLL closure (which all flow as `compile` / `runtime` / `native` assets) continues to flow normally.
+
+The result: one `Cocos2D.dll` assembly identity in the ecosystem (no NU1605/MSB3243/MSB3277 risk when both packages end up in a consumer graph), single source compilation in CI, and the MGCB-vs-no-MGCB distinction expressed purely through NuGet asset flow rules.
+
+`Cocos2DMono.Core.csproj` is intentionally NOT in `Cocos2DMono.sln`. Local `dotnet restore` of the metapackage requires the main `Cocos2D-Mono.nupkg` to be a restorable source — packing it on a developer machine works only after first running `dotnet pack src/Cocos2DMono/Cocos2DMono.csproj -o artifacts/` and adding `artifacts/` as a local NuGet source. CI does this automatically in the pack job.
 
 ### 1.6 CI matrix consolidation
 

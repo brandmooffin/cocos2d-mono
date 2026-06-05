@@ -108,6 +108,18 @@ jobs:
         run: dotnet pack src/Box2D/Box2D.csproj -c Release --no-restore -o artifacts
       - name: Pack Cocos2DMono
         run: dotnet pack src/Cocos2DMono/Cocos2DMono.csproj -c Release --no-restore -o artifacts
+
+      # Cocos2D-Mono.Core is a payload-free metapackage whose only dependency
+      # is on Cocos2D-Mono with ExcludeAssets=build. To pack it, the main
+      # Cocos2D-Mono nupkg must be a restorable source. Add artifacts/ as a
+      # local feed and restore + pack the metapackage.
+      - name: Add artifacts as local NuGet source
+        run: dotnet nuget add source "${{ github.workspace }}/artifacts" --name local-artifacts
+      - name: Restore Cocos2D-Mono.Core metapackage
+        run: dotnet restore src/Cocos2DMono.Core/Cocos2DMono.Core.csproj
+      - name: Pack Cocos2D-Mono.Core (metapackage, no MGCB build flow)
+        run: dotnet pack src/Cocos2DMono.Core/Cocos2DMono.Core.csproj -c Release --no-restore -o artifacts
+
       - uses: actions/upload-artifact@v4
         with:
           name: nuget-packages

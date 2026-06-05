@@ -36,8 +36,10 @@
 - Phase 1 modernization: collapsed 12 per-platform csprojs into a single multi-targeted package.
 - LibTiff is now Windows-only (matches the actual `#if WINDOWS` guard in CCTexture2D.cs).
 - Mac Catalyst is NOT shipped in Phase 1: MonoGame 3.8.4.1 has no maccatalyst asset. macOS desktop is served by the net9.0 DesktopGL TFM.
+- A companion Cocos2D-Mono.Core metapackage is available for consumers who don't use the MGCB content pipeline.
 - See https://github.com/Cocos2D-Mono/cocos2d-mono for the full changelog.
     </PackageReleaseNotes>
+    <PackageTags>mono monogame cocos2d game gamedev 2d mgcb content-pipeline</PackageTags>
     <PackageIcon>logo-small.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
@@ -157,6 +159,10 @@
        Package references (versions centralized via Directory.Packages.props)
        ============================================================ -->
   <ItemGroup>
+    <!-- MGCB MSBuild content-pipeline task. Flows as a build asset to consumers.
+         Consumers who do not want the content pipeline should reference
+         Cocos2D-Mono.Core instead — that metapackage depends on Cocos2D-Mono
+         with ExcludeAssets="build" so the MGCB targets are suppressed. -->
     <PackageReference Include="MonoGame.Content.Builder.Task" />
     <!-- ICSharpCode.SharpZipLib types are imported by CCParticleSystem.cs.
          Required on every TFM. -->
