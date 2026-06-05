@@ -822,8 +822,8 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/Arial.spritefont
 
-#begin fonts/arial.ttf
-/copy:fonts/arial.ttf
+#begin fonts/Arial.ttf
+/copy:fonts/Arial.ttf
 
 #begin fonts/arial-12.spritefont
 /importer:FontDescriptionImporter
@@ -1157,62 +1157,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:fonts/larabie-16.png
-
-#begin fonts/arial.ttf
-/copy:fonts/arial.ttf
-
-#begin fonts/arial.ttf
-/copy:fonts/arial.ttf
-
-#begin fonts/arial16.fnt
-/copy:fonts/arial16.fnt
-
-#begin fonts/arial16.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:fonts/arial16.png
-
-#begin fonts/arial-16.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:fonts/arial-16.spritefont
-
-#begin fonts/arial-18.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:fonts/arial-18.spritefont
-
-#begin fonts/arial-22.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:fonts/arial-22.spritefont
-
-#begin fonts/arial-12.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:fonts/arial-12.spritefont
-
-#begin fonts/arial-18.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:fonts/arial-18.spritefont
 
 #begin fonts/Paint Boy.ttf
 /copy:fonts/Paint Boy.ttf
