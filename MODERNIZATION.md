@@ -59,9 +59,9 @@ Phase 1 ships as four commits to keep blast radius bounded and the legacy build 
 | Sub-phase | Status | What changes | Reversible? |
 |---|---|---|---|
 | **1a** | ✅ | **Add** new files under `src/`, new `Cocos2DMono.sln`, new matrix `.github/workflows/build.yml`. Legacy build is untouched. New build runs **side-by-side** with legacy. TFMs are parameterized via `Cocos2DBaseTfm`/`Cocos2DWindowsTfm`/`Cocos2DAndroidTfm`/`Cocos2DIosTfm` properties so a future .NET / MonoGame bump is a four-property edit. | Yes — delete `src/`, the new `.sln`, the new workflow. Legacy untouched. |
-| **1b** | ✅ | Consolidate `Tests/` into `Tests/Cocos2DMono.IntegrationTests/`. Pre-SDK tests/ rename deferred to a follow-up after 1c-b lands the resource moves. | Mostly — `git mv` history is preserved. |
-| **1c-a** | ✅ *(this commit)* | **Delete** legacy: 12 cocos2d csprojs, 4 box2d csprojs, 4 AssemblyInfo files, 12 legacy CI workflows, the vestigial `cocos2d/external lib/ICSharpCodeSource/ICSharpCode.SharpZLib.WP8.csproj`, 2 projitems + 2 shproj (cocos2d + box2d), 7 root `cocos2d-mono.*/` meta-folders with their `.sln` files, 12 `Nuget Packages/Cocos2D.*.nuspec`, 2 `Tools/*.ps1` scripts. 53 deletions total. | After this commit `cocos2d-mono.All.sln` is gone; the new `Cocos2DMono.sln` is canonical. |
-| **1c-b** | ⏳ | `git mv` Android resources from `Tests/cocos2d-mono.Tests/cocos2d-mono.Tests.Android/` and iOS resources from `Tests/cocos2d-mono.Tests/cocos2d-mono.Tests.iOS/` into `Tests/Cocos2DMono.IntegrationTests/`, update csproj references, then `git rm` the now-orphaned legacy Tests folders (12 csproj folders + projitems/shproj). After this commit, the case rename `Tests/` → `tests/` becomes possible. | Mostly — `git mv` history is preserved. |
+| **1b** | ✅ | Consolidate `Tests/` into `Tests/Cocos2DMono.IntegrationTests/`. `Tests/` stays PascalCase — matches the prevailing convention in this repo and the sibling `Cocos2DMono.sln`, `Cocos2DMono.csproj`, `Cocos2DMono.IntegrationTests.csproj` naming. | Mostly — `git mv` history is preserved. |
+| **1c-a** | ✅ | **Delete** legacy: 12 cocos2d csprojs, 4 box2d csprojs, 4 AssemblyInfo files, 12 legacy CI workflows, the vestigial `cocos2d/external lib/ICSharpCodeSource/ICSharpCode.SharpZLib.WP8.csproj`, 2 projitems + 2 shproj (cocos2d + box2d), 7 root `cocos2d-mono.*/` meta-folders with their `.sln` files, 12 `Nuget Packages/Cocos2D.*.nuspec`, 2 `Tools/*.ps1` scripts. 53 deletions total. | After this commit `cocos2d-mono.All.sln` is gone; the new `Cocos2DMono.sln` is canonical. |
+| **1c-b** | ✅ *(this commit)* | `git mv` Android resources from `Tests/cocos2d-mono.Tests/cocos2d-mono.Tests.Android/` and iOS resources from `Tests/cocos2d-mono.Tests/cocos2d-mono.Tests.iOS/` into `Tests/Cocos2DMono.IntegrationTests/{Android,iOS}/`, updated the csproj to local paths, then `git rm` the now-orphaned 12 legacy per-platform test subfolders + projitems/shproj + 6 sibling root `.sln` meta-folders (`Tests/cocos2d-mono.Tests.{Android,DesktopGL,iOS,Linux,Windows,macOS}/`). | Mostly — `git mv` history is preserved. |
 | **1d** | ⏳ | **Reconcile `release/2.6.0-preview`** with the consolidated layout. Tiny PR against `release/2.6.0-preview`: bump the four `Cocos2D*Tfm` properties in `Directory.Build.props` from `net9.0*` → `net10.0*`, bump `MonoGameVersion` to `3.8.5-preview.*`, bump CI matrix `dotnet-version` to `10.0.x`. No csproj edits required because of the TFM parameterization in 1a. Replaces the old "preview-branch maintenance" pattern of editing 30 csprojs per .NET bump. | Yes — revert the props edit. |
 
 ### 1a — Status
@@ -136,7 +136,7 @@ None of those constraints hold in .NET 9. SDK-style projects support multi-TFM, 
 │       ├── Box2D.csproj           (multi-targeted)
 │       └── (current box2d source)
 │
-├── tests/
+├── Tests/
 │   ├── Cocos2DMono.IntegrationTests/        (the existing visual test runner)
 │   │   └── Cocos2DMono.IntegrationTests.csproj  (multi-targeted)
 │   └── Cocos2DMono.UnitTests/               (NEW — added in Phase 5)
@@ -301,7 +301,7 @@ steps:
 3. **Create `src/Cocos2DMono/Cocos2DMono.csproj`** with the multi-target shape above. Move `cocos2d/*.cs` into `src/Cocos2DMono/` *physically* — the source structure inside the project stays the same, only the project descriptor changes.
 4. **Delete `cocos2d.projitems` and `cocos2d.shproj`** once the multi-target csproj compiles cleanly on every TFM.
 5. **Repeat for Box2D and Tests.**
-6. **Update solution file**: one `Cocos2DMono.sln` with `src/`, `tests/`, `samples/` folders.
+6. **Update solution file**: one `Cocos2DMono.sln` with `src/`, `Tests/`, `samples/` folders.
 7. **Rewrite CI** as the single matrix workflow.
 8. **Verify NuGet output**: produce package with same `PackageId` (`Cocos2D-Mono`) — note this means the multi-targeted package replaces the previous `Cocos2D-Mono.DesktopGL`, `Cocos2D-Mono.Windows`, etc. SKUs. **This is the only consumer-visible change in Phase 1** and it warrants a major version bump (3.0.0). Document the migration in `CHANGELOG.md`.
 9. **Delete the old `cocos2d/cocos2d.{Platform}/` and `cocos2d/cocos2d.Core.{Platform}/` directories** after all artifacts verified.
@@ -315,7 +315,7 @@ steps:
 - [ ] `dotnet build` succeeds on `net9.0-ios18.0` (CI verification, 1a).
 - [ ] `dotnet pack` produces a single multi-targeted `Cocos2D-Mono.{version}.nupkg` containing all platform builds (1c, after legacy deletion lets us pack the full TFM set).
 - [ ] CI matrix workflow green on every TFM.
-- [ ] Tests project consolidated to `tests/Cocos2DMono.IntegrationTests/` and runs identically on every platform (1b).
+- [x] Tests project consolidated to `Tests/Cocos2DMono.IntegrationTests/` and runs identically on every platform (1b + 1c-b).
 - [ ] `cocos2d.projitems`, `cocos2d.shproj`, all `cocos2d.{Platform}` and `cocos2d.Core.{Platform}` folders deleted (1c).
 - [ ] `release/2.6.0-preview` rebased onto post-1c dev: TFM dials bumped to net10.0, MonoGameVersion → 3.8.5-preview, CI dotnet-version → 10.0.x (1d).
 - [x] `MODERNIZATION.md` updated with the actual final shape vs the plan (1a).
@@ -627,7 +627,7 @@ Most current `#if`-heavy files (`CCAccelerometer`, `CCDevice`, `CCApplication`) 
 
 The current `Tests/cocos2d-mono.Tests/` is a runnable visual test app — useful for integration but not for CI assertions.
 
-Add `tests/Cocos2DMono.UnitTests/` (xUnit) covering:
+Add `Tests/Cocos2DMono.UnitTests/` (xUnit) covering:
 - Math primitives (`CCPoint`, `CCRect`, `CCAffineTransform`).
 - Action evaluation given mocked time (`CCActionInterval`, ease functions, sequences).
 - Serialization round-trips.
@@ -638,7 +638,7 @@ Keep the visual test runner; rename to `Cocos2DMono.IntegrationTests`.
 
 ### 5.3 Benchmark project
 
-`tests/Cocos2DMono.Benchmarks/` using BenchmarkDotNet, covering:
+`Tests/Cocos2DMono.Benchmarks/` using BenchmarkDotNet, covering:
 - Render-loop hot paths (`CCSpriteBatchNode.Visit`, `CCDrawManager` vertex emission).
 - `CCActionManager.Update` scaling with action count.
 - `CCNode` traversal at varying tree depths.
@@ -660,9 +660,9 @@ Lets consumers step into framework source from their debugger.
 
 ### 5.5 Acceptance criteria for Phase 5
 
-- [ ] `tests/Cocos2DMono.UnitTests/` exists with > 100 unit tests covering math, actions, serialization.
+- [ ] `Tests/Cocos2DMono.UnitTests/` exists with > 100 unit tests covering math, actions, serialization.
 - [ ] CI gates on test pass + analyzer warnings.
-- [ ] Benchmark suite reproducible via `dotnet run -c Release --project tests/Cocos2DMono.Benchmarks`.
+- [ ] Benchmark suite reproducible via `dotnet run -c Release --project Tests/Cocos2DMono.Benchmarks`.
 - [ ] Published packages include `.snupkg` symbols on NuGet.org.
 
 ---

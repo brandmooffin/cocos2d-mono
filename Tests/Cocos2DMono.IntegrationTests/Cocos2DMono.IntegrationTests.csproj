@@ -67,17 +67,15 @@
     <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
     <CheckEolWorkloads>false</CheckEolWorkloads>
     <AndroidApplication>true</AndroidApplication>
-    <AndroidManifest>..\cocos2d-mono.Tests\cocos2d-mono.Tests.Android\AndroidManifest.xml</AndroidManifest>
-    <MonoAndroidResourcePrefix>..\cocos2d-mono.Tests\cocos2d-mono.Tests.Android\Resources</MonoAndroidResourcePrefix>
+    <AndroidManifest>Android\AndroidManifest.xml</AndroidManifest>
+    <MonoAndroidResourcePrefix>Android\Resources</MonoAndroidResourcePrefix>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
-    <!-- AndroidResource items pulled in from the legacy folder; Phase 1c moves
-         them into Tests/Cocos2DMono.IntegrationTests/Android/Resources/. -->
-    <AndroidResource Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.Android\Resources\**\*.xml" />
-    <AndroidResource Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.Android\Resources\**\*.axml" />
-    <AndroidResource Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.Android\Resources\**\*.png" />
+    <AndroidResource Include="Android\Resources\**\*.xml" />
+    <AndroidResource Include="Android\Resources\**\*.axml" />
+    <AndroidResource Include="Android\Resources\**\*.png" />
   </ItemGroup>
 
   <!-- ============================================================
@@ -89,18 +87,25 @@
     <MonoGamePlatform>iOS</MonoGamePlatform>
     <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
     <CheckEolWorkloads>false</CheckEolWorkloads>
-    <IPhoneResourcePrefix>..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS</IPhoneResourcePrefix>
-    <CodesignEntitlements>..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS\Entitlements.plist</CodesignEntitlements>
+    <IPhoneResourcePrefix>iOS</IPhoneResourcePrefix>
+    <CodesignEntitlements>iOS\Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
+  <!-- iOS\SceneDelegate.cs lives inside this project's directory now (after
+       Phase 1c-b file moves). The SDK's implicit Compile glob would pull it
+       into every TFM and fail on non-iOS hosts with CS0246 against Foundation/
+       UIKit/RegisterAttribute. Remove globally, re-include for iOS only. -->
+  <ItemGroup>
+    <Compile Remove="iOS\**\*.cs" />
+  </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
-    <!-- iOS app bundle inputs pulled from the legacy folder. -->
-    <None Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS\Info.plist" Link="Info.plist" LogicalName="Info.plist" />
-    <None Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS\Entitlements.plist" Link="Entitlements.plist" />
-    <InterfaceDefinition Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS\LaunchScreen.storyboard" Link="LaunchScreen.storyboard" />
-    <ImageAsset Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS\Assets.xcassets\**\*.png">
+    <Compile Include="iOS\**\*.cs" />
+    <None Include="iOS\Info.plist" Link="Info.plist" LogicalName="Info.plist" />
+    <None Include="iOS\Entitlements.plist" Link="Entitlements.plist" />
+    <InterfaceDefinition Include="iOS\LaunchScreen.storyboard" Link="LaunchScreen.storyboard" />
+    <ImageAsset Include="iOS\Assets.xcassets\**\*.png">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="..\cocos2d-mono.Tests\cocos2d-mono.Tests.iOS\Assets.xcassets\**\Contents.json">
+    <ImageAsset Include="iOS\Assets.xcassets\**\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
   </ItemGroup>
