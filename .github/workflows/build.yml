@@ -75,7 +75,19 @@ jobs:
       - name: Build Cocos2DMono
         run: dotnet build src/Cocos2DMono/Cocos2DMono.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
 
-      - name: Build IntegrationTests
+      # Gated to desktop TFMs to keep mobile CI in line with the pre-modernization
+      # baseline (~7-8 min iOS in run 25065745603). The IntegrationTests harness
+      # is a maintainer-internal visual test program; on iOS Release it triggers
+      # ~40 min of Mono AOT + MGCB processing of 384 content entries because of
+      # the full 573-file source glob. Mobile cells validate just the library
+      # (Box2D + Cocos2DMono) build, matching what the legacy ios_build.yml did
+      # — it only built cocos2d-mono.iOS.csproj as a .dll, never the test app.
+      #
+      # The harness still builds on every desktop matrix cell (where it's
+      # seconds) and can be built locally for mobile on demand via:
+      #   dotnet build Tests/Cocos2DMono.IntegrationTests/... -f net9.0-ios18.0
+      - name: Build IntegrationTests (desktop only)
+        if: matrix.target.tfm == 'net9.0' || matrix.target.tfm == 'net9.0-windows7.0'
         run: dotnet build Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
 
   pack:
