@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <!--
+    References the existing DesktopGL build for now. When Stage C lands the
+    consolidated csproj, this reference moves to it. The math types under test
+    (CCPoint/CCSize/CCRect/CCAffineTransform) are pure value types and need no
+    graphics device, so the suite runs headless.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\cocos2d\cocos2d.DesktopGL\cocos2d.DesktopGL.csproj" />
+  </ItemGroup>
+
+</Project>
