@@ -1,0 +1,25 @@
+name: unit-tests
+
+on:
+  push:
+    branches: [ dev, master ]
+  pull_request:
+
+concurrency:
+  group: unit-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    name: Unit tests (DesktopGL / net9.0)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Test
+        run: dotnet test Tests/Cocos2DMono.UnitTests/Cocos2DMono.UnitTests.csproj -c Release
