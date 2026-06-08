@@ -59,4 +59,31 @@ public class CCAffineTransformTests
         Assert.Equal(0f, r.X, Precision);
         Assert.Equal(1f, r.Y, Precision);
     }
+
+    [Fact]
+    public void Concat_ScaleThenTranslate_TransformsPoint()
+    {
+        var scale = CCAffineTransform.Scale(CCAffineTransform.Identity, 2f, 2f);
+        var translate = CCAffineTransform.Translate(CCAffineTransform.Identity, 3f, 5f);
+
+        // Concat(scale, translate) applies the scale first, then the translate.
+        var combined = CCAffineTransform.Concat(scale, translate);
+
+        // (1,1) -> *2 -> (2,2) -> +(3,5) -> (5,7)
+        Assert.Equal(new CCPoint(5f, 7f), CCAffineTransform.Transform(new CCPoint(1f, 1f), combined));
+    }
+
+    [Fact]
+    public void Transform_Rect_ProducesScaledAabb()
+    {
+        var scale = CCAffineTransform.Scale(CCAffineTransform.Identity, 2f, 2f);
+
+        // Rect (1,1)-(3,3) scaled by 2 -> (2,2)-(6,6)
+        var r = scale.Transform(new CCRect(1f, 1f, 2f, 2f));
+
+        Assert.Equal(2f, r.MinX);
+        Assert.Equal(2f, r.MinY);
+        Assert.Equal(4f, r.Size.Width);
+        Assert.Equal(4f, r.Size.Height);
+    }
 }
