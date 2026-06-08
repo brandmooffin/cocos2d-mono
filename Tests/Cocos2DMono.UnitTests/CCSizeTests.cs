@@ -39,4 +39,36 @@ public class CCSizeTests
     {
         Assert.True(CCSize.Zero == new CCSize(0f, 0f));
     }
+
+    [Fact]
+    public void Diagonal_IsHypotenuse()
+    {
+        Assert.Equal(5f, new CCSize(3f, 4f).Diagonal, 5);
+    }
+
+    [Fact]
+    public void Inverted_SwapsWidthAndHeight()
+    {
+        var s = new CCSize(3f, 4f).Inverted;
+        Assert.Equal(4f, s.Width);
+        Assert.Equal(3f, s.Height);
+    }
+
+    [Fact]
+    public void AsRect_IsOriginRectOfThisSize()
+    {
+        var r = new CCSize(10f, 20f).AsRect;
+        Assert.Equal(0f, r.MinX);
+        Assert.Equal(0f, r.MinY);
+        Assert.Equal(10f, r.Size.Width);
+        Assert.Equal(20f, r.Size.Height);
+    }
+
+    [Fact]
+    public void Clamp_CapsEachDimensionToMax()
+    {
+        var s = new CCSize(10f, 20f).Clamp(new CCSize(5f, 25f));
+        Assert.Equal(5f, s.Width);    // 10 capped to 5
+        Assert.Equal(20f, s.Height);  // 20 is under 25, unchanged
+    }
 }
