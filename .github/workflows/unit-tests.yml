@@ -19,7 +19,6 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
-
+          global-json-file: global.json
       - name: Test
         run: dotnet test Tests/Cocos2DMono.UnitTests/Cocos2DMono.UnitTests.csproj -c Release

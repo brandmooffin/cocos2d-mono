@@ -28,7 +28,7 @@ Continue supporting desktop (Windows, macOS, Linux / DesktopGL), Android, and iO
 ## Status at a glance
 
 | Theme | Status |
-|---|---|
+| --- | --- |
 | Quality & testing | Next up |
 | Build & packaging | Planned |
 | Modern C# | Planned |
