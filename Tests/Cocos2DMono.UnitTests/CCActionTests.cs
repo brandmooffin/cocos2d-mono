@@ -6,7 +6,7 @@ namespace Cocos2DMono.UnitTests;
 // Actions are started via the public RunAction (which calls the internal StartWithTarget
 // synchronously). A fresh node is not "running", so the action is added paused and will not
 // auto-step; we then drive it deterministically with the public Update(normalizedTime).
-public class CCActionTests
+public class CCActionTests : System.IDisposable
 {
     private const int P = 4;
 
@@ -138,5 +138,10 @@ public class CCActionTests
         Assert.Equal(new CCPoint(10f, 20f), node.Position);
         Assert.Equal(2f, node.ScaleX, P);
         Assert.Equal(2f, node.ScaleY, P);
+    }
+    public void Dispose()
+    {
+        // CCNode.RunAction registers actions with the shared ActionManager; clean it up to keep tests isolated.
+        CCDirector.SharedDirector.ActionManager.RemoveAllActions();
     }
 }
