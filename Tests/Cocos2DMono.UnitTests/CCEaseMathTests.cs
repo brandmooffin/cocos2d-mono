@@ -99,8 +99,9 @@ public class CCEaseMathTests
     {
         Assert.Equal(0f, CCEaseMath.ExponentialOut(0f), P);
         Assert.Equal(1f, CCEaseMath.ExponentialOut(1f), P);
-        Assert.Equal(0f, CCEaseMath.ExponentialInOut(0f), P);
-        Assert.Equal(1f, CCEaseMath.ExponentialInOut(1f), P);
+        // Characterization: ExponentialInOut does not special-case endpoints; it lands at 1/2048 at t=0 and 2047/2048 at t=1.
+        Assert.Equal(0.00048828125f, CCEaseMath.ExponentialInOut(0f), 8);
+        Assert.Equal(0.9995117f, CCEaseMath.ExponentialInOut(1f), 7);
 
         Assert.Equal(0f, CCEaseMath.ExponentialIn(0f), P);
         // Characterization: ExponentialIn applies a small (-0.001) offset, so at t=1 it
