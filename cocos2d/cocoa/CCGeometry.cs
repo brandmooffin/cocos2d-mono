@@ -31,7 +31,7 @@ using Microsoft.Xna.Framework;
 
 namespace Cocos2D
 {
-#if !WINDOWS_PHONE && !XBOX && !NETFX_CORE
+#if !NETFX_CORE
     [Serializable, StructLayout(LayoutKind.Sequential), TypeConverter(typeof (CCPointConverter))]
 #endif
     public struct CCPoint
@@ -666,7 +666,7 @@ namespace Cocos2D
 
         public static CCPoint Parse(string s)
         {
-#if !WINDOWS_PHONE && !XBOX && !NETFX_CORE
+#if !NETFX_CORE
             return (CCPoint) TypeDescriptor.GetConverter(typeof (CCPoint)).ConvertFromString(s);
 #else
             return (CCPointConverter.CCPointFromString(s));
@@ -689,7 +689,7 @@ namespace Cocos2D
         }
     }
 
-#if !WINDOWS_PHONE && !XBOX && !NETFX_CORE
+#if !NETFX_CORE
     [Serializable, StructLayout(LayoutKind.Sequential), TypeConverter(typeof (CCSizeConverter))]
 #endif
     public struct CCSize
@@ -799,7 +799,7 @@ namespace Cocos2D
 
         public static CCSize Parse(string s)
         {
-#if !WINDOWS_PHONE && !XBOX && !NETFX_CORE
+#if !NETFX_CORE
             return (CCSize) TypeDescriptor.GetConverter(typeof (CCSize)).ConvertFromString(s);
 #else
             return (CCSizeConverter.CCSizeFromString(s));
@@ -827,7 +827,7 @@ namespace Cocos2D
         }
     }
 
-#if !WINDOWS_PHONE && !XBOX && !NETFX_CORE
+#if !NETFX_CORE
     [Serializable, StructLayout(LayoutKind.Sequential), TypeConverter(typeof (CCRectConverter))]
 #endif
     public struct CCRect
@@ -1093,7 +1093,7 @@ namespace Cocos2D
 
         public static CCRect Parse(string s)
         {
-#if !WINDOWS_PHONE && !XBOX && !NETFX_CORE
+#if !NETFX_CORE
             return (CCRect) TypeDescriptor.GetConverter(typeof (CCRect)).ConvertFromString(s);
 #else
             return (CCRectConverter.CCRectFromString(s));
