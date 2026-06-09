@@ -49,9 +49,7 @@ namespace Cocos2D
         public bool ParseContent(TextReader sr)
         {
             var setting = new XmlReaderSettings();
-#if !PSM
             setting.DtdProcessing = DtdProcessing.Ignore;
-#endif
             XmlReader xmlReader = XmlReader.Create(sr, setting);
             int dataindex = 0;
 
