@@ -1,0 +1,80 @@
+# EditorConfig for Cocos2D-Mono  (https://editorconfig.org)
+#
+# Establishes formatting + C# code-style conventions for the modernization effort.
+# IMPORTANT: these are IDE / `dotnet format` conventions only - they do NOT change
+# the build. `EnforceCodeStyleInBuild` is intentionally left off, so no new build
+# warnings are introduced on the existing code. CI enforcement (warnings-as-errors),
+# the Hungarian-field naming rules (Phase 3), and StyleCop are deliberate later steps.
+#
+# Line endings are governed by .gitattributes (`* text=auto`), so end_of_line is
+# intentionally not set here.
+
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{json,yml,yaml,csproj,props,targets,nuspec,config,xml}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+############################
+# C# code style
+############################
+[*.cs]
+
+# using directives
+dotnet_sort_system_directives_first = true
+csharp_using_directive_placement = outside_namespace:suggestion
+
+# 'this.' qualification - prefer none
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+# language keywords instead of framework type names
+dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
+dotnet_style_predefined_type_for_member_access = true:suggestion
+
+# 'var' preferences
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = false:suggestion
+
+# expression-bodied members
+csharp_style_expression_bodied_methods = false:silent
+csharp_style_expression_bodied_properties = true:suggestion
+csharp_style_expression_bodied_accessors = true:suggestion
+
+# modern C# features (Phase 3 targets, surfaced as IDE hints)
+csharp_style_namespace_declarations = file_scoped:suggestion
+csharp_prefer_braces = true:suggestion
+csharp_style_prefer_switch_expression = true:suggestion
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+
+# new-line preferences (Allman braces - matches the existing codebase)
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+
+# indentation / spacing
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_space_after_keywords_in_control_flow_statements = true
+
+# NOTE: naming conventions (replacing the m_pFoo / m_bFoo / m_fFoo Hungarian-style
+# fields) are intentionally deferred to Phase 3, where the field-rename pass lands
+# together with the enforcing rules.
