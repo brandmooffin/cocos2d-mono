@@ -158,7 +158,7 @@ namespace Cocos2D
         {
             GameTime = gameTime;
 
-#if !PSM &&!NETFX_CORE
+#if !NETFX_CORE
             if (CCDirector.SharedDirector.Accelerometer != null)
             {
                 CCDirector.SharedDirector.Accelerometer.Update();

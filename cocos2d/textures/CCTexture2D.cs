@@ -247,7 +247,7 @@ namespace Cocos2D
                 switch (m_ePixelFormat)
                 {
                     case SurfaceFormat.Dxt1:
-#if !WINDOWS && !WINDOWS_PHONE && !XBOX
+#if !WINDOWS
                     case SurfaceFormat.Dxt1a:
                     case SurfaceFormat.RgbPvrtc2Bpp:
                     case SurfaceFormat.RgbaPvrtc2Bpp:
@@ -258,7 +258,7 @@ namespace Cocos2D
 
                     case SurfaceFormat.Dxt3:
                     case SurfaceFormat.Dxt5:
-#if !WINDOWS && !WINDOWS_PHONE && !XBOX
+#if !WINDOWS
                     case SurfaceFormat.RgbPvrtc4Bpp:
                     case SurfaceFormat.RgbaPvrtc4Bpp:
 #endif
