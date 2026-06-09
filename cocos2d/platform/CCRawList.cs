@@ -26,9 +26,9 @@ namespace Cocos2D
         /// Constructs an empty list.
         ///</summary>
         public CCRawList(bool useArrayPool = false)
-    {
+        {
             UseArrayPool = useArrayPool;
-            
+
             if (useArrayPool)
             {
                 Elements = ArrayPool<T>.Create(4);
@@ -76,7 +76,7 @@ namespace Cocos2D
             set
             {
                 T[] newArray;
-                
+
                 if (UseArrayPool)
                 {
                     var capacity = 4;
@@ -513,7 +513,7 @@ namespace Cocos2D
             }
             Elements[count++] = item;
         }
-        
+
         #region Nested type: Enumerator
 
         ///<summary>
