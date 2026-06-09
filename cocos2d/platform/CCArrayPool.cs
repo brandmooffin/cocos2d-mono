@@ -10,15 +10,7 @@ namespace Cocos2D
     {
         private static readonly Dictionary<int, List<object>> _unused = new Dictionary<int, List<object>>();
 
-#if WINDOWS_PHONE || XBOX
-        public static T[] Create(int length)
-        {
-            return (Create(length, true));
-        }
-        public static T[] Create(int length, bool pow)
-#else
         public static T[] Create(int length, bool pow = true)
-#endif
         {
             List<object> list;
 
@@ -45,15 +37,7 @@ namespace Cocos2D
             return new T[length];
         }
 
-#if WINDOWS_PHONE || XBOX
-        public static void Resize(ref T[] array, int length)
-        {
-            Resize(ref array, length, true);
-        }
-        public static void Resize(ref T[] array, int length, bool pow)
-#else
         public static void Resize(ref T[] array, int length, bool pow = true)
-#endif
         {
             Free(array);
             array = Create(length, pow);

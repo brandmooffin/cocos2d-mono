@@ -23,11 +23,7 @@ namespace Cocos2D
 
     public class CCBox2dDraw : b2Draw
     {
-#if XBOX || WINDOWS_PHONE
-        public const int CircleSegments = 16;
-#else
         public const int CircleSegments = 32;
-#endif
 
         private CCPrimitiveBatch _primitiveBatch;
         public Color TextColor = Color.White;
