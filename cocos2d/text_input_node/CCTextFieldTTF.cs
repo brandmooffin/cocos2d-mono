@@ -149,9 +149,7 @@ namespace Cocos2D
         {
             if (m_pGuideShowHandle != null)
 			{
-#if !WINDOWS_PHONE && !XBOX && !PSM
 				//Guide.EndShowKeyboardInput(m_pGuideShowHandle);
-#endif
                 m_pGuideShowHandle = null;
             }
 
