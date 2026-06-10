@@ -54,7 +54,8 @@ public class CCRawListBenchmarks
     public long Iterate_List_Indexer()
     {
         long sum = 0;
-        for (int i = 0; i < _list.Count; i++)
+        int count = _list.Count;
+        for (int i = 0; i < count; i++)
             sum += _list[i];
         return sum;
     }
