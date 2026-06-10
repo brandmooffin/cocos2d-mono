@@ -1345,7 +1345,6 @@ namespace Cocos2D
             bool p = (supportedOrientations & DisplayOrientation.Portrait) == DisplayOrientation.Portrait;
 
             bool onlyLandscape = (ll || lr) && !p;
-            bool onlyPortrait = !(ll || lr) && p;
 #if WINDOWS || WINDOWSGL || MACOS || LINUX
             bool bSwapDims = bUpdateDimensions && ((m_GraphicsDeviceMgr.SupportedOrientations & supportedOrientations) == DisplayOrientation.Default);
 #else
