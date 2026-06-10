@@ -319,7 +319,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)platform\PList\PlistObjectBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\PList\PlistReal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\PList\PlistString.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)platform\Tuple.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\Zlib\Adler32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\Zlib\Deflate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\Zlib\InfBlocks.cs" />
