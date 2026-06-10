@@ -9,7 +9,6 @@
     <Import_RootNamespace>box2d</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)b2FlagExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)b2InternalClasses.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collision\b2AABB.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collision\b2BroadPhase.cs" />
