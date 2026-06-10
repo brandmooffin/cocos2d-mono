@@ -38,7 +38,18 @@ namespace Cocos2D
 
     public abstract class CCDirector
     {
-        private static CCDirector s_sharedDirector;
+        // The shared director is created lazily and exactly once. Lazy<T> defaults to
+        // LazyThreadSafetyMode.ExecutionAndPublication, so the instance is published only
+        // after Init() has fully populated it (ActionManager, Scheduler, dispatchers);
+        // concurrent first callers block until then instead of observing a half-built
+        // director (which previously caused an intermittent NullReferenceException when a
+        // CCNode constructed on another thread cached a null ActionManager).
+        private static readonly Lazy<CCDirector> s_sharedDirector = new Lazy<CCDirector>(() =>
+        {
+            var director = new CCDisplayLinkDirector();
+            director.Init();
+            return director;
+        });
 
         private readonly float kDefaultFPS = 60f;
         private readonly List<CCScene> m_pobScenesStack = new List<CCScene>();
@@ -501,16 +512,8 @@ namespace Cocos2D
         /// <value> </value>
         public static CCDirector SharedDirector
         {
-            get
-            {
-                if (s_sharedDirector == null)
-                {
-                    s_sharedDirector = new CCDisplayLinkDirector();
-                    s_sharedDirector.Init();
-                }
-                return s_sharedDirector;
-            }
-            }
+            get { return s_sharedDirector.Value; }
+        }
 
         public virtual bool NeedsInit
         {
