@@ -87,9 +87,7 @@ namespace Cocos2D
 			} else {
 				//allow DTD but not try to resolve it from web
 				var settings = new XmlReaderSettings () {
-#if !PSM
 					DtdProcessing = DtdProcessing.Ignore,
-#endif
 					//ProhibitDtd = false,
 #if !NETFX_CORE
 					XmlResolver = null,
@@ -105,9 +103,7 @@ namespace Cocos2D
             //allow DTD but not try to resolve it from web
             var settings = new XmlReaderSettings()
                 {
-#if !PSM
                     DtdProcessing = DtdProcessing.Ignore,
-#endif
 				//ProhibitDtd = false,
 #if !NETFX_CORE
                     XmlResolver = null,
@@ -123,9 +119,7 @@ namespace Cocos2D
             var settings = new XmlReaderSettings()
                 {
                     CloseInput = true,
-#if !PSM
                     DtdProcessing = DtdProcessing.Ignore,
-#endif
 				//ProhibitDtd = false,
 #if !NETFX_CORE
                     XmlResolver = null,
@@ -153,23 +147,7 @@ namespace Cocos2D
             // Read the asset into memory in one go. This results in a ~50% reduction
             // in load times on Android due to slow Android asset streams.
             MemoryStream memStream = new MemoryStream();
-#if XBOX360
-            byte[] buf = new byte[4096];
-            while (data.CanRead)
-            {
-                int amt = data.Read(buf, 0, buf.Length);
-                if (amt == -1)
-                {
-                    break;
-                }
-                if (amt > 0)
-                {
-                    memStream.Write(buf, 0, amt);
-                }
-            }
-#else
             data.CopyTo(memStream);
-#endif
             memStream.Seek(0, SeekOrigin.Begin);
             data.Dispose();
             return memStream;
