@@ -389,7 +389,7 @@ namespace Cocos2D
 
             m_Game = game;
 
-#if ANDROID || WINDOWS_PHONE
+#if ANDROID
             graphics.IsFullScreen = true;
 #endif
 
@@ -482,7 +482,7 @@ namespace Cocos2D
             {
                 DepthBufferEnable = false
             };
-#if !WINDOWS_PHONE && !XBOX && !WINDOWS &&!NETFX_CORE && !PSM
+#if !WINDOWS &&!NETFX_CORE
             //List<string> extensions = CCUtils.GetGLExtensions();
             //foreach(string s in extensions) 
             //{
@@ -1345,8 +1345,7 @@ namespace Cocos2D
             bool p = (supportedOrientations & DisplayOrientation.Portrait) == DisplayOrientation.Portrait;
 
             bool onlyLandscape = (ll || lr) && !p;
-            bool onlyPortrait = !(ll || lr) && p;
-#if WINDOWS || WINDOWSGL || WINDOWS_PHONE || MACOS || LINUX
+#if WINDOWS || WINDOWSGL || MACOS || LINUX
             bool bSwapDims = bUpdateDimensions && ((m_GraphicsDeviceMgr.SupportedOrientations & supportedOrientations) == DisplayOrientation.Default);
 #else
             bool bSwapDims = bUpdateDimensions && ((m_GraphicsDeviceMgr.SupportedOrientations & supportedOrientations) == 0);
@@ -1354,7 +1353,7 @@ namespace Cocos2D
             if (bSwapDims && (ll || lr))
             {
                 // Check for landscape changes that do not need a swap
-#if WINDOWS || WINDOWSGL || WINDOWS_PHONE || MACOS || LINUX
+#if WINDOWS || WINDOWSGL || MACOS || LINUX
                 if (((m_GraphicsDeviceMgr.SupportedOrientations & DisplayOrientation.LandscapeLeft) != DisplayOrientation.Default) ||
                     ((m_GraphicsDeviceMgr.SupportedOrientations & DisplayOrientation.LandscapeRight) != DisplayOrientation.Default))
 #else
@@ -1393,27 +1392,6 @@ namespace Cocos2D
             m_GraphicsDeviceMgr.SupportedOrientations = supportedOrientations;
 #endif
 
-#if WINDOWS_PHONE
-            if (bSwapDims)
-            {
-                m_GraphicsDeviceMgr.PreferredBackBufferWidth = preferredBackBufferHeight;
-                m_GraphicsDeviceMgr.PreferredBackBufferHeight = preferredBackBufferWidth;
-            }
-            else
-            {
-                if (onlyLandscape)
-                {
-                    m_GraphicsDeviceMgr.PreferredBackBufferWidth = 800;
-                    m_GraphicsDeviceMgr.PreferredBackBufferHeight = 480;
-                }
-                else if (onlyPortrait)
-                {
-                    m_GraphicsDeviceMgr.PreferredBackBufferWidth = 480;
-                    m_GraphicsDeviceMgr.PreferredBackBufferHeight = 800;
-                }
-            }
-            m_GraphicsDeviceMgr.SupportedOrientations = supportedOrientations;
-#endif
 #if IOS || IPHONE
             if (bSwapDims)
             {
@@ -2209,26 +2187,12 @@ namespace Cocos2D
         {
             UpdateBuffer(0, _data.Count);
         }
-#if PSM
-		private ushort[] _PSMTmpBuffer;
-#endif
-		
+
         public void UpdateBuffer(int startIndex, int elementCount)
         {
             if (elementCount > 0)
             {
-#if PSM
-				// HACK! PSM vertexbuffer only allows for ushort so we have to convert to ushort here.
-				if(_PSMTmpBuffer == null || _PSMTmpBuffer.Length < elementCount) {
-					_PSMTmpBuffer = new ushort[elementCount];
-				}
-				for(int i=0; i < elementCount; i++) {
-					_PSMTmpBuffer[i] = (ushort)Convert.ChangeType(_data.Elements[startIndex+i], TypeCode.UInt16);
-				}
-                _indexBuffer.SetData(_PSMTmpBuffer, 0, elementCount);
-#else
                 _indexBuffer.SetData(_data.Elements, startIndex, elementCount);
-#endif
             }
         }
 
