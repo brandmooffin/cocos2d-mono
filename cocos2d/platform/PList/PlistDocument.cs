@@ -85,7 +85,7 @@ namespace Cocos2D
 				}
 
 			} else {
-				//allow DTD but not try to resolve it from web
+				// Ignore DTDs and do not resolve external resources from the web.
 				var settings = new XmlReaderSettings () {
 					DtdProcessing = DtdProcessing.Ignore,
 					//ProhibitDtd = false,
@@ -100,7 +100,7 @@ namespace Cocos2D
 
         public void LoadFromXmlFile(string path)
         {
-            //allow DTD but not try to resolve it from web
+            // Ignore DTDs and do not resolve external resources from the web.
             var settings = new XmlReaderSettings()
                 {
                     DtdProcessing = DtdProcessing.Ignore,
@@ -115,7 +115,7 @@ namespace Cocos2D
 
         public void LoadFromXml(string data)
         {
-            //allow DTD but not try to resolve it from web
+            // Ignore DTDs and do not resolve external resources from the web.
             var settings = new XmlReaderSettings()
                 {
                     CloseInput = true,
