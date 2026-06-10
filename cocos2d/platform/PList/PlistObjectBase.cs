@@ -76,17 +76,6 @@ namespace Cocos2D
 		{
 			return new PlistArray (value);
 		}
-        /*
-        public static implicit operator PlistObjectBase(ArrayList value)
-		{
-			return new PlistArray (value);
-		}
-
-		public static implicit operator PlistObjectBase (Hashtable value)
-		{
-			return new PlistDictionary (value);
-		}
-        */
 
         public abstract byte[] AsBinary { get; }
 	    public abstract int AsInt { get; }
