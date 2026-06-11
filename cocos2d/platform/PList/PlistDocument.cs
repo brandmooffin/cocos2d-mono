@@ -32,9 +32,6 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework.Content;
 using System.Collections.Generic;
 using System.Text;
-#if NETFX_CORE
-using System.IO.IsolatedStorage;
-#endif
 
 namespace Cocos2D
 {
@@ -89,9 +86,7 @@ namespace Cocos2D
 				var settings = new XmlReaderSettings () {
 					DtdProcessing = DtdProcessing.Ignore,
 					//ProhibitDtd = false,
-#if !NETFX_CORE
 					XmlResolver = null,
-#endif
 				};
 				using (var reader = XmlReader.Create(data, settings))
 					LoadFromXml (reader);
@@ -105,9 +100,7 @@ namespace Cocos2D
                 {
                     DtdProcessing = DtdProcessing.Ignore,
 				//ProhibitDtd = false,
-#if !NETFX_CORE
                     XmlResolver = null,
-#endif
                 };
             using (var reader = XmlReader.Create(path, settings))
                 LoadFromXml(reader);
@@ -121,9 +114,7 @@ namespace Cocos2D
                     CloseInput = true,
                     DtdProcessing = DtdProcessing.Ignore,
 				//ProhibitDtd = false,
-#if !NETFX_CORE
                     XmlResolver = null,
-#endif
                 };
             using (var reader = XmlReader.Create(new StringReader(data), settings))
             {
@@ -218,11 +209,7 @@ namespace Cocos2D
                 case "data":
                     return new PlistData(reader.ReadElementContentAsString());
                 case "date":
-#if NETFX_CORE
-                    return new PlistDate(DateTime.Parse(reader.ReadElementContentAsString()));
-#else
                     return new PlistDate(reader.ReadElementContentAsDateTime());
-#endif               
                 default:
                     throw new XmlException(String.Format("Plist Node `{0}' is not supported", reader.LocalName));
             }
@@ -309,12 +296,7 @@ namespace Cocos2D
 
         public void WriteToFile(string filename)
         {
-#if NETFX_CORE
-            Stream writeStreamFromFileName = IsolatedStorageFile.GetUserStoreForApplication().CreateFile(filename);
-            using (StreamWriter streamWriter = new StreamWriter(writeStreamFromFileName, System.Text.Encoding.UTF8))
-#else
             using (var streamWriter = new StreamWriter(filename, false, System.Text.Encoding.UTF8))
-#endif
             {
                 var settings = new XmlWriterSettings()
                     {
