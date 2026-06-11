@@ -635,7 +635,10 @@ namespace Cocos2D
                 // hands a non-rented array back to ArrayPool<T>.Shared on a later grow/Free.
                 // Rent yields a bucket-sized buffer (>= count) rather than an exact fit, which
                 // is the right trade-off for a pool-backed list; count stays authoritative.
-                var newArray = UseArrayPool ? ArrayPool<T>.Shared.Rent(Math.Max(count, 1)) : new T[count];
+                // Floor the length at 1 so packing an empty list never yields a zero-length
+                // backing array, which Add()'s doubling growth (Length * 2) could not expand.
+                var minLength = Math.Max(count, 1);
+                var newArray = UseArrayPool ? ArrayPool<T>.Shared.Rent(minLength) : new T[minLength];
                 Array.Copy(Elements, newArray, count);
                 if (UseArrayPool)
                 {
