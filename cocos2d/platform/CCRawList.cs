@@ -629,22 +629,37 @@ namespace Cocos2D
 
         public void PackToCount()
         {
-            if (Elements != null && count < Elements.Length)
+            if (Elements == null || count >= Elements.Length)
             {
-                // When pooling, the replacement buffer must also be rented so the list never
-                // hands a non-rented array back to ArrayPool<T>.Shared on a later grow/Free.
-                // Rent yields a bucket-sized buffer (>= count) rather than an exact fit, which
-                // is the right trade-off for a pool-backed list; count stays authoritative.
-                // Floor the length at 1 so packing an empty list never yields a zero-length
-                // backing array, which Add()'s doubling growth (Length * 2) could not expand.
-                var minLength = Math.Max(count, 1);
-                var newArray = UseArrayPool ? ArrayPool<T>.Shared.Rent(minLength) : new T[minLength];
-                Array.Copy(Elements, newArray, count);
-                if (UseArrayPool)
+                return;
+            }
+
+            // Floor the length at 1 so packing an empty list never yields a zero-length
+            // backing array, which Add()'s doubling growth (Length * 2) could not expand.
+            var minLength = Math.Max(count, 1);
+
+            if (UseArrayPool)
+            {
+                // The replacement must also be rented so the list never hands a non-rented
+                // array back to ArrayPool<T>.Shared on a later grow/Free. Rent returns the
+                // smallest pooled bucket that fits count; if that bucket isn't actually
+                // smaller than the current buffer, packing would only churn same-sized
+                // buffers, so keep the existing one. (count stays authoritative for length.)
+                var packed = ArrayPool<T>.Shared.Rent(minLength);
+                if (packed.Length >= Elements.Length)
                 {
-                    ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
+                    ArrayPool<T>.Shared.Return(packed, ClearOnReturn);
+                    return;
                 }
-                Elements = newArray;
+                Array.Copy(Elements, packed, count);
+                ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
+                Elements = packed;
+            }
+            else
+            {
+                var packed = new T[minLength];
+                Array.Copy(Elements, packed, count);
+                Elements = packed;
             }
         }
 

@@ -33,4 +33,21 @@ public class CCRawListTests
         list.Clear(true);                                   // returns the rented buffer to the shared pool
         Assert.Equal(0, list.count);
     }
+
+    [Fact]
+    public void Pooled_PackToCount_NeverGrowsCapacity()
+    {
+        var list = new CCRawList<int>(useArrayPool: true);
+        for (int i = 0; i < 100; i++)
+            list.Add(i);                 // grows to a large pooled bucket
+        int before = list.Elements.Length;
+
+        list.RemoveAt(50, 50);           // count: 100 -> 50, values 0..49 retained
+        list.PackToCount();
+
+        Assert.Equal(50, list.count);
+        Assert.True(list.Elements.Length <= before);      // packing must never increase capacity
+        Assert.True(list.Elements.Length >= list.count);  // ...but must still fit the elements
+        Assert.Equal(49, list.Elements[49]);
+    }
 }
