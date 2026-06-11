@@ -1,7 +1,9 @@
 using System;
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Cocos2D
 {
@@ -22,6 +24,11 @@ namespace Cocos2D
 
         public bool UseArrayPool;
 
+        // When pooling is enabled, buffers are rented from the shared System.Buffers pool.
+        // They must be cleared on return when T holds references, so a returned buffer does
+        // not keep objects alive until it is rented again (matches List<T>'s own behavior).
+        private static readonly bool ClearOnReturn = RuntimeHelpers.IsReferenceOrContainsReferences<T>();
+
         ///<summary>
         /// Constructs an empty list.
         ///</summary>
@@ -31,7 +38,7 @@ namespace Cocos2D
 
             if (useArrayPool)
             {
-                Elements = ArrayPool<T>.Create(4);
+                Elements = ArrayPool<T>.Shared.Rent(4);
             }
             else
             {
@@ -79,12 +86,9 @@ namespace Cocos2D
 
                 if (UseArrayPool)
                 {
-                    var capacity = 4;
-                    while (capacity < value)
-                    {
-                        capacity *= 2;
-                    }
-                    newArray = ArrayPool<T>.Create(capacity);
+                    // Rent rounds the request up to a pooled bucket size; count (not
+                    // Elements.Length) remains the authoritative logical length.
+                    newArray = ArrayPool<T>.Shared.Rent(value);
                 }
                 else
                 {
@@ -98,7 +102,7 @@ namespace Cocos2D
 
                 if (UseArrayPool && Elements != null)
                 {
-                    ArrayPool<T>.Free(Elements);
+                    ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
                 }
 
                 Elements = newArray;
@@ -212,7 +216,7 @@ namespace Cocos2D
         {
             if (Elements != null && UseArrayPool)
             {
-                ArrayPool<T>.Free(Elements);
+                ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
                 Elements = null;
             }
         }
@@ -631,7 +635,7 @@ namespace Cocos2D
                 Array.Copy(Elements, newArray, count);
                 if (UseArrayPool)
                 {
-                    ArrayPool<T>.Free(Elements);
+                    ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
                 }
                 Elements = newArray;
             }

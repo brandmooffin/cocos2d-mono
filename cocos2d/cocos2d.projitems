@@ -283,7 +283,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)platform\CCAccelerometer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\CCAccelerometerDelegate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\CCApplication.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)platform\CCArrayPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\CCContentManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\CCDevice.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)platform\CCDictMaker.cs" />
