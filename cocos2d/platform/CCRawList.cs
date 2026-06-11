@@ -631,7 +631,11 @@ namespace Cocos2D
         {
             if (Elements != null && count < Elements.Length)
             {
-                var newArray = new T[count];
+                // When pooling, the replacement buffer must also be rented so the list never
+                // hands a non-rented array back to ArrayPool<T>.Shared on a later grow/Free.
+                // Rent yields a bucket-sized buffer (>= count) rather than an exact fit, which
+                // is the right trade-off for a pool-backed list; count stays authoritative.
+                var newArray = UseArrayPool ? ArrayPool<T>.Shared.Rent(Math.Max(count, 1)) : new T[count];
                 Array.Copy(Elements, newArray, count);
                 if (UseArrayPool)
                 {
