@@ -1,7 +1,9 @@
 using System;
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Cocos2D
 {
@@ -22,6 +24,11 @@ namespace Cocos2D
 
         public bool UseArrayPool;
 
+        // When pooling is enabled, buffers are rented from the shared System.Buffers pool.
+        // They must be cleared on return when T holds references, so a returned buffer does
+        // not keep objects alive until it is rented again (matches List<T>'s own behavior).
+        private static readonly bool ClearOnReturn = RuntimeHelpers.IsReferenceOrContainsReferences<T>();
+
         ///<summary>
         /// Constructs an empty list.
         ///</summary>
@@ -31,7 +38,7 @@ namespace Cocos2D
 
             if (useArrayPool)
             {
-                Elements = ArrayPool<T>.Create(4);
+                Elements = ArrayPool<T>.Shared.Rent(4);
             }
             else
             {
@@ -79,12 +86,9 @@ namespace Cocos2D
 
                 if (UseArrayPool)
                 {
-                    var capacity = 4;
-                    while (capacity < value)
-                    {
-                        capacity *= 2;
-                    }
-                    newArray = ArrayPool<T>.Create(capacity);
+                    // Rent rounds the request up to a pooled bucket size; count (not
+                    // Elements.Length) remains the authoritative logical length.
+                    newArray = ArrayPool<T>.Shared.Rent(value);
                 }
                 else
                 {
@@ -98,7 +102,7 @@ namespace Cocos2D
 
                 if (UseArrayPool && Elements != null)
                 {
-                    ArrayPool<T>.Free(Elements);
+                    ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
                 }
 
                 Elements = newArray;
@@ -212,7 +216,7 @@ namespace Cocos2D
         {
             if (Elements != null && UseArrayPool)
             {
-                ArrayPool<T>.Free(Elements);
+                ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
                 Elements = null;
             }
         }
@@ -625,15 +629,37 @@ namespace Cocos2D
 
         public void PackToCount()
         {
-            if (Elements != null && count < Elements.Length)
+            if (Elements == null || count >= Elements.Length)
             {
-                var newArray = new T[count];
-                Array.Copy(Elements, newArray, count);
-                if (UseArrayPool)
+                return;
+            }
+
+            // Floor the length at 1 so packing an empty list never yields a zero-length
+            // backing array, which Add()'s doubling growth (Length * 2) could not expand.
+            var minLength = Math.Max(count, 1);
+
+            if (UseArrayPool)
+            {
+                // The replacement must also be rented so the list never hands a non-rented
+                // array back to ArrayPool<T>.Shared on a later grow/Free. Rent returns the
+                // smallest pooled bucket that fits count; if that bucket isn't actually
+                // smaller than the current buffer, packing would only churn same-sized
+                // buffers, so keep the existing one. (count stays authoritative for length.)
+                var packed = ArrayPool<T>.Shared.Rent(minLength);
+                if (packed.Length >= Elements.Length)
                 {
-                    ArrayPool<T>.Free(Elements);
+                    ArrayPool<T>.Shared.Return(packed, ClearOnReturn);
+                    return;
                 }
-                Elements = newArray;
+                Array.Copy(Elements, packed, count);
+                ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
+                Elements = packed;
+            }
+            else
+            {
+                var packed = new T[minLength];
+                Array.Copy(Elements, packed, count);
+                Elements = packed;
             }
         }
 
