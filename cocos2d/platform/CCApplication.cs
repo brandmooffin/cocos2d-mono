@@ -448,14 +448,6 @@ namespace Cocos2D
         }
         #endregion
 
-        private CCPoint TransformPoint(float x, float y)
-        {
-            CCPoint newPoint;
-            newPoint.X = x * TouchPanel.DisplayWidth / Game.Window.ClientBounds.Width;
-            newPoint.Y = y * TouchPanel.DisplayHeight / Game.Window.ClientBounds.Height;
-            return newPoint;
-        }
-
         #region Mouse Support
 
 #if WINDOWS || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
