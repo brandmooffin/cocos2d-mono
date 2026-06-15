@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-#if !NETFX_CORE
 using System.IO.IsolatedStorage;
-#endif
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -65,9 +63,7 @@ namespace Cocos2D
         private bool m_NeedsInit = true;
         internal CCSize m_obWinSizeInPoints;
 		
-#if !NETFX_CORE
         private CCAccelerometer m_pAccelerometer;
-#endif
 		private CCActionManager m_pActionManager;
         private CCKeypadDispatcher m_pKeypadDispatcher;
 		private CCKeyboardDispatcher m_pKeyboardDispatcher;
@@ -100,7 +96,6 @@ namespace Cocos2D
         
         #region State Management
 		
-#if !NETFX_CORE
         private string m_sStorageDirName = "cocos2dDirector";
         private string m_sSaveFileName = "SceneList.dat";
         private string m_sSceneSaveFileName = "Scene{0}.dat";
@@ -335,7 +330,6 @@ namespace Cocos2D
                 storage.DeleteFile(Path.Combine(m_sStorageDirName, file));
             }
                         }
-#endif
         #endregion
 
         public ICCDirectorDelegate Delegate
@@ -454,13 +448,11 @@ namespace Cocos2D
 			set { m_pKeyboardDispatcher = value; }
 		}
 
-#if !NETFX_CORE
 		public CCAccelerometer Accelerometer
         {
             get { return m_pAccelerometer; }
             set { m_pAccelerometer = value; }
         }
-#endif
         public CCScene RunningScene
         {
             get { return m_pRunningScene; }
@@ -578,9 +570,7 @@ namespace Cocos2D
 			m_pKeyboardDispatcher = new CCKeyboardDispatcher();
 
 			// Accelerometer
-#if !NETFX_CORE
             m_pAccelerometer = new CCAccelerometer();
-#endif
 
             m_NeedsInit = false;
             return true;

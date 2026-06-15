@@ -8,7 +8,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-#if (WINDOWS && !WINRT && !WINDOWS_UWP)
+#if WINDOWS
 using BitMiracle.LibTiff.Classic;
 #endif
 
@@ -223,7 +223,7 @@ namespace Cocos2D
                     m_samplerState = SamplerState.PointClamp;
                     return;
                 }
-                
+
                 m_samplerState = new SamplerState
                 {
                     Filter = TextureFilter.Point
@@ -441,7 +441,7 @@ namespace Cocos2D
             try
             {
                 texture = LoadTexture(stream);
-                
+
                 InitWithTexture(texture, pixelFormat, false, false);
 
                 return true;
@@ -525,7 +525,7 @@ namespace Cocos2D
                 }
 
                 float scale = 1f;
-                
+
                 if (loadedSize != 0)
                 {
                     scale = fontSize / loadedSize * CCSpriteFontCache.FontScale;
@@ -795,8 +795,8 @@ namespace Cocos2D
 
         public override void Reinit()
         {
-			CCLog.Log("reinit called on {1} '{0}' {2}", ToString(), 
-                m_CacheInfo.CacheType, 
+			CCLog.Log("reinit called on {1} '{0}' {2}", ToString(),
+                m_CacheInfo.CacheType,
 				(m_CacheInfo.CacheType == CCTextureCacheType.AssetFile || m_CacheInfo.CacheType == CCTextureCacheType.String) ? m_CacheInfo.Data : string.Empty);
 
             Texture2D textureToDispose = null;
@@ -825,11 +825,7 @@ namespace Cocos2D
                         break;
 
                     case CCTextureCacheType.RawData:
-#if NETFX_CORE
-                    var methodInfo = typeof(CCTexture2D).GetType().GetTypeInfo().GetDeclaredMethod("InitWithRawData");
-#else
-                        var methodInfo = typeof(CCTexture2D).GetMethods(BindingFlags.Public | BindingFlags.Instance).First(m => m.Name == "InitWithRawData" && m.IsGenericMethod && m.GetParameters().Length == 7);
-#endif
+                        var methodInfo = typeof(CCTexture2D).GetMethods(BindingFlags.Public | BindingFlags.Instance).FirstOrDefault(m => m.Name == "InitWithRawData" && m.IsGenericMethod && m.GetParameters().Length == 7);
                         if (methodInfo != null)
                         {
                             var genericMethod = methodInfo.MakeGenericMethod(m_CacheInfo.Data.GetType().GetElementType());
@@ -1064,7 +1060,7 @@ namespace Cocos2D
 
         private Texture2D LoadTextureFromTiff(Stream stream)
         {
-#if (WINDOWS && !WINRT && !WINDOWS_UWP)
+#if WINDOWS
             var tiff = Tiff.ClientOpen("file.tif", "r", stream, new TiffStream());
 
             var w = tiff.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
@@ -1078,7 +1074,7 @@ namespace Cocos2D
                 result.SetData(raster);
                 return result;
             }
-			else 
+			else
 			{
 				return null;
 			}
@@ -1090,7 +1086,7 @@ namespace Cocos2D
 #endif
         }
 
-        
+
         #endregion
     }
 
