@@ -69,9 +69,7 @@ namespace CocosDenshion
                 // User is playing a song, so remember the song state.
                 m_SongToPlayAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.Queue.ActiveSong;
                 m_VolumeAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.Volume;
-#if !NETFX_CORE
                 m_PlayPositionAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.PlayPosition;
-#endif
                 m_IsRepeatingAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.IsRepeating;
                 m_IsShuffleAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.IsShuffled;
             }

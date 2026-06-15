@@ -124,11 +124,7 @@ namespace Box2D.Collision.Shapes
             // Centroid
             if (area <= b2Settings.b2_epsilon)
             {
-#if NETFX_CORE
-                throw (new OverflowException("Centroid is not defined, area is zero."));
-#else
                 throw (new NotFiniteNumberException("Centroid is not defined, area is zero."));
-#endif
             }
             c *= 1.0f / area;
             return c;
@@ -395,11 +391,7 @@ namespace Box2D.Collision.Shapes
             // Center of mass
             if (area <= b2Settings.b2_epsilon)
             {
-#if NETFX_CORE
-                throw (new OverflowException("Area is zero in mass calculation."));
-#else
                 throw (new NotFiniteNumberException("Area is zero in mass calculation."));
-#endif
             }
             center *= 1.0f / area;
             massData.center = center + s;

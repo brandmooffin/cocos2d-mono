@@ -42,11 +42,7 @@ namespace Cocos2D
         {
             if (m_pEventTypeFuncMap != null)
             {
-#if NETFX_CORE
-                return this.m_pEventTypeFuncMap != null && this.m_pEventTypeFuncMap[eventType].Length != 0;
-#else
                 return (m_pEventTypeFuncMap)[eventType].Count() != 0;
-#endif
             }
 
             return false;
