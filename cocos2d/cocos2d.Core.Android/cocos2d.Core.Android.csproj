@@ -18,7 +18,7 @@
 - Added CCEaseMath standalone easing utilities (Quad, Cubic, Lerp, ExpSmooth)
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.5.9</Version>
+    <Version>2.5.10</Version>
     <Title>Cocos2D-Mono for Core Android</Title>
     <Description>Cocos2D-Mono for Core Android</Description>
     <Copyright>Copyright © 2026 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
