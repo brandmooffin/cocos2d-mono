@@ -164,7 +164,7 @@ namespace Cocos2D
             }
             if (UseInputStateManagement)
             {
-                CCInputState.Instance.Update(1f / (float)gameTime.ElapsedGameTime.Milliseconds);
+                CCInputState.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 #if WINDOWS || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
                 ProcessMouse(CCInputState.Instance.Mouse);
 #else
