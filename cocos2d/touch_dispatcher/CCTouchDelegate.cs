@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Cocos2D
 {
@@ -42,7 +41,7 @@ namespace Cocos2D
         {
             if (m_pEventTypeFuncMap != null)
             {
-                return (m_pEventTypeFuncMap)[eventType].Count() != 0;
+                return m_pEventTypeFuncMap.TryGetValue(eventType, out var handler) && !string.IsNullOrEmpty(handler);
             }
 
             return false;

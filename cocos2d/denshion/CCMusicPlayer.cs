@@ -19,7 +19,6 @@ namespace CocosDenshion
 
         private bool m_IsRepeatingAfterClose;
         private bool m_IsShuffleAfterClose;
-        private TimeSpan m_PlayPositionAfterClose = TimeSpan.Zero;
         //private MediaQueue m_QueueAfterClose;
         private Song m_SongToPlayAfterClose;
         private float m_VolumeAfterClose = 1f;
@@ -69,7 +68,6 @@ namespace CocosDenshion
                 // User is playing a song, so remember the song state.
                 m_SongToPlayAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.Queue.ActiveSong;
                 m_VolumeAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.Volume;
-                m_PlayPositionAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.PlayPosition;
                 m_IsRepeatingAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.IsRepeating;
                 m_IsShuffleAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.IsShuffled;
             }
