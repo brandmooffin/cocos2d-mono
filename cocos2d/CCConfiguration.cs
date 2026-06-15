@@ -157,10 +157,8 @@ namespace Cocos2D
                 return(Android.OS.Build.VERSION.Release);
 #elif IOS
                 return(ObjCRuntime.Constants.Version);
-#elif !WINRT
-                return (Environment.OSVersion.Version.ToString());
 #else
-                return (string.Empty);
+                return (Environment.OSVersion.Version.ToString());
 #endif
             }
         }
