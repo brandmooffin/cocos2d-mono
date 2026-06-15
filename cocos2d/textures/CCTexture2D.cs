@@ -8,7 +8,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-#if (WINDOWS && !WINRT && !WINDOWS_UWP)
+#if WINDOWS
 using BitMiracle.LibTiff.Classic;
 #endif
 
@@ -825,11 +825,7 @@ namespace Cocos2D
                         break;
 
                     case CCTextureCacheType.RawData:
-#if NETFX_CORE
-                    var methodInfo = typeof(CCTexture2D).GetType().GetTypeInfo().GetDeclaredMethod("InitWithRawData");
-#else
                         var methodInfo = typeof(CCTexture2D).GetMethods(BindingFlags.Public | BindingFlags.Instance).First(m => m.Name == "InitWithRawData" && m.IsGenericMethod && m.GetParameters().Length == 7);
-#endif
                         if (methodInfo != null)
                         {
                             var genericMethod = methodInfo.MakeGenericMethod(m_CacheInfo.Data.GetType().GetElementType());
@@ -1064,7 +1060,7 @@ namespace Cocos2D
 
         private Texture2D LoadTextureFromTiff(Stream stream)
         {
-#if (WINDOWS && !WINRT && !WINDOWS_UWP)
+#if WINDOWS
             var tiff = Tiff.ClientOpen("file.tif", "r", stream, new TiffStream());
 
             var w = tiff.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
