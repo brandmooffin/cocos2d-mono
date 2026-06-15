@@ -318,9 +318,7 @@ namespace Cocos2D
             // add this layer to concern the Accelerometer Sensor
             if (m_bIsAccelerometerEnabled)
             {
-#if !NETFX_CORE
                 director.Accelerometer.SetDelegate(this);
-#endif
 			}
         }
 
@@ -353,7 +351,6 @@ namespace Cocos2D
 				return m_bIsAccelerometerEnabled;
 			}
             set {
-#if !NETFX_CORE
                 if (value != m_bIsAccelerometerEnabled)
                 {
                     m_bIsAccelerometerEnabled = value;
@@ -364,9 +361,6 @@ namespace Cocos2D
                         pDirector.Accelerometer.SetDelegate(value ? this : null);
                     }
                 }
-#else
-                m_bIsAccelerometerEnabled = false;
-#endif
 			}
         }
 
