@@ -482,7 +482,7 @@ namespace Cocos2D
             {
                 DepthBufferEnable = false
             };
-#if !WINDOWS &&!NETFX_CORE
+#if !WINDOWS
             //List<string> extensions = CCUtils.GetGLExtensions();
             //foreach(string s in extensions) 
             //{

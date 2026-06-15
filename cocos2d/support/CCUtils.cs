@@ -23,7 +23,7 @@ THE SOFTWARE.
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using System.Globalization;
-#if !WINDOWS && !NETFX_CORE
+#if !WINDOWS
 #if WINDOWSGL || LINUX
 using OpenTK.Graphics.OpenGL;
 #else
