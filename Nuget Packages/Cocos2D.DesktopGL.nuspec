@@ -15,8 +15,8 @@
     <description>Cocos2D-Mono for DesktopGL (OpenGL Desktop Platforms)</description>
     <repository url="https://github.com/Cocos2D-Mono/cocos2d-mono" />
     <releaseNotes>
-2.5.10 - Modernization & hardening release (runtime unchanged: .NET 9 / MonoGame 3.8.4.1).
-- BREAKING: removed the custom Cocos2D.ArrayPool<T>; CCRawList<T> now pools via System.Buffers.ArrayPool<T> (the public UseArrayPool option is unchanged)
+2.5.10 - Modernization &amp; hardening release (runtime unchanged: .NET 9 / MonoGame 3.8.4.1).
+- BREAKING: removed the custom Cocos2D.ArrayPool&lt;T&gt;; CCRawList&lt;T&gt; now pools via System.Buffers.ArrayPool&lt;T&gt; (the public UseArrayPool option is unchanged)
 - Fixed a CCDirector.SharedDirector lazy-init race that could expose a half-initialized director under concurrent first access
 - Fixed CCInputState per-frame delta time, CCTouchDelegate handler lookup (no longer throws on an unregistered event), and CCRawList.PackToCount buffer ownership
 - CCRawList pooling is now backed by System.Buffers.ArrayPool (~21% faster, near-zero allocation on the pooled path)
