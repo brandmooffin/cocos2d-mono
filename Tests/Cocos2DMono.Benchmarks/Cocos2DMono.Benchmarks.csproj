@@ -14,8 +14,9 @@
   </ItemGroup>
 
   <!--
-    References the existing DesktopGL build for the types under benchmark
-    (CCRawList<T>, Cocos2D.ArrayPool<T>). These are pure-CPU benchmarks that run
+    References the existing DesktopGL build for the type under benchmark
+    (CCRawList<T>; its pooled path now uses System.Buffers.ArrayPool<T>). These are
+    pure-CPU benchmarks that run
     headless. Render-loop / action-manager benchmarks (which need a GraphicsDevice)
     can be added later. Run on demand from this project folder with:
         dotnet run -c Release

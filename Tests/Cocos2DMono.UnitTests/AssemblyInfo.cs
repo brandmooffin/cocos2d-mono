@@ -1,13 +1,9 @@
 using Xunit;
 
-// The CCNode / CCAction / CCScheduler tests exercise the global CCDirector.SharedDirector
-// singleton, whose lazy initializer is not thread-safe: it publishes the static instance
-// (CCDirector.SharedDirector) before Init() populates ActionManager/Scheduler. Under
-// xUnit's default per-class parallelism, one thread could observe the half-initialized
-// director, so the cached m_pActionManager on a freshly constructed CCNode was null and
-// CCNode.RunAction threw an intermittent NullReferenceException.
-//
-// The engine is single-threaded by design (one game loop owns the director), so we
-// serialize the test run rather than the engine. A thread-safe lazy init in the library
-// is handled as a separate change.
+// These tests share process-global singleton state - the CCDirector.SharedDirector instance
+// (with its ActionManager / Scheduler) and static caches. The director's lazy init is now
+// thread-safe (backed by Lazy<CCDirector>), but the shared mutable state it hands out is not:
+// under xUnit's default per-class parallelism, tests in different classes would mutate the
+// same director / action manager concurrently. The engine is single-threaded by design (one
+// game loop owns the director), so we serialize the test run rather than the engine.
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
