@@ -13,6 +13,6 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.DOCS_REPO_PAT }}
-          repository: brandmooffin/cocos2d-mono-docs
+          repository: Cocos2D-Mono/cocos2d-mono-docs
           event-type: update-docs
-          client-payload: '{"source":"brandmooffin/cocos2d-mono", "ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+          client-payload: '{"source":"Cocos2D-Mono/cocos2d-mono", "ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'

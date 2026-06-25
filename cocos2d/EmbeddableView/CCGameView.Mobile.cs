@@ -151,12 +151,10 @@ namespace Cocos2D
             }
 
             // Update accelerometer if available and enabled
-#if !NETFX_CORE
             if (Accelerometer != null)
             {
                 Accelerometer.Update();
             }
-#endif
         }
 
         // Prevent memory leaks by removing stale touches

@@ -10,15 +10,16 @@
     <TargetFramework>net9.0-android35.0</TargetFramework>
     <BaseIntermediateOutputPath>obj\Core\Android\Debug</BaseIntermediateOutputPath>
     <PackageReleaseNotes>
-- Added CCDrawNodeRetained for retained-mode drawing with shape handles (move, recolor, remove without Clear)
-- Added CCPixelLabel optimized for frequent text updates with pre-cached character textures
-- Added CCSoundHandle for per-instance audio control (volume, pan, pitch, stop, pause)
-- Added CCFontManager for easy switching between content pipeline and direct TTF font loading
-- Added CCCollision category/mask filtering with CollisionCategory and CollisionCategoryMask on CCNode
-- Added CCEaseMath standalone easing utilities (Quad, Cubic, Lerp, ExpSmooth)
+2.5.10 - Modernization &amp; hardening release (runtime unchanged: .NET 9 / MonoGame 3.8.4.1).
+- BREAKING: removed the custom Cocos2D.ArrayPool&lt;T&gt;; CCRawList&lt;T&gt; now pools via System.Buffers.ArrayPool&lt;T&gt; (the public UseArrayPool option is unchanged)
+- Fixed a CCDirector.SharedDirector lazy-init race that could expose a half-initialized director under concurrent first access
+- Fixed CCInputState per-frame delta time, CCTouchDelegate handler lookup (no longer throws on an unregistered event), and CCRawList.PackToCount buffer ownership
+- CCRawList pooling is now backed by System.Buffers.ArrayPool (~21% faster, near-zero allocation on the pooled path)
+- Removed all dead platform code (WINDOWS_PHONE/XBOX/XBOX360/PSM/WP8/SILVERLIGHT/PCL and NETFX_CORE/WINRT/WINDOWS_UWP); deleted Tuple.cs and b2FlagExtensions.cs; ArrayList/Hashtable -> generics
+- Added a unit-test suite and a BenchmarkDotNet project, plus an .editorconfig baseline
 	</PackageReleaseNotes>
     <Authors>Cocos2D-Mono Team, Broken Walls Studios</Authors>
-    <Version>2.5.9</Version>
+    <Version>2.5.10</Version>
     <Title>Cocos2D-Mono for Core Android</Title>
     <Description>Cocos2D-Mono for Core Android</Description>
     <Copyright>Copyright © 2026 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>

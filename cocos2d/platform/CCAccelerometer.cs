@@ -8,7 +8,7 @@ namespace Cocos2D
 {
     public class CCAccelerometer
     {
-#if !WINDOWS && !PSM && !XBOX && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
+#if !WINDOWS && !MACOS && !WINDOWSGL && !LINUX
         // the accelerometer sensor on the device
         private static MonoGame.Framework.Devices.Sensors.Accelerometer accelerometer = null;
 #endif
@@ -22,7 +22,7 @@ namespace Cocos2D
 
         static CCAccelerometer()
         {
-#if !WINDOWS && !PSM && !XBOX && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
+#if !WINDOWS && !MACOS && !WINDOWSGL && !LINUX
             try
             {
                 if (MonoGame.Framework.Devices.Sensors.Accelerometer.IsSupported)
@@ -56,7 +56,7 @@ namespace Cocos2D
 
             if (pDelegate != null && !m_bActive)
             {
-#if !WINDOWS && !PSM && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
+#if !WINDOWS && !MACOS && !WINDOWSGL && !LINUX
                     try
                 {
                     if (accelerometer != null && MonoGame.Framework.Devices.Sensors.Accelerometer.IsSupported)
@@ -90,7 +90,7 @@ namespace Cocos2D
             {
                 if (m_bActive && !m_bEmulation)
                 {
-#if !WINDOWS && !PSM && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
+#if !WINDOWS && !MACOS && !WINDOWSGL && !LINUX
                     //if (accelerometer != null)
                     //{
                     //    accelerometer.CurrentValueChanged -= accelerometer_CurrentValueChanged;
@@ -107,7 +107,7 @@ namespace Cocos2D
         }
 
 
-#if !WINDOWS && !PSM && !XBOX360 &&!NETFX_CORE && !MACOS && !WINDOWSGL && !LINUX
+#if !WINDOWS && !MACOS && !WINDOWSGL && !LINUX
         private void accelerometer_CurrentValueChanged(object sender, MonoGame.Framework.Devices.Sensors.SensorReadingEventArgs<MonoGame.Framework.Devices.Sensors.AccelerometerReading> e)
         {
 

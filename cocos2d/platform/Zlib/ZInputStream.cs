@@ -160,11 +160,7 @@ namespace Cocos2D.Compression.Zlib
             var tmp = new byte[len];
             return (SupportClass.ReadInput(BaseStream, tmp, 0, tmp.Length));
         }
-#if NETFX_CORE
-        public void Close()
-#else
         public override void Close()
-#endif
         {
             in_Renamed.Close();
         }

@@ -17,7 +17,7 @@ namespace Cocos2D
         private readonly LinkedList<CCTouch> m_pTouches = new LinkedList<CCTouch>();
         private readonly List<CCTouch> movedTouches = new List<CCTouch>();
         private readonly List<CCTouch> newTouches = new List<CCTouch>();
-#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
+#if WINDOWS || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
         private int _lastMouseId;
         private MouseState _lastMouseState;
         private MouseState _prevMouseState;
@@ -158,16 +158,14 @@ namespace Cocos2D
         {
             GameTime = gameTime;
 
-#if !PSM &&!NETFX_CORE
             if (CCDirector.SharedDirector.Accelerometer != null)
             {
                 CCDirector.SharedDirector.Accelerometer.Update();
             }
-#endif
             if (UseInputStateManagement)
             {
-                CCInputState.Instance.Update(1f / (float)gameTime.ElapsedGameTime.Milliseconds);
-#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
+                CCInputState.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+#if WINDOWS || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
                 ProcessMouse(CCInputState.Instance.Mouse);
 #else
                 ProcessTouch(CCInputState.Instance.TouchState);
@@ -185,7 +183,7 @@ namespace Cocos2D
             else
             {
                 // Process touch events 
-#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
+#if WINDOWS || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
                 ProcessMouse();
 #else
                 ProcessTouch();
@@ -450,17 +448,9 @@ namespace Cocos2D
         }
         #endregion
 
-        private CCPoint TransformPoint(float x, float y)
-        {
-            CCPoint newPoint;
-            newPoint.X = x * TouchPanel.DisplayWidth / Game.Window.ClientBounds.Width;
-            newPoint.Y = y * TouchPanel.DisplayHeight / Game.Window.ClientBounds.Height;
-            return newPoint;
-        }
-
         #region Mouse Support
 
-#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
+#if WINDOWS || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
         private void ProcessMouse()
         {
             ProcessMouse(Mouse.GetState());
@@ -482,12 +472,7 @@ namespace Cocos2D
 
                 if (_prevMouseState.LeftButton == ButtonState.Released && _lastMouseState.LeftButton == ButtonState.Pressed)
                 {
-#if NETFX_CORE
-                    pos = TransformPoint(_lastMouseState.X, _lastMouseState.Y);
-                    pos = CCDrawManager.ScreenToWorld(pos.X, pos.Y);
-#else
                     pos = CCDrawManager.ScreenToWorld(_lastMouseState.X, _lastMouseState.Y);
-#endif
                     _lastMouseId++;
                     m_pTouches.AddLast(new CCTouch(_lastMouseId, pos.X, pos.Y));
                     m_pTouchMap.Add(_lastMouseId, m_pTouches.Last);
@@ -501,12 +486,7 @@ namespace Cocos2D
                     {
                         if (_prevMouseState.X != _lastMouseState.X || _prevMouseState.Y != _lastMouseState.Y)
                         {
-#if NETFX_CORE
-                            pos = TransformPoint(_lastMouseState.X, _lastMouseState.Y);
-                            pos = CCDrawManager.ScreenToWorld(pos.X, pos.Y);
-#else
                             pos = CCDrawManager.ScreenToWorld(_lastMouseState.X, _lastMouseState.Y);
-#endif
                             movedTouches.Add(m_pTouchMap[_lastMouseId].Value);
                             m_pTouchMap[_lastMouseId].Value.SetTouchInfo(_lastMouseId, pos.X, pos.Y);
                         }

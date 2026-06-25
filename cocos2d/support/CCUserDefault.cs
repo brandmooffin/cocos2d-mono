@@ -26,7 +26,7 @@ THE SOFTWARE.
 using System;
 using Cocos2D;
 using System.IO;
-#if (WINDOWS && WINDOWS_UWP && !MACOS && !LINUX) || ANDROID || IOS || WINDOWSGL
+#if !(WINDOWS || MACOS || LINUX)
 using System.IO.IsolatedStorage;
 #endif
 using System.Collections.Generic;
@@ -44,7 +44,7 @@ namespace Cocos2D
     	private static string USERDEFAULT_ROOT_NAME = "userDefaultRoot";
     	private static string XML_FILE_NAME = "UserDefault.xml";
 
-#if (WINDOWS && WINDOWS_UWP && !MACOS && !LINUX) || ANDROID || IOS || WINDOWSGL
+#if !(WINDOWS || MACOS || LINUX)
         private IsolatedStorageFile myIsolatedStorage;
     #endif
         private Dictionary<string, string> values = new Dictionary<string, string>();
@@ -99,7 +99,7 @@ namespace Cocos2D
     	 */
     	private CCUserDefault()
     	{
-    #if WINDOWS && !WINDOWS_UWP || MACOS || LINUX
+    #if WINDOWS || MACOS || LINUX
     		// only create xml file once if it doesnt exist
     		if ((!isXMLFileExist())) {
     			createXMLFile();
@@ -264,13 +264,7 @@ namespace Cocos2D
     	private bool isXMLFileExist()
     	{
     		bool bRet = false;
-    #if NETFX_CORE
-            // use the StorageContainer to determine if the file exists.
-            if (myIsolatedStorage.FileExists(XML_FILE_NAME))
-            {
-                bRet = true;
-            }
-    #elif WINDOWS || LINUX || MACOS
+    #if WINDOWS || LINUX || MACOS
     		if (new FileInfo(XML_FILE_NAME).Exists) 
     		{
     			bRet = true;
@@ -289,9 +283,7 @@ namespace Cocos2D
     	{
     		bool bRet = false;
 
-    #if NETFX_CORE
-            using (StreamWriter writeFile = new StreamWriter(myIsolatedStorage.OpenFile(XML_FILE_NAME, FileMode.OpenOrCreate)))
-    #elif WINDOWS || LINUX || MACOS
+    #if WINDOWS || LINUX || MACOS
     		using (StreamWriter writeFile = new StreamWriter(XML_FILE_NAME)) 
     #else
             using (StreamWriter writeFile = new StreamWriter(new IsolatedStorageFileStream(XML_FILE_NAME, FileMode.Create, FileAccess.Write, myIsolatedStorage)))
@@ -307,9 +299,7 @@ namespace Cocos2D
 
     	public void Flush()
     	{
-    #if NETFX_CORE
-            using (Stream stream = myIsolatedStorage.OpenFile(XML_FILE_NAME, FileMode.OpenOrCreate))
-    #elif WINDOWS || LINUX || MACOS
+    #if WINDOWS || LINUX || MACOS
     		using (StreamWriter stream = new StreamWriter(XML_FILE_NAME)) 
     #else
     		using (StreamWriter stream = new StreamWriter(new IsolatedStorageFileStream(XML_FILE_NAME, FileMode.Create, FileAccess.Write, myIsolatedStorage))) 

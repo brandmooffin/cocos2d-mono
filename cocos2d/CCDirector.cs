@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-#if !PSM &&!NETFX_CORE
 using System.IO.IsolatedStorage;
-#endif
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -38,7 +36,18 @@ namespace Cocos2D
 
     public abstract class CCDirector
     {
-        private static CCDirector s_sharedDirector;
+        // The shared director is created lazily and exactly once. Lazy<T> defaults to
+        // LazyThreadSafetyMode.ExecutionAndPublication, so the instance is published only
+        // after Init() has fully populated it (ActionManager, Scheduler, dispatchers);
+        // concurrent first callers block until then instead of observing a half-built
+        // director (which previously caused an intermittent NullReferenceException when a
+        // CCNode constructed on another thread cached a null ActionManager).
+        private static readonly Lazy<CCDirector> s_sharedDirector = new Lazy<CCDirector>(() =>
+        {
+            var director = new CCDisplayLinkDirector();
+            director.Init();
+            return director;
+        });
 
         private readonly float kDefaultFPS = 60f;
         private readonly List<CCScene> m_pobScenesStack = new List<CCScene>();
@@ -54,9 +63,7 @@ namespace Cocos2D
         private bool m_NeedsInit = true;
         internal CCSize m_obWinSizeInPoints;
 		
-#if !PSM &&!NETFX_CORE
         private CCAccelerometer m_pAccelerometer;
-#endif
 		private CCActionManager m_pActionManager;
         private CCKeypadDispatcher m_pKeypadDispatcher;
 		private CCKeyboardDispatcher m_pKeyboardDispatcher;
@@ -89,7 +96,6 @@ namespace Cocos2D
         
         #region State Management
 		
-#if !PSM &&!NETFX_CORE
         private string m_sStorageDirName = "cocos2dDirector";
         private string m_sSaveFileName = "SceneList.dat";
         private string m_sSceneSaveFileName = "Scene{0}.dat";
@@ -324,7 +330,6 @@ namespace Cocos2D
                 storage.DeleteFile(Path.Combine(m_sStorageDirName, file));
             }
                         }
-#endif
         #endregion
 
         public ICCDirectorDelegate Delegate
@@ -443,13 +448,11 @@ namespace Cocos2D
 			set { m_pKeyboardDispatcher = value; }
 		}
 
-#if !PSM &&!NETFX_CORE
 		public CCAccelerometer Accelerometer
         {
             get { return m_pAccelerometer; }
             set { m_pAccelerometer = value; }
         }
-#endif
         public CCScene RunningScene
         {
             get { return m_pRunningScene; }
@@ -501,16 +504,8 @@ namespace Cocos2D
         /// <value> </value>
         public static CCDirector SharedDirector
         {
-            get
-            {
-                if (s_sharedDirector == null)
-                {
-                    s_sharedDirector = new CCDisplayLinkDirector();
-                    s_sharedDirector.Init();
-                }
-                return s_sharedDirector;
-            }
-            }
+            get { return s_sharedDirector.Value; }
+        }
 
         public virtual bool NeedsInit
         {
@@ -575,9 +570,7 @@ namespace Cocos2D
 			m_pKeyboardDispatcher = new CCKeyboardDispatcher();
 
 			// Accelerometer
-#if !PSM &&!NETFX_CORE
             m_pAccelerometer = new CCAccelerometer();
-#endif
 
             m_NeedsInit = false;
             return true;
@@ -735,6 +728,7 @@ namespace Cocos2D
         public void PurgeCachedData()
         {
             CCLabelBMFont.PurgeCachedData();
+            CCPixelLabel.PurgeCachedData();
             CCTextureCache.SharedTextureCache.RemoveAllTextures();
             //CCFileUtils::sharedFileUtils()->purgeCachedEntries();
         }
@@ -816,6 +810,7 @@ namespace Cocos2D
 
             // purge bitmap cache
             CCLabelBMFont.PurgeCachedData();
+            CCPixelLabel.PurgeCachedData();
 
             // purge all managed caches
             CCAnimationCache.PurgeSharedAnimationCache();

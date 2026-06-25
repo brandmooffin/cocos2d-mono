@@ -99,7 +99,7 @@ namespace Cocos2D
 
                 if (!canceled)
                 {
-#if (ANDROID && ANDROID31_0_OR_GREATER) || __IOS__ || WINDOWS_UWP || WINDOWS
+#if (ANDROID && ANDROID31_0_OR_GREATER) || __IOS__ || WINDOWS
 
                     Task.Run(async () =>
                     {
@@ -149,9 +149,7 @@ namespace Cocos2D
         {
             if (m_pGuideShowHandle != null)
 			{
-#if !WINDOWS_PHONE && !XBOX && !PSM
 				//Guide.EndShowKeyboardInput(m_pGuideShowHandle);
-#endif
                 m_pGuideShowHandle = null;
             }
 
