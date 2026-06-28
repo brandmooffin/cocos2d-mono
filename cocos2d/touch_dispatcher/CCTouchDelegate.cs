@@ -49,18 +49,18 @@ namespace Cocos2D
 
         public void ExcuteScriptTouchHandler(int eventType, CCTouch pTouch)
         {
-            if (m_pEventTypeFuncMap != null && CCScriptEngineManager.SharedScriptEngineManager.ScriptEngine != null)
+            if (m_pEventTypeFuncMap != null && CCScriptEngineManager.SharedScriptEngineManager.ScriptEngine != null && m_pEventTypeFuncMap.TryGetValue(eventType, out var handler))
             {
-                CCScriptEngineManager.SharedScriptEngineManager.ScriptEngine.ExecuteTouchEvent((m_pEventTypeFuncMap)[eventType],
+                CCScriptEngineManager.SharedScriptEngineManager.ScriptEngine.ExecuteTouchEvent(handler,
                                                                                                  pTouch);
             }
         }
 
         public void ExcuteScriptTouchesHandler(int eventType, List<CCTouch> pTouches)
         {
-            if (m_pEventTypeFuncMap != null && CCScriptEngineManager.SharedScriptEngineManager.ScriptEngine != null)
+            if (m_pEventTypeFuncMap != null && CCScriptEngineManager.SharedScriptEngineManager.ScriptEngine != null && m_pEventTypeFuncMap.TryGetValue(eventType, out var handler))
             {
-                CCScriptEngineManager.SharedScriptEngineManager.ScriptEngine.ExecuteTouchesEvent((m_pEventTypeFuncMap)[eventType],
+                CCScriptEngineManager.SharedScriptEngineManager.ScriptEngine.ExecuteTouchesEvent(handler,
                                                                                                    pTouches);
             }
         }
