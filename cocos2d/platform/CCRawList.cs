@@ -29,6 +29,12 @@ namespace Cocos2D
         // not keep objects alive until it is rented again (matches List<T>'s own behavior).
         private static readonly bool ClearOnReturn = RuntimeHelpers.IsReferenceOrContainsReferences<T>();
 
+        // Tracks whether the current Elements buffer was actually rented from
+        // ArrayPool<T>.Shared, independent of the public, mutable UseArrayPool flag. Returns
+        // are keyed off this (not UseArrayPool), so toggling UseArrayPool after construction
+        // can never leak a rented buffer or hand a non-rented one back to the shared pool.
+        private bool m_ownsPooledBuffer;
+
         ///<summary>
         /// Constructs an empty list.
         ///</summary>
@@ -39,6 +45,7 @@ namespace Cocos2D
             if (useArrayPool)
             {
                 Elements = ArrayPool<T>.Shared.Rent(4);
+                m_ownsPooledBuffer = true;
             }
             else
             {
@@ -83,8 +90,9 @@ namespace Cocos2D
             set
             {
                 T[] newArray;
+                bool newArrayIsPooled = UseArrayPool;
 
-                if (UseArrayPool)
+                if (newArrayIsPooled)
                 {
                     // Rent rounds the request up to a pooled bucket size; count (not
                     // Elements.Length) remains the authoritative logical length.
@@ -100,12 +108,14 @@ namespace Cocos2D
                     Array.Copy(Elements, newArray, count);
                 }
 
-                if (UseArrayPool && Elements != null)
+                // Return the OLD buffer based on its real provenance, not the current flag.
+                if (m_ownsPooledBuffer && Elements != null)
                 {
                     ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
                 }
 
                 Elements = newArray;
+                m_ownsPooledBuffer = newArrayIsPooled;
 
                 Debug.Assert(Elements != null);
             }
@@ -214,10 +224,11 @@ namespace Cocos2D
 
         public void Free()
         {
-            if (Elements != null && UseArrayPool)
+            if (Elements != null && m_ownsPooledBuffer)
             {
                 ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
                 Elements = null;
+                m_ownsPooledBuffer = false;
             }
         }
 
@@ -652,14 +663,23 @@ namespace Cocos2D
                     return;
                 }
                 Array.Copy(Elements, packed, count);
-                ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
+                if (m_ownsPooledBuffer)
+                {
+                    ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
+                }
                 Elements = packed;
+                m_ownsPooledBuffer = true;
             }
             else
             {
                 var packed = new T[minLength];
                 Array.Copy(Elements, packed, count);
+                if (m_ownsPooledBuffer)
+                {
+                    ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
+                }
                 Elements = packed;
+                m_ownsPooledBuffer = false;
             }
         }
 
