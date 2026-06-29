@@ -50,4 +50,41 @@ public class CCRawListTests
         Assert.True(list.Elements.Length >= list.count);  // ...but must still fit the elements
         Assert.Equal(49, list.Elements[49]);
     }
+
+    // Buffer provenance is tracked independently of the mutable UseArrayPool flag, so flipping
+    // the flag after construction stays correct (grow returns the OLD buffer by its real
+    // provenance; the NEW buffer follows the flag). These exercise both flip directions through
+    // a grow + Clear(true); they assert functional correctness (contents/count, no throw) -
+    // the underlying pool hygiene isn't observable through the public API.
+    [Fact]
+    public void UseArrayPool_ToggledOffAfterPooledConstruction_GrowsAndClearsCleanly()
+    {
+        var list = new CCRawList<int>(useArrayPool: true);  // buffer rented from the pool
+        for (int i = 0; i < 10; i++)
+            list.Add(i);
+        list.UseArrayPool = false;                          // flip off mid-life
+        for (int i = 10; i < 40; i++)
+            list.Add(i);                                    // grow: old pooled buffer returned, new is a plain array
+
+        Assert.Equal(40, list.count);
+        Assert.Equal(25, list.Elements[25]);
+        list.Clear(true);
+        Assert.Equal(0, list.count);
+    }
+
+    [Fact]
+    public void UseArrayPool_ToggledOnAfterUnpooledConstruction_GrowsCleanly()
+    {
+        var list = new CCRawList<int>(useArrayPool: false); // plain array
+        for (int i = 0; i < 10; i++)
+            list.Add(i);
+        list.UseArrayPool = true;                           // flip on: the plain array must not be returned to the pool on grow
+        for (int i = 10; i < 40; i++)
+            list.Add(i);
+
+        Assert.Equal(40, list.count);
+        Assert.Equal(25, list.Elements[25]);
+        list.Clear(true);
+        Assert.Equal(0, list.count);
+    }
 }
