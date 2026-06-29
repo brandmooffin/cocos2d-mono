@@ -91,11 +91,18 @@ namespace Cocos2D
                 if (m_bActive && !m_bEmulation)
                 {
 #if !WINDOWS && !MACOS && !WINDOWSGL && !LINUX
-                    //if (accelerometer != null)
-                    //{
-                    //    accelerometer.CurrentValueChanged -= accelerometer_CurrentValueChanged;
-                    //    accelerometer.Stop();
-                    //}
+                    if (accelerometer != null)
+                    {
+                        try
+                        {
+                            accelerometer.CurrentValueChanged -= accelerometer_CurrentValueChanged;
+                            accelerometer.Stop();
+                        }
+                        catch (Exception)
+                        {
+                            // Sensor can be in a bad / partial state on teardown; ignore.
+                        }
+                    }
 #endif
                 }
                 
