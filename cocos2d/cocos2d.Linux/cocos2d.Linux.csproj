@@ -61,13 +61,13 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="$(MonoGameVersion)" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(MonoGameVersion)" />
-    <PackageReference Include="OpenTK" Version="4.9.4" />
-    <PackageReference Include="SharpZipLib" Version="1.3.3" />
-    <PackageReference Include="SkiaSharp" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
-    <PackageReference Include="System.Drawing.Common" Version="8.0.11" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" />
+    <PackageReference Include="OpenTK" />
+    <PackageReference Include="SharpZipLib" />
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
+    <PackageReference Include="System.Drawing.Common" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\box2d\box2d.DesktopGL\box2d.DesktopGL.csproj">
