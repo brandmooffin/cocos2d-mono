@@ -70,7 +70,7 @@
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(MonoGameVersion)" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" />
   </ItemGroup>
   <Import Project="..\cocos2d-mono.Tests.projitems" Label="Shared" />
 </Project>

@@ -73,9 +73,9 @@
     </MonoGameContentReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="$(MonoGameVersion)" />
-    <PackageReference Include="MonoGame.Framework.iOS" Version="$(MonoGameVersion)" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.5" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" />
+    <PackageReference Include="MonoGame.Framework.iOS" />
+    <PackageReference Include="Xamarin.Essentials" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">

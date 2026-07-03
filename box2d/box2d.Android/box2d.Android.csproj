@@ -52,7 +52,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.Android" Version="$(MonoGameVersion)" />
+    <PackageReference Include="MonoGame.Framework.Android" />
   </ItemGroup>
   <Import Project="..\box2d.projitems" Label="Shared" />
 </Project>

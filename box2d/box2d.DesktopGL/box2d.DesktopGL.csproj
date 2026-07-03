@@ -60,7 +60,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(MonoGameVersion)" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Logos\logo-small.png">

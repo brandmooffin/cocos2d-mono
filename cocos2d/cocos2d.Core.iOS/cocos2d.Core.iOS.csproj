@@ -60,9 +60,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.iOS" Version="$(MonoGameVersion)" />
-    <PackageReference Include="OpenTK" Version="4.9.4" />
-    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="MonoGame.Framework.iOS" />
+    <PackageReference Include="OpenTK" />
+    <PackageReference Include="SharpZipLib" />
   </ItemGroup>
   <Import Project="..\cocos2d.projitems" Label="Shared" />
 </Project>
