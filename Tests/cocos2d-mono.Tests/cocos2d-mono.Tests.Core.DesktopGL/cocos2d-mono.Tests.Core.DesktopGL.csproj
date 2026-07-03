@@ -30,7 +30,7 @@
     <OutputPath>bin\Core\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
      <IntermediateOutputPath>obj\Core\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\Core\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</BaseIntermediateOutputPath>
-    <DefineConstants>TRACE;LINUX</DefineConstants>
+    <DefineConstants>TRACE;LINUX;WINDOWSGL;OPENGL;MONOGAME;DESKTOPGL</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>

@@ -374,7 +374,7 @@ namespace tests
 
                 case (int)TestCases.TEST_FONTS:
                         pScene = new FontTestScene(); break;
-#if IPHONE || IOS || MACOS || WINDOWSGL || WINDOWS || ANDROID || NETFX_CORE || LINUX
+#if IOS || MACOS || WINDOWSGL || WINDOWS || (ANDROID && !OUYA) || NETFX_CORE
                 case (int)TestCases.TEST_SYSTEM_FONTS:
                     pScene = new SystemFontTestScene(); break;
 #endif
