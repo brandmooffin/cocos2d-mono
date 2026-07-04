@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      Stage C3 consolidation: one csproj replaces the 4 box2d.{Platform} csprojs.
+      Multi-targets the same TFMs as Cocos2DMono.csproj for consistency.
+      Source remains physically under ../../box2d/; the new csproj globs it.
+    -->
+    <!-- TFMs come from the repo-root Directory.Build.props ($(Cocos2DBaseTfm) etc.). -->
+    <TargetFrameworks>$(Cocos2DTargetFrameworks)</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Box2D</RootNamespace>
+    <AssemblyName>Box2D</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+    <PackageId>Cocos2D-Mono.Box2D</PackageId>
+    <Title>Box2D for Cocos2D-Mono</Title>
+    <Product>Cocos2D-Mono.Box2D</Product>
+    <Description>Box2D physics engine (managed C# port) used by Cocos2D-Mono. Multi-targets net9.0 (DesktopGL/Linux/macOS), net9.0-windows7.0 (WindowsDX), net9.0-android35.0, and net9.0-ios18.0.</Description>
+    <PackageReleaseNotes>
+- Stage C3 modernization: collapsed 4 per-platform Box2D csprojs into a single multi-targeted package.
+    </PackageReleaseNotes>
+    <PackageIcon>logo-small.png</PackageIcon>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Per-TFM platform defines (mirror Cocos2DMono.csproj exactly)
+       ============================================================ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)'">
+    <DefineConstants>$(DefineConstants);OPENGL;MONOGAME;DESKTOPGL</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`Windows`))' == 'true'">
+    <DefineConstants>$(DefineConstants);WINDOWSGL</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`OSX`))' == 'true'">
+    <DefineConstants>$(DefineConstants);MACOS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`Linux`))' == 'true'">
+    <DefineConstants>$(DefineConstants);LINUX</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DWindowsTfm)'">
+    <!-- Matches legacy box2d.Windows.csproj. See Cocos2DMono.csproj for the rationale
+         on MONOGAME being intentionally NOT defined here. -->
+    <DefineConstants>$(DefineConstants);WINDOWS;XNA</DefineConstants>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
+    <DefineConstants>$(DefineConstants);ANDROID;OPENGL;GLES;MONOGAME</DefineConstants>
+    <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
+    <DefineConstants>$(DefineConstants);__IOS__;__MOBILE__;__UNIFIED__;IPHONE;IOS;GLES;OPENGL;MONOGAME</DefineConstants>
+    <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)' or '$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
+    <IncludeSymbols>false</IncludeSymbols>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Source globbing (replaces box2d.projitems)
+       ============================================================ -->
+  <PropertyGroup>
+    <Box2DSourceRoot>..\..\box2d\</Box2DSourceRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(Box2DSourceRoot)**\*.cs"
+             Exclude="$(Box2DSourceRoot)bin\**;$(Box2DSourceRoot)obj\**;$(Box2DSourceRoot)box2d.*\**;$(Box2DSourceRoot)**\*.Designer.cs" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       Package references (MonoGame is the only runtime dep;
+       versions centralized in the repo-root Directory.Packages.props)
+       ============================================================ -->
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)'">
+    <PackageReference Include="MonoGame.Framework.DesktopGL" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DWindowsTfm)'">
+    <PackageReference Include="MonoGame.Framework.WindowsDX" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
+    <PackageReference Include="MonoGame.Framework.Android" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
+    <PackageReference Include="MonoGame.Framework.iOS" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Pack content -->
+  <ItemGroup>
+    <None Include="..\..\Logos\logo-small.png" Pack="True" PackagePath="" Visible="false" />
+  </ItemGroup>
+
+</Project>

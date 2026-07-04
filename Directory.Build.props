@@ -15,4 +15,26 @@
          custom layout and makes configuration switches safe in one working tree. -->
     <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
   </PropertyGroup>
+
+  <!--
+    ==================== TFM version dials ====================
+
+    Bumping .NET or a per-platform TFM is a single-file edit here. Consumed by
+    the consolidated csprojs under src/ (Cocos2DMono, Box2D) via
+    $(Cocos2DTargetFrameworks) and their per-TFM Condition checks.
+
+    Legacy csprojs under cocos2d/, box2d/, and Tests/ do NOT reference these
+    properties, so defining them here is a no-op for the legacy build.
+
+    The release/2.6.0-preview branch overrides these four properties (plus
+    MonoGameVersion above) to move the whole build to net10.0 + MonoGame 3.8.5;
+    no csproj edits required.
+  -->
+  <PropertyGroup>
+    <Cocos2DBaseTfm>net9.0</Cocos2DBaseTfm>
+    <Cocos2DWindowsTfm>net9.0-windows7.0</Cocos2DWindowsTfm>
+    <Cocos2DAndroidTfm>net9.0-android35.0</Cocos2DAndroidTfm>
+    <Cocos2DIosTfm>net9.0-ios18.0</Cocos2DIosTfm>
+    <Cocos2DTargetFrameworks>$(Cocos2DBaseTfm);$(Cocos2DWindowsTfm);$(Cocos2DAndroidTfm);$(Cocos2DIosTfm)</Cocos2DTargetFrameworks>
+  </PropertyGroup>
 </Project>

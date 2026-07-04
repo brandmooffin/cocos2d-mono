@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Shared MSBuild properties for the consolidated cocos2d-mono build (Stage C3).
+
+  Scoped to src/ so the legacy csprojs under cocos2d/ and box2d/ continue to
+  inherit only the repo-root Directory.Build.props. Promoted to the repo root
+  once the legacy layout is deleted (Stage C4).
+
+  Package VERSIONS are managed by the repo-root Directory.Packages.props
+  (central package management, Stage C1) - src/ deliberately has no
+  Directory.Packages.props of its own.
+-->
+<Project>
+
+  <!-- Chain the repo-root props (Version, MonoGameVersion, TFM dials,
+       DefaultItemExcludes). A directory-level Directory.Build.props otherwise
+       shadows the root one. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..'))"
+          Condition="Exists('$([MSBuild]::GetPathOfFileAbove(`Directory.Build.props`, `$(MSBuildThisFileDirectory)..`))')" />
+
+  <PropertyGroup>
+    <!-- ==================== Toolchain ==================== -->
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <!--
+      Warnings to ignore for the new csproj build:
+        CS1591 - missing XML doc on a public member (Stage D tightens docs)
+        CA1416 - platform-compat (cross-platform code intentionally references Win32 APIs under #if WINDOWS)
+        NU1701 - package compatible-with-warning (legacy MonoGame packages declare older TFMs)
+        NU5119 - snupkg empty (mobile workloads emit non-portable PDBs; symbol pack is disabled on mobile anyway)
+    -->
+    <NoWarn>$(NoWarn);CS1591;CA1416;NU1701;NU5119</NoWarn>
+
+    <!-- ==================== Shared NuGet metadata (Version inherited from root) ==================== -->
+    <Authors>Broken Walls Studios; Cocos2D-Mono Team</Authors>
+    <Company>Broken Walls Studios</Company>
+    <Copyright>Copyright © 2026 Cocos2D-Mono Team; Broken Walls Studios, LLC.</Copyright>
+    <PackageProjectUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Cocos2D-Mono/cocos2d-mono</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <!-- Matches the repo LICENSE and the legacy nuspecs. -->
+    <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageTags>mono monogame cocos2d game gamedev 2d</PackageTags>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+
+    <!-- ==================== Symbol packages & source link ==================== -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+</Project>
