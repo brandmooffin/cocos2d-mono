@@ -89,6 +89,7 @@
        platform-specific symbol formats and would trip NU5119 on pack. -->
   <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)' or '$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
     <IncludeSymbols>false</IncludeSymbols>
+    <NoWarn>$(NoWarn);NU5119</NoWarn>
   </PropertyGroup>
 
   <!-- ============================================================

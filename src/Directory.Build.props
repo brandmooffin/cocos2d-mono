@@ -29,9 +29,10 @@
         CS1591 - missing XML doc on a public member (Stage D tightens docs)
         CA1416 - platform-compat (cross-platform code intentionally references Win32 APIs under #if WINDOWS)
         NU1701 - package compatible-with-warning (legacy MonoGame packages declare older TFMs)
-        NU5119 - snupkg empty (mobile workloads emit non-portable PDBs; symbol pack is disabled on mobile anyway)
+      NU5119 (snupkg empty) is suppressed only on the mobile TFMs, next to their
+      IncludeSymbols=false, so a genuinely empty desktop snupkg still warns.
     -->
-    <NoWarn>$(NoWarn);CS1591;CA1416;NU1701;NU5119</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;CA1416;NU1701</NoWarn>
 
     <!-- ==================== Shared NuGet metadata (Version inherited from root) ==================== -->
     <Authors>Broken Walls Studios; Cocos2D-Mono Team</Authors>
