@@ -1,0 +1,66 @@
+name: build (matrix)
+
+# Matrix CI for the consolidated csprojs under src/ (Stage C3). Runs side-by-side
+# with the 13 legacy per-platform *_build.yml workflows during the transition;
+# the legacy workflows are retired at the CI cutover (Stage C4).
+
+on:
+  push:
+    branches: [ dev, master ]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.target.tfm }} (${{ matrix.configuration }}) on ${{ matrix.target.os }}
+    runs-on: ${{ matrix.target.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Two real top-level dimensions (configuration x target) so GitHub
+        # Actions produces a true cartesian product.
+        configuration: [Debug, Release]
+        target:
+          # DesktopGL on Linux validates the net9.0 TFM cross-platform.
+          - { os: ubuntu-latest, tfm: net9.0, workloads: '' }
+          # WindowsDX requires net9.0-windows7.0 which only builds on Windows.
+          - { os: windows-latest, tfm: net9.0-windows7.0, workloads: '' }
+          # Android workload installs on Linux runners (cheaper than Windows).
+          - { os: ubuntu-latest, tfm: net9.0-android35.0, workloads: android }
+          # iOS requires a macOS host (Apple toolchain).
+          - { os: macos-latest, tfm: net9.0-ios18.0, workloads: ios }
+
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+        with:
+          global-json-file: global.json
+
+      - name: Setup Java (Android only)
+        if: matrix.target.workloads == 'android'
+        uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # v4.8.0
+        with:
+          distribution: microsoft
+          java-version: "17"
+
+      - name: Install .NET workloads
+        if: matrix.target.workloads != ''
+        run: dotnet workload install ${{ matrix.target.workloads }} --ignore-failed-sources
+
+      # Build per-TFM so non-Windows hosts never evaluate the Windows TFM
+      # (restoring the full <TargetFrameworks> on macOS/Linux raises NETSDK1100
+      # for net9.0-windows7.0). -p:TargetFrameworks=<tfm> narrows each project
+      # to the single TFM being built. Box2D builds first so Cocos2DMono's
+      # ProjectReference resolves from a populated cache.
+      - name: Build Box2D
+        run: dotnet build src/Box2D/Box2D.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
+
+      - name: Build Cocos2DMono
+        run: dotnet build src/Cocos2DMono/Cocos2DMono.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
