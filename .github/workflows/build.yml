@@ -64,3 +64,12 @@ jobs:
 
       - name: Build Cocos2DMono
         run: dotnet build src/Cocos2DMono/Cocos2DMono.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
+
+      # The integration-test host builds on desktop TFMs only: on mobile it
+      # triggers minutes of AOT + MGCB content processing for a maintainer-run
+      # visual test app the mobile cells don't execute anyway (the legacy
+      # per-platform CI never built the mobile test apps either - it built the
+      # library alone).
+      - name: Build IntegrationTests (desktop only)
+        if: matrix.target.tfm == 'net9.0' || matrix.target.tfm == 'net9.0-windows7.0'
+        run: dotnet build Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}

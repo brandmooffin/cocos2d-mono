@@ -22,7 +22,7 @@
         dotnet run -c Release
   -->
   <ItemGroup>
-    <ProjectReference Include="..\..\cocos2d\cocos2d.DesktopGL\cocos2d.DesktopGL.csproj" />
+    <ProjectReference Include="..\..\src\Cocos2DMono\Cocos2DMono.csproj" />
   </ItemGroup>
 
 </Project>

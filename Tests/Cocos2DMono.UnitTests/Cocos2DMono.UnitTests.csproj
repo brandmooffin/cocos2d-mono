@@ -16,13 +16,12 @@
   </ItemGroup>
 
   <!--
-    References the existing DesktopGL build for now. When Stage C lands the
-    consolidated csproj, this reference moves to it. The math types under test
-    (CCPoint/CCSize/CCRect/CCAffineTransform) are pure value types and need no
-    graphics device, so the suite runs headless.
+    References the consolidated csproj (Stage C4a) so the suite defends the
+    assembly that ships from src/; resolves its net9.0 TFM. The suite runs
+    headless (pure value types + a graphics-free director init).
   -->
   <ItemGroup>
-    <ProjectReference Include="..\..\cocos2d\cocos2d.DesktopGL\cocos2d.DesktopGL.csproj" />
+    <ProjectReference Include="..\..\src\Cocos2DMono\Cocos2DMono.csproj" />
   </ItemGroup>
 
 </Project>
