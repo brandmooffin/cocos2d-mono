@@ -1,0 +1,62 @@
+name: pack (consolidated packages)
+
+# Manual, release-time packing of the NEW consolidated packages
+# (Cocos2D-Mono, Cocos2D-Mono.Box2D, Cocos2D-Mono.Core) introduced in Stage C3/C5.
+# Produces the .nupkg/.snupkg set as a downloadable artifact - uploading to
+# nuget.org stays a manual, human step.
+#
+# The legacy 12-package line (Cocos2D-Mono.{Platform} / .Core.{Platform}) is
+# still packed via Tools/nuget_build.ps1 until the Stage C4 cutover.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  pack:
+    name: Pack NuGet packages
+    # Windows: the only host that can build all four TFMs
+    # (net9.0-windows7.0 requires Windows; android/ios are workload installs).
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+        with:
+          global-json-file: global.json
+
+      - name: Install mobile workloads
+        run: dotnet workload install android ios --ignore-failed-sources
+
+      - name: Restore
+        run: dotnet restore Cocos2DMono.sln
+
+      - name: Pack Cocos2D-Mono.Box2D
+        run: dotnet pack src/Box2D/Box2D.csproj -c Release --no-restore -o artifacts
+
+      - name: Pack Cocos2D-Mono
+        run: dotnet pack src/Cocos2DMono/Cocos2DMono.csproj -c Release --no-restore -o artifacts
+
+      # Cocos2D-Mono.Core is a payload-free metapackage whose only dependency
+      # is Cocos2D-Mono with a strict [version] pin and ExcludeAssets=build.
+      # It can only restore against a feed containing the freshly-packed main
+      # package, so artifacts/ is registered as a local source first.
+      - name: Add artifacts as local NuGet source
+        run: dotnet nuget add source "${{ github.workspace }}/artifacts" --name local-artifacts
+
+      - name: Restore Cocos2D-Mono.Core metapackage
+        run: dotnet restore src/Cocos2DMono.Core/Cocos2DMono.Core.csproj
+
+      # --no-build: the metapackage has IncludeBuildOutput=false, so pack needs
+      # only the restore assets, not a compiled assembly (verified from a clean tree).
+      - name: Pack Cocos2D-Mono.Core (metapackage)
+        run: dotnet pack src/Cocos2DMono.Core/Cocos2DMono.Core.csproj -c Release --no-restore --no-build -o artifacts
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: nuget-packages
+          path: |
+            artifacts/*.nupkg
+            artifacts/*.snupkg

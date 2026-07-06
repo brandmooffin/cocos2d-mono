@@ -155,11 +155,14 @@
        Directory.Packages.props)
        ============================================================ -->
   <ItemGroup>
-    <!-- MGCB MSBuild content-pipeline task. Flows as a build asset to consumers.
-         Consumers who do not want the content pipeline will reference the
-         Cocos2D-Mono.Core metapackage instead (added with the pack workflow) -
-         it depends on Cocos2D-Mono with ExcludeAssets="build" so the MGCB
-         targets are suppressed. -->
+    <!-- MGCB MSBuild content-pipeline task. Ships as a package dependency for
+         parity with the legacy package line. NOTE (verified against 3.8.4.1):
+         the MGCB package provides build/ targets only - no buildTransitive/ -
+         so SDK-style consumers of this package do NOT import the MGCB targets
+         transitively; game projects that use the content pipeline reference
+         MonoGame.Content.Builder.Task directly (standard MonoGame practice).
+         The Cocos2D-Mono.Core metapackage additionally excludes build assets
+         on its dependency edge as future-proofing. -->
     <PackageReference Include="MonoGame.Content.Builder.Task" />
     <!-- ICSharpCode.SharpZipLib types are imported by CCParticleSystem.cs.
          Required on every TFM. -->
