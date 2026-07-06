@@ -23,4 +23,7 @@ jobs:
         with:
           global-json-file: global.json
       - name: Test
-        run: dotnet test Tests/Cocos2DMono.UnitTests/Cocos2DMono.UnitTests.csproj -c Release
+        # -p:TargetFrameworks=net9.0 narrows the referenced multi-target
+        # src/Cocos2DMono to the tested TFM so restore does not require the
+        # android/ios workloads on this runner.
+        run: dotnet test Tests/Cocos2DMono.UnitTests/Cocos2DMono.UnitTests.csproj -c Release -p:TargetFrameworks=net9.0
