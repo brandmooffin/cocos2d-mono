@@ -64,3 +64,16 @@ jobs:
 
       - name: Build Cocos2DMono
         run: dotnet build src/Cocos2DMono/Cocos2DMono.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
+
+      # The integration-test host builds on desktop TFMs on WINDOWS runners only:
+      # - mobile cells: building the app triggers minutes of AOT + MGCB content
+      #   processing for a maintainer-run visual test app the cells don't execute;
+      # - linux/macos cells: the shared Content.mgcb has 29 spritefonts that
+      #   resolve Windows system fonts by name (Arial etc.), which do not exist
+      #   on those runners, so the MGCB content build fails.
+      # The legacy per-platform CI never built any test app - it built the
+      # library alone - so Windows-only integration builds still exceed the old
+      # coverage.
+      - name: Build IntegrationTests (Windows desktop only)
+        if: runner.os == 'Windows' && (matrix.target.tfm == 'net9.0' || matrix.target.tfm == 'net9.0-windows7.0')
+        run: dotnet build Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}

@@ -23,4 +23,10 @@ jobs:
         with:
           global-json-file: global.json
       - name: Test
-        run: dotnet test Tests/Cocos2DMono.UnitTests/Cocos2DMono.UnitTests.csproj -c Release
+        # Overriding the Cocos2DTargetFrameworks dial narrows the referenced
+        # multi-target src/Cocos2DMono to the tested TFM so restore does not
+        # require the android/ios workloads on this runner. (A global
+        # TargetFrameworks property would also poison the single-TFM test
+        # project itself and break test discovery - the dial is scoped to the
+        # src/ projects that consume it.)
+        run: dotnet test Tests/Cocos2DMono.UnitTests/Cocos2DMono.UnitTests.csproj -c Release -p:Cocos2DTargetFrameworks=net9.0
