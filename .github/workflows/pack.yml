@@ -49,8 +49,10 @@ jobs:
       - name: Restore Cocos2D-Mono.Core metapackage
         run: dotnet restore src/Cocos2DMono.Core/Cocos2DMono.Core.csproj
 
-      - name: Pack Cocos2D-Mono.Core (metapackage, no MGCB build flow)
-        run: dotnet pack src/Cocos2DMono.Core/Cocos2DMono.Core.csproj -c Release --no-restore -o artifacts
+      # --no-build: the metapackage has IncludeBuildOutput=false, so pack needs
+      # only the restore assets, not a compiled assembly (verified from a clean tree).
+      - name: Pack Cocos2D-Mono.Core (metapackage)
+        run: dotnet pack src/Cocos2DMono.Core/Cocos2DMono.Core.csproj -c Release --no-restore --no-build -o artifacts
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:

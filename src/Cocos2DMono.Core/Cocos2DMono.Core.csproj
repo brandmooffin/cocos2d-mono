@@ -6,15 +6,23 @@
 
     Contains NO lib/, NO build/, NO content/ - only a generated .nuspec declaring a
     strict-version dependency on Cocos2D-Mono with ExcludeAssets="build".
-    The build-asset exclusion suppresses the MGCB MSBuild content-pipeline
-    task that ships with the main package. Runtime closure (MonoGame.Framework.*,
-    OpenTK, SkiaSharp, System.Drawing.Common, BitMiracle.LibTiff.NET, SharpZipLib,
-    Cocos2D-Mono.Box2D) flows transitively through Cocos2D-Mono.
+    Runtime closure (MonoGame.Framework.*, OpenTK, SkiaSharp, System.Drawing.Common,
+    BitMiracle.LibTiff.NET, SharpZipLib, Cocos2D-Mono.Box2D) flows transitively
+    through Cocos2D-Mono.
 
     This replaces the historical .Core variant from the legacy 12-nuspec era
     (Cocos2D-Mono.Core.{Platform} packages) which existed for consumers who
-    didn't want MGCB. The only difference between the legacy main vs .Core
-    nuspecs was the MGCB dependency.
+    didn't want MGCB; the only difference between the legacy main vs .Core
+    nuspecs was the MGCB dependency. NOTE (verified empirically against MGCB
+    3.8.4.1): the MGCB package ships build/ targets only - no buildTransitive/ -
+    so SDK-style consumers of the MAIN package do not import the MGCB targets
+    transitively either; game projects that use the content pipeline reference
+    MonoGame.Content.Builder.Task directly (standard MonoGame practice). For
+    such consumers, main and .Core behave identically today. .Core exists for
+    migration continuity from the legacy .Core.{Platform} line, and its asset
+    exclusion is insurance: if a future MGCB ships buildTransitive/ targets,
+    they would start flowing through the main package while remaining
+    suppressed through this one.
 
     NOTE: restore of this project requires the freshly-packed Cocos2D-Mono
     .nupkg in a reachable feed (the strict [$(Version)] pin cannot resolve
@@ -74,10 +82,11 @@
        metapackage locked to the matching main package - preventing
        drift in cases where a consumer references both directly.
 
-       ExcludeAssets="build" is the magic that defines the .Core variant:
-       NuGet asset flow rules suppress MSBuild build targets from
-       MonoGame.Content.Builder.Task when the dependency arrives via
-       this Cocos2D-Mono reference.
+       ExcludeAssets="build" excludes Cocos2D-Mono's build/analyzer assets
+       on this edge, and NuGet propagates the exclusion down the dependency
+       chain. Today that is defense-in-depth (MGCB 3.8.4.1 ships build/ only,
+       which never flows transitively - see the header note); it becomes
+       load-bearing the day the MGCB package adds buildTransitive/ targets.
        ============================================================ -->
   <ItemGroup>
     <PackageReference Include="Cocos2D-Mono"
