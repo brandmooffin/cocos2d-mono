@@ -24,8 +24,12 @@ jobs:
         # Actions produces a true cartesian product.
         configuration: [Debug, Release]
         target:
-          # DesktopGL on Linux validates the net9.0 TFM cross-platform.
+          # DesktopGL (net9.0) is validated on all three desktop hosts - each
+          # host bakes its own IsOSPlatform constant (LINUX / WINDOWSGL / MACOS)
+          # and each feeds its own README status badge via the status-*.yml shims.
           - { os: ubuntu-latest, tfm: net9.0, workloads: '' }
+          - { os: windows-latest, tfm: net9.0, workloads: '' }
+          - { os: macos-latest, tfm: net9.0, workloads: '' }
           # WindowsDX requires net9.0-windows7.0 which only builds on Windows.
           - { os: windows-latest, tfm: net9.0-windows7.0, workloads: '' }
           # Android workload installs on Linux runners (cheaper than Windows).
