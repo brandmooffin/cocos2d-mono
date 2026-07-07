@@ -117,7 +117,8 @@
     <!--
       Glob the shared Tests source. Exclusions:
         bin/ obj/                        build artifacts
-        cocos2d-mono.Tests.*             legacy per-platform test csproj folders
+        cocos2d-mono.Tests.*             legacy per-platform test csproj folders (deleted
+                                         at the C4 cutover; exclude kept defensively)
         Properties\AssemblyInfo*.cs      SDK auto-generates assembly info.
         **\*.Designer.cs                 generated; none today, glob is defensive.
 

@@ -103,7 +103,8 @@
     <!--
       Glob the entire shared tree. Exclusions:
         bin/ obj/                    - build artifacts
-        cocos2d.* / cocos2d.Core.*   - legacy per-platform csproj folders (side-by-side only)
+        cocos2d.* / cocos2d.Core.*   - legacy per-platform csproj folders (deleted at the
+                                       C4 cutover; exclude kept defensively)
         external lib/**              - vendored ICSharpCode SharpZLib (never built by legacy
                                        either; the SharpZipLib NuGet provides the runtime types)
         Properties/AssemblyInfo*.cs  - SDK auto-generates assembly info from MSBuild props
