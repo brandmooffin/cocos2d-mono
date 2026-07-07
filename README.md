@@ -6,12 +6,12 @@
 
 [Check out the docs!](https://cocos2d-mono.dev)
 
-[![DesktopGL (Windows/Linux/macOS)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/desktopgl_build.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/desktopgl_build.yml)
-[![Windows](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/windows_build.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/windows_build.yml)
-[![macOS](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/macos_build.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/macos_build.yml)
-[![Linux](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/linux_build.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/linux_build.yml)
-[![Android](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/android_build.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/android_build.yml)
-[![iOS](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/ios_build.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/ios_build_.yml)
+[![DesktopGL (Windows/Linux/macOS)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-desktopgl.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-desktopgl.yml)
+[![Windows](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-windows.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-windows.yml)
+[![macOS](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-macos.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-macos.yml)
+[![Linux](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-linux.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-linux.yml)
+[![Android](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-android.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-android.yml)
+[![iOS](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-ios.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-ios.yml)
 
 </div>
 

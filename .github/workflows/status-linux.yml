@@ -1,0 +1,45 @@
+name: Linux
+
+# Status reflector for the DesktopGL (net9.0) cells on the Linux host.
+# See status-desktopgl.yml for how these shims work.
+
+on:
+  workflow_run:
+    workflows: ["build (matrix)"]
+    types: [completed]
+    branches: ["**"]
+
+permissions:
+  actions: read
+
+jobs:
+  status:
+    name: Reflect Linux matrix cells
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror Linux matrix-cell conclusions
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const runId = context.payload.workflow_run.id;
+            const { data } = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: runId,
+              per_page: 100,
+            });
+            const matching = data.jobs.filter(j =>
+              j.name.startsWith('net9.0 (') && j.name.includes('on ubuntu-latest')
+            );
+            core.info(`Matched ${matching.length} Linux cell(s):`);
+            for (const j of matching) core.info(`  - ${j.name}: ${j.conclusion}`);
+            if (matching.length === 0) {
+              core.setFailed(`No Linux cells found in upstream run ${runId}`);
+              return;
+            }
+            const bad = matching.filter(j => j.conclusion !== 'success');
+            if (bad.length > 0) {
+              core.setFailed(`Linux cell(s) not successful: ${bad.map(j => `${j.name}=${j.conclusion}`).join(', ')}`);
+              return;
+            }
+            core.info('All Linux cells passed.');
