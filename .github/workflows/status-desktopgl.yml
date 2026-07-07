@@ -10,7 +10,6 @@ on:
   workflow_run:
     workflows: ["build (matrix)"]
     types: [completed]
-    branches: ["**"]
 
 permissions:
   actions: read
