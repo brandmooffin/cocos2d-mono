@@ -81,3 +81,20 @@ jobs:
       - name: Build IntegrationTests (Windows desktop only)
         if: runner.os == 'Windows' && (matrix.target.tfm == 'net9.0' || matrix.target.tfm == 'net9.0-windows7.0')
         run: dotnet build Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
+
+  # Aggregate gate over every matrix cell. Branch protection should require THIS
+  # check (stable name) rather than individual cell names, which embed TFM + OS
+  # and would silently break the required-checks list at the next TFM bump.
+  gate:
+    name: gate
+    runs-on: ubuntu-latest
+    needs: build
+    if: always()
+    steps:
+      - name: All matrix cells succeeded?
+        run: |
+          if [ "${{ needs.build.result }}" != "success" ]; then
+            echo "matrix result: ${{ needs.build.result }}"
+            exit 1
+          fi
+          echo "all matrix cells succeeded"
