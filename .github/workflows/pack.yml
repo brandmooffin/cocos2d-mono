@@ -5,8 +5,8 @@ name: pack (consolidated packages)
 # Produces the .nupkg/.snupkg set as a downloadable artifact - uploading to
 # nuget.org stays a manual, human step.
 #
-# The legacy 12-package line (Cocos2D-Mono.{Platform} / .Core.{Platform}) is
-# still packed via Tools/nuget_build.ps1 until the Stage C4 cutover.
+# The legacy 12-package line (Cocos2D-Mono.{Platform} / .Core.{Platform})
+# ended with 2.5.10; these consolidated packages replace it (Stage C4).
 
 on:
   workflow_dispatch:

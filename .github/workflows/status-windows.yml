@@ -27,7 +27,8 @@ jobs:
               run_id: runId,
               per_page: 100,
             });
-            const matching = data.jobs.filter(j => j.name.startsWith('net9.0-windows7.0 ('));
+            // Matches the "WindowsDX" matrix target label in build.yml.
+            const matching = data.jobs.filter(j => j.name.startsWith('WindowsDX ('));
             core.info(`Matched ${matching.length} WindowsDX cell(s):`);
             for (const j of matching) core.info(`  - ${j.name}: ${j.conclusion}`);
             if (matching.length === 0) {

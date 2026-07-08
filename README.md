@@ -15,6 +15,29 @@
 
 </div>
 
+# Packages
+
+Starting with the release after 2.5.10, Cocos2D-Mono ships as three consolidated,
+multi-targeted NuGet packages (DesktopGL for Windows/Linux/macOS, WindowsDX, Android,
+and iOS in one package each):
+
+| Package | Use it when |
+|---|---|
+| `Cocos2D-Mono` | The engine, including the MonoGame content-pipeline (MGCB) build task dependency. |
+| `Cocos2D-Mono.Core` | Same engine, without the MGCB dependency — for projects that don't use the content pipeline. |
+| `Cocos2D-Mono.Box2D` | The Box2D physics port (also flows transitively through the packages above). |
+
+**Migrating from the per-platform packages** (`Cocos2D-Mono.DesktopGL`,
+`Cocos2D-Mono.Windows`, `Cocos2D-Mono.Linux`, `Cocos2D-Mono.macOS`,
+`Cocos2D-Mono.Android`, `Cocos2D-Mono.iOS` and their `.Core.*` variants):
+**2.5.10 is the final release under those IDs** — replace the reference with
+`Cocos2D-Mono` (or `Cocos2D-Mono.Core`) and the right target framework is selected
+automatically. The DesktopGL/Windows/Android/iOS flavors are compiled exactly as their
+legacy counterparts were. If you are coming from the dedicated `Linux`/`macOS`
+packages, note that the unified DesktopGL build uses the same compile-time flavor the
+flagship `Cocos2D-Mono.DesktopGL` package always shipped on those platforms (this can
+relocate `CCUserDefault` storage written by the old dedicated packages).
+
 # Getting Started
 
 Check out the [guides](https://cocos2d-mono.dev/docs/category/getting-started)!
