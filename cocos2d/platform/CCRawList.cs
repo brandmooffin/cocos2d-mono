@@ -27,7 +27,15 @@ public class CCRawList<T> : IList<T>
     // When pooling is enabled, buffers are rented from the shared System.Buffers pool.
     // They must be cleared on return when T holds references, so a returned buffer does
     // not keep objects alive until it is rented again (matches List<T>'s own behavior).
+#if NETFRAMEWORK
+    // .NET Framework-era targets (e.g. the PS5 fork's net452) lack
+    // RuntimeHelpers.IsReferenceOrContainsReferences. Clearing unconditionally is the
+    // conservative equivalent: a returned buffer can never keep objects alive through
+    // stale references, at the cost of clearing buffers of pure value types too.
+    private static readonly bool ClearOnReturn = true;
+#else
     private static readonly bool ClearOnReturn = RuntimeHelpers.IsReferenceOrContainsReferences<T>();
+#endif
 
     // Tracks whether the current Elements buffer was actually rented from
     // ArrayPool<T>.Shared, independent of the public, mutable UseArrayPool flag. Returns
