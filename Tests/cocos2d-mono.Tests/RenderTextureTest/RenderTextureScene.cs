@@ -4,77 +4,76 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class RenderTextureScene : TestScene
 {
-    public class RenderTextureScene : TestScene
+    public static int sceneIdx = -1;
+    public static int MAX_LAYER = 5;
+
+    public static CCLayer createTestCase(int nIndex)
     {
-        public static int sceneIdx = -1;
-        public static int MAX_LAYER = 5;
-
-        public static CCLayer createTestCase(int nIndex)
+        switch (nIndex)
         {
-            switch (nIndex)
-            {
-                case 0: return new RenderTextureSave();
-                case 1: return new RenderTextureIssue937();
-                case 2: return new RenderTextureZbuffer();
-                case 3: return new RenderTextureTestDepthStencil();
-                case 4: return new RenderTextureCompositeTest();
-            }
-
-            return null;
+            case 0: return new RenderTextureSave();
+            case 1: return new RenderTextureIssue937();
+            case 2: return new RenderTextureZbuffer();
+            case 3: return new RenderTextureTestDepthStencil();
+            case 4: return new RenderTextureCompositeTest();
         }
 
-        protected override void NextTestCase()
-        {
-            nextTestCase();
-        }
-        protected override void PreviousTestCase()
-        {
-            backTestCase();
-        }
-        protected override void RestTestCase()
-        {
-            restartTestCase();
-        }
-        public static CCLayer nextTestCase()
-        {
-            sceneIdx++;
-            sceneIdx = sceneIdx % MAX_LAYER;
+        return null;
+    }
 
-            CCLayer pLayer = createTestCase(sceneIdx);
-            //pLayer->autorelease();
+    protected override void NextTestCase()
+    {
+        nextTestCase();
+    }
+    protected override void PreviousTestCase()
+    {
+        backTestCase();
+    }
+    protected override void RestTestCase()
+    {
+        restartTestCase();
+    }
+    public static CCLayer nextTestCase()
+    {
+        sceneIdx++;
+        sceneIdx = sceneIdx % MAX_LAYER;
 
-            return pLayer;
-        }
+        CCLayer pLayer = createTestCase(sceneIdx);
+        //pLayer->autorelease();
 
-        public static CCLayer backTestCase()
-        {
-            sceneIdx--;
-            int total = MAX_LAYER;
-            if (sceneIdx < 0)
-                sceneIdx += total;
+        return pLayer;
+    }
 
-            CCLayer pLayer = createTestCase(sceneIdx);
-            //pLayer->autorelease();
+    public static CCLayer backTestCase()
+    {
+        sceneIdx--;
+        int total = MAX_LAYER;
+        if (sceneIdx < 0)
+            sceneIdx += total;
 
-            return pLayer;
-        }
+        CCLayer pLayer = createTestCase(sceneIdx);
+        //pLayer->autorelease();
 
-        public static CCLayer restartTestCase()
-        {
-            CCLayer pLayer = createTestCase(sceneIdx);
-            //pLayer->autorelease();
+        return pLayer;
+    }
 
-            return pLayer;
-        }
+    public static CCLayer restartTestCase()
+    {
+        CCLayer pLayer = createTestCase(sceneIdx);
+        //pLayer->autorelease();
 
-        public override void runThisTest()
-        {
-            CCLayer pLayer = nextTestCase();
-            AddChild(pLayer);
+        return pLayer;
+    }
 
-            CCDirector.SharedDirector.ReplaceScene(this);
-        }
+    public override void runThisTest()
+    {
+        CCLayer pLayer = nextTestCase();
+        AddChild(pLayer);
+
+        CCDirector.SharedDirector.ReplaceScene(this);
     }
 }

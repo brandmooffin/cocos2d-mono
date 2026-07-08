@@ -5,65 +5,64 @@ using System.Text;
 using Cocos2D;
 using Random = Cocos2D.CCRandom;
 
-namespace tests
+namespace tests;
+
+public class AddRemoveSpriteSheet : NodeChildrenMainScene
 {
-    public class AddRemoveSpriteSheet : NodeChildrenMainScene
+
+    public override void updateQuantityOfNodes()
     {
+        CCSize s = CCDirector.SharedDirector.WinSize;
 
-        public override void updateQuantityOfNodes()
+        // increase nodes
+        if (currentQuantityOfNodes < quantityOfNodes)
         {
-            CCSize s = CCDirector.SharedDirector.WinSize;
-
-            // increase nodes
-            if (currentQuantityOfNodes < quantityOfNodes)
+            StartTimer();
+            for (int i = 0; i < (quantityOfNodes - currentQuantityOfNodes); i++)
             {
-                StartTimer();
-                for (int i = 0; i < (quantityOfNodes - currentQuantityOfNodes); i++)
-                {
-                    CCSprite sprite = new CCSprite(batchNode.Texture, new CCRect(0, 0, 32, 32));
-                    batchNode.AddChild(sprite);
-                    sprite.Position = new CCPoint(CCRandom.Next() * s.Width, CCRandom.Next() * s.Height);
-                    sprite.Visible = false;
-                }
-                EndTimer("Current Quantity: add");
+                CCSprite sprite = new CCSprite(batchNode.Texture, new CCRect(0, 0, 32, 32));
+                batchNode.AddChild(sprite);
+                sprite.Position = new CCPoint(CCRandom.Next() * s.Width, CCRandom.Next() * s.Height);
+                sprite.Visible = false;
             }
-            // decrease nodes
-            else if (currentQuantityOfNodes > quantityOfNodes)
+            EndTimer("Current Quantity: add");
+        }
+        // decrease nodes
+        else if (currentQuantityOfNodes > quantityOfNodes)
+        {
+            StartTimer();
+            for (int i = 0; i < (currentQuantityOfNodes - quantityOfNodes); i++)
             {
-                StartTimer();
-                for (int i = 0; i < (currentQuantityOfNodes - quantityOfNodes); i++)
-                {
-                    int index = currentQuantityOfNodes - i - 1;
-                    batchNode.RemoveChildAtIndex(index, true);
-                }
-                EndTimer("Current Quantity: add");
+                int index = currentQuantityOfNodes - i - 1;
+                batchNode.RemoveChildAtIndex(index, true);
             }
-
-            currentQuantityOfNodes = quantityOfNodes;
+            EndTimer("Current Quantity: add");
         }
 
-        public override void initWithQuantityOfNodes(int nNodes)
-        {
-            batchNode = new CCSpriteBatchNode("Images/spritesheet1");
-            AddChild(batchNode);
-
-            base.initWithQuantityOfNodes(nNodes);
-
-            ScheduleUpdate();
-        }
-
-        public override void Update(float dt)
-        {
-        }
-
-        public virtual string profilerName()
-        {
-            return "none";
-        }
-
-        protected CCSpriteBatchNode batchNode;
-        //#if CC_ENABLE_PROFILERS
-        //    CCProfilingTimer* _profilingTimer;
-        //#endif
+        currentQuantityOfNodes = quantityOfNodes;
     }
+
+    public override void initWithQuantityOfNodes(int nNodes)
+    {
+        batchNode = new CCSpriteBatchNode("Images/spritesheet1");
+        AddChild(batchNode);
+
+        base.initWithQuantityOfNodes(nNodes);
+
+        ScheduleUpdate();
+    }
+
+    public override void Update(float dt)
+    {
+    }
+
+    public virtual string profilerName()
+    {
+        return "none";
+    }
+
+    protected CCSpriteBatchNode batchNode;
+    //#if CC_ENABLE_PROFILERS
+    //    CCProfilingTimer* _profilingTimer;
+    //#endif
 }

@@ -2,7 +2,7 @@
 using Foundation;
 using UIKit;
 
-namespace NewSingleViewTemplate {
+namespace NewSingleViewTemplate; 
 	[Register ("SceneDelegate")]
 	public class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
 
@@ -55,4 +55,3 @@ namespace NewSingleViewTemplate {
 			// to restore the scene back to its current state.
 		}
 	}
-}

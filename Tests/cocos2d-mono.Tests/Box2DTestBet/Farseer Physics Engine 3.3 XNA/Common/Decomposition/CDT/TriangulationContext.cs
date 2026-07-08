@@ -33,53 +33,52 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Poly2Tri.Triangulation.Delaunay;
 
-namespace Poly2Tri.Triangulation
+namespace Poly2Tri.Triangulation;
+
+public abstract class TriangulationContext
 {
-    public abstract class TriangulationContext
+    public readonly List<TriangulationPoint> Points = new List<TriangulationPoint>(200);
+    public readonly List<DelaunayTriangle> Triangles = new List<DelaunayTriangle>();
+    private int _stepTime = -1;
+
+    public TriangulationContext()
     {
-        public readonly List<TriangulationPoint> Points = new List<TriangulationPoint>(200);
-        public readonly List<DelaunayTriangle> Triangles = new List<DelaunayTriangle>();
-        private int _stepTime = -1;
+        Terminated = false;
+    }
 
-        public TriangulationContext()
-        {
-            Terminated = false;
-        }
+    public TriangulationMode TriangulationMode { get; protected set; }
+    public Triangulatable Triangulatable { get; private set; }
 
-        public TriangulationMode TriangulationMode { get; protected set; }
-        public Triangulatable Triangulatable { get; private set; }
+    public bool WaitUntilNotified { get; private set; }
+    public bool Terminated { get; set; }
 
-        public bool WaitUntilNotified { get; private set; }
-        public bool Terminated { get; set; }
+    public int StepCount { get; private set; }
+    public virtual bool IsDebugEnabled { get; protected set; }
 
-        public int StepCount { get; private set; }
-        public virtual bool IsDebugEnabled { get; protected set; }
+    public void Done()
+    {
+        StepCount++;
+    }
 
-        public void Done()
-        {
-            StepCount++;
-        }
+    public virtual void PrepareTriangulation(Triangulatable t)
+    {
+        Triangulatable = t;
+        TriangulationMode = t.TriangulationMode;
+        t.PrepareTriangulation(this);
+    }
 
-        public virtual void PrepareTriangulation(Triangulatable t)
-        {
-            Triangulatable = t;
-            TriangulationMode = t.TriangulationMode;
-            t.PrepareTriangulation(this);
-        }
-
-        public abstract TriangulationConstraint NewConstraint(TriangulationPoint a, TriangulationPoint b);
+    public abstract TriangulationConstraint NewConstraint(TriangulationPoint a, TriangulationPoint b);
 #if!NETFX_CORE
-        [MethodImpl(MethodImplOptions.Synchronized)]
+    [MethodImpl(MethodImplOptions.Synchronized)]
 #endif
-        public void Update(string message)
-        {
-        }
+    public void Update(string message)
+    {
+    }
 
-        public virtual void Clear()
-        {
-            Points.Clear();
-            Terminated = false;
-            StepCount = 0;
-        }
+    public virtual void Clear()
+    {
+        Points.Clear();
+        Terminated = false;
+        StepCount = 0;
     }
 }

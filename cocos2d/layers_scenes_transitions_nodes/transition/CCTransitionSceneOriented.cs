@@ -23,48 +23,47 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public enum CCTransitionOrientation
 {
-    public enum CCTransitionOrientation
+    /// An horizontal orientation where the Left is nearer
+    LeftOver = 0,
+
+    /// An horizontal orientation where the Right is nearer
+    RightOver = 1,
+
+    /// A vertical orientation where the Up is nearer
+    UpOver = 0,
+
+    /// A vertical orientation where the Bottom is nearer
+    DownOver = 1,
+}
+
+public class CCTransitionSceneOriented : CCTransitionScene
+{
+    protected CCTransitionOrientation m_eOrientation;
+
+    public CCTransitionSceneOriented() { }
+
+    /// <summary>
+    /// creates a base transition with duration and incoming scene
+    /// </summary>
+    public CCTransitionSceneOriented (float t, CCScene scene, CCTransitionOrientation orientation) : base (t, scene)
     {
-        /// An horizontal orientation where the Left is nearer
-        LeftOver = 0,
-
-        /// An horizontal orientation where the Right is nearer
-        RightOver = 1,
-
-        /// A vertical orientation where the Up is nearer
-        UpOver = 0,
-
-        /// A vertical orientation where the Bottom is nearer
-        DownOver = 1,
+        m_eOrientation = orientation;
     }
 
-    public class CCTransitionSceneOriented : CCTransitionScene
+    /// <summary>
+    /// initializes a transition with duration and incoming scene
+    /// </summary>
+    public virtual bool InitWithDuration(float t, CCScene scene, CCTransitionOrientation orientation)
     {
-        protected CCTransitionOrientation m_eOrientation;
-
-        public CCTransitionSceneOriented() { }
-
-        /// <summary>
-        /// creates a base transition with duration and incoming scene
-        /// </summary>
-        public CCTransitionSceneOriented (float t, CCScene scene, CCTransitionOrientation orientation) : base (t, scene)
+        if (base.InitWithDuration(t, scene))
         {
             m_eOrientation = orientation;
         }
 
-        /// <summary>
-        /// initializes a transition with duration and incoming scene
-        /// </summary>
-        public virtual bool InitWithDuration(float t, CCScene scene, CCTransitionOrientation orientation)
-        {
-            if (base.InitWithDuration(t, scene))
-            {
-                m_eOrientation = orientation;
-            }
-
-            return true;
-        }
+        return true;
     }
 }

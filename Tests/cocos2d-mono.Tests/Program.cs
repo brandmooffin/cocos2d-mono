@@ -23,8 +23,8 @@ using UIKit;
 using Cocos2D;
 using Microsoft.Xna.Framework.Content;
 
-namespace tests
-{
+namespace tests;
+
 #if IPHONE || IOS
 	[Register ("AppDelegate")]
 	class Program : UIApplicationDelegate 
@@ -33,11 +33,11 @@ namespace tests
 
 		public override void FinishedLaunching (UIApplication app)
 		{
-            // More shameless hacking to bypass AOT
-            //var hHack = new ReflectiveReader<CCBMFontConfiguration>();
-            //var hFoo = new PlistDocument.PlistDocumentReader ();
+        // More shameless hacking to bypass AOT
+        //var hHack = new ReflectiveReader<CCBMFontConfiguration>();
+        //var hFoo = new PlistDocument.PlistDocumentReader ();
 
-            // Fun begins..
+        // Fun begins..
 
 			game = new Game1();
 			game.Run();
@@ -62,7 +62,7 @@ namespace tests
 		{
 #if DEBUG
 			/* Create a listener that outputs to the console screen, and 
-  			* add it to the debug listeners. */
+			* add it to the debug listeners. */
 			TextWriterTraceListener debugConsoleWriter = new 
 				TextWriterTraceListener(System.Console.Out);
 			Debug.Listeners.Add(debugConsoleWriter);
@@ -93,83 +93,82 @@ namespace tests
 	#if WINDOWS || WINDOWSGL || XBOX || PSM || LINUX || MACOS
 
 #if !NETFX_CORE
-    static class Program
+static class Program
+{
+#if WINDOWS || WINDOWSGL || LINUX || MACOS
+    private static Game1 game;
+#endif
+    /// <summary>
+    /// The main entry point for the application.
+    /// </summary>
+#if WINDOWS || WINDOWSGL || LINUX || MACOS
+    [STAThread]
+#endif
+    static void Main(string[] args)
     {
-#if WINDOWS || WINDOWSGL || LINUX || MACOS
-        private static Game1 game;
-#endif
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-#if WINDOWS || WINDOWSGL || LINUX || MACOS
-        [STAThread]
-#endif
-        static void Main(string[] args)
+        using (game = new Game1())
         {
-            using (game = new Game1())
-            {
-                game.Run();
-            }
+            game.Run();
         }
     }
+}
 #endif
 #endif
 
 #if ANDROID
-    [Activity(
-        Label = "Tests",
-        AlwaysRetainTaskState = true,
-        Icon = "@drawable/Icon",
-        Theme = "@style/Theme.NoTitleBar",
-        ScreenOrientation = Android.Content.PM.ScreenOrientation.SensorLandscape,
-        LaunchMode = Android.Content.PM.LaunchMode.SingleInstance,
-        MainLauncher = true,
-        ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden)
-    ]
-    public class Activity1 : AndroidGameActivity
+[Activity(
+    Label = "Tests",
+    AlwaysRetainTaskState = true,
+    Icon = "@drawable/Icon",
+    Theme = "@style/Theme.NoTitleBar",
+    ScreenOrientation = Android.Content.PM.ScreenOrientation.SensorLandscape,
+    LaunchMode = Android.Content.PM.LaunchMode.SingleInstance,
+    MainLauncher = true,
+    ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden)
+]
+public class Activity1 : AndroidGameActivity
+{
+    protected override void OnCreate(Bundle bundle)
     {
-        protected override void OnCreate(Bundle bundle)
+        base.OnCreate(bundle);
+
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.P)
         {
-            base.OnCreate(bundle);
-
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.P)
-            {
-                Window.Attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
-            }
-
-            Window.AddFlags(WindowManagerFlags.Fullscreen);
-            Window.AddFlags(WindowManagerFlags.LayoutNoLimits);
-
-            View decorView = Window.DecorView;
-            var uiOptions = (int)SystemUiFlags.LayoutStable
-                          | (int)SystemUiFlags.LayoutFullscreen
-                          | (int)SystemUiFlags.LayoutHideNavigation
-                          | (int)SystemUiFlags.Fullscreen
-                          | (int)SystemUiFlags.HideNavigation
-                          | (int)SystemUiFlags.ImmersiveSticky;
-            decorView.SystemUiVisibility = (StatusBarVisibility)uiOptions;
-
-            var game = new Game1();
-
-            var frameLayout = new FrameLayout(this);
-            frameLayout.AddView((View)game.Services.GetService(typeof(View)));
-            this.SetContentView(frameLayout);
-
-            //SetContentView(game.Window);
-            game.Run(GameRunBehavior.Asynchronous);
+            Window.Attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
         }
+
+        Window.AddFlags(WindowManagerFlags.Fullscreen);
+        Window.AddFlags(WindowManagerFlags.LayoutNoLimits);
+
+        View decorView = Window.DecorView;
+        var uiOptions = (int)SystemUiFlags.LayoutStable
+                      | (int)SystemUiFlags.LayoutFullscreen
+                      | (int)SystemUiFlags.LayoutHideNavigation
+                      | (int)SystemUiFlags.Fullscreen
+                      | (int)SystemUiFlags.HideNavigation
+                      | (int)SystemUiFlags.ImmersiveSticky;
+        decorView.SystemUiVisibility = (StatusBarVisibility)uiOptions;
+
+        var game = new Game1();
+
+        var frameLayout = new FrameLayout(this);
+        frameLayout.AddView((View)game.Services.GetService(typeof(View)));
+        this.SetContentView(frameLayout);
+
+        //SetContentView(game.Window);
+        game.Run(GameRunBehavior.Asynchronous);
     }
+}
 #endif
 #if NETFX_CORE 
-    public static class Program {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        static void Main() {
-            var factory = new MonoGame.Framework.GameFrameworkViewSource<Game1>();
-            Windows.ApplicationModel.Core.CoreApplication.Run(factory);
-        }
+public static class Program {
+    /// <summary>
+    /// The main entry point for the application.
+    /// </summary>
+    static void Main() {
+        var factory = new MonoGame.Framework.GameFrameworkViewSource<Game1>();
+        Windows.ApplicationModel.Core.CoreApplication.Run(factory);
     }
-#endif
 }
+#endif
 

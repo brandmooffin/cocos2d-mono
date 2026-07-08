@@ -32,51 +32,50 @@
 using System.Collections.Generic;
 using Poly2Tri.Triangulation.Delaunay.Sweep;
 
-namespace Poly2Tri.Triangulation
+namespace Poly2Tri.Triangulation;
+
+public class TriangulationPoint
 {
-    public class TriangulationPoint
+    // List of edges this point constitutes an upper ending point (CDT)
+
+    public double X, Y;
+
+    public TriangulationPoint(double x, double y)
     {
-        // List of edges this point constitutes an upper ending point (CDT)
+        X = x;
+        Y = y;
+    }
 
-        public double X, Y;
+    public List<DTSweepConstraint> Edges { get; private set; }
 
-        public TriangulationPoint(double x, double y)
+    public float Xf
+    {
+        get { return (float) X; }
+        set { X = value; }
+    }
+
+    public float Yf
+    {
+        get { return (float) Y; }
+        set { Y = value; }
+    }
+
+    public bool HasEdges
+    {
+        get { return Edges != null; }
+    }
+
+    public override string ToString()
+    {
+        return "[" + X + "," + Y + "]";
+    }
+
+    public void AddEdge(DTSweepConstraint e)
+    {
+        if (Edges == null)
         {
-            X = x;
-            Y = y;
+            Edges = new List<DTSweepConstraint>();
         }
-
-        public List<DTSweepConstraint> Edges { get; private set; }
-
-        public float Xf
-        {
-            get { return (float) X; }
-            set { X = value; }
-        }
-
-        public float Yf
-        {
-            get { return (float) Y; }
-            set { Y = value; }
-        }
-
-        public bool HasEdges
-        {
-            get { return Edges != null; }
-        }
-
-        public override string ToString()
-        {
-            return "[" + X + "," + Y + "]";
-        }
-
-        public void AddEdge(DTSweepConstraint e)
-        {
-            if (Edges == null)
-            {
-                Edges = new List<DTSweepConstraint>();
-            }
-            Edges.Add(e);
-        }
+        Edges.Add(e);
     }
 }

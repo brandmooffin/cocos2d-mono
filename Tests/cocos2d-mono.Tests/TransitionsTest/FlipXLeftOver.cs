@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class FlipXLeftOver : CCTransitionFlipX
 {
-    public class FlipXLeftOver : CCTransitionFlipX
+    public FlipXLeftOver(float t, CCScene s)
+        : base(t, s, CCTransitionOrientation.LeftOver)
     {
-        public FlipXLeftOver(float t, CCScene s)
-            : base(t, s, CCTransitionOrientation.LeftOver)
-        {
-        }
     }
 }

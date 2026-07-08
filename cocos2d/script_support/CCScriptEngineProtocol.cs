@@ -26,70 +26,69 @@ THE SOFTWARE.
 
 using System.Collections.Generic;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCScriptEngineProtocol
 {
-    public class CCScriptEngineProtocol
+    // functions for excute touch event
+    public virtual bool ExecuteTouchEvent(string pszFuncName, CCTouch pTouch)
     {
-        // functions for excute touch event
-        public virtual bool ExecuteTouchEvent(string pszFuncName, CCTouch pTouch)
-        {
-            return false;
-        }
+        return false;
+    }
 
-        public virtual bool ExecuteTouchesEvent(string pszFuncName, List<CCTouch> pTouches)
-        {
-            return false;
-        }
+    public virtual bool ExecuteTouchesEvent(string pszFuncName, List<CCTouch> pTouches)
+    {
+        return false;
+    }
 
-        // functions for CCCallFuncX
-        public virtual bool ExecuteCallFunc(string pszFuncName)
-        {
-            return false;
-        }
+    // functions for CCCallFuncX
+    public virtual bool ExecuteCallFunc(string pszFuncName)
+    {
+        return false;
+    }
 
-        public virtual bool ExecuteCallFuncN(string pszFuncName, CCNode node)
-        {
-            return false;
-        }
+    public virtual bool ExecuteCallFuncN(string pszFuncName, CCNode node)
+    {
+        return false;
+    }
 
-        public virtual bool ExecuteCallFuncNd(string pszFuncName, CCNode node, object pData)
-        {
-            return false;
-        }
+    public virtual bool ExecuteCallFuncNd(string pszFuncName, CCNode node, object pData)
+    {
+        return false;
+    }
 
-        public virtual bool ExecuteCallFunc0(string pszFuncName, object pObject)
-        {
-            return false;
-        }
+    public virtual bool ExecuteCallFunc0(string pszFuncName, object pObject)
+    {
+        return false;
+    }
 
-        // excute a script function without params
-        public virtual int ExecuteFuction(string pszFuncName)
-        {
-            return 0;
-        }
+    // excute a script function without params
+    public virtual int ExecuteFuction(string pszFuncName)
+    {
+        return 0;
+    }
 
-        // excute a script file
-        public virtual bool ExecuteScriptFile(string pszFileName)
-        {
-            return false;
-        }
+    // excute a script file
+    public virtual bool ExecuteScriptFile(string pszFileName)
+    {
+        return false;
+    }
 
-        // excute script from string
-        public virtual bool ExecuteString(string pszCodes)
-        {
-            return false;
-        }
+    // excute script from string
+    public virtual bool ExecuteString(string pszCodes)
+    {
+        return false;
+    }
 
-        // execute a schedule function
-        public virtual bool ExecuteSchedule(string pszFuncName, float t)
-        {
-            return false;
-        }
+    // execute a schedule function
+    public virtual bool ExecuteSchedule(string pszFuncName, float t)
+    {
+        return false;
+    }
 
-        // add a search path  
-        public virtual bool AddSearchPath(string pszPath)
-        {
-            return false;
-        }
+    // add a search path  
+    public virtual bool AddSearchPath(string pszPath)
+    {
+        return false;
     }
 }

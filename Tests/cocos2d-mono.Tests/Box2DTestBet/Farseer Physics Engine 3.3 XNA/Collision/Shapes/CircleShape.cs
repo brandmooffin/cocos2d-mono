@@ -27,180 +27,179 @@ using System;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.Collision.Shapes
-{
-    public class CircleShape : Shape
-    {
-        internal Vector2 _position;
+namespace FarseerPhysics.Collision.Shapes;
 
-        public CircleShape(float radius, float density)
-            : base(density)
+public class CircleShape : Shape
+{
+    internal Vector2 _position;
+
+    public CircleShape(float radius, float density)
+        : base(density)
+    {
+        ShapeType = ShapeType.Circle;
+        _radius = radius;
+        _position = Vector2.Zero;
+        ComputeProperties();
+    }
+
+    internal CircleShape()
+        : base(0)
+    {
+        ShapeType = ShapeType.Circle;
+        _radius = 0.0f;
+        _position = Vector2.Zero;
+    }
+
+    public override int ChildCount
+    {
+        get { return 1; }
+    }
+
+    public Vector2 Position
+    {
+        get { return _position; }
+        set
         {
-            ShapeType = ShapeType.Circle;
-            _radius = radius;
-            _position = Vector2.Zero;
+            _position = value;
             ComputeProperties();
         }
+    }
 
-        internal CircleShape()
-            : base(0)
+    public override Shape Clone()
+    {
+        CircleShape shape = new CircleShape();
+        shape._radius = Radius;
+        shape._density = _density;
+        shape._position = _position;
+        shape.ShapeType = ShapeType;
+        shape.MassData = MassData;
+        return shape;
+    }
+
+    /// <summary>
+    /// Test a point for containment in this shape. This only works for convex shapes.
+    /// </summary>
+    /// <param name="transform">The shape world transform.</param>
+    /// <param name="point">a point in world coordinates.</param>
+    /// <returns>True if the point is inside the shape</returns>
+    public override bool TestPoint(ref Transform transform, ref Vector2 point)
+    {
+        Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, Position);
+        Vector2 d = point - center;
+        return Vector2.Dot(d, d) <= Radius * Radius;
+    }
+
+    /// <summary>
+    /// Cast a ray against a child shape.
+    /// </summary>
+    /// <param name="output">The ray-cast results.</param>
+    /// <param name="input">The ray-cast input parameters.</param>
+    /// <param name="transform">The transform to be applied to the shape.</param>
+    /// <param name="childIndex">The child shape index.</param>
+    /// <returns>True if the ray-cast hits the shape</returns>
+    public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform,
+                                 int childIndex)
+    {
+        // Collision Detection in Interactive 3D Environments by Gino van den Bergen
+        // From Section 3.1.2
+        // x = s + a * r
+        // norm(x) = radius
+
+        output = new RayCastOutput();
+
+        Vector2 position = transform.Position + MathUtils.Multiply(ref transform.R, Position);
+        Vector2 s = input.Point1 - position;
+        float b = Vector2.Dot(s, s) - Radius * Radius;
+
+        // Solve quadratic equation.
+        Vector2 r = input.Point2 - input.Point1;
+        float c = Vector2.Dot(s, r);
+        float rr = Vector2.Dot(r, r);
+        float sigma = c * c - rr * b;
+
+        // Check for negative discriminant and short segment.
+        if (sigma < 0.0f || rr < Settings.Epsilon)
         {
-            ShapeType = ShapeType.Circle;
-            _radius = 0.0f;
-            _position = Vector2.Zero;
-        }
-
-        public override int ChildCount
-        {
-            get { return 1; }
-        }
-
-        public Vector2 Position
-        {
-            get { return _position; }
-            set
-            {
-                _position = value;
-                ComputeProperties();
-            }
-        }
-
-        public override Shape Clone()
-        {
-            CircleShape shape = new CircleShape();
-            shape._radius = Radius;
-            shape._density = _density;
-            shape._position = _position;
-            shape.ShapeType = ShapeType;
-            shape.MassData = MassData;
-            return shape;
-        }
-
-        /// <summary>
-        /// Test a point for containment in this shape. This only works for convex shapes.
-        /// </summary>
-        /// <param name="transform">The shape world transform.</param>
-        /// <param name="point">a point in world coordinates.</param>
-        /// <returns>True if the point is inside the shape</returns>
-        public override bool TestPoint(ref Transform transform, ref Vector2 point)
-        {
-            Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, Position);
-            Vector2 d = point - center;
-            return Vector2.Dot(d, d) <= Radius * Radius;
-        }
-
-        /// <summary>
-        /// Cast a ray against a child shape.
-        /// </summary>
-        /// <param name="output">The ray-cast results.</param>
-        /// <param name="input">The ray-cast input parameters.</param>
-        /// <param name="transform">The transform to be applied to the shape.</param>
-        /// <param name="childIndex">The child shape index.</param>
-        /// <returns>True if the ray-cast hits the shape</returns>
-        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform,
-                                     int childIndex)
-        {
-            // Collision Detection in Interactive 3D Environments by Gino van den Bergen
-            // From Section 3.1.2
-            // x = s + a * r
-            // norm(x) = radius
-
-            output = new RayCastOutput();
-
-            Vector2 position = transform.Position + MathUtils.Multiply(ref transform.R, Position);
-            Vector2 s = input.Point1 - position;
-            float b = Vector2.Dot(s, s) - Radius * Radius;
-
-            // Solve quadratic equation.
-            Vector2 r = input.Point2 - input.Point1;
-            float c = Vector2.Dot(s, r);
-            float rr = Vector2.Dot(r, r);
-            float sigma = c * c - rr * b;
-
-            // Check for negative discriminant and short segment.
-            if (sigma < 0.0f || rr < Settings.Epsilon)
-            {
-                return false;
-            }
-
-            // Find the point of intersection of the line with the circle.
-            float a = -(c + (float)Math.Sqrt(sigma));
-
-            // Is the intersection point on the segment?
-            if (0.0f <= a && a <= input.MaxFraction * rr)
-            {
-                a /= rr;
-                output.Fraction = a;
-                Vector2 norm = (s + a * r);
-                norm.Normalize();
-                output.Normal = norm;
-                return true;
-            }
-
             return false;
         }
 
-        /// <summary>
-        /// Given a transform, compute the associated axis aligned bounding box for a child shape.
-        /// </summary>
-        /// <param name="aabb">The aabb results.</param>
-        /// <param name="transform">The world transform of the shape.</param>
-        /// <param name="childIndex">The child shape index.</param>
-        public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
+        // Find the point of intersection of the line with the circle.
+        float a = -(c + (float)Math.Sqrt(sigma));
+
+        // Is the intersection point on the segment?
+        if (0.0f <= a && a <= input.MaxFraction * rr)
         {
-            Vector2 p = transform.Position + MathUtils.Multiply(ref transform.R, Position);
-            aabb = new AABB(new Vector2(p.X - Radius, p.Y - Radius), new Vector2(p.X + Radius, p.Y + Radius));
+            a /= rr;
+            output.Fraction = a;
+            Vector2 norm = (s + a * r);
+            norm.Normalize();
+            output.Normal = norm;
+            return true;
         }
 
-        /// <summary>
-        /// Compute the mass properties of this shape using its dimensions and density.
-        /// The inertia tensor is computed about the local origin, not the centroid.
-        /// </summary>
-        public override sealed void ComputeProperties()
-        {
-            float area = Settings.Pi * Radius * Radius;
-            MassData.Area = area;
-            MassData.Mass = Density * area;
-            MassData.Centroid = Position;
+        return false;
+    }
 
-            // inertia about the local origin
-            MassData.Inertia = MassData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
+    /// <summary>
+    /// Given a transform, compute the associated axis aligned bounding box for a child shape.
+    /// </summary>
+    /// <param name="aabb">The aabb results.</param>
+    /// <param name="transform">The world transform of the shape.</param>
+    /// <param name="childIndex">The child shape index.</param>
+    public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
+    {
+        Vector2 p = transform.Position + MathUtils.Multiply(ref transform.R, Position);
+        aabb = new AABB(new Vector2(p.X - Radius, p.Y - Radius), new Vector2(p.X + Radius, p.Y + Radius));
+    }
+
+    /// <summary>
+    /// Compute the mass properties of this shape using its dimensions and density.
+    /// The inertia tensor is computed about the local origin, not the centroid.
+    /// </summary>
+    public override sealed void ComputeProperties()
+    {
+        float area = Settings.Pi * Radius * Radius;
+        MassData.Area = area;
+        MassData.Mass = Density * area;
+        MassData.Centroid = Position;
+
+        // inertia about the local origin
+        MassData.Inertia = MassData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
+    }
+
+    public bool CompareTo(CircleShape shape)
+    {
+        return (Radius == shape.Radius &&
+                Position == shape.Position);
+    }
+
+    public override float ComputeSubmergedArea(Vector2 normal, float offset, Transform xf, out Vector2 sc)
+    {
+        sc = Vector2.Zero;
+
+        Vector2 p = MathUtils.Multiply(ref xf, Position);
+        float l = -(Vector2.Dot(normal, p) - offset);
+        if (l < -Radius + Settings.Epsilon)
+        {
+            //Completely dry
+            return 0;
+        }
+        if (l > Radius)
+        {
+            //Completely wet
+            sc = p;
+            return Settings.Pi * Radius * Radius;
         }
 
-        public bool CompareTo(CircleShape shape)
-        {
-            return (Radius == shape.Radius &&
-                    Position == shape.Position);
-        }
+        //Magic
+        float r2 = Radius * Radius;
+        float l2 = l * l;
+        float area = r2 * (float)((Math.Asin(l / Radius) + Settings.Pi / 2) + l * Math.Sqrt(r2 - l2));
+        float com = -2.0f / 3.0f * (float)Math.Pow(r2 - l2, 1.5f) / area;
 
-        public override float ComputeSubmergedArea(Vector2 normal, float offset, Transform xf, out Vector2 sc)
-        {
-            sc = Vector2.Zero;
+        sc.X = p.X + normal.X * com;
+        sc.Y = p.Y + normal.Y * com;
 
-            Vector2 p = MathUtils.Multiply(ref xf, Position);
-            float l = -(Vector2.Dot(normal, p) - offset);
-            if (l < -Radius + Settings.Epsilon)
-            {
-                //Completely dry
-                return 0;
-            }
-            if (l > Radius)
-            {
-                //Completely wet
-                sc = p;
-                return Settings.Pi * Radius * Radius;
-            }
-
-            //Magic
-            float r2 = Radius * Radius;
-            float l2 = l * l;
-            float area = r2 * (float)((Math.Asin(l / Radius) + Settings.Pi / 2) + l * Math.Sqrt(r2 - l2));
-            float com = -2.0f / 3.0f * (float)Math.Pow(r2 - l2, 1.5f) / area;
-
-            sc.X = p.X + normal.X * com;
-            sc.Y = p.Y + normal.Y * com;
-
-            return area;
-        }
+        return area;
     }
 }

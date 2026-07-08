@@ -1,27 +1,26 @@
 using System;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCScale9SpriteFrame : CCScale9Sprite
 {
-    public class CCScale9SpriteFrame : CCScale9Sprite
+    public CCScale9SpriteFrame(CCSpriteFrame spriteFrame, CCRect capInsets)
     {
-        public CCScale9SpriteFrame(CCSpriteFrame spriteFrame, CCRect capInsets)
-        {
-            InitWithSpriteFrame(spriteFrame, capInsets);
-        }
+        InitWithSpriteFrame(spriteFrame, capInsets);
+    }
 
-        public CCScale9SpriteFrame(CCSpriteFrame spriteFrame)
-        {
-            InitWithSpriteFrame(spriteFrame);
-        }
+    public CCScale9SpriteFrame(CCSpriteFrame spriteFrame)
+    {
+        InitWithSpriteFrame(spriteFrame);
+    }
 
-        public CCScale9SpriteFrame(string spriteFrameName, CCRect capInsets)
-        {
-            InitWithSpriteFrameName(spriteFrameName, capInsets);
-        }
+    public CCScale9SpriteFrame(string spriteFrameName, CCRect capInsets)
+    {
+        InitWithSpriteFrameName(spriteFrameName, capInsets);
+    }
 
-        public CCScale9SpriteFrame(string alias)
-        {
-            InitWithSpriteFrameName(alias);
-        }
+    public CCScale9SpriteFrame(string alias)
+    {
+        InitWithSpriteFrameName(alias);
     }
 }

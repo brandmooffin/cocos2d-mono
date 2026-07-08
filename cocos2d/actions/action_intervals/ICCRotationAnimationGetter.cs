@@ -1,7 +1,6 @@
-﻿namespace cocos2d.actions.action_intervals
+﻿namespace cocos2d.actions.action_intervals;
+
+public interface ICCRotationAnimationGetter
 {
-    public interface ICCRotationAnimationGetter
-    {
-        float CurrentRotation { get; set; }
-    }
+    float CurrentRotation { get; set; }
 }

@@ -28,33 +28,32 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class PongScene : TestScene
 {
-    public class PongScene : TestScene
+    public PongScene()
     {
-        public PongScene()
-        {
-            PongLayer pongLayer = new PongLayer();//PongLayer::node();
-            base.AddChild(pongLayer);
-        }
+        PongLayer pongLayer = new PongLayer();//PongLayer::node();
+        base.AddChild(pongLayer);
+    }
 
-        public override void runThisTest()
-        {
-            CCDirector.SharedDirector.ReplaceScene(this);
-        }
+    public override void runThisTest()
+    {
+        CCDirector.SharedDirector.ReplaceScene(this);
+    }
 
-        public override void MainMenuCallback(object pSender)
-        {
-            base.MainMenuCallback(pSender);
-        }
-        protected override void NextTestCase()
-        {
-        }
-        protected override void PreviousTestCase()
-        {
-        }
-        protected override void RestTestCase()
-        {
-        }
+    public override void MainMenuCallback(object pSender)
+    {
+        base.MainMenuCallback(pSender);
+    }
+    protected override void NextTestCase()
+    {
+    }
+    protected override void PreviousTestCase()
+    {
+    }
+    protected override void RestTestCase()
+    {
     }
 }

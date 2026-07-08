@@ -1,40 +1,39 @@
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCEaseBackInOut : CCActionEase
 {
-    public class CCEaseBackInOut : CCActionEase
+    public CCEaseBackInOut(CCActionInterval pAction) : base(pAction)
     {
-        public CCEaseBackInOut(CCActionInterval pAction) : base(pAction)
-        {
-        }
+    }
 
-        public CCEaseBackInOut(CCFiniteTimeAction pAction) : base(pAction)
-        {
-        }
+    public CCEaseBackInOut(CCFiniteTimeAction pAction) : base(pAction)
+    {
+    }
 
-        protected CCEaseBackInOut(CCEaseBackInOut easeBackInOut) : base(easeBackInOut)
-        {
-        }
+    protected CCEaseBackInOut(CCEaseBackInOut easeBackInOut) : base(easeBackInOut)
+    {
+    }
 
-        public override void Update(float time)
-        {
-            m_pInner.Update(CCEaseMath.BackInOut(time));
-        }
+    public override void Update(float time)
+    {
+        m_pInner.Update(CCEaseMath.BackInOut(time));
+    }
 
-        public override object Copy(ICCCopyable pZone)
+    public override object Copy(ICCCopyable pZone)
+    {
+        if (pZone != null)
         {
-            if (pZone != null)
-            {
-                //in case of being called at sub class
-                var pCopy = pZone as CCEaseBackInOut;
-                pCopy.InitWithAction((CCActionInterval) (m_pInner.Copy()));
+            //in case of being called at sub class
+            var pCopy = pZone as CCEaseBackInOut;
+            pCopy.InitWithAction((CCActionInterval) (m_pInner.Copy()));
 
-                return pCopy;
-            }
-            return new CCEaseBackInOut(this);
+            return pCopy;
         }
+        return new CCEaseBackInOut(this);
+    }
 
-        public override CCFiniteTimeAction Reverse()
-        {
-            return new CCEaseBackInOut((CCActionInterval) m_pInner.Reverse());
-        }
+    public override CCFiniteTimeAction Reverse()
+    {
+        return new CCEaseBackInOut((CCActionInterval) m_pInner.Reverse());
     }
 }

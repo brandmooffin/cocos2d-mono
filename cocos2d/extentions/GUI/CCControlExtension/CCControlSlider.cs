@@ -28,124 +28,124 @@
 using System;
 using System.Diagnostics;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCControlSlider : CCControl
 {
-    public class CCControlSlider : CCControl
+    //maunally put in the setters
+    private CCSprite _backgroundSprite;
+    private float _maximumAllowedValue;
+    private float _maximumValue;
+    private float _minimumAllowedValue;
+    private float _minimumValue;
+    private CCSprite _progressSprite;
+    private CCSprite _thumbSprite;
+    private float _value;
+
+    public float Value
     {
-        //maunally put in the setters
-        private CCSprite _backgroundSprite;
-        private float _maximumAllowedValue;
-        private float _maximumValue;
-        private float _minimumAllowedValue;
-        private float _minimumValue;
-        private CCSprite _progressSprite;
-        private CCSprite _thumbSprite;
-        private float _value;
-
-        public float Value
+        get { return _value; }
+        set
         {
-            get { return _value; }
-            set
+            // set new value with sentinel
+            if (value < _minimumValue)
             {
-                // set new value with sentinel
-                if (value < _minimumValue)
-                {
-                    value = _minimumValue;
-                }
+                value = _minimumValue;
+            }
 
-                if (value > _maximumValue)
-                {
-                    value = _maximumValue;
-                }
+            if (value > _maximumValue)
+            {
+                value = _maximumValue;
+            }
 
-                _value = value;
+            _value = value;
 
-                NeedsLayout();
+            NeedsLayout();
 
-                SendActionsForControlEvents(CCControlEvent.ValueChanged);
+            SendActionsForControlEvents(CCControlEvent.ValueChanged);
+        }
+    }
+
+    public float MinimumAllowedValue
+    {
+        get { return _minimumAllowedValue; }
+        set { _minimumAllowedValue = value; }
+    }
+
+    public float MinimumValue
+    {
+        get { return _minimumValue; }
+        set
+        {
+            _minimumValue = value;
+            _minimumAllowedValue = value;
+            if (_minimumValue >= _maximumValue)
+            {
+                _maximumValue = _minimumValue + 1.0f;
+            }
+
+            Value = _value;
+        }
+    }
+
+    public float MaximumAllowedValue
+    {
+        get { return _maximumAllowedValue; }
+        set { _maximumAllowedValue = value; }
+    }
+
+    public float MaximumValue
+    {
+        get { return _maximumValue; }
+        set
+        {
+            _maximumValue = value;
+            _maximumAllowedValue = value;
+            if (_maximumValue <= _minimumValue)
+            {
+                _minimumValue = _maximumValue - 1.0f;
+            }
+            Value = _value;
+        }
+    }
+
+    //interval to snap to
+    public float SnappingInterval { get; set; }
+
+    // maybe this should be read-only
+
+    public CCSprite ThumbSprite
+    {
+        get { return _thumbSprite; }
+        set { _thumbSprite = value; }
+    }
+
+    public CCSprite ProgressSprite
+    {
+        get { return _progressSprite; }
+        set { _progressSprite = value; }
+    }
+
+    public CCSprite BackgroundSprite
+    {
+        get { return _backgroundSprite; }
+        set { _backgroundSprite = value; }
+    }
+
+    public override bool Enabled
+    {
+        get { return base.Enabled; }
+        set
+        {
+            base.Enabled = value;
+            if (_thumbSprite != null)
+            {
+                _thumbSprite.Opacity = (byte) (value ? 255 : 128);
             }
         }
+    }
 
-        public float MinimumAllowedValue
-        {
-            get { return _minimumAllowedValue; }
-            set { _minimumAllowedValue = value; }
-        }
-
-        public float MinimumValue
-        {
-            get { return _minimumValue; }
-            set
-            {
-                _minimumValue = value;
-                _minimumAllowedValue = value;
-                if (_minimumValue >= _maximumValue)
-                {
-                    _maximumValue = _minimumValue + 1.0f;
-                }
-
-                Value = _value;
-            }
-        }
-
-        public float MaximumAllowedValue
-        {
-            get { return _maximumAllowedValue; }
-            set { _maximumAllowedValue = value; }
-        }
-
-        public float MaximumValue
-        {
-            get { return _maximumValue; }
-            set
-            {
-                _maximumValue = value;
-                _maximumAllowedValue = value;
-                if (_maximumValue <= _minimumValue)
-                {
-                    _minimumValue = _maximumValue - 1.0f;
-                }
-                Value = _value;
-            }
-        }
-
-        //interval to snap to
-        public float SnappingInterval { get; set; }
-
-        // maybe this should be read-only
-
-        public CCSprite ThumbSprite
-        {
-            get { return _thumbSprite; }
-            set { _thumbSprite = value; }
-        }
-
-        public CCSprite ProgressSprite
-        {
-            get { return _progressSprite; }
-            set { _progressSprite = value; }
-        }
-
-        public CCSprite BackgroundSprite
-        {
-            get { return _backgroundSprite; }
-            set { _backgroundSprite = value; }
-        }
-
-        public override bool Enabled
-        {
-            get { return base.Enabled; }
-            set
-            {
-                base.Enabled = value;
-                if (_thumbSprite != null)
-                {
-                    _thumbSprite.Opacity = (byte) (value ? 255 : 128);
-                }
-            }
-        }
-
-        /** 
+    /** 
 		* Initializes a slider with a background sprite, a progress bar and a thumb
 		* item.
 		*
@@ -154,177 +154,176 @@ namespace Cocos2D
 		* @param thumbItem         CCMenuItem, that is used as a thumb.
 		*/
 
-        public virtual bool InitWithSprites(CCSprite backgroundSprite, CCSprite progressSprite, CCSprite thumbSprite)
+    public virtual bool InitWithSprites(CCSprite backgroundSprite, CCSprite progressSprite, CCSprite thumbSprite)
+    {
+        if (base.Init())
         {
-            if (base.Init())
-            {
-                Debug.Assert(backgroundSprite != null, "Background sprite must be not nil");
-                Debug.Assert(progressSprite != null, "Progress sprite must be not nil");
-                Debug.Assert(thumbSprite != null, "Thumb sprite must be not nil");
+            Debug.Assert(backgroundSprite != null, "Background sprite must be not nil");
+            Debug.Assert(progressSprite != null, "Progress sprite must be not nil");
+            Debug.Assert(thumbSprite != null, "Thumb sprite must be not nil");
 
-                IgnoreAnchorPointForPosition = false;
-                TouchEnabled = true;
+            IgnoreAnchorPointForPosition = false;
+            TouchEnabled = true;
 
-                BackgroundSprite = backgroundSprite;
-                ProgressSprite = progressSprite;
-                ThumbSprite = thumbSprite;
+            BackgroundSprite = backgroundSprite;
+            ProgressSprite = progressSprite;
+            ThumbSprite = thumbSprite;
 
-                // Defines the content size
-                CCRect maxRect = CCControlUtils.CCRectUnion(backgroundSprite.BoundingBox, thumbSprite.BoundingBox);
-                ContentSize = new CCSize(maxRect.Size.Width, maxRect.Size.Height);
+            // Defines the content size
+            CCRect maxRect = CCControlUtils.CCRectUnion(backgroundSprite.BoundingBox, thumbSprite.BoundingBox);
+            ContentSize = new CCSize(maxRect.Size.Width, maxRect.Size.Height);
 
-                //setContentSize(CCSizeMake(backgroundSprite->getContentSize().width, thumbItem->getContentSize().height));
-                // Add the slider background
-                _backgroundSprite.AnchorPoint = new CCPoint(0.5f, 0.5f);
-                _backgroundSprite.Position = new CCPoint(ContentSize.Width / 2, ContentSize.Height / 2);
-                AddChild(_backgroundSprite);
+            //setContentSize(CCSizeMake(backgroundSprite->getContentSize().width, thumbItem->getContentSize().height));
+            // Add the slider background
+            _backgroundSprite.AnchorPoint = new CCPoint(0.5f, 0.5f);
+            _backgroundSprite.Position = new CCPoint(ContentSize.Width / 2, ContentSize.Height / 2);
+            AddChild(_backgroundSprite);
 
-                // Add the progress bar
-                _progressSprite.AnchorPoint = new CCPoint(0.0f, 0.5f);
-                _progressSprite.Position = new CCPoint(0.0f, ContentSize.Height / 2);
-                AddChild(_progressSprite);
+            // Add the progress bar
+            _progressSprite.AnchorPoint = new CCPoint(0.0f, 0.5f);
+            _progressSprite.Position = new CCPoint(0.0f, ContentSize.Height / 2);
+            AddChild(_progressSprite);
 
-                // Add the slider thumb  
-                _thumbSprite.Position = new CCPoint(0, ContentSize.Height / 2);
-                AddChild(_thumbSprite);
+            // Add the slider thumb  
+            _thumbSprite.Position = new CCPoint(0, ContentSize.Height / 2);
+            AddChild(_thumbSprite);
 
-                // Init default values
-                _minimumValue = 0.0f;
-                _maximumValue = 1.0f;
+            // Init default values
+            _minimumValue = 0.0f;
+            _maximumValue = 1.0f;
 
-                Value = _minimumValue;
-                return true;
-            }
-            return false;
+            Value = _minimumValue;
+            return true;
         }
+        return false;
+    }
 
-        /** 
+    /** 
 		* Creates slider with a background filename, a progress filename and a 
 		* thumb image filename.
 		*/
 
-        public CCControlSlider(string bgFile, string progressFile, string thumbFile)
-        {
-            // Prepare background for slider
-            CCSprite backgroundSprite = new CCSprite(bgFile);
+    public CCControlSlider(string bgFile, string progressFile, string thumbFile)
+    {
+        // Prepare background for slider
+        CCSprite backgroundSprite = new CCSprite(bgFile);
 
-            // Prepare progress for slider
-            CCSprite progressSprite = new CCSprite(progressFile);
+        // Prepare progress for slider
+        CCSprite progressSprite = new CCSprite(progressFile);
 
-            // Prepare thumb (menuItem) for slider
-            CCSprite thumbSprite = new CCSprite(thumbFile);
+        // Prepare thumb (menuItem) for slider
+        CCSprite thumbSprite = new CCSprite(thumbFile);
 
-            InitWithSprites(backgroundSprite, progressSprite, thumbSprite);
-        }
+        InitWithSprites(backgroundSprite, progressSprite, thumbSprite);
+    }
 
-        /** 
+    /** 
 		* Creates a slider with a given background sprite and a progress bar and a
 		* thumb item.
 		*
 		* @see initWithBackgroundSprite:progressSprite:thumbMenuItem:
 		*/
 
-        public CCControlSlider(CCSprite backgroundSprite, CCSprite progressSprite, CCSprite thumbSprite)
+    public CCControlSlider(CCSprite backgroundSprite, CCSprite progressSprite, CCSprite thumbSprite)
+    {
+        InitWithSprites(backgroundSprite, progressSprite, thumbSprite);
+    }
+
+    protected void SliderBegan(CCPoint location)
+    {
+        Selected = true;
+        ThumbSprite.Color = CCTypes.CCGray;
+        Value = ValueForLocation(location);
+    }
+
+    protected void SliderMoved(CCPoint location)
+    {
+        Value = ValueForLocation(location);
+    }
+
+    protected void SliderEnded(CCPoint location)
+    {
+        if (Selected)
         {
-            InitWithSprites(backgroundSprite, progressSprite, thumbSprite);
+            Value = ValueForLocation(_thumbSprite.Position);
         }
+        _thumbSprite.Color = CCTypes.CCWhite;
+        Selected = false;
+    }
 
-        protected void SliderBegan(CCPoint location)
+    protected virtual CCPoint LocationFromTouch(CCTouch touch)
+    {
+        CCPoint touchLocation = touch.Location; // Get the touch position
+        touchLocation = ConvertToNodeSpace(touchLocation); // Convert to the node space of this class
+
+        if (touchLocation.X < 0)
         {
-            Selected = true;
-            ThumbSprite.Color = CCTypes.CCGray;
-            Value = ValueForLocation(location);
+            touchLocation.X = 0;
         }
-
-        protected void SliderMoved(CCPoint location)
+        else if (touchLocation.X > _backgroundSprite.ContentSize.Width)
         {
-            Value = ValueForLocation(location);
+            touchLocation.X = _backgroundSprite.ContentSize.Width;
         }
+        return touchLocation;
+    }
 
-        protected void SliderEnded(CCPoint location)
+    public override bool IsTouchInside(CCTouch touch)
+    {
+        CCPoint touchLocation = touch.Location;
+        touchLocation = Parent.ConvertToNodeSpace(touchLocation);
+
+        CCRect rect = BoundingBox;
+        rect.Size.Width += _thumbSprite.ContentSize.Width;
+        rect.Origin.X -= _thumbSprite.ContentSize.Width / 2;
+
+        return rect.ContainsPoint(touchLocation);
+    }
+
+    public override bool TouchBegan(CCTouch touch)
+    {
+        if (!IsTouchInside(touch) || !Enabled || !Visible)
+            return false;
+
+        CCPoint location = LocationFromTouch(touch);
+        SliderBegan(location);
+        return true;
+    }
+
+    public override void TouchMoved(CCTouch pTouch)
+    {
+        CCPoint location = LocationFromTouch(pTouch);
+        SliderMoved(location);
+    }
+
+    public override void TouchEnded(CCTouch pTouch)
+    {
+        SliderEnded(CCPoint.Zero);
+    }
+
+    public override void NeedsLayout()
+    {
+        if (null == _thumbSprite || null == _backgroundSprite || null == _progressSprite)
         {
-            if (Selected)
-            {
-                Value = ValueForLocation(_thumbSprite.Position);
-            }
-            _thumbSprite.Color = CCTypes.CCWhite;
-            Selected = false;
+            return;
         }
+        // Update thumb position for new value
+        float percent = (_value - _minimumValue) / (_maximumValue - _minimumValue);
 
-        protected virtual CCPoint LocationFromTouch(CCTouch touch)
-        {
-            CCPoint touchLocation = touch.Location; // Get the touch position
-            touchLocation = ConvertToNodeSpace(touchLocation); // Convert to the node space of this class
+        CCPoint pos = _thumbSprite.Position;
+        pos.X = percent * _backgroundSprite.ContentSize.Width;
+        _thumbSprite.Position = pos;
 
-            if (touchLocation.X < 0)
-            {
-                touchLocation.X = 0;
-            }
-            else if (touchLocation.X > _backgroundSprite.ContentSize.Width)
-            {
-                touchLocation.X = _backgroundSprite.ContentSize.Width;
-            }
-            return touchLocation;
-        }
+        // Stretches content proportional to newLevel
+        CCRect textureRect = _progressSprite.TextureRect;
+        textureRect = new CCRect(textureRect.Origin.X, textureRect.Origin.Y, pos.X, textureRect.Size.Height);
+        _progressSprite.SetTextureRect(textureRect, _progressSprite.IsTextureRectRotated, textureRect.Size);
+    }
 
-        public override bool IsTouchInside(CCTouch touch)
-        {
-            CCPoint touchLocation = touch.Location;
-            touchLocation = Parent.ConvertToNodeSpace(touchLocation);
+    /** Returns the value for the given location. */
 
-            CCRect rect = BoundingBox;
-            rect.Size.Width += _thumbSprite.ContentSize.Width;
-            rect.Origin.X -= _thumbSprite.ContentSize.Width / 2;
-
-            return rect.ContainsPoint(touchLocation);
-        }
-
-        public override bool TouchBegan(CCTouch touch)
-        {
-            if (!IsTouchInside(touch) || !Enabled || !Visible)
-                return false;
-
-            CCPoint location = LocationFromTouch(touch);
-            SliderBegan(location);
-            return true;
-        }
-
-        public override void TouchMoved(CCTouch pTouch)
-        {
-            CCPoint location = LocationFromTouch(pTouch);
-            SliderMoved(location);
-        }
-
-        public override void TouchEnded(CCTouch pTouch)
-        {
-            SliderEnded(CCPoint.Zero);
-        }
-
-        public override void NeedsLayout()
-        {
-            if (null == _thumbSprite || null == _backgroundSprite || null == _progressSprite)
-            {
-                return;
-            }
-            // Update thumb position for new value
-            float percent = (_value - _minimumValue) / (_maximumValue - _minimumValue);
-
-            CCPoint pos = _thumbSprite.Position;
-            pos.X = percent * _backgroundSprite.ContentSize.Width;
-            _thumbSprite.Position = pos;
-
-            // Stretches content proportional to newLevel
-            CCRect textureRect = _progressSprite.TextureRect;
-            textureRect = new CCRect(textureRect.Origin.X, textureRect.Origin.Y, pos.X, textureRect.Size.Height);
-            _progressSprite.SetTextureRect(textureRect, _progressSprite.IsTextureRectRotated, textureRect.Size);
-        }
-
-        /** Returns the value for the given location. */
-
-        protected float ValueForLocation(CCPoint location)
-        {
-            float percent = location.X / _backgroundSprite.ContentSize.Width;
-            return Math.Max(Math.Min(_minimumValue + percent * (_maximumValue - _minimumValue), _maximumAllowedValue), _minimumAllowedValue);
-        }
-    };
-}
+    protected float ValueForLocation(CCPoint location)
+    {
+        float percent = location.X / _backgroundSprite.ContentSize.Width;
+        return Math.Max(Math.Min(_minimumValue + percent * (_maximumValue - _minimumValue), _maximumAllowedValue), _minimumAllowedValue);
+    }
+};

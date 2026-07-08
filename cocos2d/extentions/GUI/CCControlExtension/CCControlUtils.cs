@@ -31,8 +31,8 @@
 
 using System;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	internal struct RGBA
 	{
 		public float r;       // percent
@@ -54,7 +54,7 @@ namespace Cocos2D
 		public static CCSprite AddSpriteToTargetWithPosAndAnchor(string spriteName, CCNode target, CCPoint pos, CCPoint anchor)
 		{
 			var sprite = new CCSprite(spriteName);
-    
+
 			if (sprite == null)
 				return null;
 
@@ -69,13 +69,13 @@ namespace Cocos2D
 		{
 			HSV o;
 			float min, max, delta;
-    
+
 			min = value.r < value.g ? value.r : value.g;
 			min = min  < value.b ? min  : value.b;
-    
+
 			max = value.r > value.g ? value.r : value.g;
 			max = max  > value.b ? max  : value.b;
-    
+
 			o.v = max;											// v
 			delta = max - min;
 			if( max > 0.0f )
@@ -98,12 +98,12 @@ namespace Cocos2D
 				else
 					o.h = 4.0f + ( value.r - value.g ) / delta;  // between magenta & cyan
 			}
-    
+
 			o.h *= 60.0f;										// degrees
-    
+
 			if( o.h < 0.0f )
 				o.h += 360.0f;
-    
+
 			return o;
 		}
 
@@ -113,7 +113,7 @@ namespace Cocos2D
 			long i;
 			RGBA o;
 			o.a = 1f;
-    
+
 			if (value.s <= 0.0f) // < is bogus, just shuts up warnings
 			{       
 				if (double.IsNaN(value.h)) // value.h == NAN
@@ -123,14 +123,14 @@ namespace Cocos2D
 					o.b = value.v;
 					return o;
 				}
-        
+    
 				// error - should never happen
 				o.r = 0.0f;
 				o.g = 0.0f;
 				o.b = 0.0f;
 				return o;
 			}
-    
+
 			hh = value.h;
 			if(hh >= 360.0f) hh = 0.0f;
 			hh /= 60.0f;
@@ -139,7 +139,7 @@ namespace Cocos2D
 			p = value.v * (1.0f - value.s);
 			q = value.v * (1.0f - (value.s * ff));
 			t = value.v * (1.0f - (value.s * (1.0f - ff)));
-    
+
 			switch(i)
 			{
 				case 0:
@@ -157,7 +157,7 @@ namespace Cocos2D
 					o.g = value.v;
 					o.b = t;
 					break;
-            
+        
 				case 3:
 					o.r = p;
 					o.g = q;
@@ -181,15 +181,14 @@ namespace Cocos2D
 		public static CCRect CCRectUnion(CCRect src1, CCRect src2)
 		{
 			CCRect result;
-    
+
 			float x1 = Math.Min(src1.MinX, src2.MinX);
 			float y1 = Math.Min(src1.MinY, src2.MinY);
 			float x2 = Math.Max(src1.MaxX, src2.MaxX);
 			float y2 = Math.Max(src1.MaxY, src2.MaxY);
-    
+
 			result.Origin = new CCPoint(x1,x2);
 			result.Size = new CCSize(x2-x1, y2-y1);
 			return result;
 		}
 	}
-}

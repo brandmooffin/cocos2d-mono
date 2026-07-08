@@ -28,37 +28,37 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public class PlistArray : PlistObject<List<PlistObjectBase>>, IEnumerable<PlistObjectBase>
 	{
 		public PlistArray () : base(new List<PlistObjectBase> ())
 		{
 		}
 
-        public PlistArray(int capacity)
-            : base(new List<PlistObjectBase>(capacity))
-        {
-        }
-        
-        public PlistArray(List<PlistObjectBase> value)
-            : base(value)
+    public PlistArray(int capacity)
+        : base(new List<PlistObjectBase>(capacity))
+    {
+    }
+    
+    public PlistArray(List<PlistObjectBase> value)
+        : base(value)
 		{
 		}
 
-        public PlistArray(IEnumerable value)
-            : this()
+    public PlistArray(IEnumerable value)
+        : this()
+    {
+        foreach (object item in value)
         {
-            foreach (object item in value)
-            {
-                Add(ObjectToPlistObject(item));
-            }
+            Add(ObjectToPlistObject(item));
         }
+    }
 
 	    public PlistObjectBase this[int index]
 	    {
-            get { return Value[index]; }
-            set { Value[index] = value; }
+        get { return Value[index]; }
+        set { Value[index] = value; }
 	    }
 
 	    public override void Write (System.Xml.XmlWriter writer)
@@ -96,7 +96,7 @@ namespace Cocos2D
 
 	    public override bool AsBool
 	    {
-            get { throw new NotImplementedException(); }
+        get { throw new NotImplementedException(); }
 	    }
 
 	    public override PlistArray AsArray
@@ -150,4 +150,3 @@ namespace Cocos2D
 
 
 	}
-}

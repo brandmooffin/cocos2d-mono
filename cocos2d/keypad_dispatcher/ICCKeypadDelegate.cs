@@ -1,39 +1,38 @@
-namespace Cocos2D
-{
-    public interface ICCKeypadDelegate
-    {
-        // The back key clicked
-        void KeyBackClicked();
+namespace Cocos2D;
 
-        // The menu key clicked. only available on wophone & android
-        void KeyMenuClicked();
+public interface ICCKeypadDelegate
+{
+    // The back key clicked
+    void KeyBackClicked();
+
+    // The menu key clicked. only available on wophone & android
+    void KeyMenuClicked();
+}
+
+public class CCKeypadHandler 
+{
+    protected ICCKeypadDelegate m_pDelegate;
+
+    public ICCKeypadDelegate Delegate
+    {
+        get { return m_pDelegate; }
+        set { m_pDelegate = value; }
     }
 
-    public class CCKeypadHandler 
+    /** initializes a CCKeypadHandler with a delegate */
+
+    public virtual bool InitWithDelegate(ICCKeypadDelegate pDelegate)
     {
-        protected ICCKeypadDelegate m_pDelegate;
+        m_pDelegate = pDelegate;
+        return true;
+    }
 
-        public ICCKeypadDelegate Delegate
-        {
-            get { return m_pDelegate; }
-            set { m_pDelegate = value; }
-        }
+    /** allocates a CCKeypadHandler with a delegate */
 
-        /** initializes a CCKeypadHandler with a delegate */
-
-        public virtual bool InitWithDelegate(ICCKeypadDelegate pDelegate)
-        {
-            m_pDelegate = pDelegate;
-            return true;
-        }
-
-        /** allocates a CCKeypadHandler with a delegate */
-
-        public static CCKeypadHandler HandlerWithDelegate(ICCKeypadDelegate pDelegate)
-        {
-            var pHandler = new CCKeypadHandler();
-            pHandler.InitWithDelegate(pDelegate);
-            return pHandler;
-        }
+    public static CCKeypadHandler HandlerWithDelegate(ICCKeypadDelegate pDelegate)
+    {
+        var pHandler = new CCKeypadHandler();
+        pHandler.InitWithDelegate(pDelegate);
+        return pHandler;
     }
 }

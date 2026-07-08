@@ -33,86 +33,85 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Poly2Tri.Triangulation.Util
+namespace Poly2Tri.Triangulation.Util;
+
+public struct FixedArray3<T> : IEnumerable<T> where T : class
 {
-    public struct FixedArray3<T> : IEnumerable<T> where T : class
+    public T _0, _1, _2;
+
+    public T this[int index]
     {
-        public T _0, _1, _2;
-
-        public T this[int index]
+        get
         {
-            get
+            switch (index)
             {
-                switch (index)
-                {
-                    case 0:
-                        return _0;
-                    case 1:
-                        return _1;
-                    case 2:
-                        return _2;
-                    default:
-                        throw new IndexOutOfRangeException();
-                }
-            }
-            set
-            {
-                switch (index)
-                {
-                    case 0:
-                        _0 = value;
-                        break;
-                    case 1:
-                        _1 = value;
-                        break;
-                    case 2:
-                        _2 = value;
-                        break;
-                    default:
-                        throw new IndexOutOfRangeException();
-                }
+                case 0:
+                    return _0;
+                case 1:
+                    return _1;
+                case 2:
+                    return _2;
+                default:
+                    throw new IndexOutOfRangeException();
             }
         }
-
-        #region IEnumerable<T> Members
-
-        public IEnumerator<T> GetEnumerator()
+        set
         {
-            return Enumerate().GetEnumerator();
+            switch (index)
+            {
+                case 0:
+                    _0 = value;
+                    break;
+                case 1:
+                    _1 = value;
+                    break;
+                case 2:
+                    _2 = value;
+                    break;
+                default:
+                    throw new IndexOutOfRangeException();
+            }
         }
+    }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    #region IEnumerable<T> Members
 
-        #endregion
+    public IEnumerator<T> GetEnumerator()
+    {
+        return Enumerate().GetEnumerator();
+    }
 
-        public bool Contains(T value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) return true;
-            return false;
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 
-        public int IndexOf(T value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) return i;
-            return -1;
-        }
+    #endregion
 
-        public void Clear()
-        {
-            _0 = _1 = _2 = null;
-        }
+    public bool Contains(T value)
+    {
+        for (int i = 0; i < 3; ++i) if (this[i] == value) return true;
+        return false;
+    }
 
-        public void Clear(T value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) this[i] = null;
-        }
+    public int IndexOf(T value)
+    {
+        for (int i = 0; i < 3; ++i) if (this[i] == value) return i;
+        return -1;
+    }
 
-        private IEnumerable<T> Enumerate()
-        {
-            for (int i = 0; i < 3; ++i) yield return this[i];
-        }
+    public void Clear()
+    {
+        _0 = _1 = _2 = null;
+    }
+
+    public void Clear(T value)
+    {
+        for (int i = 0; i < 3; ++i) if (this[i] == value) this[i] = null;
+    }
+
+    private IEnumerable<T> Enumerate()
+    {
+        for (int i = 0; i < 3; ++i) yield return this[i];
     }
 }

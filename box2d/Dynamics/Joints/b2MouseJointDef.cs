@@ -4,32 +4,31 @@ using System.Linq;
 using System.Text;
 using Box2D.Common;
 
-namespace Box2D.Dynamics.Joints
+namespace Box2D.Dynamics.Joints;
+
+public class b2MouseJointDef : b2JointDef
 {
-    public class b2MouseJointDef : b2JointDef
+    public b2MouseJointDef()
     {
-        public b2MouseJointDef()
-        {
-            JointType = b2JointType.e_mouseJoint;
-            target.Set(0.0f, 0.0f);
-            maxForce = 0.0f;
-            frequencyHz = 5.0f;
-            dampingRatio = 0.7f;
-        }
-
-        /// The initial world target point. This is assumed
-        /// to coincide with the body anchor initially.
-        public b2Vec2 target;
-
-        /// The maximum constraint force that can be exerted
-        /// to move the candidate body. Usually you will express
-        /// as some multiple of the weight (multiplier * mass * gravity).
-        public float maxForce;
-
-        /// The response speed.
-        public float frequencyHz;
-
-        /// The damping ratio. 0 = no damping, 1 = critical damping.
-        public float dampingRatio;
+        JointType = b2JointType.e_mouseJoint;
+        target.Set(0.0f, 0.0f);
+        maxForce = 0.0f;
+        frequencyHz = 5.0f;
+        dampingRatio = 0.7f;
     }
+
+    /// The initial world target point. This is assumed
+    /// to coincide with the body anchor initially.
+    public b2Vec2 target;
+
+    /// The maximum constraint force that can be exerted
+    /// to move the candidate body. Usually you will express
+    /// as some multiple of the weight (multiplier * mass * gravity).
+    public float maxForce;
+
+    /// The response speed.
+    public float frequencyHz;
+
+    /// The damping ratio. 0 = no damping, 1 = critical damping.
+    public float dampingRatio;
 }

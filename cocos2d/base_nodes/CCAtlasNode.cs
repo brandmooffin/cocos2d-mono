@@ -1,41 +1,41 @@
 
 using System.Diagnostics;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCAtlasNode : CCNode, ICCTextureProtocol
 {
-    public class CCAtlasNode : CCNode, ICCTextureProtocol
+    protected bool m_bIsOpacityModifyRGB;
+
+    protected CCTextureAtlas m_pTextureAtlas;
+    protected CCBlendFunc m_tBlendFunc;
+
+    protected CCColor3B m_tColorUnmodified;
+    protected int m_uItemHeight;
+    protected int m_uItemWidth;
+    protected int m_uItemsPerColumn;
+    protected int m_uItemsPerRow;
+
+    // color uniform
+    protected int m_nUniformColor;
+
+    // quads to draw
+    protected int m_uQuadsToDraw;
+
+    // This varible is only used for CCLabelAtlas FPS display. So plz don't modify its value.
+    protected bool m_bIgnoreContentScaleFactor;
+
+    public CCTextureAtlas TextureAtlas
     {
-        protected bool m_bIsOpacityModifyRGB;
+        get { return m_pTextureAtlas; }
+        set { m_pTextureAtlas = value; }
+    }
 
-        protected CCTextureAtlas m_pTextureAtlas;
-        protected CCBlendFunc m_tBlendFunc;
-
-        protected CCColor3B m_tColorUnmodified;
-        protected int m_uItemHeight;
-        protected int m_uItemWidth;
-        protected int m_uItemsPerColumn;
-        protected int m_uItemsPerRow;
-
-        // color uniform
-        protected int m_nUniformColor;
-
-        // quads to draw
-        protected int m_uQuadsToDraw;
-
-        // This varible is only used for CCLabelAtlas FPS display. So plz don't modify its value.
-        protected bool m_bIgnoreContentScaleFactor;
-
-        public CCTextureAtlas TextureAtlas
-        {
-            get { return m_pTextureAtlas; }
-            set { m_pTextureAtlas = value; }
-        }
-
-        public int QuadsToDraw
-        {
-            get { return m_uQuadsToDraw; }
-            set { m_uQuadsToDraw = value; }
-        }
+    public int QuadsToDraw
+    {
+        get { return m_uQuadsToDraw; }
+        set { m_uQuadsToDraw = value; }
+    }
 
 		public bool IsAntialiased
 		{
@@ -44,172 +44,171 @@ namespace Cocos2D
 			set { Texture.IsAntialiased = value; }
 		}
 
-        #region ICCRGBAProtocol Members
+    #region ICCRGBAProtocol Members
 
-        public override bool IsOpacityModifyRGB
+    public override bool IsOpacityModifyRGB
+    {
+        get { return m_bIsOpacityModifyRGB; }
+        set
         {
-            get { return m_bIsOpacityModifyRGB; }
-            set
-            {
-                CCColor3B oldColor = Color;
-                m_bIsOpacityModifyRGB = value;
-                Color = oldColor;
-            }
+            CCColor3B oldColor = Color;
+            m_bIsOpacityModifyRGB = value;
+            Color = oldColor;
         }
+    }
 
-        public override byte Opacity
+    public override byte Opacity
+    {
+        get { return base.Opacity; }
+        set
         {
-            get { return base.Opacity; }
-            set
-            {
-                base.Opacity = value;
+            base.Opacity = value;
 
-                // special opacity for premultiplied textures
-                if (m_bIsOpacityModifyRGB)
-                {
-                    Color = m_tColorUnmodified;
-                }
-                else
-                {
-                    UpdateAtlasValues();
-                }
+            // special opacity for premultiplied textures
+            if (m_bIsOpacityModifyRGB)
+            {
+                Color = m_tColorUnmodified;
             }
-        }
-
-        public override CCColor3B Color
-        {
-            get
+            else
             {
-                if (m_bIsOpacityModifyRGB)
-                {
-                    return m_tColorUnmodified;
-                }
-                return base.Color;
-            }
-            set
-            {
-                var tmp = value;
-                m_tColorUnmodified = value;
-
-                if (m_bIsOpacityModifyRGB)
-                {
-                    tmp.R = (byte) (value.R * _displayedOpacity / 255);
-                    tmp.G = (byte) (value.G * _displayedOpacity / 255);
-                    tmp.B = (byte) (value.B * _displayedOpacity / 255);
-                }
-                base.Color = tmp;
                 UpdateAtlasValues();
             }
         }
+    }
 
-        private void UpdateOpacityModifyRgb()
+    public override CCColor3B Color
+    {
+        get
         {
-            m_bIsOpacityModifyRGB = m_pTextureAtlas.Texture.HasPremultipliedAlpha;
-        }
-
-        #endregion
-
-        #region ICCTextureProtocol Members
-
-        public CCBlendFunc BlendFunc
-        {
-            get { return m_tBlendFunc; }
-            set { m_tBlendFunc = value; }
-        }
-
-        public virtual CCTexture2D Texture
-        {
-            get { return m_pTextureAtlas.Texture; }
-            set
+            if (m_bIsOpacityModifyRGB)
             {
-                m_pTextureAtlas.Texture = value;
-                UpdateBlendFunc();
-                UpdateOpacityModifyRgb();
+                return m_tColorUnmodified;
             }
+            return base.Color;
         }
-
-        private void UpdateBlendFunc()
+        set
         {
-            if (!m_pTextureAtlas.Texture.HasPremultipliedAlpha)
+            var tmp = value;
+            m_tColorUnmodified = value;
+
+            if (m_bIsOpacityModifyRGB)
             {
-                m_tBlendFunc = CCBlendFunc.NonPremultiplied;
+                tmp.R = (byte) (value.R * _displayedOpacity / 255);
+                tmp.G = (byte) (value.G * _displayedOpacity / 255);
+                tmp.B = (byte) (value.B * _displayedOpacity / 255);
             }
+            base.Color = tmp;
+            UpdateAtlasValues();
         }
+    }
 
-        #endregion
+    private void UpdateOpacityModifyRgb()
+    {
+        m_bIsOpacityModifyRGB = m_pTextureAtlas.Texture.HasPremultipliedAlpha;
+    }
 
-        internal CCAtlasNode()
+    #endregion
+
+    #region ICCTextureProtocol Members
+
+    public CCBlendFunc BlendFunc
+    {
+        get { return m_tBlendFunc; }
+        set { m_tBlendFunc = value; }
+    }
+
+    public virtual CCTexture2D Texture
+    {
+        get { return m_pTextureAtlas.Texture; }
+        set
         {
-        }
-
-        public CCAtlasNode(string tile, int tileWidth, int tileHeight, int itemsToRender)
-        {
-            InitWithTileFile(tile, tileWidth, tileHeight, itemsToRender);
-        }
-
-        public CCAtlasNode(CCTexture2D texture, int tileWidth, int tileHeight, int itemsToRender)
-        {
-            InitWithTexture(texture, tileWidth, tileHeight, itemsToRender);
-        }
-
-        public bool InitWithTileFile(string tile, int tileWidth, int tileHeight, int itemsToRender)
-        {
-            Debug.Assert(tile != null, "title should not be null");
-            var texture = CCTextureCache.SharedTextureCache.AddImage(tile);
-            return InitWithTexture(texture, tileWidth, tileHeight, itemsToRender);
-        }
-
-        public bool InitWithTexture(CCTexture2D texture, int tileWidth, int tileHeight, int itemsToRender)
-        {
-            m_uItemWidth = tileWidth;
-            m_uItemHeight = tileHeight;
-
-            m_tColorUnmodified = CCTypes.CCWhite;
-            m_bIsOpacityModifyRGB = true;
-
-            m_tBlendFunc = CCBlendFunc.AlphaBlend; 
-
-            m_pTextureAtlas = new CCTextureAtlas();
-            m_pTextureAtlas.InitWithTexture(texture, itemsToRender);
-
+            m_pTextureAtlas.Texture = value;
             UpdateBlendFunc();
             UpdateOpacityModifyRgb();
-
-            CalculateMaxItems();
-
-            m_uQuadsToDraw = itemsToRender;
-
-            return true;
         }
+    }
 
-        private void CalculateMaxItems()
+    private void UpdateBlendFunc()
+    {
+        if (!m_pTextureAtlas.Texture.HasPremultipliedAlpha)
         {
-            CCSize s = m_pTextureAtlas.Texture.ContentSize;
-
-            if (m_bIgnoreContentScaleFactor)
-            {
-                s = m_pTextureAtlas.Texture.ContentSizeInPixels;
-            }
-
-            m_uItemsPerColumn = (int) (s.Height / m_uItemHeight);
-            m_uItemsPerRow = (int) (s.Width / m_uItemWidth);
+            m_tBlendFunc = CCBlendFunc.NonPremultiplied;
         }
+    }
 
-        public virtual void UpdateAtlasValues()
+    #endregion
+
+    internal CCAtlasNode()
+    {
+    }
+
+    public CCAtlasNode(string tile, int tileWidth, int tileHeight, int itemsToRender)
+    {
+        InitWithTileFile(tile, tileWidth, tileHeight, itemsToRender);
+    }
+
+    public CCAtlasNode(CCTexture2D texture, int tileWidth, int tileHeight, int itemsToRender)
+    {
+        InitWithTexture(texture, tileWidth, tileHeight, itemsToRender);
+    }
+
+    public bool InitWithTileFile(string tile, int tileWidth, int tileHeight, int itemsToRender)
+    {
+        Debug.Assert(tile != null, "title should not be null");
+        var texture = CCTextureCache.SharedTextureCache.AddImage(tile);
+        return InitWithTexture(texture, tileWidth, tileHeight, itemsToRender);
+    }
+
+    public bool InitWithTexture(CCTexture2D texture, int tileWidth, int tileHeight, int itemsToRender)
+    {
+        m_uItemWidth = tileWidth;
+        m_uItemHeight = tileHeight;
+
+        m_tColorUnmodified = CCTypes.CCWhite;
+        m_bIsOpacityModifyRGB = true;
+
+        m_tBlendFunc = CCBlendFunc.AlphaBlend; 
+
+        m_pTextureAtlas = new CCTextureAtlas();
+        m_pTextureAtlas.InitWithTexture(texture, itemsToRender);
+
+        UpdateBlendFunc();
+        UpdateOpacityModifyRgb();
+
+        CalculateMaxItems();
+
+        m_uQuadsToDraw = itemsToRender;
+
+        return true;
+    }
+
+    private void CalculateMaxItems()
+    {
+        CCSize s = m_pTextureAtlas.Texture.ContentSize;
+
+        if (m_bIgnoreContentScaleFactor)
         {
-            Debug.Assert(false, "CCAtlasNode:Abstract updateAtlasValue not overridden");
+            s = m_pTextureAtlas.Texture.ContentSizeInPixels;
         }
 
-        public override void Draw()
-        {
-            CCDrawManager.BlendFunc(m_tBlendFunc);
+        m_uItemsPerColumn = (int) (s.Height / m_uItemHeight);
+        m_uItemsPerRow = (int) (s.Width / m_uItemWidth);
+    }
 
-            m_pTextureAtlas.DrawNumberOfQuads(m_uQuadsToDraw, 0);
-        }
+    public virtual void UpdateAtlasValues()
+    {
+        Debug.Assert(false, "CCAtlasNode:Abstract updateAtlasValue not overridden");
+    }
 
-        public void SetIgnoreContentScaleFactor(bool bIgnoreContentScaleFactor)
-        {
-            m_bIgnoreContentScaleFactor = bIgnoreContentScaleFactor;
-        }
+    public override void Draw()
+    {
+        CCDrawManager.BlendFunc(m_tBlendFunc);
+
+        m_pTextureAtlas.DrawNumberOfQuads(m_uQuadsToDraw, 0);
+    }
+
+    public void SetIgnoreContentScaleFactor(bool bIgnoreContentScaleFactor)
+    {
+        m_bIgnoreContentScaleFactor = bIgnoreContentScaleFactor;
     }
 }

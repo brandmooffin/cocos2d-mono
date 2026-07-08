@@ -1,7 +1,7 @@
 using System;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	/**
 	 * Abstract class for SWTableView cell node
 	 */
@@ -11,11 +11,11 @@ namespace Cocos2D
 		/**
 		 * The index used internally by SWTableView and its subclasses
 		 */
-        public int Index 
-        {
-            get { return _idx; }
-            set { _idx = value; }
-        }
+    public int Index 
+    {
+        get { return _idx; }
+        set { _idx = value; }
+    }
 
 		/**
 		 * Cleans up any resources linked to this cell and resets <code>idx</code> property.
@@ -33,4 +33,3 @@ namespace Cocos2D
 
 	    private int _idx;
 	}
-}

@@ -26,8 +26,8 @@
 
 using System;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public class PlistString : PlistObject<string>
 	{
 		public PlistString(string value) : base(value)
@@ -48,10 +48,10 @@ namespace Cocos2D
 	    {
 	        get
 	        {
-                int result = 0;
-                int.TryParse(Value, out result);
-                return result;
-            }
+            int result = 0;
+            int.TryParse(Value, out result);
+            return result;
+        }
 	    }
 
 	    public override float AsFloat
@@ -89,4 +89,3 @@ namespace Cocos2D
 	        get { throw new NotImplementedException(); }
 	    }
 	}
-}

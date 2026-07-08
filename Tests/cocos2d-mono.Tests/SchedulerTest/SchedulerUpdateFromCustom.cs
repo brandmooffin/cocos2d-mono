@@ -4,42 +4,41 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class SchedulerUpdateFromCustom : SchedulerTestLayer
 {
-    public class SchedulerUpdateFromCustom : SchedulerTestLayer
+    public override void OnEnter()
     {
-        public override void OnEnter()
-        {
-            base.OnEnter();
-            Schedule(schedUpdate, 2.0f);
-        }
+        base.OnEnter();
+        Schedule(schedUpdate, 2.0f);
+    }
 
-        public override string title()
-        {
-            return "Schedule Update in 2 sec";
-        }
+    public override string title()
+    {
+        return "Schedule Update in 2 sec";
+    }
 
-        public override string subtitle()
-        {
-            return "Update schedules in 2 secs. Stops 2 sec later. See console";
-        }
+    public override string subtitle()
+    {
+        return "Update schedules in 2 secs. Stops 2 sec later. See console";
+    }
 
-        public void update(float dt)
-        {
-            CCLog.Log("update called:{0}", dt);
-        }
+    public void update(float dt)
+    {
+        CCLog.Log("update called:{0}", dt);
+    }
 
-        public void schedUpdate(float dt)
-        {
-            Unschedule(schedUpdate);
-            base.ScheduleUpdate();
-            Schedule(stopUpdate, 2.0f);
-        }
+    public void schedUpdate(float dt)
+    {
+        Unschedule(schedUpdate);
+        base.ScheduleUpdate();
+        Schedule(stopUpdate, 2.0f);
+    }
 
-        public void stopUpdate(float dt)
-        {
-            UnscheduleUpdate();
-            Unschedule(stopUpdate);
-        }
+    public void stopUpdate(float dt)
+    {
+        UnscheduleUpdate();
+        Unschedule(stopUpdate);
     }
 }

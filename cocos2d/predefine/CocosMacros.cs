@@ -23,116 +23,115 @@ THE SOFTWARE.
 
 using System;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public static class CCMacros
 {
-    public static class CCMacros
+    /// <summary>
+    /// simple macro that swaps 2 variables
+    /// </summary>
+    public static void CCSwap<T>(ref T x, ref T y)
     {
-        /// <summary>
-        /// simple macro that swaps 2 variables
-        /// </summary>
-        public static void CCSwap<T>(ref T x, ref T y)
-        {
-            T temp = x;
-            x = y;
-            y = temp;
-        }
+        T temp = x;
+        x = y;
+        y = temp;
+    }
 
-        private static readonly System.Random rand = new System.Random();
+    private static readonly System.Random rand = new System.Random();
 
-        /// <summary>
-        /// returns a random float between -1 and 1
-        /// </summary>
-        public static float CCRandomBetweenNegative1And1()
-        {
-            return (2.0f * ((float) rand.Next() / int.MaxValue)) - 1.0f;
-        }
+    /// <summary>
+    /// returns a random float between -1 and 1
+    /// </summary>
+    public static float CCRandomBetweenNegative1And1()
+    {
+        return (2.0f * ((float) rand.Next() / int.MaxValue)) - 1.0f;
+    }
 
-        /** @def CCRANDOM_0_1
-            returns a random float between 0 and 1
-         */
+    /** @def CCRANDOM_0_1
+        returns a random float between 0 and 1
+     */
 
-        public static float CCRandomBetween0And1()
-        {
-            return (float) rand.Next() / int.MaxValue;
-        }
+    public static float CCRandomBetween0And1()
+    {
+        return (float) rand.Next() / int.MaxValue;
+    }
 
-        /** @def CC_DEGREES_TO_RADIANS
-            converts degrees to radians
-        */
+    /** @def CC_DEGREES_TO_RADIANS
+        converts degrees to radians
+    */
 
-        public static float CCDegreesToRadians(float angle)
-        {
-            return angle * 0.01745329252f; // PI / 180
-        }
+    public static float CCDegreesToRadians(float angle)
+    {
+        return angle * 0.01745329252f; // PI / 180
+    }
 
-        /** @def CC_RADIANS_TO_DEGREES
-            converts radians to degrees
-        */
+    /** @def CC_RADIANS_TO_DEGREES
+        converts radians to degrees
+    */
 
-        public static float CCRadiansToDegrees(float angle)
-        {
-            return angle * 57.29577951f; // PI * 180
-        }
+    public static float CCRadiansToDegrees(float angle)
+    {
+        return angle * 57.29577951f; // PI * 180
+    }
 
-        // On Arm float.Epsilon is too small and evalutates to 0
-        // http://msdn.microsoft.com/en-us/library/system.single.epsilon(v=vs.110).aspx
-        public static readonly float FLT_EPSILON = 1.175494351E-38f;
+    // On Arm float.Epsilon is too small and evalutates to 0
+    // http://msdn.microsoft.com/en-us/library/system.single.epsilon(v=vs.110).aspx
+    public static readonly float FLT_EPSILON = 1.175494351E-38f;
 
-        public static float CCContentScaleFactor()
-        {
-            return CCDirector.SharedDirector.ContentScaleFactor;
-        }
+    public static float CCContentScaleFactor()
+    {
+        return CCDirector.SharedDirector.ContentScaleFactor;
+    }
 
-        public static CCRect PixelsToPoints(this CCRect r)
-        {
-            var cs = CCDirector.SharedDirector.ContentScaleFactor;
-            return new CCRect(r.Origin.X / cs, r.Origin.Y / cs, r.Size.Width / cs, r.Size.Height / cs);
-        }
+    public static CCRect PixelsToPoints(this CCRect r)
+    {
+        var cs = CCDirector.SharedDirector.ContentScaleFactor;
+        return new CCRect(r.Origin.X / cs, r.Origin.Y / cs, r.Size.Width / cs, r.Size.Height / cs);
+    }
 
-        public static CCRect PointsToPixels(this CCRect r)
-        {
-            var cs = CCDirector.SharedDirector.ContentScaleFactor;
-            return new CCRect(r.Origin.X * cs, r.Origin.Y * cs, r.Size.Width * cs, r.Size.Height * cs);
-        }
+    public static CCRect PointsToPixels(this CCRect r)
+    {
+        var cs = CCDirector.SharedDirector.ContentScaleFactor;
+        return new CCRect(r.Origin.X * cs, r.Origin.Y * cs, r.Size.Width * cs, r.Size.Height * cs);
+    }
 
-        public static CCSize PixelsToPoints(this CCSize s)
-        {
-            var cs = CCDirector.SharedDirector.ContentScaleFactor;
-            return new CCSize(s.Width / cs, s.Height / cs);
-        }
+    public static CCSize PixelsToPoints(this CCSize s)
+    {
+        var cs = CCDirector.SharedDirector.ContentScaleFactor;
+        return new CCSize(s.Width / cs, s.Height / cs);
+    }
 
-        public static CCSize PointsToPixels(this CCSize s)
-        {
-            var cs = CCDirector.SharedDirector.ContentScaleFactor;
-            return new CCSize(s.Width * cs, s.Height * cs);
-        }
+    public static CCSize PointsToPixels(this CCSize s)
+    {
+        var cs = CCDirector.SharedDirector.ContentScaleFactor;
+        return new CCSize(s.Width * cs, s.Height * cs);
+    }
 
-        public static CCPoint PixelsToPoints(this CCPoint p)
-        {
-            var cs = CCDirector.SharedDirector.ContentScaleFactor;
-            return new CCPoint(p.X / cs, p.Y / cs);
-        }
+    public static CCPoint PixelsToPoints(this CCPoint p)
+    {
+        var cs = CCDirector.SharedDirector.ContentScaleFactor;
+        return new CCPoint(p.X / cs, p.Y / cs);
+    }
 
-        public static CCPoint PointsToPixels(this CCPoint p)
-        {
-            var cs = CCDirector.SharedDirector.ContentScaleFactor;
-            return new CCPoint(p.X * cs, p.Y * cs);
-        }
+    public static CCPoint PointsToPixels(this CCPoint p)
+    {
+        var cs = CCDirector.SharedDirector.ContentScaleFactor;
+        return new CCPoint(p.X * cs, p.Y * cs);
+    }
 
-        /*
-         * Macros defined in ccConfig.h
-         */
-        public static readonly string CCHiResDisplayFilenameSuffix = "-hd";
-        public static readonly float CCDirectorStatsUpdateIntervalInSeconds = 0.5f;
+    /*
+     * Macros defined in ccConfig.h
+     */
+    public static readonly string CCHiResDisplayFilenameSuffix = "-hd";
+    public static readonly float CCDirectorStatsUpdateIntervalInSeconds = 0.5f;
 
-        /*
-         * Macros defined in CCSprite.h
-         */
-        public static readonly int CCSpriteIndexNotInitialized = 320000000; // 0xffffffff; // CCSprite invalid index on the CCSpriteBatchode
+    /*
+     * Macros defined in CCSprite.h
+     */
+    public static readonly int CCSpriteIndexNotInitialized = 320000000; // 0xffffffff; // CCSprite invalid index on the CCSpriteBatchode
 
-        internal static CCVector2 ToCCVector2(this Microsoft.Xna.Framework.Vector2 point)
-        {
-            return new CCVector2(point.X, point.Y);
-        }
+    internal static CCVector2 ToCCVector2(this Microsoft.Xna.Framework.Vector2 point)
+    {
+        return new CCVector2(point.X, point.Y);
     }
 }

@@ -30,45 +30,44 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class PyramidTest : Test
 {
-    public class PyramidTest : Test
+    private const int Count = 20;
+
+    private PyramidTest()
     {
-        private const int Count = 20;
+        //Create ground
+        BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-        private PyramidTest()
+        Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
+        PolygonShape shape = new PolygonShape(box, 5);
+
+        Vector2 x = new Vector2(-7.0f, 0.75f);
+        Vector2 deltaX = new Vector2(0.5625f, 1.25f);
+        Vector2 deltaY = new Vector2(1.125f, 0.0f);
+
+        for (int i = 0; i < Count; ++i)
         {
-            //Create ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Vector2 y = x;
 
-            Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
-            PolygonShape shape = new PolygonShape(box, 5);
-
-            Vector2 x = new Vector2(-7.0f, 0.75f);
-            Vector2 deltaX = new Vector2(0.5625f, 1.25f);
-            Vector2 deltaY = new Vector2(1.125f, 0.0f);
-
-            for (int i = 0; i < Count; ++i)
+            for (int j = i; j < Count; ++j)
             {
-                Vector2 y = x;
+                Body body = BodyFactory.CreateBody(World);
+                body.BodyType = BodyType.Dynamic;
+                body.Position = y;
+                body.CreateFixture(shape);
 
-                for (int j = i; j < Count; ++j)
-                {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = y;
-                    body.CreateFixture(shape);
-
-                    y += deltaY;
-                }
-
-                x += deltaX;
+                y += deltaY;
             }
-        }
 
-        public static Test Create()
-        {
-            return new PyramidTest();
+            x += deltaX;
         }
+    }
+
+    public static Test Create()
+    {
+        return new PyramidTest();
     }
 }

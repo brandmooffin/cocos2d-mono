@@ -23,111 +23,110 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
+namespace Cocos2D;
+
+/// <summary>
+/// @brief A transition which peels back the bottom right hand corner of a scene
+/// to transition to the scene beneath it simulating a page turn.
+///    This uses a 3DAction so it's strongly recommended that depth buffering
+/// is turned on in CCDirector using:
+/// CCDirector::sharedDirector()->setDepthBufferFormat(kDepthBuffer16);
+/// @since v0.8.2
+/// </summary>
+public class CCTransitionPageTurn : CCTransitionScene
 {
+    protected bool m_bBack;
+
+    public CCTransitionPageTurn() { }
+    
     /// <summary>
-    /// @brief A transition which peels back the bottom right hand corner of a scene
-    /// to transition to the scene beneath it simulating a page turn.
-    ///    This uses a 3DAction so it's strongly recommended that depth buffering
-    /// is turned on in CCDirector using:
-    /// CCDirector::sharedDirector()->setDepthBufferFormat(kDepthBuffer16);
-    /// @since v0.8.2
+    /// Creates a base transition with duration and incoming scene.
+    /// If back is true then the effect is reversed to appear as if the incoming 
+    /// scene is being turned from left over the outgoing scene.
     /// </summary>
-    public class CCTransitionPageTurn : CCTransitionScene
+    public CCTransitionPageTurn (float t, CCScene scene, bool backwards)
     {
-        protected bool m_bBack;
+        // We can not call base here because m_bBack needs to be set first
+        InitWithDuration(t, scene, backwards);
+    }
 
-        public CCTransitionPageTurn() { }
-        
-        /// <summary>
-        /// Creates a base transition with duration and incoming scene.
-        /// If back is true then the effect is reversed to appear as if the incoming 
-        /// scene is being turned from left over the outgoing scene.
-        /// </summary>
-        public CCTransitionPageTurn (float t, CCScene scene, bool backwards)
+    /// <summary>
+    /// Creates a base transition with duration and incoming scene.
+    /// If back is true then the effect is reversed to appear as if the incoming 
+    /// scene is being turned from left over the outgoing scene.
+    /// </summary>
+    public virtual bool InitWithDuration(float t, CCScene scene, bool backwards)
+    {
+        // XXX: needed before [super init]
+        m_bBack = backwards;
+
+        if (base.InitWithDuration(t, scene))
         {
-            // We can not call base here because m_bBack needs to be set first
-            InitWithDuration(t, scene, backwards);
+            // do something
         }
 
-        /// <summary>
-        /// Creates a base transition with duration and incoming scene.
-        /// If back is true then the effect is reversed to appear as if the incoming 
-        /// scene is being turned from left over the outgoing scene.
-        /// </summary>
-        public virtual bool InitWithDuration(float t, CCScene scene, bool backwards)
+        return true;
+    }
+
+    public CCActionInterval ActionWithSize(CCGridSize vector)
+    {
+        if (m_bBack)
         {
-            // XXX: needed before [super init]
-            m_bBack = backwards;
+            // Get hold of the PageTurn3DAction
+            return new CCReverseTime
+                (
+                    new CCPageTurn3D (m_fDuration, vector)
+                );
+        }
+        else
+        {
+            // Get hold of the PageTurn3DAction
+            return new CCPageTurn3D (m_fDuration, vector);
+        }
+    }
 
-            if (base.InitWithDuration(t, scene))
-            {
-                // do something
-            }
+    public override void OnEnter()
+    {
+        base.OnEnter();
 
-            return true;
+        CCSize s = CCDirector.SharedDirector.WinSize;
+        int x, y;
+        if (s.Width > s.Height)
+        {
+            x = 16;
+            y = 12;
+        }
+        else
+        {
+            x = 12;
+            y = 16;
         }
 
-        public CCActionInterval ActionWithSize(CCGridSize vector)
+        CCActionInterval action = ActionWithSize(CCTypes.GridSize(x, y));
+
+        if (!m_bBack)
         {
-            if (m_bBack)
-            {
-                // Get hold of the PageTurn3DAction
-                return new CCReverseTime
-                    (
-                        new CCPageTurn3D (m_fDuration, vector)
-                    );
-            }
-            else
-            {
-                // Get hold of the PageTurn3DAction
-                return new CCPageTurn3D (m_fDuration, vector);
-            }
+            m_pOutScene.RunAction(new CCSequence
+                                      (
+                                          action,
+                                          new CCCallFunc(Finish),
+                                          new CCStopGrid()));
         }
-
-        public override void OnEnter()
+        else
         {
-            base.OnEnter();
-
-            CCSize s = CCDirector.SharedDirector.WinSize;
-            int x, y;
-            if (s.Width > s.Height)
-            {
-                x = 16;
-                y = 12;
-            }
-            else
-            {
-                x = 12;
-                y = 16;
-            }
-
-            CCActionInterval action = ActionWithSize(CCTypes.GridSize(x, y));
-
-            if (!m_bBack)
-            {
-                m_pOutScene.RunAction(new CCSequence
-                                          (
-                                              action,
-                                              new CCCallFunc(Finish),
-                                              new CCStopGrid()));
-            }
-            else
-            {
-                // to prevent initial flicker
-                m_pInScene.Visible = false;
-                m_pInScene.RunAction(new CCSequence
-                                         (
-                                             new CCShow(),
-                                             action,
-                                             new CCCallFunc(Finish),
-                                             new CCStopGrid()));
-            }
+            // to prevent initial flicker
+            m_pInScene.Visible = false;
+            m_pInScene.RunAction(new CCSequence
+                                     (
+                                         new CCShow(),
+                                         action,
+                                         new CCCallFunc(Finish),
+                                         new CCStopGrid()));
         }
+    }
 
-        protected override void SceneOrder()
-        {
-            m_bIsInSceneOnTop = m_bBack;
-        }
+    protected override void SceneOrder()
+    {
+        m_bIsInSceneOnTop = m_bBack;
     }
 }

@@ -7,19 +7,18 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace WP7Contrib.Communications.Compression
+namespace WP7Contrib.Communications.Compression;
+
+using System;
+
+internal class ZlibException : Exception
 {
-    using System;
-
-    internal class ZlibException : Exception
+    public ZlibException()
     {
-        public ZlibException()
-        {
-        }
+    }
 
-        public ZlibException(string s)
-            : base(s)
-        {
-        }
+    public ZlibException(string s)
+        : base(s)
+    {
     }
 }

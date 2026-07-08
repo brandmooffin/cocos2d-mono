@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public class CCRectConverter : TypeConverter
 	{
-        public CCRectConverter() { }
+    public CCRectConverter() { }
 
 		// Overrides the CanConvertFrom method of TypeConverter.
 		// The ITypeDescriptorContext interface provides the context for the
@@ -108,5 +108,4 @@ namespace Cocos2D
 			return result;
 		}
 	}
-}
 

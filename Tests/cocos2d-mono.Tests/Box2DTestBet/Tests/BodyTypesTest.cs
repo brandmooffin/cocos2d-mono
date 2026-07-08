@@ -32,123 +32,122 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class BodyTypesTest : Test
 {
-    public class BodyTypesTest : Test
+    private Body _attachment;
+    private Body _platform;
+    private float _speed;
+
+    private BodyTypesTest()
     {
-        private Body _attachment;
-        private Body _platform;
-        private float _speed;
+        //Ground
+        BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-        private BodyTypesTest()
+        // Define attachment
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            _attachment = BodyFactory.CreateBody(World);
+            _attachment.BodyType = BodyType.Dynamic;
+            _attachment.Position = new Vector2(0.0f, 3.0f);
 
-            // Define attachment
+            Vertices box = PolygonTools.CreateRectangle(0.5f, 2.0f);
+            PolygonShape shape = new PolygonShape(box, 2);
+            _attachment.CreateFixture(shape);
+        }
+
+        // Define platform
+        {
+            _platform = BodyFactory.CreateBody(World);
+            _platform.BodyType = BodyType.Dynamic;
+            _platform.Position = new Vector2(0.0f, 5.0f);
+
+            Vertices box = PolygonTools.CreateRectangle(4.0f, 0.5f);
+            PolygonShape shape = new PolygonShape(box, 2);
+
+            Fixture fixture = _platform.CreateFixture(shape);
+            fixture.Friction = 0.6f;
+
+            RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform,
+                                                  _attachment.GetLocalPoint(_platform.Position),
+                                                  Vector2.Zero);
+            rjd.MaxMotorTorque = 50.0f;
+            rjd.MotorEnabled = true;
+            World.AddJoint(rjd);
+
+            FixedPrismaticJoint pjd = new FixedPrismaticJoint(_platform, new Vector2(0.0f, 5.0f),
+                                                              new Vector2(1.0f, 0.0f));
+            pjd.MaxMotorForce = 1000.0f;
+            pjd.MotorEnabled = true;
+            pjd.LowerLimit = -10.0f;
+            pjd.UpperLimit = 10.0f;
+            pjd.LimitEnabled = true;
+
+            World.AddJoint(pjd);
+
+            _speed = 3.0f;
+        }
+
+        // Create a payload
+        {
+            Body body = BodyFactory.CreateBody(World);
+            body.BodyType = BodyType.Dynamic;
+            body.Position = new Vector2(0.0f, 8.0f);
+
+            Vertices box = PolygonTools.CreateRectangle(0.75f, 0.75f);
+            PolygonShape shape = new PolygonShape(box, 2);
+
+            Fixture fixture = body.CreateFixture(shape);
+            fixture.Friction = 0.6f;
+        }
+    }
+
+    public override void Keyboard(KeyboardManager keyboardManager)
+    {
+        if (keyboardManager.IsKeyDown(Keys.D))
+        {
+            _platform.BodyType = BodyType.Dynamic;
+        }
+        if (keyboardManager.IsKeyDown(Keys.S))
+        {
+            _platform.BodyType = BodyType.Static;
+        }
+        if (keyboardManager.IsKeyDown(Keys.K))
+        {
+            _platform.BodyType = BodyType.Kinematic;
+            _platform.LinearVelocity = new Vector2(-_speed, 0.0f);
+            _platform.AngularVelocity = 0.0f;
+        }
+
+        base.Keyboard(keyboardManager);
+    }
+
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        // Drive the kinematic body.
+        if (_platform.BodyType == BodyType.Kinematic)
+        {
+            Transform tf;
+            _platform.GetTransform(out tf);
+            Vector2 p = tf.Position;
+            Vector2 v = _platform.LinearVelocity;
+
+            if ((p.X < -10.0f && v.X < 0.0f) ||
+                (p.X > 10.0f && v.X > 0.0f))
             {
-                _attachment = BodyFactory.CreateBody(World);
-                _attachment.BodyType = BodyType.Dynamic;
-                _attachment.Position = new Vector2(0.0f, 3.0f);
-
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 2.0f);
-                PolygonShape shape = new PolygonShape(box, 2);
-                _attachment.CreateFixture(shape);
-            }
-
-            // Define platform
-            {
-                _platform = BodyFactory.CreateBody(World);
-                _platform.BodyType = BodyType.Dynamic;
-                _platform.Position = new Vector2(0.0f, 5.0f);
-
-                Vertices box = PolygonTools.CreateRectangle(4.0f, 0.5f);
-                PolygonShape shape = new PolygonShape(box, 2);
-
-                Fixture fixture = _platform.CreateFixture(shape);
-                fixture.Friction = 0.6f;
-
-                RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform,
-                                                      _attachment.GetLocalPoint(_platform.Position),
-                                                      Vector2.Zero);
-                rjd.MaxMotorTorque = 50.0f;
-                rjd.MotorEnabled = true;
-                World.AddJoint(rjd);
-
-                FixedPrismaticJoint pjd = new FixedPrismaticJoint(_platform, new Vector2(0.0f, 5.0f),
-                                                                  new Vector2(1.0f, 0.0f));
-                pjd.MaxMotorForce = 1000.0f;
-                pjd.MotorEnabled = true;
-                pjd.LowerLimit = -10.0f;
-                pjd.UpperLimit = 10.0f;
-                pjd.LimitEnabled = true;
-
-                World.AddJoint(pjd);
-
-                _speed = 3.0f;
-            }
-
-            // Create a payload
-            {
-                Body body = BodyFactory.CreateBody(World);
-                body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(0.0f, 8.0f);
-
-                Vertices box = PolygonTools.CreateRectangle(0.75f, 0.75f);
-                PolygonShape shape = new PolygonShape(box, 2);
-
-                Fixture fixture = body.CreateFixture(shape);
-                fixture.Friction = 0.6f;
+                v.X = -v.X;
+                _platform.LinearVelocity = v;
             }
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
-        {
-            if (keyboardManager.IsKeyDown(Keys.D))
-            {
-                _platform.BodyType = BodyType.Dynamic;
-            }
-            if (keyboardManager.IsKeyDown(Keys.S))
-            {
-                _platform.BodyType = BodyType.Static;
-            }
-            if (keyboardManager.IsKeyDown(Keys.K))
-            {
-                _platform.BodyType = BodyType.Kinematic;
-                _platform.LinearVelocity = new Vector2(-_speed, 0.0f);
-                _platform.AngularVelocity = 0.0f;
-            }
-
-            base.Keyboard(keyboardManager);
-        }
-
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            // Drive the kinematic body.
-            if (_platform.BodyType == BodyType.Kinematic)
-            {
-                Transform tf;
-                _platform.GetTransform(out tf);
-                Vector2 p = tf.Position;
-                Vector2 v = _platform.LinearVelocity;
-
-                if ((p.X < -10.0f && v.X < 0.0f) ||
-                    (p.X > 10.0f && v.X > 0.0f))
-                {
-                    v.X = -v.X;
-                    _platform.LinearVelocity = v;
-                }
-            }
-
-            base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
-            TextLine += 15;
-        }
+        base.Update(settings, gameTime);
+        DebugView.DrawString(50, TextLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
+        TextLine += 15;
+    }
 
 
-        internal static Test Create()
-        {
-            return new BodyTypesTest();
-        }
+    internal static Test Create()
+    {
+        return new BodyTypesTest();
     }
 }

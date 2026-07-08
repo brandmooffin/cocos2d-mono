@@ -23,94 +23,93 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCShakyTiles3D : CCTiledGrid3DAction
 {
-    public class CCShakyTiles3D : CCTiledGrid3DAction
+    protected bool m_bShakeZ;
+    protected int m_nRandrange;
+
+    /// <summary>
+    ///  initializes the action with a range, whether or not to shake Z vertices, a grid size, and duration
+    /// </summary>
+    protected virtual bool InitWithDuration(float duration, CCGridSize gridSize, int nRange, bool bShakeZ)
     {
-        protected bool m_bShakeZ;
-        protected int m_nRandrange;
-
-        /// <summary>
-        ///  initializes the action with a range, whether or not to shake Z vertices, a grid size, and duration
-        /// </summary>
-        protected virtual bool InitWithDuration(float duration, CCGridSize gridSize, int nRange, bool bShakeZ)
+        if (base.InitWithDuration(duration, gridSize))
         {
-            if (base.InitWithDuration(duration, gridSize))
-            {
-                m_nRandrange = nRange;
-                m_bShakeZ = bShakeZ;
+            m_nRandrange = nRange;
+            m_bShakeZ = bShakeZ;
 
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
-        public override object Copy(ICCCopyable pZone)
+        return false;
+    }
+
+    public override object Copy(ICCCopyable pZone)
+    {
+        CCShakyTiles3D pCopy;
+        if (pZone != null)
         {
-            CCShakyTiles3D pCopy;
-            if (pZone != null)
-            {
-                //in case of being called at sub class
-                pCopy = (CCShakyTiles3D) (pZone);
-            }
-            else
-            {
-                pCopy = new CCShakyTiles3D();
-                pZone = (pCopy);
-            }
-
-            base.Copy(pZone);
-
-            pCopy.InitWithDuration(m_fDuration, m_sGridSize, m_nRandrange, m_bShakeZ);
-
-            return pCopy;
+            //in case of being called at sub class
+            pCopy = (CCShakyTiles3D) (pZone);
+        }
+        else
+        {
+            pCopy = new CCShakyTiles3D();
+            pZone = (pCopy);
         }
 
-        public override void Update(float time)
-        {
-            int i, j;
+        base.Copy(pZone);
 
-            for (i = 0; i < m_sGridSize.X; ++i)
+        pCopy.InitWithDuration(m_fDuration, m_sGridSize, m_nRandrange, m_bShakeZ);
+
+        return pCopy;
+    }
+
+    public override void Update(float time)
+    {
+        int i, j;
+
+        for (i = 0; i < m_sGridSize.X; ++i)
+        {
+            for (j = 0; j < m_sGridSize.Y; ++j)
             {
-                for (j = 0; j < m_sGridSize.Y; ++j)
+                CCQuad3 coords = OriginalTile(new CCGridSize(i, j));
+                // X
+                coords.BottomLeft.X += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
+                coords.BottomRight.X += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
+                coords.TopLeft.X += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
+                coords.TopRight.X += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
+
+                // Y
+                coords.BottomLeft.Y += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
+                coords.BottomRight.Y += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
+                coords.TopLeft.Y += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
+                coords.TopRight.Y += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
+
+                if (m_bShakeZ)
                 {
-                    CCQuad3 coords = OriginalTile(new CCGridSize(i, j));
-                    // X
-                    coords.BottomLeft.X += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
-                    coords.BottomRight.X += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
-                    coords.TopLeft.X += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
-                    coords.TopRight.X += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
-
-                    // Y
-                    coords.BottomLeft.Y += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
-                    coords.BottomRight.Y += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
-                    coords.TopLeft.Y += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
-                    coords.TopRight.Y += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
-
-                    if (m_bShakeZ)
-                    {
-                        coords.BottomLeft.Z += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
-                        coords.BottomRight.Z += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
-                        coords.TopLeft.Z += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
-                        coords.TopRight.Z += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
-                    }
-
-                    SetTile(new CCGridSize(i, j), ref coords);
+                    coords.BottomLeft.Z += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
+                    coords.BottomRight.Z += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
+                    coords.TopLeft.Z += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
+                    coords.TopRight.Z += (CCRandom.Next() % (m_nRandrange * 2)) - m_nRandrange;
                 }
+
+                SetTile(new CCGridSize(i, j), ref coords);
             }
         }
+    }
 
-        public CCShakyTiles3D()
-        {
-        }
+    public CCShakyTiles3D()
+    {
+    }
 
-        /// <summary>
-        /// creates the action with a range, whether or not to shake Z vertices, a grid size, and duration
-        /// </summary>
-        public CCShakyTiles3D(float duration, CCGridSize gridSize, int nRange, bool bShakeZ) : base(duration)
-        {
-            InitWithDuration(duration, gridSize, nRange, bShakeZ);
-        }
+    /// <summary>
+    /// creates the action with a range, whether or not to shake Z vertices, a grid size, and duration
+    /// </summary>
+    public CCShakyTiles3D(float duration, CCGridSize gridSize, int nRange, bool bShakeZ) : base(duration)
+    {
+        InitWithDuration(duration, gridSize, nRange, bShakeZ);
     }
 }

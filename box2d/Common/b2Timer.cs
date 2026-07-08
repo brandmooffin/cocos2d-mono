@@ -19,25 +19,24 @@
 using System;
 using System.Diagnostics;
 
-namespace Box2D.Common
+namespace Box2D.Common;
+
+public class b2Timer
 {
-    public class b2Timer
+    private long m_tickStart = 0L;
+
+    public b2Timer()
     {
-        private long m_tickStart = 0L;
+        Reset();
+    }
 
-        public b2Timer()
-        {
-            Reset();
-        }
+    public void Reset()
+    {
+        m_tickStart = DateTime.Now.Ticks;
+    }
 
-        public void Reset()
-        {
-            m_tickStart = DateTime.Now.Ticks;
-        }
-
-        public float GetMilliseconds()
-        {
-            return ((float)(new TimeSpan(DateTime.Now.Ticks - m_tickStart).TotalMilliseconds));
-        }
+    public float GetMilliseconds()
+    {
+        return ((float)(new TimeSpan(DateTime.Now.Ticks - m_tickStart).TotalMilliseconds));
     }
 }

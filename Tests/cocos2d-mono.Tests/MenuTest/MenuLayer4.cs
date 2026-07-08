@@ -28,117 +28,116 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class MenuLayer4 : CCLayer
 {
-    public class MenuLayer4 : CCLayer
+    public MenuLayer4()
     {
-        public MenuLayer4()
-        {
-            CCMenuItemFont.FontName = "arial";
-            CCMenuItemFont.FontSize = 18;
+        CCMenuItemFont.FontName = "arial";
+        CCMenuItemFont.FontSize = 18;
 
-            CCMenuItemFont title1 = new CCMenuItemFont("Sound");
-            title1.Enabled = false;
-            CCMenuItemFont.FontName = "arial";
-            CCMenuItemFont.FontSize = 34;
-            CCMenuItemToggle item1 = new CCMenuItemToggle(this.menuCallback,
-                                                                        new CCMenuItemFont("On"),
-                                                                        new CCMenuItemFont("Off"));
+        CCMenuItemFont title1 = new CCMenuItemFont("Sound");
+        title1.Enabled = false;
+        CCMenuItemFont.FontName = "arial";
+        CCMenuItemFont.FontSize = 34;
+        CCMenuItemToggle item1 = new CCMenuItemToggle(this.menuCallback,
+                                                                    new CCMenuItemFont("On"),
+                                                                    new CCMenuItemFont("Off"));
 
-            CCMenuItemFont.FontName = "arial";
-            CCMenuItemFont.FontSize = 18;
-            CCMenuItemFont title2 = new CCMenuItemFont("Music");
-            title2.Enabled = false;
-            CCMenuItemFont.FontName = "arial";
-            CCMenuItemFont.FontSize = 34;
-            CCMenuItemToggle item2 = new CCMenuItemToggle(this.menuCallback,
-                                                                        new CCMenuItemFont("On"),
-                                                                        new CCMenuItemFont("Off"));
+        CCMenuItemFont.FontName = "arial";
+        CCMenuItemFont.FontSize = 18;
+        CCMenuItemFont title2 = new CCMenuItemFont("Music");
+        title2.Enabled = false;
+        CCMenuItemFont.FontName = "arial";
+        CCMenuItemFont.FontSize = 34;
+        CCMenuItemToggle item2 = new CCMenuItemToggle(this.menuCallback,
+                                                                    new CCMenuItemFont("On"),
+                                                                    new CCMenuItemFont("Off"));
 
-            CCMenuItemFont.FontName = "arial";
-            CCMenuItemFont.FontSize = 18;
-            CCMenuItemFont title3 = new CCMenuItemFont("Quality");
-            title3.Enabled = false;
-            CCMenuItemFont.FontName = "arial";
-            CCMenuItemFont.FontSize = 34;
-            CCMenuItemToggle item3 = new CCMenuItemToggle(this.menuCallback,
-                                                                        new CCMenuItemFont("High"),
-                                                                        new CCMenuItemFont("Low"));
+        CCMenuItemFont.FontName = "arial";
+        CCMenuItemFont.FontSize = 18;
+        CCMenuItemFont title3 = new CCMenuItemFont("Quality");
+        title3.Enabled = false;
+        CCMenuItemFont.FontName = "arial";
+        CCMenuItemFont.FontSize = 34;
+        CCMenuItemToggle item3 = new CCMenuItemToggle(this.menuCallback,
+                                                                    new CCMenuItemFont("High"),
+                                                                    new CCMenuItemFont("Low"));
 
-            CCMenuItemFont.FontName = "arial";
-            CCMenuItemFont.FontSize = 18;
-            CCMenuItemFont title4 = new CCMenuItemFont("Orientation");
-            title4.Enabled = false;
-            CCMenuItemFont.FontName = "arial";
-            CCMenuItemFont.FontSize = 34;
-            CCMenuItemToggle item4 = new CCMenuItemToggle(this.menuCallback,
-                                                                     new CCMenuItemFont("Off"));
+        CCMenuItemFont.FontName = "arial";
+        CCMenuItemFont.FontSize = 18;
+        CCMenuItemFont title4 = new CCMenuItemFont("Orientation");
+        title4.Enabled = false;
+        CCMenuItemFont.FontName = "arial";
+        CCMenuItemFont.FontSize = 34;
+        CCMenuItemToggle item4 = new CCMenuItemToggle(this.menuCallback,
+                                                                 new CCMenuItemFont("Off"));
 
-            item4.SubItems.Add(new CCMenuItemFont("33%"));
-            item4.SubItems.Add(new CCMenuItemFont("66%"));
-            item4.SubItems.Add(new CCMenuItemFont("100%"));
+        item4.SubItems.Add(new CCMenuItemFont("33%"));
+        item4.SubItems.Add(new CCMenuItemFont("66%"));
+        item4.SubItems.Add(new CCMenuItemFont("100%"));
 
-            // you can change the one of the items by doing this
-            item4.SelectedIndex = 2;
+        // you can change the one of the items by doing this
+        item4.SelectedIndex = 2;
 
-            CCMenuItemFont.FontName = "arial";
-            CCMenuItemFont.FontSize = 34;
+        CCMenuItemFont.FontName = "arial";
+        CCMenuItemFont.FontSize = 34;
 
-            CCLabelBMFont label = new CCLabelBMFont("go back", "fonts/bitmapFontTest3.fnt");
-            CCMenuItemLabel back = new CCMenuItemLabel(label, this.backCallback);
+        CCLabelBMFont label = new CCLabelBMFont("go back", "fonts/bitmapFontTest3.fnt");
+        CCMenuItemLabel back = new CCMenuItemLabel(label, this.backCallback);
 
-            CCMenu menu = new CCMenu(
-                          title1, title2,
-                          item1, item2,
-                          title3, title4,
-                          item3, item4,
-                          back); // 9 items.
+        CCMenu menu = new CCMenu(
+                      title1, title2,
+                      item1, item2,
+                      title3, title4,
+                      item3, item4,
+                      back); // 9 items.
 
-            menu.AlignItemsInColumns(2, 2, 2, 2, 1);
+        menu.AlignItemsInColumns(2, 2, 2, 2, 1);
 
-            AddChild(menu);
-        }
-
-        public void menuCallback(object pSender)
-        {
-        }
-
-        public void backCallback(object pSender)
-        {
-            ((CCLayerMultiplex)m_pParent).SwitchTo(0);
-        }
+        AddChild(menu);
     }
 
-    public class MenuLayer5 : CCLayer
+    public void menuCallback(object pSender)
     {
-        private CCSize _targetButtonSize = new CCSize(128, 64);
+    }
 
-        public MenuLayer5()
+    public void backCallback(object pSender)
+    {
+        ((CCLayerMultiplex)m_pParent).SwitchTo(0);
+    }
+}
+
+public class MenuLayer5 : CCLayer
+{
+    private CCSize _targetButtonSize = new CCSize(128, 64);
+
+    public MenuLayer5()
+    {
+        var randomFilterMenuItem = CocosExtensions.CreateScaledMenuItemLabel(_targetButtonSize, 20, 4, CCColor3B.Blue, new CCColor3B(Microsoft.Xna.Framework.Color.Black), 
+            new CCColor3B(Microsoft.Xna.Framework.Color.White), "Random Surprise!", () =>
         {
-            var randomFilterMenuItem = CocosExtensions.CreateScaledMenuItemLabel(_targetButtonSize, 20, 4, CCColor3B.Blue, new CCColor3B(Microsoft.Xna.Framework.Color.Black), 
-                new CCColor3B(Microsoft.Xna.Framework.Color.White), "Random Surprise!", () =>
+            CCLog.Log("Random action");
+        });
+        CocosExtensions.AddJiggle(randomFilterMenuItem);
+
+        var backMenuItem = CocosExtensions.CreateScaledMenuItemLabel(_targetButtonSize, 20, 4, CCColor3B.Blue, new CCColor3B(Microsoft.Xna.Framework.Color.Black), 
+            new CCColor3B(Microsoft.Xna.Framework.Color.White), "Back", null);
+        var backMenuItemToggle = new CCMenuItemToggle((o) =>
+        {
+            CCLog.Log("Back toggle touched");
+        },
+        new[] { backMenuItem });
+        CocosExtensions.AddJiggle(backMenuItemToggle);
+
+        var menu = new CCMenu(new[]
             {
-                CCLog.Log("Random action");
+                randomFilterMenuItem, 
+                backMenuItemToggle, 
             });
-            CocosExtensions.AddJiggle(randomFilterMenuItem);
-
-            var backMenuItem = CocosExtensions.CreateScaledMenuItemLabel(_targetButtonSize, 20, 4, CCColor3B.Blue, new CCColor3B(Microsoft.Xna.Framework.Color.Black), 
-                new CCColor3B(Microsoft.Xna.Framework.Color.White), "Back", null);
-            var backMenuItemToggle = new CCMenuItemToggle((o) =>
-            {
-                CCLog.Log("Back toggle touched");
-            },
-            new[] { backMenuItem });
-            CocosExtensions.AddJiggle(backMenuItemToggle);
-
-            var menu = new CCMenu(new[]
-                {
-                    randomFilterMenuItem, 
-                    backMenuItemToggle, 
-                });
-            AddChild(menu);
-            menu.Position = CCDirector.SharedDirector.WinSize.Center;
-            menu.AlignItemsVertically();
-        }
+        AddChild(menu);
+        menu.Position = CCDirector.SharedDirector.WinSize.Center;
+        menu.AlignItemsVertically();
     }
 }

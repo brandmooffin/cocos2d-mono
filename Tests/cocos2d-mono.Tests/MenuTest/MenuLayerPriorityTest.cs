@@ -28,75 +28,74 @@
     using System.Text;
     using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class MenuLayerPriorityTest : CCLayer
 {
-    public class MenuLayerPriorityTest : CCLayer
+    private CCMenu m_pMenu1;
+    private CCMenu m_pMenu2;
+    private bool m_bPriority;
+
+    public MenuLayerPriorityTest()
     {
-        private CCMenu m_pMenu1;
-        private CCMenu m_pMenu2;
-        private bool m_bPriority;
+        // Testing empty menu
+        m_pMenu1 = new CCMenu();
+        m_pMenu2 = new CCMenu();
 
-        public MenuLayerPriorityTest()
+
+        // Menu 1
+        CCMenuItemFont item1 = new CCMenuItemFont("Return to Main Menu", menuCallback);
+        CCMenuItemFont item2 = new CCMenuItemFont("Disable menu for 5 seconds", disableMenuCallback);
+
+
+        m_pMenu1.AddChild(item1);
+        m_pMenu1.AddChild(item2);
+
+        m_pMenu1.AlignItemsVertically(2);
+
+        AddChild(m_pMenu1);
+
+        // Menu 2
+        m_bPriority = true;
+        //CCMenuItemFont.setFontSize(48);
+        item1 = new CCMenuItemFont("Toggle priority", togglePriorityCallback);
+        item1.Scale = 1.5f;
+        item1.Color = new CCColor3B(0, 0, 255);
+        m_pMenu2.AddChild(item1);
+        AddChild(m_pMenu2);
+    }
+
+    public void menuCallback(object pSender)
+    {
+        ((CCLayerMultiplex) m_pParent).SwitchTo(0);
+    }
+
+    public void disableMenuCallback(object pSender)
+    {
+        m_pMenu1.Enabled = false;
+        CCDelayTime wait = new CCDelayTime (5);
+        CCCallFunc enable = new CCCallFunc(enableMenuCallback);
+
+        CCFiniteTimeAction seq = new CCSequence(wait, enable);
+        m_pMenu1.RunAction(seq);
+    }
+
+    private void enableMenuCallback()
+    {
+        m_pMenu1.Enabled = true;
+    }
+
+    private void togglePriorityCallback(object pSender)
+    {
+        if (m_bPriority)
         {
-            // Testing empty menu
-            m_pMenu1 = new CCMenu();
-            m_pMenu2 = new CCMenu();
-
-
-            // Menu 1
-            CCMenuItemFont item1 = new CCMenuItemFont("Return to Main Menu", menuCallback);
-            CCMenuItemFont item2 = new CCMenuItemFont("Disable menu for 5 seconds", disableMenuCallback);
-
-
-            m_pMenu1.AddChild(item1);
-            m_pMenu1.AddChild(item2);
-
-            m_pMenu1.AlignItemsVertically(2);
-
-            AddChild(m_pMenu1);
-
-            // Menu 2
+            m_pMenu2.SetHandlerPriority(CCMenu.kCCMenuHandlerPriority + 20);
+            m_bPriority = false;
+        }
+        else
+        {
+            m_pMenu2.SetHandlerPriority(CCMenu.kCCMenuHandlerPriority - 20);
             m_bPriority = true;
-            //CCMenuItemFont.setFontSize(48);
-            item1 = new CCMenuItemFont("Toggle priority", togglePriorityCallback);
-            item1.Scale = 1.5f;
-            item1.Color = new CCColor3B(0, 0, 255);
-            m_pMenu2.AddChild(item1);
-            AddChild(m_pMenu2);
-        }
-
-        public void menuCallback(object pSender)
-        {
-            ((CCLayerMultiplex) m_pParent).SwitchTo(0);
-        }
-
-        public void disableMenuCallback(object pSender)
-        {
-            m_pMenu1.Enabled = false;
-            CCDelayTime wait = new CCDelayTime (5);
-            CCCallFunc enable = new CCCallFunc(enableMenuCallback);
-
-            CCFiniteTimeAction seq = new CCSequence(wait, enable);
-            m_pMenu1.RunAction(seq);
-        }
-
-        private void enableMenuCallback()
-        {
-            m_pMenu1.Enabled = true;
-        }
-
-        private void togglePriorityCallback(object pSender)
-        {
-            if (m_bPriority)
-            {
-                m_pMenu2.SetHandlerPriority(CCMenu.kCCMenuHandlerPriority + 20);
-                m_bPriority = false;
-            }
-            else
-            {
-                m_pMenu2.SetHandlerPriority(CCMenu.kCCMenuHandlerPriority - 20);
-                m_bPriority = true;
-            }
         }
     }
 }

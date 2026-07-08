@@ -23,24 +23,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
-{
-    /// <summary>
-    /// @brief CCTransitionSplitRows:
-    /// The odd rows goes to the left while the even rows goes to the right.
-    /// </summary>
-    public class CCTransitionSplitRows : CCTransitionSplitCols
-    {
-        public override CCActionInterval Action()
-        {
-            return new CCSplitRows(m_fDuration / 2.0f, 3);
-        }
-        
-        public CCTransitionSplitRows() { }
+namespace Cocos2D;
 
-        public CCTransitionSplitRows(float t, CCScene scene) : base(t, scene)
-        {
-            InitWithDuration(t, scene);
-        }
+/// <summary>
+/// @brief CCTransitionSplitRows:
+/// The odd rows goes to the left while the even rows goes to the right.
+/// </summary>
+public class CCTransitionSplitRows : CCTransitionSplitCols
+{
+    public override CCActionInterval Action()
+    {
+        return new CCSplitRows(m_fDuration / 2.0f, 3);
+    }
+    
+    public CCTransitionSplitRows() { }
+
+    public CCTransitionSplitRows(float t, CCScene scene) : base(t, scene)
+    {
+        InitWithDuration(t, scene);
     }
 }

@@ -5,100 +5,99 @@ using System.Text;
 using Cocos2D;
 using tests;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class TextInputTestScene : TestScene
 {
-    public class TextInputTestScene : TestScene
+
+    int kTextFieldTTFDefaultTest = 0;
+    int kTextFieldTTFActionTest = 1;
+    int kTextInputTestsCount = 2;
+
+    public static string FONT_NAME = "Thonburi";
+    public static int FONT_SIZE = 36;
+
+    public static int testIdx = -1;
+
+    public override void runThisTest()
     {
+        CCLayer pLayer = nextTextInputTest();
+        AddChild(pLayer);
 
-        int kTextFieldTTFDefaultTest = 0;
-        int kTextFieldTTFActionTest = 1;
-        int kTextInputTestsCount = 2;
+        CCDirector.SharedDirector.ReplaceScene(this);
+    }
 
-        public static string FONT_NAME = "Thonburi";
-        public static int FONT_SIZE = 36;
-
-        public static int testIdx = -1;
-
-        public override void runThisTest()
+    public KeyboardNotificationLayer createTextInputTest(int nIndex)
+    {
+        switch (nIndex)
         {
-            CCLayer pLayer = nextTextInputTest();
-            AddChild(pLayer);
+            //case kTextFieldTTFDefaultTest:
+            //    return new TextFieldTTFDefaultTest();
+            //case kTextFieldTTFActionTest:
+            //    return new TextFieldTTFActionTest();
+            //default: return 0;
 
-            CCDirector.SharedDirector.ReplaceScene(this);
+            case 0:
+                return new TextFieldTTFDefaultTest();
+            case 1:
+                return new TextFieldTTFActionTest();
+            default: break;
         }
 
-        public KeyboardNotificationLayer createTextInputTest(int nIndex)
-        {
-            switch (nIndex)
-            {
-                //case kTextFieldTTFDefaultTest:
-                //    return new TextFieldTTFDefaultTest();
-                //case kTextFieldTTFActionTest:
-                //    return new TextFieldTTFActionTest();
-                //default: return 0;
+        return null;
+    }
 
-                case 0:
-                    return new TextFieldTTFDefaultTest();
-                case 1:
-                    return new TextFieldTTFActionTest();
-                default: break;
-            }
+    protected override void NextTestCase()
+    {
+        nextTextInputTest();
+    }
+    protected override void PreviousTestCase()
+    {
+        backTextInputTest();
+    }
+    protected override void RestTestCase()
+    {
+        restartTextInputTest();
+    }
+    public CCLayer restartTextInputTest()
+    {
+        TextInputTest pContainerLayer = new TextInputTest();
+        //pContainerLayer->autorelease();
 
-            return null;
-        }
+        KeyboardNotificationLayer pTestLayer = createTextInputTest(testIdx);
+        //pTestLayer->autorelease();
+        pContainerLayer.addKeyboardNotificationLayer(pTestLayer);
 
-        protected override void NextTestCase()
-        {
-            nextTextInputTest();
-        }
-        protected override void PreviousTestCase()
-        {
-            backTextInputTest();
-        }
-        protected override void RestTestCase()
-        {
-            restartTextInputTest();
-        }
-        public CCLayer restartTextInputTest()
-        {
-            TextInputTest pContainerLayer = new TextInputTest();
-            //pContainerLayer->autorelease();
+        return pContainerLayer;
+    }
 
-            KeyboardNotificationLayer pTestLayer = createTextInputTest(testIdx);
-            //pTestLayer->autorelease();
-            pContainerLayer.addKeyboardNotificationLayer(pTestLayer);
+    public CCLayer nextTextInputTest()
+    {
+        testIdx++;
+        testIdx = testIdx % kTextInputTestsCount;
 
-            return pContainerLayer;
-        }
+        return restartTextInputTest();
+    }
 
-        public CCLayer nextTextInputTest()
-        {
-            testIdx++;
-            testIdx = testIdx % kTextInputTestsCount;
+    public CCLayer backTextInputTest()
+    {
+        testIdx--;
+        int total = kTextInputTestsCount;
+        if (testIdx < 0)
+            testIdx += total;
 
-            return restartTextInputTest();
-        }
+        return restartTextInputTest();
+    }
 
-        public CCLayer backTextInputTest()
-        {
-            testIdx--;
-            int total = kTextInputTestsCount;
-            if (testIdx < 0)
-                testIdx += total;
+    public static CCRect getRect(CCNode node)
+    {
+        var rc = new CCRect();
 
-            return restartTextInputTest();
-        }
-
-        public static CCRect getRect(CCNode node)
-        {
-            var rc = new CCRect();
-
-            rc.Origin = node.Position;
-            rc.Size = node.ContentSize;
-            rc.Origin.X -= rc.Size.Width * node.AnchorPoint.X;
-            rc.Origin.Y -= rc.Size.Height * node.AnchorPoint.Y;
-            
-            return rc;
-        }
+        rc.Origin = node.Position;
+        rc.Size = node.ContentSize;
+        rc.Origin.X -= rc.Size.Width * node.AnchorPoint.X;
+        rc.Origin.Y -= rc.Size.Height * node.AnchorPoint.Y;
+        
+        return rc;
     }
 }

@@ -29,343 +29,342 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCLayer : CCNode, ICCAccelerometerDelegate
 {
-    public class CCLayer : CCNode, ICCAccelerometerDelegate
+    private bool m_bIsAccelerometerEnabled;
+
+    private CCRenderTexture m_pRenderTexture;
+    private bool m_bRestoreScissor;
+    private CCRect m_tSaveScissorRect;
+    private bool m_bNoDrawChildren;
+
+    /// <summary>
+    /// Set to true if the child drawing should be isolated in their own render target
+    /// </summary>
+    protected CCClipMode m_childClippingMode = CCClipMode.None;
+
+    public CCLayer(CCClipMode clipMode)
     {
-        private bool m_bIsAccelerometerEnabled;
-
-        private CCRenderTexture m_pRenderTexture;
-        private bool m_bRestoreScissor;
-        private CCRect m_tSaveScissorRect;
-        private bool m_bNoDrawChildren;
-
-        /// <summary>
-        /// Set to true if the child drawing should be isolated in their own render target
-        /// </summary>
-        protected CCClipMode m_childClippingMode = CCClipMode.None;
-
-        public CCLayer(CCClipMode clipMode)
+        m_childClippingMode = clipMode;
+        AnchorPoint = new CCPoint(0.5f, 0.5f);
+        m_bIgnoreAnchorPointForPosition = true;
+        CCDirector director = CCDirector.SharedDirector;
+        if (director != null)
         {
-            m_childClippingMode = clipMode;
-            AnchorPoint = new CCPoint(0.5f, 0.5f);
-            m_bIgnoreAnchorPointForPosition = true;
-            CCDirector director = CCDirector.SharedDirector;
-            if (director != null)
-            {
-                ContentSize = director.WinSize;
-            }
-            Init();
+            ContentSize = director.WinSize;
         }
+        Init();
+    }
 
-        /// <summary>
-        /// Default layer constructor that does not use clipping.
-        /// </summary>
-        public CCLayer() : this(CCClipMode.None)
+    /// <summary>
+    /// Default layer constructor that does not use clipping.
+    /// </summary>
+    public CCLayer() : this(CCClipMode.None)
+    {
+    }
+
+
+    public CCClipMode ChildClippingMode
+    {
+        get { return m_childClippingMode; }
+        set
         {
-        }
-
-
-        public CCClipMode ChildClippingMode
-        {
-            get { return m_childClippingMode; }
-            set
+            if (m_childClippingMode != value)
             {
-                if (m_childClippingMode != value)
-                {
-                    m_childClippingMode = value;
-                    InitClipping();
-                }
-            }
-        }
-
-        public override CCSize ContentSize
-        {
-            get { return base.ContentSize; }
-            set
-            {
-                base.ContentSize = value;
+                m_childClippingMode = value;
                 InitClipping();
             }
         }
+    }
 
-        private bool m_bDidInit = false;
-
-        public override void Visit()
+    public override CCSize ContentSize
+    {
+        get { return base.ContentSize; }
+        set
         {
-            // quick return if not visible
-            if (!Visible)
+            base.ContentSize = value;
+            InitClipping();
+        }
+    }
+
+    private bool m_bDidInit = false;
+
+    public override void Visit()
+    {
+        // quick return if not visible
+        if (!Visible)
+        {
+            return;
+        }
+        if (m_childClippingMode == CCClipMode.None)
+        {
+            base.Visit();
+            return;
+        }
+
+        UpdateGraphIndex();
+        CCDrawManager.PushMatrix();
+
+        if (m_pGrid != null && m_pGrid.Active)
+        {
+            m_pGrid.BeforeDraw();
+            TransformAncestors();
+        }
+
+        Transform();
+
+        BeforeDraw();
+
+        if (!m_bNoDrawChildren && m_pChildren != null)
+        {
+            SortAllChildren();
+
+            CCNode[] arrayData = m_pChildren.Elements;
+            int count = m_pChildren.count;
+            int i = 0;
+
+            // draw children zOrder < 0
+            for (; i < count; i++)
             {
-                return;
-            }
-            if (m_childClippingMode == CCClipMode.None)
-            {
-                base.Visit();
-                return;
-            }
-
-            UpdateGraphIndex();
-            CCDrawManager.PushMatrix();
-
-            if (m_pGrid != null && m_pGrid.Active)
-            {
-                m_pGrid.BeforeDraw();
-                TransformAncestors();
-            }
-
-            Transform();
-
-            BeforeDraw();
-
-            if (!m_bNoDrawChildren && m_pChildren != null)
-            {
-                SortAllChildren();
-
-                CCNode[] arrayData = m_pChildren.Elements;
-                int count = m_pChildren.count;
-                int i = 0;
-
-                // draw children zOrder < 0
-                for (; i < count; i++)
+                CCNode child = arrayData[i];
+                if (child.m_nZOrder < 0)
                 {
-                    CCNode child = arrayData[i];
-                    if (child.m_nZOrder < 0)
-                    {
-                        child.Visit();
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    child.Visit();
                 }
-
-                // this draw
-                Draw();
-
-                // draw children zOrder >= 0
-                for (; i < count; i++)
+                else
                 {
-                    arrayData[i].Visit();
+                    break;
                 }
+            }
+
+            // this draw
+            Draw();
+
+            // draw children zOrder >= 0
+            for (; i < count; i++)
+            {
+                arrayData[i].Visit();
+            }
+        }
+        else
+        {
+            Draw();
+        }
+
+        AfterDraw();
+
+        if (m_pGrid != null && m_pGrid.Active)
+        {
+            m_pGrid.AfterDraw(this);
+        }
+
+        CCDrawManager.PopMatrix();
+    }
+
+    private void InitClipping()
+    {
+        if (m_childClippingMode == CCClipMode.BoundsWithRenderTarget)
+        {
+            if (m_pRenderTexture == null || m_pRenderTexture.ContentSize.Width < ContentSize.Width || m_pRenderTexture.ContentSize.Height < ContentSize.Height)
+            {
+                m_pRenderTexture = new CCRenderTexture((int)ContentSize.Width, (int)ContentSize.Height);
+                m_pRenderTexture.Sprite.AnchorPoint = new CCPoint(0, 0);
+            }
+            m_pRenderTexture.Sprite.TextureRect = new CCRect(0, 0, ContentSize.Width, ContentSize.Height);
+        }
+        else
+        {
+            m_pRenderTexture = null;
+        }
+    }
+
+    private void BeforeDraw()
+    {
+        m_bNoDrawChildren = false;
+
+        if (m_childClippingMode == CCClipMode.Bounds)
+        {
+            // We always clip to the bounding box
+            var rect = new CCRect(0, 0, m_obContentSize.Width, m_obContentSize.Height);
+            var bounds = CCAffineTransform.Transform(rect, NodeToWorldTransform());
+
+            var winSize = CCDirector.SharedDirector.WinSize;
+
+            CCRect prevScissorRect;
+            if (CCDrawManager.ScissorRectEnabled)
+            {
+                prevScissorRect = CCDrawManager.ScissorRect;
             }
             else
             {
-                Draw();
+                prevScissorRect = new CCRect(0, 0, winSize.Width, winSize.Height);
             }
 
-            AfterDraw();
-
-            if (m_pGrid != null && m_pGrid.Active)
+            if (!bounds.IntersectsRect(prevScissorRect))
             {
-                m_pGrid.AfterDraw(this);
+                m_bNoDrawChildren = true;
+                return;
             }
 
-            CCDrawManager.PopMatrix();
-        }
+            float minX = Math.Max(bounds.MinX, prevScissorRect.MinX);
+            float minY = Math.Max(bounds.MinY, prevScissorRect.MinY);
+            float maxX = Math.Min(bounds.MaxX, prevScissorRect.MaxX);
+            float maxY = Math.Min(bounds.MaxY, prevScissorRect.MaxY);
+          
+            if (CCDrawManager.ScissorRectEnabled)
+            {
+                m_bRestoreScissor = true;
+            }
+            else
+            {
+                CCDrawManager.ScissorRectEnabled = true;
+            }
 
-        private void InitClipping()
+            m_tSaveScissorRect = prevScissorRect;
+
+            CCDrawManager.SetScissorInPoints(minX, minY, maxX - minX, maxY - minY);
+        }
+        else if (m_childClippingMode == CCClipMode.BoundsWithRenderTarget)
+        {
+            m_tSaveScissorRect = CCDrawManager.ScissorRect;
+            m_bRestoreScissor = CCDrawManager.ScissorRectEnabled;
+
+            CCDrawManager.ScissorRectEnabled = false;
+
+            CCDrawManager.PushMatrix();
+            CCDrawManager.SetIdentityMatrix();
+
+            m_pRenderTexture.BeginWithClear(0, 0, 0, 0);
+        }
+    }
+
+    /**
+ * retract what's done in beforeDraw so that there's no side effect to
+ * other nodes.
+ */
+    private void AfterDraw()
+    {
+        if (m_childClippingMode != CCClipMode.None)
         {
             if (m_childClippingMode == CCClipMode.BoundsWithRenderTarget)
             {
-                if (m_pRenderTexture == null || m_pRenderTexture.ContentSize.Width < ContentSize.Width || m_pRenderTexture.ContentSize.Height < ContentSize.Height)
-                {
-                    m_pRenderTexture = new CCRenderTexture((int)ContentSize.Width, (int)ContentSize.Height);
-                    m_pRenderTexture.Sprite.AnchorPoint = new CCPoint(0, 0);
-                }
-                m_pRenderTexture.Sprite.TextureRect = new CCRect(0, 0, ContentSize.Width, ContentSize.Height);
+                m_pRenderTexture.End();
+
+                CCDrawManager.PopMatrix();
+            }
+
+            if (m_bRestoreScissor)
+            {
+                CCDrawManager.SetScissorInPoints(
+                    m_tSaveScissorRect.Origin.X, m_tSaveScissorRect.Origin.Y,
+                    m_tSaveScissorRect.Size.Width, m_tSaveScissorRect.Size.Height);
+
+                CCDrawManager.ScissorRectEnabled = true;
+
+                m_bRestoreScissor = false;
             }
             else
             {
-                m_pRenderTexture = null;
-            }
-        }
-
-        private void BeforeDraw()
-        {
-            m_bNoDrawChildren = false;
-
-            if (m_childClippingMode == CCClipMode.Bounds)
-            {
-                // We always clip to the bounding box
-                var rect = new CCRect(0, 0, m_obContentSize.Width, m_obContentSize.Height);
-                var bounds = CCAffineTransform.Transform(rect, NodeToWorldTransform());
-
-                var winSize = CCDirector.SharedDirector.WinSize;
-
-                CCRect prevScissorRect;
-                if (CCDrawManager.ScissorRectEnabled)
-                {
-                    prevScissorRect = CCDrawManager.ScissorRect;
-                }
-                else
-                {
-                    prevScissorRect = new CCRect(0, 0, winSize.Width, winSize.Height);
-                }
-
-                if (!bounds.IntersectsRect(prevScissorRect))
-                {
-                    m_bNoDrawChildren = true;
-                    return;
-                }
-
-                float minX = Math.Max(bounds.MinX, prevScissorRect.MinX);
-                float minY = Math.Max(bounds.MinY, prevScissorRect.MinY);
-                float maxX = Math.Min(bounds.MaxX, prevScissorRect.MaxX);
-                float maxY = Math.Min(bounds.MaxY, prevScissorRect.MaxY);
-              
-                if (CCDrawManager.ScissorRectEnabled)
-                {
-                    m_bRestoreScissor = true;
-                }
-                else
-                {
-                    CCDrawManager.ScissorRectEnabled = true;
-                }
-
-                m_tSaveScissorRect = prevScissorRect;
-
-                CCDrawManager.SetScissorInPoints(minX, minY, maxX - minX, maxY - minY);
-            }
-            else if (m_childClippingMode == CCClipMode.BoundsWithRenderTarget)
-            {
-                m_tSaveScissorRect = CCDrawManager.ScissorRect;
-                m_bRestoreScissor = CCDrawManager.ScissorRectEnabled;
-
                 CCDrawManager.ScissorRectEnabled = false;
+            }
 
-                CCDrawManager.PushMatrix();
-                CCDrawManager.SetIdentityMatrix();
-
-                m_pRenderTexture.BeginWithClear(0, 0, 0, 0);
+            if (m_childClippingMode == CCClipMode.BoundsWithRenderTarget)
+            {
+                m_pRenderTexture.Sprite.Visit();
             }
         }
+    }
 
-        /**
-     * retract what's done in beforeDraw so that there's no side effect to
-     * other nodes.
-     */
-        private void AfterDraw()
+    public override bool Init()
+    {
+        if (m_bDidInit)
         {
-            if (m_childClippingMode != CCClipMode.None)
-            {
-                if (m_childClippingMode == CCClipMode.BoundsWithRenderTarget)
-                {
-                    m_pRenderTexture.End();
-
-                    CCDrawManager.PopMatrix();
-                }
-
-                if (m_bRestoreScissor)
-                {
-                    CCDrawManager.SetScissorInPoints(
-                        m_tSaveScissorRect.Origin.X, m_tSaveScissorRect.Origin.Y,
-                        m_tSaveScissorRect.Size.Width, m_tSaveScissorRect.Size.Height);
-
-                    CCDrawManager.ScissorRectEnabled = true;
-
-                    m_bRestoreScissor = false;
-                }
-                else
-                {
-                    CCDrawManager.ScissorRectEnabled = false;
-                }
-
-                if (m_childClippingMode == CCClipMode.BoundsWithRenderTarget)
-                {
-                    m_pRenderTexture.Sprite.Visit();
-                }
-            }
+            return (true);
         }
 
-        public override bool Init()
+        TouchMode = CCTouchMode.AllAtOnce;
+
+        bool bRet = false;
+        CCDirector director = CCDirector.SharedDirector;
+        if (director != null)
         {
-            if (m_bDidInit)
-            {
-                return (true);
-            }
+            //                ContentSize = director.WinSize;
+            m_bIsAccelerometerEnabled = false;
+            bRet = true;
+            m_bDidInit = true;
+        }
+        return bRet;
+    }
 
-            TouchMode = CCTouchMode.AllAtOnce;
+    protected override void AddedToScene()
+    {
+        base.AddedToScene();
+    }
 
-            bool bRet = false;
-            CCDirector director = CCDirector.SharedDirector;
-            if (director != null)
-            {
-                //                ContentSize = director.WinSize;
-                m_bIsAccelerometerEnabled = false;
-                bRet = true;
-                m_bDidInit = true;
-            }
-            return bRet;
+    public override void OnEnter()
+    {
+        if(!m_bDidInit) {
+            Init();
         }
 
-        protected override void AddedToScene()
+        // then iterate over all the children
+        base.OnEnter();
+
+        CCDirector director = CCDirector.SharedDirector;
+        CCApplication application = CCApplication.SharedApplication;
+
+        // add this layer to concern the Accelerometer Sensor
+        if (m_bIsAccelerometerEnabled)
         {
-            base.AddedToScene();
-        }
-
-        public override void OnEnter()
-        {
-            if(!m_bDidInit) {
-                Init();
-            }
-
-            // then iterate over all the children
-            base.OnEnter();
-
-            CCDirector director = CCDirector.SharedDirector;
-            CCApplication application = CCApplication.SharedApplication;
-
-            // add this layer to concern the Accelerometer Sensor
-            if (m_bIsAccelerometerEnabled)
-            {
-                director.Accelerometer.SetDelegate(this);
+            director.Accelerometer.SetDelegate(this);
 			}
+    }
+
+    public override void OnExit()
+    {
+
+        // remove this layer from the delegates who concern Accelerometer Sensor
+        if (m_bIsAccelerometerEnabled)
+        {
+            //CCDirector director = CCDirector.SharedDirector;
+            //director.Accelerometer.setDelegate(null);
         }
 
-        public override void OnExit()
-        {
+        base.OnExit();
+    }
 
-            // remove this layer from the delegates who concern Accelerometer Sensor
-            if (m_bIsAccelerometerEnabled)
-            {
-                //CCDirector director = CCDirector.SharedDirector;
-                //director.Accelerometer.setDelegate(null);
-            }
+    public override void OnEnterTransitionDidFinish()
+    {
+        //if (m_bIsAccelerometerEnabled)
+        //{
+        //    CCDirector.SharedDirector.Accelerometer.SetDelegate(this);
+        //}
 
-            base.OnExit();
-        }
+        base.OnEnterTransitionDidFinish();
+    }
 
-        public override void OnEnterTransitionDidFinish()
-        {
-            //if (m_bIsAccelerometerEnabled)
-            //{
-            //    CCDirector.SharedDirector.Accelerometer.SetDelegate(this);
-            //}
-
-            base.OnEnterTransitionDidFinish();
-        }
-
-        public bool AccelerometerEnabled
-        {
-            get { 
+    public bool AccelerometerEnabled
+    {
+        get { 
 				return m_bIsAccelerometerEnabled;
 			}
-            set {
-                if (value != m_bIsAccelerometerEnabled)
+        set {
+            if (value != m_bIsAccelerometerEnabled)
+            {
+                m_bIsAccelerometerEnabled = value;
+
+                if (m_bRunning)
                 {
-                    m_bIsAccelerometerEnabled = value;
-
-                    if (m_bRunning)
-                    {
-                        CCDirector pDirector = CCDirector.SharedDirector;
-                        pDirector.Accelerometer.SetDelegate(value ? this : null);
-                    }
+                    CCDirector pDirector = CCDirector.SharedDirector;
+                    pDirector.Accelerometer.SetDelegate(value ? this : null);
                 }
+            }
 			}
-        }
+    }
 
-        public virtual void DidAccelerate(CCAcceleration pAccelerationValue)
-        {
-        }
+    public virtual void DidAccelerate(CCAcceleration pAccelerationValue)
+    {
     }
 }

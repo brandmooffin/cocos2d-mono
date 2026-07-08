@@ -24,8 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public abstract class PlistObject<T> : PlistObjectBase
 	{
 		private T value;
@@ -40,4 +40,3 @@ namespace Cocos2D
 			set { this.value = value; }
 		}
 	}
-}

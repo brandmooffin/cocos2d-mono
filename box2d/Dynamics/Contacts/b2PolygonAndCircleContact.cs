@@ -18,32 +18,31 @@
 
 using System;
 using System.Diagnostics;
-using Box2D.Common;
-using Box2D.Collision.Shapes;
 using Box2D.Collision;
+using Box2D.Collision.Shapes;
+using Box2D.Common;
 
-namespace Box2D.Dynamics.Contacts
+namespace Box2D.Dynamics.Contacts;
+
+/*
+public class b2PolygonAndCircleContact : b2Contact
 {
-    /*
-    public class b2PolygonAndCircleContact : b2Contact
-    {
 		public b2PolygonAndCircleContact(b2Fixture fixtureA, int indexA, b2Fixture fixtureB, int indexB)
 			: this(fixtureA, fixtureB)
 		{}
 
-        public b2PolygonAndCircleContact(b2Fixture fixtureA, b2Fixture fixtureB)
-            : base(fixtureA, 0, fixtureB, 0)
-        {
-            Debug.Assert(m_fixtureA.ShapeType == b2ShapeType.e_polygon);
-            Debug.Assert(m_fixtureB.ShapeType == b2ShapeType.e_circle);
-        }
-
-        public override void Evaluate(ref b2Manifold manifold, ref b2Transform xfA, ref b2Transform xfB)
-        {
-            b2Collision.b2CollidePolygonAndCircle(ref manifold,
-                                        (b2PolygonShape)m_fixtureA.Shape, ref xfA,
-                                        (b2CircleShape)m_fixtureB.Shape, ref xfB);
-        }
+    public b2PolygonAndCircleContact(b2Fixture fixtureA, b2Fixture fixtureB)
+        : base(fixtureA, 0, fixtureB, 0)
+    {
+        Debug.Assert(m_fixtureA.ShapeType == b2ShapeType.e_polygon);
+        Debug.Assert(m_fixtureB.ShapeType == b2ShapeType.e_circle);
     }
-    */
+
+    public override void Evaluate(ref b2Manifold manifold, ref b2Transform xfA, ref b2Transform xfB)
+    {
+        b2Collision.b2CollidePolygonAndCircle(ref manifold,
+                                    (b2PolygonShape)m_fixtureA.Shape, ref xfA,
+                                    (b2CircleShape)m_fixtureB.Shape, ref xfB);
+    }
 }
+*/

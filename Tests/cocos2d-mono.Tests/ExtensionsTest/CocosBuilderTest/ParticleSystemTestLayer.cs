@@ -1,6 +1,5 @@
-namespace tests.Extensions
+namespace tests.Extensions;
+
+internal class ParticleSystemTestLayer : BaseLayer
 {
-    internal class ParticleSystemTestLayer : BaseLayer
-    {
-    }
 }

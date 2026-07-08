@@ -30,11 +30,16 @@
     MonoGameVersion above) to move the whole build to net10.0 + MonoGame 3.8.5;
     no csproj edits required.
   -->
+  <!-- The Condition guards keep each dial overridable from the environment or the
+       command line (-p:). Tools without an msbuild-property passthrough (e.g.
+       `dotnet format`, which otherwise evaluates every TFM and can emit unmerged-
+       change conflict markers when per-TFM edits diverge) can narrow the build by
+       exporting e.g. Cocos2DTargetFrameworks=net9.0. -->
   <PropertyGroup>
-    <Cocos2DBaseTfm>net9.0</Cocos2DBaseTfm>
-    <Cocos2DWindowsTfm>net9.0-windows7.0</Cocos2DWindowsTfm>
-    <Cocos2DAndroidTfm>net9.0-android35.0</Cocos2DAndroidTfm>
-    <Cocos2DIosTfm>net9.0-ios18.0</Cocos2DIosTfm>
-    <Cocos2DTargetFrameworks>$(Cocos2DBaseTfm);$(Cocos2DWindowsTfm);$(Cocos2DAndroidTfm);$(Cocos2DIosTfm)</Cocos2DTargetFrameworks>
+    <Cocos2DBaseTfm Condition="'$(Cocos2DBaseTfm)' == ''">net9.0</Cocos2DBaseTfm>
+    <Cocos2DWindowsTfm Condition="'$(Cocos2DWindowsTfm)' == ''">net9.0-windows7.0</Cocos2DWindowsTfm>
+    <Cocos2DAndroidTfm Condition="'$(Cocos2DAndroidTfm)' == ''">net9.0-android35.0</Cocos2DAndroidTfm>
+    <Cocos2DIosTfm Condition="'$(Cocos2DIosTfm)' == ''">net9.0-ios18.0</Cocos2DIosTfm>
+    <Cocos2DTargetFrameworks Condition="'$(Cocos2DTargetFrameworks)' == ''">$(Cocos2DBaseTfm);$(Cocos2DWindowsTfm);$(Cocos2DAndroidTfm);$(Cocos2DIosTfm)</Cocos2DTargetFrameworks>
   </PropertyGroup>
 </Project>

@@ -33,76 +33,75 @@ using Microsoft.Xna.Framework.Input;
 
 //TODO: Copy this test to a new test and make this the original revolute test from Box2D
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class RevoluteTest : Test
 {
-    public class RevoluteTest : Test
+    private FixedRevoluteJoint _fixedJoint;
+    private RevoluteJoint _joint;
+
+    private RevoluteTest()
     {
-        private FixedRevoluteJoint _fixedJoint;
-        private RevoluteJoint _joint;
+        //Ground
+        BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-        private RevoluteTest()
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            //The big fixed wheel
+            CircleShape shape = new CircleShape(5.0f, 5);
 
-            {
-                //The big fixed wheel
-                CircleShape shape = new CircleShape(5.0f, 5);
+            Body body = BodyFactory.CreateBody(World);
+            body.Position = new Vector2(0.0f, 15.0f);
+            body.BodyType = BodyType.Dynamic;
 
-                Body body = BodyFactory.CreateBody(World);
-                body.Position = new Vector2(0.0f, 15.0f);
-                body.BodyType = BodyType.Dynamic;
+            body.CreateFixture(shape);
 
-                body.CreateFixture(shape);
+            _fixedJoint = new FixedRevoluteJoint(body, Vector2.Zero, body.Position);
+            _fixedJoint.MotorSpeed = 0.25f * Settings.Pi;
+            _fixedJoint.MaxMotorTorque = 5000.0f;
+            _fixedJoint.MotorEnabled = true;
+            World.AddJoint(_fixedJoint);
 
-                _fixedJoint = new FixedRevoluteJoint(body, Vector2.Zero, body.Position);
-                _fixedJoint.MotorSpeed = 0.25f * Settings.Pi;
-                _fixedJoint.MaxMotorTorque = 5000.0f;
-                _fixedJoint.MotorEnabled = true;
-                World.AddJoint(_fixedJoint);
+            // The small gear attached to the big one
+            Body body1 = BodyFactory.CreateGear(World, 1.5f, 10, 0.1f, 1, 1);
+            body1.Position = new Vector2(0.0f, 12.0f);
+            body1.BodyType = BodyType.Dynamic;
 
-                // The small gear attached to the big one
-                Body body1 = BodyFactory.CreateGear(World, 1.5f, 10, 0.1f, 1, 1);
-                body1.Position = new Vector2(0.0f, 12.0f);
-                body1.BodyType = BodyType.Dynamic;
+            _joint = new RevoluteJoint(body, body1, body.GetLocalPoint(body1.Position),
+                                       Vector2.Zero);
+            _joint.MotorSpeed = 1.0f * Settings.Pi;
+            _joint.MaxMotorTorque = 5000.0f;
+            _joint.MotorEnabled = true;
+            _joint.CollideConnected = false;
 
-                _joint = new RevoluteJoint(body, body1, body.GetLocalPoint(body1.Position),
-                                           Vector2.Zero);
-                _joint.MotorSpeed = 1.0f * Settings.Pi;
-                _joint.MaxMotorTorque = 5000.0f;
-                _joint.MotorEnabled = true;
-                _joint.CollideConnected = false;
+            World.AddJoint(_joint);
+        }
+    }
 
-                World.AddJoint(_joint);
-            }
+    public override void Keyboard(KeyboardManager keyboardManager)
+    {
+        if (keyboardManager.IsNewKeyPress(Keys.L))
+        {
+            _joint.LimitEnabled = !_joint.LimitEnabled;
+            _fixedJoint.LimitEnabled = !_fixedJoint.LimitEnabled;
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        if (keyboardManager.IsNewKeyPress(Keys.M))
         {
-            if (keyboardManager.IsNewKeyPress(Keys.L))
-            {
-                _joint.LimitEnabled = !_joint.LimitEnabled;
-                _fixedJoint.LimitEnabled = !_fixedJoint.LimitEnabled;
-            }
-
-            if (keyboardManager.IsNewKeyPress(Keys.M))
-            {
-                _joint.MotorEnabled = !_joint.MotorEnabled;
-                _fixedJoint.MotorEnabled = !_fixedJoint.MotorEnabled;
-            }
-
-            base.Keyboard(keyboardManager);
+            _joint.MotorEnabled = !_joint.MotorEnabled;
+            _fixedJoint.MotorEnabled = !_fixedJoint.MotorEnabled;
         }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine, "Keys: (l) limits on/off, (m) motor on/off");
-        }
+        base.Keyboard(keyboardManager);
+    }
 
-        internal static Test Create()
-        {
-            return new RevoluteTest();
-        }
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        base.Update(settings, gameTime);
+        DebugView.DrawString(50, TextLine, "Keys: (l) limits on/off, (m) motor on/off");
+    }
+
+    internal static Test Create()
+    {
+        return new RevoluteTest();
     }
 }

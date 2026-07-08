@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Cocos2D;
 using FarseerPhysics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
-using Cocos2D;
 
 public class QuadTreeBroadPhase : IBroadPhase
 {

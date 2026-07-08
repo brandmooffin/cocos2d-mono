@@ -1,40 +1,39 @@
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class ZwoptexTestScene : TestScene
 {
-    public class ZwoptexTestScene : TestScene
+    public override void runThisTest()
     {
-        public override void runThisTest()
-        {
-            CCLayer pLayer = ZwoptexTest.nextZwoptexTest();
-            AddChild(pLayer);
+        CCLayer pLayer = ZwoptexTest.nextZwoptexTest();
+        AddChild(pLayer);
 
-            CCDirector.SharedDirector.ReplaceScene(this);
-        }
+        CCDirector.SharedDirector.ReplaceScene(this);
+    }
 
-        protected override void NextTestCase()
-        {
-        }
-        protected override void PreviousTestCase()
-        {
-        }
-        protected override void RestTestCase()
-        {
-        }
+    protected override void NextTestCase()
+    {
+    }
+    protected override void PreviousTestCase()
+    {
+    }
+    protected override void RestTestCase()
+    {
+    }
 
 
-        public static ZwoptexTestScene node()
+    public static ZwoptexTestScene node()
+    {
+        var pRet = new ZwoptexTestScene();
+        if (pRet != null && pRet.Init())
         {
-            var pRet = new ZwoptexTestScene();
-            if (pRet != null && pRet.Init())
-            {
-                return pRet;
-            }
-            else
-            {
-                pRet = null;
-                return null;
-            }
+            return pRet;
+        }
+        else
+        {
+            pRet = null;
+            return null;
         }
     }
 }

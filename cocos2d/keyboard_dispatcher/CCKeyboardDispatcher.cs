@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public class CCKeyboardDispatcher
 	{
 		protected List<CCKeyboardHandler> m_pDelegates = new List<CCKeyboardHandler> ();
@@ -14,8 +14,8 @@ namespace Cocos2D
 		protected List<ICCKeyboardDelegate> m_pHandlersToRemove = new List<ICCKeyboardDelegate> ();
 
 		/**
-        @brief add delegate to concern keypad msg
-        */
+    @brief add delegate to concern keypad msg
+    */
 
 		public void AddDelegate (ICCKeyboardDelegate pDelegate)
 		{
@@ -32,8 +32,8 @@ namespace Cocos2D
 		}
 
 		/**
-        @brief remove the delegate from the delegates who concern keypad msg
-        */
+    @brief remove the delegate from the delegates who concern keypad msg
+    */
 
 		public void RemoveDelegate (ICCKeyboardDelegate pDelegate)
 		{
@@ -50,8 +50,8 @@ namespace Cocos2D
 		}
 
 		/**
-        @brief force add the delegate
-        */
+    @brief force add the delegate
+    */
 
 		public void ForceAddDelegate (ICCKeyboardDelegate pDelegate)
 		{
@@ -60,8 +60,8 @@ namespace Cocos2D
 		}
 
 		/**
-        @brief force remove the delegate
-        */
+    @brief force remove the delegate
+    */
 
 		public void ForceRemoveDelegate (ICCKeyboardDelegate pDelegate)
 		{
@@ -158,4 +158,3 @@ namespace Cocos2D
 		}
 	
 	}
-}

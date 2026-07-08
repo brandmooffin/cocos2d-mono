@@ -1,7 +1,7 @@
 using Cocos2D;
 
-namespace tests.Extensions
-{
+namespace tests.Extensions;
+
 	public class CustomTableViewCell : CCTableViewCell
 	{
 		public override void Draw()
@@ -24,5 +24,4 @@ namespace tests.Extensions
 			//CCDrawingPrimitives.ccDrawPoly(vertices, 4, true);
 		}
 	}
-}
 

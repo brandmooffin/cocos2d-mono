@@ -32,55 +32,54 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class ChainTest : Test
 {
-    public class ChainTest : Test
+    private ChainTest()
     {
-        private ChainTest()
+        //Ground
+        BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+
+        //Chain start / end
+        Path path = new Path();
+        path.Add(new Vector2(0, 25));
+        path.Add(new Vector2(40, 25));
+
+        //A single chainlink
+        PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.125f, 0.6f), 20);
+
+        //Use PathFactory to create all the chainlinks based on the chainlink created before.
+        List<Body> chainLinks = PathManager.EvenlyDistributeShapesAlongPath(World, path, shape, BodyType.Dynamic, 30);
+
+        foreach (Body chainLink in chainLinks)
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-
-            //Chain start / end
-            Path path = new Path();
-            path.Add(new Vector2(0, 25));
-            path.Add(new Vector2(40, 25));
-
-            //A single chainlink
-            PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.125f, 0.6f), 20);
-
-            //Use PathFactory to create all the chainlinks based on the chainlink created before.
-            List<Body> chainLinks = PathManager.EvenlyDistributeShapesAlongPath(World, path, shape, BodyType.Dynamic, 30);
-
-            foreach (Body chainLink in chainLinks)
+            foreach (Fixture f in chainLink.FixtureList)
             {
-                foreach (Fixture f in chainLink.FixtureList)
-                {
-                    f.Friction = 0.2f;
-                }
-            }
-
-            //Fix the first chainlink to the world
-            FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], Vector2.Zero, chainLinks[0].Position);
-            World.AddJoint(fixedJoint);
-
-            //Attach all the chainlinks together with a revolute joint
-            List<RevoluteJoint> joints = PathManager.AttachBodiesWithRevoluteJoint(World, chainLinks,
-                                                                                   new Vector2(0, -0.6f),
-                                                                                   new Vector2(0, 0.6f),
-                                                                                   false, false);
-
-            //The chain is breakable
-            for (int i = 0; i < joints.Count; i++)
-            {
-                RevoluteJoint r = joints[i];
-                r.Breakpoint = 10000f;
+                f.Friction = 0.2f;
             }
         }
 
-        internal static Test Create()
+        //Fix the first chainlink to the world
+        FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], Vector2.Zero, chainLinks[0].Position);
+        World.AddJoint(fixedJoint);
+
+        //Attach all the chainlinks together with a revolute joint
+        List<RevoluteJoint> joints = PathManager.AttachBodiesWithRevoluteJoint(World, chainLinks,
+                                                                               new Vector2(0, -0.6f),
+                                                                               new Vector2(0, 0.6f),
+                                                                               false, false);
+
+        //The chain is breakable
+        for (int i = 0; i < joints.Count; i++)
         {
-            return new ChainTest();
+            RevoluteJoint r = joints[i];
+            r.Breakpoint = 10000f;
         }
+    }
+
+    internal static Test Create()
+    {
+        return new ChainTest();
     }
 }

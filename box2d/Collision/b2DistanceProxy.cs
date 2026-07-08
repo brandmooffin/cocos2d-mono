@@ -1,160 +1,159 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using Box2D.Common;
 using Box2D.Collision.Shapes;
-using System.Diagnostics;
+using Box2D.Common;
 
-namespace Box2D.Collision
+namespace Box2D.Collision;
+
+public class b2DistanceProxy
 {
-    public class b2DistanceProxy
+    // GJK using Voronoi regions (Christer Ericson) and Barycentric coordinates.
+    public static int b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
+
+    internal b2Vec2[] m_buffer;
+    internal b2Vec2[] m_vertices;
+    internal int m_count;
+    internal float m_radius;
+
+    public float Radius { get { return (m_radius); } set { m_radius = value; } }
+    public int Count { get { return (m_count); } set { m_count = value; } }
+
+    public static b2DistanceProxy Create()
     {
-        // GJK using Voronoi regions (Christer Ericson) and Barycentric coordinates.
-        public static int b2_gjkCalls, b2_gjkIters, b2_gjkMaxIters;
+        b2DistanceProxy bp = new b2DistanceProxy();
+        bp.m_vertices = null;
+        bp.m_count = 0;
+        bp.m_radius = 0.0f;
+        bp.m_buffer = new b2Vec2[2];
+        return (bp);
+    }
 
-        internal b2Vec2[] m_buffer;
-        internal b2Vec2[] m_vertices;
-        internal int m_count;
-        internal float m_radius;
+    public static b2DistanceProxy Create(b2Shape shape, int index)
+    {
+        b2DistanceProxy bp = Create();
+        bp.Set(shape, index);
+        return (bp);
+    }
 
-        public float Radius { get { return (m_radius); } set { m_radius = value; } }
-        public int Count { get { return (m_count); } set { m_count = value; } }
+    public int GetVertexCount()
+    {
+        return m_count;
+    }
 
-        public static b2DistanceProxy Create()
+    public b2Vec2 GetVertex(int index)
+    {
+        Debug.Assert(0 <= index && index < m_count);
+        return m_vertices[index];
+    }
+    public b2Vec2 GetVertex(uint index)
+    {
+        Debug.Assert(0 <= index && index < m_count);
+        return m_vertices[index];
+    }
+
+    public int GetSupport(ref b2Vec2 d)
+    {
+        int bestIndex = 0;
+        
+        var v = m_vertices[0];
+        float bestValue = v.x * d.x + v.y * d.y;
+        
+        for (int i = 1; i < m_count; ++i)
         {
-            b2DistanceProxy bp = new b2DistanceProxy();
-            bp.m_vertices = null;
-            bp.m_count = 0;
-            bp.m_radius = 0.0f;
-            bp.m_buffer = new b2Vec2[2];
-            return (bp);
-        }
-
-        public static b2DistanceProxy Create(b2Shape shape, int index)
-        {
-            b2DistanceProxy bp = Create();
-            bp.Set(shape, index);
-            return (bp);
-        }
-
-        public int GetVertexCount()
-        {
-            return m_count;
-        }
-
-        public b2Vec2 GetVertex(int index)
-        {
-            Debug.Assert(0 <= index && index < m_count);
-            return m_vertices[index];
-        }
-        public b2Vec2 GetVertex(uint index)
-        {
-            Debug.Assert(0 <= index && index < m_count);
-            return m_vertices[index];
-        }
-
-        public int GetSupport(ref b2Vec2 d)
-        {
-            int bestIndex = 0;
+            v = m_vertices[i];
             
-            var v = m_vertices[0];
-            float bestValue = v.x * d.x + v.y * d.y;
-            
-            for (int i = 1; i < m_count; ++i)
+            float value = v.x * d.x + v.y * d.y;
+        
+            if (value > bestValue)
             {
-                v = m_vertices[i];
-                
-                float value = v.x * d.x + v.y * d.y;
-            
-                if (value > bestValue)
+                bestIndex = i;
+                bestValue = value;
+            }
+        }
+
+        return bestIndex;
+    }
+
+    public b2Vec2 GetSupportVertex(b2Vec2 d)
+    {
+        int bestIndex = 0;
+        var v = m_vertices[0];
+        float bestValue = v.x * d.x + v.y * d.y;
+        for (int i = 1; i < m_count; ++i)
+        {
+            v = m_vertices[i];
+            float value = v.x * d.x + v.y * d.y;
+            if (value > bestValue)
+            {
+                bestIndex = i;
+                bestValue = value;
+            }
+        }
+
+        return m_vertices[bestIndex];
+    }
+
+    public void Set(b2Shape shape, int index)
+    {
+        switch (shape.ShapeType)
+        {
+            case b2ShapeType.e_circle:
                 {
-                    bestIndex = i;
-                    bestValue = value;
+                    b2CircleShape circle = (b2CircleShape)shape;
+                    m_buffer[0] = circle.Position;
+                    m_vertices = m_buffer;
+                    m_count = 1;
+                    m_radius = circle.Radius;
                 }
-            }
+                break;
 
-            return bestIndex;
-        }
-
-        public b2Vec2 GetSupportVertex(b2Vec2 d)
-        {
-            int bestIndex = 0;
-            var v = m_vertices[0];
-            float bestValue = v.x * d.x + v.y * d.y;
-            for (int i = 1; i < m_count; ++i)
-            {
-                v = m_vertices[i];
-                float value = v.x * d.x + v.y * d.y;
-                if (value > bestValue)
+            case b2ShapeType.e_polygon:
                 {
-                    bestIndex = i;
-                    bestValue = value;
+                    b2PolygonShape polygon = (b2PolygonShape)shape;
+                    m_vertices = polygon.Vertices;
+                    m_count = polygon.VertexCount;
+                    m_radius = polygon.Radius;
                 }
-            }
+                break;
 
-            return m_vertices[bestIndex];
-        }
+            case b2ShapeType.e_chain:
+                {
+                    b2ChainShape chain = (b2ChainShape)shape;
+                    Debug.Assert(0 <= index && index < chain.Count);
 
-        public void Set(b2Shape shape, int index)
-        {
-            switch (shape.ShapeType)
-            {
-                case b2ShapeType.e_circle:
+                    m_buffer[0] = chain.Vertices[index];
+                    if (index + 1 < chain.Count)
                     {
-                        b2CircleShape circle = (b2CircleShape)shape;
-                        m_buffer[0] = circle.Position;
-                        m_vertices = m_buffer;
-                        m_count = 1;
-                        m_radius = circle.Radius;
+                        m_buffer[1] = chain.Vertices[index + 1];
                     }
-                    break;
-
-                case b2ShapeType.e_polygon:
+                    else
                     {
-                        b2PolygonShape polygon = (b2PolygonShape)shape;
-                        m_vertices = polygon.Vertices;
-                        m_count = polygon.VertexCount;
-                        m_radius = polygon.Radius;
+                        m_buffer[1] = chain.Vertices[0];
                     }
-                    break;
 
-                case b2ShapeType.e_chain:
-                    {
-                        b2ChainShape chain = (b2ChainShape)shape;
-                        Debug.Assert(0 <= index && index < chain.Count);
+                    m_vertices = m_buffer;
+                    m_count = 2;
+                    m_radius = chain.Radius;
+                }
+                break;
 
-                        m_buffer[0] = chain.Vertices[index];
-                        if (index + 1 < chain.Count)
-                        {
-                            m_buffer[1] = chain.Vertices[index + 1];
-                        }
-                        else
-                        {
-                            m_buffer[1] = chain.Vertices[0];
-                        }
+            case b2ShapeType.e_edge:
+                {
+                    b2EdgeShape edge = (b2EdgeShape)shape;
+                    m_buffer[0] = edge.Vertex1;
+                    m_buffer[1] = edge.Vertex2;
+                    m_vertices = m_buffer;
+                    m_count = 2;
+                    m_radius = edge.Radius;
+                }
+                break;
 
-                        m_vertices = m_buffer;
-                        m_count = 2;
-                        m_radius = chain.Radius;
-                    }
-                    break;
-
-                case b2ShapeType.e_edge:
-                    {
-                        b2EdgeShape edge = (b2EdgeShape)shape;
-                        m_buffer[0] = edge.Vertex1;
-                        m_buffer[1] = edge.Vertex2;
-                        m_vertices = m_buffer;
-                        m_count = 2;
-                        m_radius = edge.Radius;
-                    }
-                    break;
-
-                default:
-                    Debug.Assert(false);
-                    break;
-            }
+            default:
+                Debug.Assert(false);
+                break;
         }
     }
 }

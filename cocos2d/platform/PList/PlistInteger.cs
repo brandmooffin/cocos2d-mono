@@ -26,8 +26,8 @@
 
 using System;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public class PlistInteger : PlistObject<int>
 	{
 		public PlistInteger (int value) : base(value)
@@ -79,4 +79,3 @@ namespace Cocos2D
 	        get { throw new NotImplementedException(); }
 	    }
 	}
-}

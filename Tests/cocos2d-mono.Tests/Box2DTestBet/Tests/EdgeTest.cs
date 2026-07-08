@@ -29,97 +29,96 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class EdgeTest : Test
 {
-    public class EdgeTest : Test
+    private Fixture _circleFixture;
+
+    private EdgeTest()
     {
-        private Fixture _circleFixture;
-
-        private EdgeTest()
         {
-            {
-                Body ground = BodyFactory.CreateBody(World);
+            Body ground = BodyFactory.CreateBody(World);
 
-                Vector2 v1 = new Vector2(-10.0f, 0.0f);
-                Vector2 v2 = new Vector2(-7.0f, -2.0f);
-                Vector2 v3 = new Vector2(-4.0f, 0.0f);
-                Vector2 v4 = Vector2.Zero;
-                Vector2 v5 = new Vector2(4.0f, 0.0f);
-                Vector2 v6 = new Vector2(7.0f, 2.0f);
-                Vector2 v7 = new Vector2(10.0f, 0.0f);
+            Vector2 v1 = new Vector2(-10.0f, 0.0f);
+            Vector2 v2 = new Vector2(-7.0f, -2.0f);
+            Vector2 v3 = new Vector2(-4.0f, 0.0f);
+            Vector2 v4 = Vector2.Zero;
+            Vector2 v5 = new Vector2(4.0f, 0.0f);
+            Vector2 v6 = new Vector2(7.0f, 2.0f);
+            Vector2 v7 = new Vector2(10.0f, 0.0f);
 
-                EdgeShape shape = new EdgeShape(v1, v2);
-                shape.HasVertex3 = true;
-                shape.Vertex3 = v3;
-                ground.CreateFixture(shape);
+            EdgeShape shape = new EdgeShape(v1, v2);
+            shape.HasVertex3 = true;
+            shape.Vertex3 = v3;
+            ground.CreateFixture(shape);
 
-                shape.Set(v2, v3);
-                shape.HasVertex0 = true;
-                shape.HasVertex3 = true;
-                shape.Vertex0 = v1;
-                shape.Vertex3 = v4;
-                ground.CreateFixture(shape);
+            shape.Set(v2, v3);
+            shape.HasVertex0 = true;
+            shape.HasVertex3 = true;
+            shape.Vertex0 = v1;
+            shape.Vertex3 = v4;
+            ground.CreateFixture(shape);
 
-                shape.Set(v3, v4);
-                shape.HasVertex0 = true;
-                shape.HasVertex3 = true;
-                shape.Vertex0 = v2;
-                shape.Vertex3 = v5;
-                ground.CreateFixture(shape);
+            shape.Set(v3, v4);
+            shape.HasVertex0 = true;
+            shape.HasVertex3 = true;
+            shape.Vertex0 = v2;
+            shape.Vertex3 = v5;
+            ground.CreateFixture(shape);
 
-                shape.Set(v4, v5);
-                shape.HasVertex0 = true;
-                shape.HasVertex3 = true;
-                shape.Vertex0 = v3;
-                shape.Vertex3 = v6;
-                ground.CreateFixture(shape);
+            shape.Set(v4, v5);
+            shape.HasVertex0 = true;
+            shape.HasVertex3 = true;
+            shape.Vertex0 = v3;
+            shape.Vertex3 = v6;
+            ground.CreateFixture(shape);
 
-                shape.Set(v5, v6);
-                shape.HasVertex0 = true;
-                shape.HasVertex3 = true;
-                shape.Vertex0 = v4;
-                shape.Vertex3 = v7;
-                ground.CreateFixture(shape);
+            shape.Set(v5, v6);
+            shape.HasVertex0 = true;
+            shape.HasVertex3 = true;
+            shape.Vertex0 = v4;
+            shape.Vertex3 = v7;
+            ground.CreateFixture(shape);
 
-                shape.Set(v6, v7);
-                shape.HasVertex0 = true;
-                shape.Vertex0 = v5;
-                ground.CreateFixture(shape);
-            }
-
-            {
-                Body body = BodyFactory.CreateBody(World, new Vector2(-0.5f, 0.6f));
-                body.BodyType = BodyType.Dynamic;
-                body.SleepingAllowed = false;
-
-                CircleShape shape = new CircleShape(0.5f, 1);
-                _circleFixture = body.CreateFixture(shape);
-            }
-
-            {
-                Body body = BodyFactory.CreateBody(World, new Vector2(1.0f, 0.6f));
-                body.BodyType = BodyType.Dynamic;
-                body.SleepingAllowed = false;
-
-                PolygonShape shape = new PolygonShape(1);
-                shape.SetAsBox(0.5f, 0.5f);
-
-                body.CreateFixture(shape);
-            }
+            shape.Set(v6, v7);
+            shape.HasVertex0 = true;
+            shape.Vertex0 = v5;
+            ground.CreateFixture(shape);
         }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Rotation: " + _circleFixture.Body.Rotation);
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Revolutions: " + _circleFixture.Body.Revolutions);
+            Body body = BodyFactory.CreateBody(World, new Vector2(-0.5f, 0.6f));
+            body.BodyType = BodyType.Dynamic;
+            body.SleepingAllowed = false;
 
-            base.Update(settings, gameTime);
+            CircleShape shape = new CircleShape(0.5f, 1);
+            _circleFixture = body.CreateFixture(shape);
         }
 
-        internal static Test Create()
         {
-            return new EdgeTest();
+            Body body = BodyFactory.CreateBody(World, new Vector2(1.0f, 0.6f));
+            body.BodyType = BodyType.Dynamic;
+            body.SleepingAllowed = false;
+
+            PolygonShape shape = new PolygonShape(1);
+            shape.SetAsBox(0.5f, 0.5f);
+
+            body.CreateFixture(shape);
         }
+    }
+
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        DebugView.DrawString(50, TextLine, "Rotation: " + _circleFixture.Body.Rotation);
+        TextLine += 15;
+        DebugView.DrawString(50, TextLine, "Revolutions: " + _circleFixture.Body.Revolutions);
+
+        base.Update(settings, gameTime);
+    }
+
+    internal static Test Create()
+    {
+        return new EdgeTest();
     }
 }

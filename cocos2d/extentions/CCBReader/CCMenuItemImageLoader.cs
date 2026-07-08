@@ -3,49 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCMenuItemImageLoader : CCMenuItemLoader
 {
-    public class CCMenuItemImageLoader : CCMenuItemLoader
+    private const string PROPERTY_NORMALDISPLAYFRAME = "normalSpriteFrame";
+    private const string PROPERTY_SELECTEDDISPLAYFRAME = "selectedSpriteFrame";
+    private const string PROPERTY_DISABLEDDISPLAYFRAME = "disabledSpriteFrame";
+
+    public override CCNode CreateCCNode()
     {
-        private const string PROPERTY_NORMALDISPLAYFRAME = "normalSpriteFrame";
-        private const string PROPERTY_SELECTEDDISPLAYFRAME = "selectedSpriteFrame";
-        private const string PROPERTY_DISABLEDDISPLAYFRAME = "disabledSpriteFrame";
+        return new CCMenuItemImage();
+    }
 
-        public override CCNode CreateCCNode()
+    protected override void OnHandlePropTypeSpriteFrame(CCNode node, CCNode parent, string propertyName, CCSpriteFrame spriteFrame,
+                                                        CCBReader reader)
+    {
+        if (propertyName == PROPERTY_NORMALDISPLAYFRAME)
         {
-            return new CCMenuItemImage();
+            if (spriteFrame != null)
+            {
+                ((CCMenuItemImage) node).SetNormalSpriteFrame(spriteFrame);
+            }
         }
-
-        protected override void OnHandlePropTypeSpriteFrame(CCNode node, CCNode parent, string propertyName, CCSpriteFrame spriteFrame,
-                                                            CCBReader reader)
+        else if (propertyName == PROPERTY_SELECTEDDISPLAYFRAME)
         {
-            if (propertyName == PROPERTY_NORMALDISPLAYFRAME)
+            if (spriteFrame != null)
             {
-                if (spriteFrame != null)
-                {
-                    ((CCMenuItemImage) node).SetNormalSpriteFrame(spriteFrame);
-                }
+                ((CCMenuItemImage) node).SetSelectedSpriteFrame(spriteFrame);
             }
-            else if (propertyName == PROPERTY_SELECTEDDISPLAYFRAME)
+        }
+        else if (propertyName == PROPERTY_DISABLEDDISPLAYFRAME)
+        {
+            if (spriteFrame != null)
             {
-                if (spriteFrame != null)
-                {
-                    ((CCMenuItemImage) node).SetSelectedSpriteFrame(spriteFrame);
-                }
+                ((CCMenuItemImage) node).SetDisabledSpriteFrame(spriteFrame);
             }
-            else if (propertyName == PROPERTY_DISABLEDDISPLAYFRAME)
-            {
-                if (spriteFrame != null)
-                {
-                    ((CCMenuItemImage) node).SetDisabledSpriteFrame(spriteFrame);
-                }
-            }
-            else
-            {
-                base.OnHandlePropTypeSpriteFrame(node, parent, propertyName, spriteFrame, reader);
-            }
+        }
+        else
+        {
+            base.OnHandlePropTypeSpriteFrame(node, parent, propertyName, spriteFrame, reader);
         }
     }
 }
-    
+
 

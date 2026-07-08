@@ -30,118 +30,117 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class DistanceTest : Test
 {
-    public class DistanceTest : Test
+    private float _angleB;
+    private PolygonShape _polygonA;
+    private PolygonShape _polygonB;
+    private Vector2 _positionB = Vector2.Zero;
+    private Transform _transformA;
+    private Transform _transformB;
+
+    private DistanceTest()
     {
-        private float _angleB;
-        private PolygonShape _polygonA;
-        private PolygonShape _polygonB;
-        private Vector2 _positionB = Vector2.Zero;
-        private Transform _transformA;
-        private Transform _transformB;
-
-        private DistanceTest()
         {
-            {
-                _transformA.SetIdentity();
-                _transformA.Position = new Vector2(0.0f, -0.2f);
-                Vertices vertices = PolygonTools.CreateRectangle(10.0f, 0.2f);
-                _polygonA = new PolygonShape(vertices, 1);
-            }
-
-            {
-                _positionB = new Vector2(12.017401f, 0.13678508f);
-                _angleB = -0.0109265f;
-                _transformB.Set(_positionB, _angleB);
-
-                Vertices vertices = PolygonTools.CreateRectangle(2.0f, 0.1f);
-                _polygonB = new PolygonShape(vertices, 1);
-            }
+            _transformA.SetIdentity();
+            _transformA.Position = new Vector2(0.0f, -0.2f);
+            Vertices vertices = PolygonTools.CreateRectangle(10.0f, 0.2f);
+            _polygonA = new PolygonShape(vertices, 1);
         }
 
-        internal static Test Create()
         {
-            return new DistanceTest();
-        }
-
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            base.Update(settings, gameTime);
-
-            DistanceInput input = new DistanceInput();
-            input.ProxyA.Set(_polygonA, 0);
-            input.ProxyB.Set(_polygonB, 0);
-            input.TransformA = _transformA;
-            input.TransformB = _transformB;
-            input.UseRadii = true;
-            SimplexCache cache;
-            cache.Count = 0;
-            DistanceOutput output;
-            Distance.ComputeDistance(out output, out cache, input);
-
-            DebugView.DrawString(50, TextLine, "Distance = {0:n7}", output.Distance);
-            TextLine += 15;
-
-            DebugView.DrawString(50, TextLine, "Iterations = {0:n0}", output.Iterations);
-            TextLine += 15;
-
-            DebugView.BeginCustomDraw();
-            {
-                Color color = new Color(0.9f, 0.9f, 0.9f);
-                Vector2[] v = new Vector2[Settings.MaxPolygonVertices];
-                for (int i = 0; i < _polygonA.Vertices.Count; ++i)
-                {
-                    v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
-                }
-                DebugView.DrawPolygon(v, _polygonA.Vertices.Count, color);
-
-                for (int i = 0; i < _polygonB.Vertices.Count; ++i)
-                {
-                    v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
-                }
-                DebugView.DrawPolygon(v, _polygonB.Vertices.Count, color);
-            }
-
-            Vector2 x1 = output.PointA;
-            Vector2 x2 = output.PointB;
-
-
-            DebugView.DrawPoint(x1, 0.5f, new Color(1.0f, 0.0f, 0.0f));
-            DebugView.DrawPoint(x2, 0.5f, new Color(1.0f, 0.0f, 0.0f));
-
-            DebugView.DrawSegment(x1, x2, new Color(1.0f, 1.0f, 0.0f));
-            DebugView.EndCustomDraw();
-        }
-
-        public override void Keyboard(KeyboardManager keyboardManager)
-        {
-            if (keyboardManager.IsNewKeyPress(Keys.A))
-            {
-                _positionB.X -= 0.1f;
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.D))
-            {
-                _positionB.X += 0.1f;
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.S))
-            {
-                _positionB.Y -= 0.1f;
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.W))
-            {
-                _positionB.Y += 0.1f;
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.Q))
-            {
-                _angleB += 0.1f * Settings.Pi;
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.E))
-            {
-                _angleB -= 0.1f * Settings.Pi;
-            }
-
+            _positionB = new Vector2(12.017401f, 0.13678508f);
+            _angleB = -0.0109265f;
             _transformB.Set(_positionB, _angleB);
+
+            Vertices vertices = PolygonTools.CreateRectangle(2.0f, 0.1f);
+            _polygonB = new PolygonShape(vertices, 1);
         }
+    }
+
+    internal static Test Create()
+    {
+        return new DistanceTest();
+    }
+
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        base.Update(settings, gameTime);
+
+        DistanceInput input = new DistanceInput();
+        input.ProxyA.Set(_polygonA, 0);
+        input.ProxyB.Set(_polygonB, 0);
+        input.TransformA = _transformA;
+        input.TransformB = _transformB;
+        input.UseRadii = true;
+        SimplexCache cache;
+        cache.Count = 0;
+        DistanceOutput output;
+        Distance.ComputeDistance(out output, out cache, input);
+
+        DebugView.DrawString(50, TextLine, "Distance = {0:n7}", output.Distance);
+        TextLine += 15;
+
+        DebugView.DrawString(50, TextLine, "Iterations = {0:n0}", output.Iterations);
+        TextLine += 15;
+
+        DebugView.BeginCustomDraw();
+        {
+            Color color = new Color(0.9f, 0.9f, 0.9f);
+            Vector2[] v = new Vector2[Settings.MaxPolygonVertices];
+            for (int i = 0; i < _polygonA.Vertices.Count; ++i)
+            {
+                v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
+            }
+            DebugView.DrawPolygon(v, _polygonA.Vertices.Count, color);
+
+            for (int i = 0; i < _polygonB.Vertices.Count; ++i)
+            {
+                v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
+            }
+            DebugView.DrawPolygon(v, _polygonB.Vertices.Count, color);
+        }
+
+        Vector2 x1 = output.PointA;
+        Vector2 x2 = output.PointB;
+
+
+        DebugView.DrawPoint(x1, 0.5f, new Color(1.0f, 0.0f, 0.0f));
+        DebugView.DrawPoint(x2, 0.5f, new Color(1.0f, 0.0f, 0.0f));
+
+        DebugView.DrawSegment(x1, x2, new Color(1.0f, 1.0f, 0.0f));
+        DebugView.EndCustomDraw();
+    }
+
+    public override void Keyboard(KeyboardManager keyboardManager)
+    {
+        if (keyboardManager.IsNewKeyPress(Keys.A))
+        {
+            _positionB.X -= 0.1f;
+        }
+        if (keyboardManager.IsNewKeyPress(Keys.D))
+        {
+            _positionB.X += 0.1f;
+        }
+        if (keyboardManager.IsNewKeyPress(Keys.S))
+        {
+            _positionB.Y -= 0.1f;
+        }
+        if (keyboardManager.IsNewKeyPress(Keys.W))
+        {
+            _positionB.Y += 0.1f;
+        }
+        if (keyboardManager.IsNewKeyPress(Keys.Q))
+        {
+            _angleB += 0.1f * Settings.Pi;
+        }
+        if (keyboardManager.IsNewKeyPress(Keys.E))
+        {
+            _angleB -= 0.1f * Settings.Pi;
+        }
+
+        _transformB.Set(_positionB, _angleB);
     }
 }

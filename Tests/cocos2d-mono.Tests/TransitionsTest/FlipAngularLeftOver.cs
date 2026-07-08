@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class FlipAngularLeftOver : CCTransitionFlipAngular
 {
-    public class FlipAngularLeftOver : CCTransitionFlipAngular
+    public FlipAngularLeftOver(float t, CCScene s) : base(t, s, CCTransitionOrientation.LeftOver)
     {
-        public FlipAngularLeftOver(float t, CCScene s) : base(t, s, CCTransitionOrientation.LeftOver)
-        {
-        }
     }
 }

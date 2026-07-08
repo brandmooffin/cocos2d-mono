@@ -28,113 +28,112 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class MenuLayer2 : CCLayer
 {
-    public class MenuLayer2 : CCLayer
+    string s_PlayNormal = "Images/btn-play-normal";
+    string s_PlaySelect = "Images/btn-play-selected";
+    string s_HighNormal = "Images/btn-highscores-normal";
+    string s_HighSelect = "Images/btn-highscores-selected";
+    string s_AboutNormal = "Images/btn-about-normal";
+    string s_AboutSelect = "Images/btn-about-selected";
+
+
+    protected CCPoint m_centeredMenu;
+    protected bool m_alignedH;
+
+    protected void alignMenusH()
     {
-        string s_PlayNormal = "Images/btn-play-normal";
-        string s_PlaySelect = "Images/btn-play-selected";
-        string s_HighNormal = "Images/btn-highscores-normal";
-        string s_HighSelect = "Images/btn-highscores-selected";
-        string s_AboutNormal = "Images/btn-about-normal";
-        string s_AboutSelect = "Images/btn-about-selected";
-
-
-        protected CCPoint m_centeredMenu;
-        protected bool m_alignedH;
-
-        protected void alignMenusH()
+        for (int i = 0; i < 2; i++)
         {
-            for (int i = 0; i < 2; i++)
+            CCMenu menu = (CCMenu)GetChildByTag(100 + i);
+            menu.Position = m_centeredMenu;
+            if (i == 0)
             {
-                CCMenu menu = (CCMenu)GetChildByTag(100 + i);
-                menu.Position = m_centeredMenu;
-                if (i == 0)
-                {
-                    // TIP: if no padding, padding = 5
-                    menu.AlignItemsHorizontally();
-                    CCPoint p = menu.Position;
-                    menu.Position = new CCPoint(p.X + 0, p.Y + 30);
+                // TIP: if no padding, padding = 5
+                menu.AlignItemsHorizontally();
+                CCPoint p = menu.Position;
+                menu.Position = new CCPoint(p.X + 0, p.Y + 30);
 
-                }
-                else
-                {
-                    // TIP: but padding is configurable
-                    menu.AlignItemsHorizontally(40);
-                    CCPoint p = menu.Position;
-                    menu.Position = new CCPoint(p.X - 0, p.Y - 30);
-                }
+            }
+            else
+            {
+                // TIP: but padding is configurable
+                menu.AlignItemsHorizontally(40);
+                CCPoint p = menu.Position;
+                menu.Position = new CCPoint(p.X - 0, p.Y - 30);
             }
         }
-        protected void alignMenusV()
+    }
+    protected void alignMenusV()
+    {
+        for (int i = 0; i < 2; i++)
         {
-            for (int i = 0; i < 2; i++)
+            CCMenu menu = (CCMenu)GetChildByTag(100 + i);
+            menu.Position = m_centeredMenu;
+            if (i == 0)
             {
-                CCMenu menu = (CCMenu)GetChildByTag(100 + i);
-                menu.Position = m_centeredMenu;
-                if (i == 0)
-                {
-                    // TIP: if no padding, padding = 5
-                    menu.AlignItemsVertically();
-                    CCPoint p = menu.Position;
-                    menu.Position = new CCPoint(p.X + 100, p.Y);
-                }
-                else
-                {
-                    // TIP: but padding is configurable
-                    menu.AlignItemsVertically(40);
-                    CCPoint p = menu.Position;
-                    menu.Position = new CCPoint(p.X - 100, p.Y);
-                }
+                // TIP: if no padding, padding = 5
+                menu.AlignItemsVertically();
+                CCPoint p = menu.Position;
+                menu.Position = new CCPoint(p.X + 100, p.Y);
+            }
+            else
+            {
+                // TIP: but padding is configurable
+                menu.AlignItemsVertically(40);
+                CCPoint p = menu.Position;
+                menu.Position = new CCPoint(p.X - 100, p.Y);
             }
         }
+    }
 
-        public MenuLayer2()
+    public MenuLayer2()
+    {
+        for (int i = 0; i < 2; i++)
         {
-            for (int i = 0; i < 2; i++)
-            {
-                CCMenuItemImage item1 = new CCMenuItemImage(s_PlayNormal, s_PlaySelect, menuCallback);
-                CCMenuItemImage item2 = new CCMenuItemImage(s_HighNormal, s_HighSelect, menuCallbackOpacity);
-                CCMenuItemImage item3 = new CCMenuItemImage(s_AboutNormal, s_AboutSelect, menuCallbackAlign);
+            CCMenuItemImage item1 = new CCMenuItemImage(s_PlayNormal, s_PlaySelect, menuCallback);
+            CCMenuItemImage item2 = new CCMenuItemImage(s_HighNormal, s_HighSelect, menuCallbackOpacity);
+            CCMenuItemImage item3 = new CCMenuItemImage(s_AboutNormal, s_AboutSelect, menuCallbackAlign);
 
-                item1.ScaleX = 1.5f;
-                item2.ScaleX = 0.5f;
-                item3.ScaleX = 0.5f;
+            item1.ScaleX = 1.5f;
+            item2.ScaleX = 0.5f;
+            item3.ScaleX = 0.5f;
 
-                CCMenu menu = new CCMenu(item1, item2, item3);
+            CCMenu menu = new CCMenu(item1, item2, item3);
 
-                menu.Tag = (int)kTag.kTagMenu;
+            menu.Tag = (int)kTag.kTagMenu;
 
-                AddChild(menu, 0, 100 + i);
+            AddChild(menu, 0, 100 + i);
 
-                m_centeredMenu = menu.Position;
-            }
+            m_centeredMenu = menu.Position;
+        }
 
-            m_alignedH = true;
+        m_alignedH = true;
+        alignMenusH();
+    }
+    public void menuCallback(object pSender)
+    {
+        CCLayerMultiplex m = m_pParent as CCLayerMultiplex;
+        m.SwitchTo(0);
+    }
+    public void menuCallbackOpacity(object pSender)
+    {
+        CCMenu menu = (CCMenu)(((CCNode)(pSender)).Parent);
+        byte opacity = menu.Opacity;
+        if (opacity == 128)
+            menu.Opacity = 255;
+        else
+            menu.Opacity = 128;
+    }
+    public void menuCallbackAlign(object pSender)
+    {
+        m_alignedH = !m_alignedH;
+
+        if (m_alignedH)
             alignMenusH();
-        }
-        public void menuCallback(object pSender)
-        {
-            CCLayerMultiplex m = m_pParent as CCLayerMultiplex;
-            m.SwitchTo(0);
-        }
-        public void menuCallbackOpacity(object pSender)
-        {
-            CCMenu menu = (CCMenu)(((CCNode)(pSender)).Parent);
-            byte opacity = menu.Opacity;
-            if (opacity == 128)
-                menu.Opacity = 255;
-            else
-                menu.Opacity = 128;
-        }
-        public void menuCallbackAlign(object pSender)
-        {
-            m_alignedH = !m_alignedH;
-
-            if (m_alignedH)
-                alignMenusH();
-            else
-                alignMenusV();
-        }
+        else
+            alignMenusV();
     }
 }

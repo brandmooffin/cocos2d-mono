@@ -31,152 +31,151 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class CantileverTest : Test
 {
-    public class CantileverTest : Test
+    private const int Count = 8;
+
+    private CantileverTest()
     {
-        private const int Count = 8;
-
-        private CantileverTest()
+        Body ground;
         {
-            Body ground;
+            ground = BodyFactory.CreateBody(World);
+
+            EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            ground.CreateFixture(shape);
+        }
+
+        {
+            Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
+            PolygonShape shape = new PolygonShape(box, 20);
+
+            Body prevBody = ground;
+            for (int i = 0; i < Count; ++i)
             {
-                ground = BodyFactory.CreateBody(World);
-
-                EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
-            }
-
-            {
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
-                PolygonShape shape = new PolygonShape(box, 20);
-
-                Body prevBody = ground;
-                for (int i = 0; i < Count; ++i)
-                {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
-
-                    body.CreateFixture(shape);
-
-                    Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
-                    WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor),
-                                                 body.GetLocalPoint(anchor));
-                    World.AddJoint(jd);
-
-                    prevBody = body;
-                }
-            }
-
-            {
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
-                PolygonShape shape = new PolygonShape(box, 20);
-
-                Body prevBody = ground;
-                for (int i = 0; i < Count; ++i)
-                {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-14.5f + 1.0f * i, 15.0f);
-
-                    body.CreateFixture(shape);
-
-                    Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 15.0f);
-                    WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor),
-                                                 body.GetLocalPoint(anchor));
-                    World.AddJoint(jd);
-
-                    prevBody = body;
-                }
-            }
-
-            {
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
-                PolygonShape shape = new PolygonShape(box, 20);
-
-
-                Body prevBody = ground;
-                for (int i = 0; i < Count; ++i)
-                {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-4.5f + 1.0f * i, 5.0f);
-
-                    body.CreateFixture(shape);
-
-                    if (i > 0)
-                    {
-                        Vector2 anchor = new Vector2(-5.0f + 1.0f * i, 5.0f);
-                        WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor),
-                                                     body.GetLocalPoint(anchor));
-                        World.AddJoint(jd);
-                    }
-
-                    prevBody = body;
-                }
-            }
-
-
-            {
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
-                PolygonShape shape = new PolygonShape(box, 20);
-
-                Body prevBody = ground;
-                for (int i = 0; i < Count; ++i)
-                {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(5.5f + 1.0f * i, 10.0f);
-
-                    body.CreateFixture(shape);
-
-                    if (i > 0)
-                    {
-                        Vector2 anchor = new Vector2(5.0f + 1.0f * i, 10.0f);
-                        WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor),
-                                                     body.GetLocalPoint(anchor));
-                        World.AddJoint(jd);
-                    }
-
-                    prevBody = body;
-                }
-            }
-
-            //Triangels
-
-            Vertices vertices = new Vertices(3);
-            vertices.Add(new Vector2(-0.5f, 0.0f));
-            vertices.Add(new Vector2(0.5f, 0.0f));
-            vertices.Add(new Vector2(0.0f, 1.5f));
-
-            for (int i = 0; i < 2; ++i)
-            {
-                PolygonShape shape = new PolygonShape(vertices, 1);
-
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
+                body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
 
                 body.CreateFixture(shape);
-            }
 
-            //Circles            
-            for (int i = 0; i < 2; ++i)
-            {
-                CircleShape shape = new CircleShape(0.5f, 1);
+                Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
+                WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor),
+                                             body.GetLocalPoint(anchor));
+                World.AddJoint(jd);
 
-                Body body = BodyFactory.CreateBody(World);
-                body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
-
-                body.CreateFixture(shape);
+                prevBody = body;
             }
         }
 
-        internal static Test Create()
         {
-            return new CantileverTest();
+            Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
+            PolygonShape shape = new PolygonShape(box, 20);
+
+            Body prevBody = ground;
+            for (int i = 0; i < Count; ++i)
+            {
+                Body body = BodyFactory.CreateBody(World);
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(-14.5f + 1.0f * i, 15.0f);
+
+                body.CreateFixture(shape);
+
+                Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 15.0f);
+                WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor),
+                                             body.GetLocalPoint(anchor));
+                World.AddJoint(jd);
+
+                prevBody = body;
+            }
         }
+
+        {
+            Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
+            PolygonShape shape = new PolygonShape(box, 20);
+
+
+            Body prevBody = ground;
+            for (int i = 0; i < Count; ++i)
+            {
+                Body body = BodyFactory.CreateBody(World);
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(-4.5f + 1.0f * i, 5.0f);
+
+                body.CreateFixture(shape);
+
+                if (i > 0)
+                {
+                    Vector2 anchor = new Vector2(-5.0f + 1.0f * i, 5.0f);
+                    WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor),
+                                                 body.GetLocalPoint(anchor));
+                    World.AddJoint(jd);
+                }
+
+                prevBody = body;
+            }
+        }
+
+
+        {
+            Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
+            PolygonShape shape = new PolygonShape(box, 20);
+
+            Body prevBody = ground;
+            for (int i = 0; i < Count; ++i)
+            {
+                Body body = BodyFactory.CreateBody(World);
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(5.5f + 1.0f * i, 10.0f);
+
+                body.CreateFixture(shape);
+
+                if (i > 0)
+                {
+                    Vector2 anchor = new Vector2(5.0f + 1.0f * i, 10.0f);
+                    WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor),
+                                                 body.GetLocalPoint(anchor));
+                    World.AddJoint(jd);
+                }
+
+                prevBody = body;
+            }
+        }
+
+        //Triangels
+
+        Vertices vertices = new Vertices(3);
+        vertices.Add(new Vector2(-0.5f, 0.0f));
+        vertices.Add(new Vector2(0.5f, 0.0f));
+        vertices.Add(new Vector2(0.0f, 1.5f));
+
+        for (int i = 0; i < 2; ++i)
+        {
+            PolygonShape shape = new PolygonShape(vertices, 1);
+
+            Body body = BodyFactory.CreateBody(World);
+            body.BodyType = BodyType.Dynamic;
+            body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
+
+            body.CreateFixture(shape);
+        }
+
+        //Circles            
+        for (int i = 0; i < 2; ++i)
+        {
+            CircleShape shape = new CircleShape(0.5f, 1);
+
+            Body body = BodyFactory.CreateBody(World);
+            body.BodyType = BodyType.Dynamic;
+            body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
+
+            body.CreateFixture(shape);
+        }
+    }
+
+    internal static Test Create()
+    {
+        return new CantileverTest();
     }
 }

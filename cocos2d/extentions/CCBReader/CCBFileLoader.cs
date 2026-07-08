@@ -1,24 +1,23 @@
-namespace Cocos2D
+namespace Cocos2D;
+
+internal class CCBFileLoader : CCNodeLoader
 {
-    internal class CCBFileLoader : CCNodeLoader
+    private const string PROPERTY_CCBFILE = "ccbFile";
+
+    public override CCNode CreateCCNode()
     {
-        private const string PROPERTY_CCBFILE = "ccbFile";
+        return new CCBFile();
+    }
 
-        public override CCNode CreateCCNode()
+    protected override void OnHandlePropTypeCCBFile(CCNode node, CCNode parent, string propertyName, CCNode fileNode, CCBReader reader)
+    {
+        if (propertyName == PROPERTY_CCBFILE)
         {
-            return new CCBFile();
+            ((CCBFile) node).FileNode = fileNode;
         }
-
-        protected override void OnHandlePropTypeCCBFile(CCNode node, CCNode parent, string propertyName, CCNode fileNode, CCBReader reader)
+        else
         {
-            if (propertyName == PROPERTY_CCBFILE)
-            {
-                ((CCBFile) node).FileNode = fileNode;
-            }
-            else
-            {
-                base.OnHandlePropTypeCCBFile(node, parent, propertyName, fileNode, reader);
-            }
+            base.OnHandlePropTypeCCBFile(node, parent, propertyName, fileNode, reader);
         }
     }
 }

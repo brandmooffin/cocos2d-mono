@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class ZoomFlipAngularRightOver : CCTransitionZoomFlipAngular
 {
-    public class ZoomFlipAngularRightOver : CCTransitionZoomFlipAngular
-    {
-        public ZoomFlipAngularRightOver (float t, CCScene s) : base (t, s, CCTransitionOrientation.RightOver)
-        { }
-    }
+    public ZoomFlipAngularRightOver (float t, CCScene s) : base (t, s, CCTransitionOrientation.RightOver)
+    { }
 }
