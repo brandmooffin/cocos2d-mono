@@ -26,9 +26,6 @@ THE SOFTWARE.
 using System;
 using Cocos2D;
 using System.IO;
-#if !(WINDOWS || MACOS || LINUX)
-using System.IO.IsolatedStorage;
-#endif
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -44,9 +41,32 @@ public class CCUserDefault
 	private static string USERDEFAULT_ROOT_NAME = "userDefaultRoot";
 	private static string XML_FILE_NAME = "UserDefault.xml";
 
-#if !(WINDOWS || MACOS || LINUX)
-    private IsolatedStorageFile myIsolatedStorage;
+    private static ICCUserDefaultStorage storage;
+
+    /// <summary>
+    /// The storage backend the settings file is persisted through. Defaults to a plain
+    /// file on desktop and isolated storage elsewhere (the historical behavior). Assign a
+    /// replacement BEFORE the first <see cref="SharedUserDefault"/> access to redirect
+    /// persistence (e.g. console save-data); combine with
+    /// <see cref="PurgeSharedUserDefault"/> when swapping mid-run.
+    /// </summary>
+    public static ICCUserDefaultStorage Storage
+    {
+        get
+        {
+            if (storage == null)
+            {
+#if WINDOWS || MACOS || LINUX
+                storage = new CCFileUserDefaultStorage(XML_FILE_NAME);
+#else
+                storage = new CCIsolatedStorageUserDefaultStorage(XML_FILE_NAME);
 #endif
+            }
+            return storage;
+        }
+        set { storage = value; }
+    }
+
     private Dictionary<string, string> values = new Dictionary<string, string>();
 
     private bool parseXMLFile(Stream xmlFile)
@@ -99,28 +119,13 @@ public class CCUserDefault
 	 */
 	private CCUserDefault()
 	{
-#if WINDOWS || MACOS || LINUX
 		// only create xml file once if it doesnt exist
 		if ((!isXMLFileExist())) {
 			createXMLFile();
 		}
-		using (FileStream fileStream = new FileInfo(XML_FILE_NAME).OpenRead()){
+		using (Stream fileStream = Storage.OpenRead()){
 			parseXMLFile(fileStream);
 		}
-
-#else
-
-        myIsolatedStorage = IsolatedStorageFile.GetUserStoreForApplication();
-
-        // only create xml file once if it doesnt exist
-		if ((!isXMLFileExist())) {
-			createXMLFile();
-		}
-
-		using (IsolatedStorageFileStream fileStream = myIsolatedStorage.OpenFile(XML_FILE_NAME, FileMode.Open, FileAccess.Read)) {
-			parseXMLFile(fileStream);
-		}
-#endif
     }
 
 	public static void PurgeSharedUserDefault()
@@ -263,47 +268,24 @@ public class CCUserDefault
 
 	private bool isXMLFileExist()
 	{
-		bool bRet = false;
-#if WINDOWS || LINUX || MACOS
-		if (new FileInfo(XML_FILE_NAME).Exists) 
-		{
-			bRet = true;
-		}
-#else
-        if (myIsolatedStorage.FileExists(XML_FILE_NAME)) 
-		{
-			bRet = true;
-		}
-#endif
-		return bRet;
+		return Storage.Exists();
 	}
 
 	// create new xml file
-	private bool createXMLFile()
+	private void createXMLFile()
 	{
-		bool bRet = false;
-
-#if WINDOWS || LINUX || MACOS
-		using (StreamWriter writeFile = new StreamWriter(XML_FILE_NAME)) 
-#else
-        using (StreamWriter writeFile = new StreamWriter(new IsolatedStorageFileStream(XML_FILE_NAME, FileMode.Create, FileAccess.Write, myIsolatedStorage)))
-#endif
+		using (StreamWriter writeFile = new StreamWriter(Storage.OpenWrite()))
         {
             string someTextData = "<?xml version=\"1.0\" encoding=\"utf-8\"?><userDefaultRoot>";
             writeFile.WriteLine(someTextData);
             // Do not write anything here. This just creates the temporary xml save file.
             writeFile.WriteLine("</userDefaultRoot>");
         }
-		return bRet;
 	}
 
 	public void Flush()
 	{
-#if WINDOWS || LINUX || MACOS
-		using (StreamWriter stream = new StreamWriter(XML_FILE_NAME)) 
-#else
-		using (StreamWriter stream = new StreamWriter(new IsolatedStorageFileStream(XML_FILE_NAME, FileMode.Create, FileAccess.Write, myIsolatedStorage))) 
-#endif
+		using (StreamWriter stream = new StreamWriter(Storage.OpenWrite()))
 		{
 			//create xml doc
 			XmlWriterSettings ws = new XmlWriterSettings();
