@@ -401,14 +401,6 @@ public class CCTexture2D : CCGraphicsResource
         {
             return (false);
         }
-#if WINDOWS_PHONE8
-        /*
-        byte[] cloneOfData = new byte[data.Length];
-        data.CopyTo(cloneOfData, 0);
-        data = cloneOfData;
-         */
-#endif
-
         var texture = LoadTexture(new MemoryStream(data, false));
 
         if (texture != null)
