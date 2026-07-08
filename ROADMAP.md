@@ -14,7 +14,7 @@ Cocos2D-Mono is an actively maintained 2D game framework for .NET, built on Mono
 Simplify the project and packaging layout — fewer, clearer NuGet packages with centralized, consistent dependency versions — so the framework is easier to consume and maintain. This has landed: the build is consolidated into multi-targeted projects, and the next release ships as three packages (`Cocos2D-Mono`, `Cocos2D-Mono.Core`, `Cocos2D-Mono.Box2D`) replacing the per-platform package line (final per-platform release: 2.5.10). Migration notes live in the README.
 
 ### Quality & testing
-Grow automated test coverage (math primitives, actions, scheduling, serialization) and adopt code analyzers, so changes stay safe and regressions are caught early. A unit-test suite and benchmark project now gate changes in CI and keep growing alongside the work.
+Grow automated test coverage (math primitives, actions, scheduling, serialization) and adopt code analyzers, so changes stay safe and regressions are caught early. A unit-test suite now gates changes in CI and keeps growing alongside the work; a benchmark project supports performance decisions on demand.
 
 ### Modern C#
 Adopt current language features — nullable reference types for null-safety, up-to-date syntax, and value-type discipline for the math types — improving correctness and readability.
