@@ -1,6 +1,5 @@
 using System;
 using Microsoft.Xna.Framework.Media;
-using MediaPlayer = Microsoft.Xna.Framework.Media.MediaPlayer;
 using Cocos2D;
 
 namespace CocosDenshion;
