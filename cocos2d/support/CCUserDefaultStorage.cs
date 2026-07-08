@@ -49,7 +49,9 @@ internal sealed class CCFileUserDefaultStorage : ICCUserDefaultStorage
 
     public Stream OpenWrite()
     {
-        return new FileStream(path, FileMode.Create, FileAccess.Write);
+        // FileShare.Read matches the StreamWriter(path) the pre-seam code used
+        // (its FileStream allows concurrent readers during a write).
+        return new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read);
     }
 }
 #else

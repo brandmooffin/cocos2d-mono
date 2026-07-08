@@ -272,10 +272,8 @@ public class CCUserDefault
 	}
 
 	// create new xml file
-	private bool createXMLFile()
+	private void createXMLFile()
 	{
-		bool bRet = false;
-
 		using (StreamWriter writeFile = new StreamWriter(Storage.OpenWrite()))
         {
             string someTextData = "<?xml version=\"1.0\" encoding=\"utf-8\"?><userDefaultRoot>";
@@ -283,7 +281,6 @@ public class CCUserDefault
             // Do not write anything here. This just creates the temporary xml save file.
             writeFile.WriteLine("</userDefaultRoot>");
         }
-		return bRet;
 	}
 
 	public void Flush()
