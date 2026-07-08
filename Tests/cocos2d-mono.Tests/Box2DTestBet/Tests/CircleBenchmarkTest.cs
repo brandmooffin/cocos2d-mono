@@ -29,51 +29,50 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class CircleBenchmarkTest : Test
 {
-    public class CircleBenchmarkTest : Test
+    private const int XCount = 30;
+    private const int YCount = 15;
+
+    private CircleBenchmarkTest()
     {
-        private const int XCount = 30;
-        private const int YCount = 15;
+        Body ground = BodyFactory.CreateBody(World);
 
-        private CircleBenchmarkTest()
+        // Floor
+        EdgeShape ashape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+        ground.CreateFixture(ashape);
+
+        // Left wall
+        ashape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(-40.0f, 45.0f));
+        ground.CreateFixture(ashape);
+
+        // Right wall
+        ashape = new EdgeShape(new Vector2(40.0f, 0.0f), new Vector2(40.0f, 45.0f));
+        ground.CreateFixture(ashape);
+
+        // Roof
+        ashape = new EdgeShape(new Vector2(-40.0f, 45.0f), new Vector2(40.0f, 45.0f));
+        ground.CreateFixture(ashape);
+
+        CircleShape shape = new CircleShape(1.0f, 1);
+
+        for (int i = 0; i < XCount; i++)
         {
-            Body ground = BodyFactory.CreateBody(World);
-
-            // Floor
-            EdgeShape ashape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-            ground.CreateFixture(ashape);
-
-            // Left wall
-            ashape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(-40.0f, 45.0f));
-            ground.CreateFixture(ashape);
-
-            // Right wall
-            ashape = new EdgeShape(new Vector2(40.0f, 0.0f), new Vector2(40.0f, 45.0f));
-            ground.CreateFixture(ashape);
-
-            // Roof
-            ashape = new EdgeShape(new Vector2(-40.0f, 45.0f), new Vector2(40.0f, 45.0f));
-            ground.CreateFixture(ashape);
-
-            CircleShape shape = new CircleShape(1.0f, 1);
-
-            for (int i = 0; i < XCount; i++)
+            for (int j = 0; j < YCount; ++j)
             {
-                for (int j = 0; j < YCount; ++j)
-                {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-38f + 2.1f * i, 2.0f + 2.0f * j);
+                Body body = BodyFactory.CreateBody(World);
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(-38f + 2.1f * i, 2.0f + 2.0f * j);
 
-                    body.CreateFixture(shape);
-                }
+                body.CreateFixture(shape);
             }
         }
+    }
 
-        public static Test Create()
-        {
-            return new CircleBenchmarkTest();
-        }
+    public static Test Create()
+    {
+        return new CircleBenchmarkTest();
     }
 }

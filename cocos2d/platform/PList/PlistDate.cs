@@ -26,8 +26,8 @@
 
 using System;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public class PlistDate : PlistObject<DateTime>
 	{
 		public PlistDate (DateTime value) : base(value)
@@ -73,12 +73,11 @@ namespace Cocos2D
 
 	    public override PlistArray AsArray
 	    {
-            get { return null; }
-        }
+        get { return null; }
+    }
 
 	    public override PlistDictionary AsDictionary
 	    {
-            get { return null; }
-        }
+        get { return null; }
+    }
 	}
-}

@@ -4,21 +4,21 @@ using System.Linq;
 using System.Text;
 using Box2D.Common;
 
-namespace Box2D.Dynamics
+namespace Box2D.Dynamics;
+
+/// <summary>
+/// A body definition holds all the data needed to construct a rigid body.
+/// You can safely re-use body definitions. Shapes are added to a body after construction.
+/// </summary>
+public class b2BodyDef
 {
-    /// <summary>
-    /// A body definition holds all the data needed to construct a rigid body.
-    /// You can safely re-use body definitions. Shapes are added to a body after construction.
-    /// </summary>
-    public class b2BodyDef
+
+    public b2BodyDef()
     {
+        Defaults();
+    }
 
-        public b2BodyDef()
-        {
-            Defaults();
-        }
-
-        public void Defaults() 
+    public void Defaults() 
 		{
 			userData = null;
 			position = b2Vec2.Zero;
@@ -38,56 +38,55 @@ namespace Box2D.Dynamics
 			gravityScale = 1.0f;
 		}
 
-        /// The body type: static, kinematic, or dynamic.
-        /// Note: if a dynamic body would have zero mass, the mass is set to one.
-        public b2BodyType type;
+    /// The body type: static, kinematic, or dynamic.
+    /// Note: if a dynamic body would have zero mass, the mass is set to one.
+    public b2BodyType type;
 
-        /// The world position of the body. Avoid creating bodies at the origin
-        /// since this can lead to many overlapping shapes.
-        public b2Vec2 position;
+    /// The world position of the body. Avoid creating bodies at the origin
+    /// since this can lead to many overlapping shapes.
+    public b2Vec2 position;
 
-        /// The world angle of the body in radians.
-        public float angle;
+    /// The world angle of the body in radians.
+    public float angle;
 
-        /// The linear velocity of the body's origin in world co-ordinates.
-        public b2Vec2 linearVelocity;
+    /// The linear velocity of the body's origin in world co-ordinates.
+    public b2Vec2 linearVelocity;
 
-        /// The angular velocity of the body.
-        public float angularVelocity;
+    /// The angular velocity of the body.
+    public float angularVelocity;
 
-        /// Linear damping is use to reduce the linear velocity. The damping parameter
-        /// can be larger than 1.0f but the damping effect becomes sensitive to the
-        /// time step when the damping parameter is large.
-        public float linearDamping;
+    /// Linear damping is use to reduce the linear velocity. The damping parameter
+    /// can be larger than 1.0f but the damping effect becomes sensitive to the
+    /// time step when the damping parameter is large.
+    public float linearDamping;
 
-        /// Angular damping is use to reduce the angular velocity. The damping parameter
-        /// can be larger than 1.0f but the damping effect becomes sensitive to the
-        /// time step when the damping parameter is large.
-        public float angularDamping;
+    /// Angular damping is use to reduce the angular velocity. The damping parameter
+    /// can be larger than 1.0f but the damping effect becomes sensitive to the
+    /// time step when the damping parameter is large.
+    public float angularDamping;
 
-        /// Set this flag to false if this body should never fall asleep. Note that
-        /// this increases CPU usage.
-        public bool allowSleep;
+    /// Set this flag to false if this body should never fall asleep. Note that
+    /// this increases CPU usage.
+    public bool allowSleep;
 
-        /// Is this body initially awake or sleeping?
-        public bool awake;
+    /// Is this body initially awake or sleeping?
+    public bool awake;
 
-        /// Should this body be prevented from rotating? Useful for characters.
-        public bool fixedRotation;
+    /// Should this body be prevented from rotating? Useful for characters.
+    public bool fixedRotation;
 
-        /// Is this a fast moving body that should be prevented from tunneling through
-        /// other moving bodies? Note that all bodies are prevented from tunneling through
-        /// kinematic and static bodies. This setting is only considered on dynamic bodies.
-        /// @warning You should use this flag sparingly since it increases processing time.
-        public bool bullet;
+    /// Is this a fast moving body that should be prevented from tunneling through
+    /// other moving bodies? Note that all bodies are prevented from tunneling through
+    /// kinematic and static bodies. This setting is only considered on dynamic bodies.
+    /// @warning You should use this flag sparingly since it increases processing time.
+    public bool bullet;
 
-        /// Does this body start out active?
-        public bool active;
+    /// Does this body start out active?
+    public bool active;
 
-        /// Use this to store application specific body data.
-        public object userData;
+    /// Use this to store application specific body data.
+    public object userData;
 
-        /// Scale the gravity applied to this body.
-        public float gravityScale;
-    }
+    /// Scale the gravity applied to this body.
+    public float gravityScale;
 }

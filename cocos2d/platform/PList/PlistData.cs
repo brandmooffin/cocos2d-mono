@@ -26,65 +26,64 @@
 
 using System;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class PlistData : PlistObject<byte[]>
 {
-    public class PlistData : PlistObject<byte[]>
+    public PlistData(byte[] data)
+        : base(data)
     {
-        public PlistData(byte[] data)
-            : base(data)
-        {
-        }
+    }
 
-        public PlistData(string value)
-            : base(Convert.FromBase64String(value))
-        {
-        }
+    public PlistData(string value)
+        : base(Convert.FromBase64String(value))
+    {
+    }
 
-        public override void Write(System.Xml.XmlWriter writer)
-        {
-            writer.WriteStartElement("data");
-            writer.WriteBase64(Value, Value.Length, 1);
-            writer.WriteEndElement();
-        }
+    public override void Write(System.Xml.XmlWriter writer)
+    {
+        writer.WriteStartElement("data");
+        writer.WriteBase64(Value, Value.Length, 1);
+        writer.WriteEndElement();
+    }
 
-        public override int AsInt
-        {
-            get { throw new NotImplementedException(); }
-        }
+    public override int AsInt
+    {
+        get { throw new NotImplementedException(); }
+    }
 
-        public override float AsFloat
-        {
-            get { throw new NotImplementedException(); }
-        }
+    public override float AsFloat
+    {
+        get { throw new NotImplementedException(); }
+    }
 
-        public override string AsString
-        {
-            get { throw new NotImplementedException(); }
-        }
+    public override string AsString
+    {
+        get { throw new NotImplementedException(); }
+    }
 
-        public override byte[] AsBinary
-        {
-            get { return Value; }
-        }
+    public override byte[] AsBinary
+    {
+        get { return Value; }
+    }
 
-        public override DateTime AsDate
-        {
-            get { throw new NotImplementedException(); }
-        }
+    public override DateTime AsDate
+    {
+        get { throw new NotImplementedException(); }
+    }
 
-        public override bool AsBool
-        {
-            get { throw new NotImplementedException(); }
-        }
+    public override bool AsBool
+    {
+        get { throw new NotImplementedException(); }
+    }
 
-        public override PlistArray AsArray
-        {
-            get { return null; }
-        }
+    public override PlistArray AsArray
+    {
+        get { return null; }
+    }
 
-        public override PlistDictionary AsDictionary
-        {
-            get { return null; }
-        }
+    public override PlistDictionary AsDictionary
+    {
+        get { return null; }
     }
 }

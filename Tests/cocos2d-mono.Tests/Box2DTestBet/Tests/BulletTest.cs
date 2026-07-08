@@ -29,90 +29,89 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class BulletTest : Test
 {
-    public class BulletTest : Test
+    private Body _body;
+    private Body _bullet;
+    private float _x;
+
+    private BulletTest()
     {
-        private Body _body;
-        private Body _bullet;
-        private float _x;
+        BodyFactory.CreateEdge(World, new Vector2(-10, 0), new Vector2(10, 0));
+        BodyFactory.CreateRectangle(World, 0.4f, 2f, 0, new Vector2(0.5f, 1.0f));
 
-        private BulletTest()
+        //Bar
+        _body = BodyFactory.CreateRectangle(World, 4f, 0.2f, 1, new Vector2(0.5f, 1.0f));
+        _body.Position = new Vector2(0, 4);
+        _body.BodyType = BodyType.Dynamic;
+
+        //Bullet
+        _bullet = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 100);
+        _bullet.IsBullet = true;
+        _bullet.BodyType = BodyType.Dynamic;
+        _x = 0.20352793f;
+        _bullet.Position = new Vector2(_x, 10);
+
+        _bullet.LinearVelocity = new Vector2(0, -50);
+    }
+
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        base.Update(settings, gameTime);
+
+        if (Distance.GJKCalls > 0)
         {
-            BodyFactory.CreateEdge(World, new Vector2(-10, 0), new Vector2(10, 0));
-            BodyFactory.CreateRectangle(World, 0.4f, 2f, 0, new Vector2(0.5f, 1.0f));
-
-            //Bar
-            _body = BodyFactory.CreateRectangle(World, 4f, 0.2f, 1, new Vector2(0.5f, 1.0f));
-            _body.Position = new Vector2(0, 4);
-            _body.BodyType = BodyType.Dynamic;
-
-            //Bullet
-            _bullet = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 100);
-            _bullet.IsBullet = true;
-            _bullet.BodyType = BodyType.Dynamic;
-            _x = 0.20352793f;
-            _bullet.Position = new Vector2(_x, 10);
-
-            _bullet.LinearVelocity = new Vector2(0, -50);
+            DebugView.DrawString(50, TextLine, "GJK calls = {0}, Ave GJK iters = {1}, Max GJK iters = {2}",
+                                 Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls,
+                                 Distance.GJKMaxIters);
+            TextLine += 15;
         }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
+        if (TimeOfImpact.TOICalls > 0)
         {
-            base.Update(settings, gameTime);
+            DebugView.DrawString(50, TextLine, "TOI calls = {0}, Ave TOI iters = {1}, Max TOI iters = {2}",
+                                 TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float)TimeOfImpact.TOICalls,
+                                 TimeOfImpact.TOIMaxRootIters);
+            TextLine += 15;
 
-            if (Distance.GJKCalls > 0)
-            {
-                DebugView.DrawString(50, TextLine, "GJK calls = {0}, Ave GJK iters = {1}, Max GJK iters = {2}",
-                                     Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls,
-                                     Distance.GJKMaxIters);
-                TextLine += 15;
-            }
-
-            if (TimeOfImpact.TOICalls > 0)
-            {
-                DebugView.DrawString(50, TextLine, "TOI calls = {0}, Ave TOI iters = {1}, Max TOI iters = {2}",
-                                     TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float)TimeOfImpact.TOICalls,
-                                     TimeOfImpact.TOIMaxRootIters);
-                TextLine += 15;
-
-                DebugView.DrawString(50, TextLine, "Ave TOI root iters = {0}, Max TOI root iters = {1}",
-                                     TimeOfImpact.TOIRootIters / (float)TimeOfImpact.TOICalls,
-                                     TimeOfImpact.TOIMaxRootIters);
-                TextLine += 15;
-            }
-
-            if (StepCount % 60 == 0)
-            {
-                Launch();
-            }
+            DebugView.DrawString(50, TextLine, "Ave TOI root iters = {0}, Max TOI root iters = {1}",
+                                 TimeOfImpact.TOIRootIters / (float)TimeOfImpact.TOICalls,
+                                 TimeOfImpact.TOIMaxRootIters);
+            TextLine += 15;
         }
 
-        private void Launch()
+        if (StepCount % 60 == 0)
         {
-            _body.SetTransform(new Vector2(0.0f, 4.0f), 0.0f);
-            _body.LinearVelocity = Vector2.Zero;
-            _body.AngularVelocity = 0;
-
-            _x = Rand.RandomFloat(-1.0f, 1.0f);
-            _bullet.SetTransform(new Vector2(_x, 10.0f), 0.0f);
-            _bullet.LinearVelocity = new Vector2(0.0f, -50.0f);
-            _bullet.AngularVelocity = 0;
-
-            Distance.GJKCalls = 0;
-            Distance.GJKIters = 0;
-            Distance.GJKMaxIters = 0;
-
-            TimeOfImpact.TOICalls = 0;
-            TimeOfImpact.TOIIters = 0;
-            TimeOfImpact.TOIMaxIters = 0;
-            TimeOfImpact.TOIRootIters = 0;
-            TimeOfImpact.TOIMaxRootIters = 0;
+            Launch();
         }
+    }
 
-        internal static Test Create()
-        {
-            return new BulletTest();
-        }
+    private void Launch()
+    {
+        _body.SetTransform(new Vector2(0.0f, 4.0f), 0.0f);
+        _body.LinearVelocity = Vector2.Zero;
+        _body.AngularVelocity = 0;
+
+        _x = Rand.RandomFloat(-1.0f, 1.0f);
+        _bullet.SetTransform(new Vector2(_x, 10.0f), 0.0f);
+        _bullet.LinearVelocity = new Vector2(0.0f, -50.0f);
+        _bullet.AngularVelocity = 0;
+
+        Distance.GJKCalls = 0;
+        Distance.GJKIters = 0;
+        Distance.GJKMaxIters = 0;
+
+        TimeOfImpact.TOICalls = 0;
+        TimeOfImpact.TOIIters = 0;
+        TimeOfImpact.TOIMaxIters = 0;
+        TimeOfImpact.TOIRootIters = 0;
+        TimeOfImpact.TOIMaxRootIters = 0;
+    }
+
+    internal static Test Create()
+    {
+        return new BulletTest();
     }
 }

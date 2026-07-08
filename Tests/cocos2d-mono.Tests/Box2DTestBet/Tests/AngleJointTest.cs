@@ -30,35 +30,34 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class AngleJointTest : Test
 {
-    public class AngleJointTest : Test
+    private AngleJointTest()
     {
-        private AngleJointTest()
-        {
-            BodyFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0));
+        BodyFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0));
 
-            Body fA = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(-5, 4));
-            fA.BodyType = BodyType.Dynamic;
+        Body fA = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(-5, 4));
+        fA.BodyType = BodyType.Dynamic;
 
-            Body fB = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(5, 4));
-            fB.BodyType = BodyType.Dynamic;
+        Body fB = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(5, 4));
+        fB.BodyType = BodyType.Dynamic;
 
-            AngleJoint joint = new AngleJoint(fA, fB);
-            joint.TargetAngle = (float)Math.PI / 2;
-            World.AddJoint(joint);
+        AngleJoint joint = new AngleJoint(fA, fB);
+        joint.TargetAngle = (float)Math.PI / 2;
+        World.AddJoint(joint);
 
-            Body fC = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(10, 4));
-            fC.BodyType = BodyType.Dynamic;
+        Body fC = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(10, 4));
+        fC.BodyType = BodyType.Dynamic;
 
-            FixedAngleJoint fixedJoint = new FixedAngleJoint(fC);
-            fixedJoint.TargetAngle = (float)Math.PI / 3;
-            World.AddJoint(fixedJoint);
-        }
+        FixedAngleJoint fixedJoint = new FixedAngleJoint(fC);
+        fixedJoint.TargetAngle = (float)Math.PI / 3;
+        World.AddJoint(fixedJoint);
+    }
 
-        internal static Test Create()
-        {
-            return new AngleJointTest();
-        }
+    internal static Test Create()
+    {
+        return new AngleJointTest();
     }
 }

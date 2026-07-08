@@ -2,98 +2,97 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Cocos2D;
 using FarseerPhysics.TestBed.Framework;
 using FarseerPhysics.TestBed.Tests;
 using Microsoft.Xna.Framework;
-using Cocos2D;
 
-namespace tests.classes.tests.Box2DTestBet
+namespace tests.classes.tests.Box2DTestBet;
+
+public class Box2DView : CCLayer
 {
-    public class Box2DView : CCLayer
+    private TestEntry m_entry;
+    private Test m_test;
+    private int m_entryID;
+
+    private GameSettings settings = new GameSettings();
+
+    public bool initWithEntryID(int entryId)
     {
-        private TestEntry m_entry;
-        private Test m_test;
-        private int m_entryID;
 
-        private GameSettings settings = new GameSettings();
+        TouchEnabled = true;
 
-        public bool initWithEntryID(int entryId)
-        {
+        Schedule(tick);
 
-            TouchEnabled = true;
+        m_entry = TestEntries.TestList[entryId];
+        m_test = m_entry.CreateFcn();
+        m_test.Initialize();
 
-            Schedule(tick);
+        return true;
+    }
 
-            m_entry = TestEntries.TestList[entryId];
-            m_test = m_entry.CreateFcn();
-            m_test.Initialize();
+    public string title()
+    {
+        return m_entry.Name;
+    }
 
-            return true;
-        }
+    public void tick(float dt)
+    {
+        m_test.TextLine = 30;
+        m_test.Update(settings, CCApplication.SharedApplication.GameTime);
+    }
 
-        public string title()
-        {
-            return m_entry.Name;
-        }
+    public override void Draw()
+    {
+        base.Draw();
 
-        public void tick(float dt)
-        {
-            m_test.TextLine = 30;
-            m_test.Update(settings, CCApplication.SharedApplication.GameTime);
-        }
+        //CCDrawManager.PushMatrix();
 
-        public override void Draw()
-        {
-            base.Draw();
+        m_test.DebugView.RenderDebugData();
 
-            //CCDrawManager.PushMatrix();
+        //CCDrawManager.PopMatrix();
+    }
 
-            m_test.DebugView.RenderDebugData();
+    public override void RegisterWithTouchDispatcher()
+    {
+        CCDirector pDirector = CCDirector.SharedDirector;
+        pDirector.TouchDispatcher.AddTargetedDelegate(this, -10, true);
+    }
 
-            //CCDrawManager.PopMatrix();
-        }
+    public override bool TouchBegan(CCTouch touch)
+    {
+        CCPoint touchLocation = touch.Location;
 
-        public override void RegisterWithTouchDispatcher()
-        {
-            CCDirector pDirector = CCDirector.SharedDirector;
-            pDirector.TouchDispatcher.AddTargetedDelegate(this, -10, true);
-        }
+        CCPoint nodePosition = ConvertToNodeSpace(touchLocation);
+        //    NSLog(@"pos: %f,%f -> %f,%f", touchLocation.x, touchLocation.y, nodePosition.x, nodePosition.y);
 
-        public override bool TouchBegan(CCTouch touch)
-        {
-            CCPoint touchLocation = touch.Location;
+        m_test.MouseDown(new Vector2(nodePosition.X, nodePosition.Y));
 
-            CCPoint nodePosition = ConvertToNodeSpace(touchLocation);
-            //    NSLog(@"pos: %f,%f -> %f,%f", touchLocation.x, touchLocation.y, nodePosition.x, nodePosition.y);
+        return true;
+    }
 
-            m_test.MouseDown(new Vector2(nodePosition.X, nodePosition.Y));
+    public override void TouchMoved(CCTouch touch)
+    {
+        CCPoint touchLocation = touch.Location;
+        CCPoint nodePosition = ConvertToNodeSpace(touchLocation);
 
-            return true;
-        }
+        m_test.MouseMove(new Vector2(nodePosition.X, nodePosition.Y));
+    }
 
-        public override void TouchMoved(CCTouch touch)
-        {
-            CCPoint touchLocation = touch.Location;
-            CCPoint nodePosition = ConvertToNodeSpace(touchLocation);
+    public override void TouchEnded(CCTouch touch)
+    {
+        CCPoint touchLocation = touch.Location;
+        CCPoint nodePosition = ConvertToNodeSpace(touchLocation);
 
-            m_test.MouseMove(new Vector2(nodePosition.X, nodePosition.Y));
-        }
+        m_test.MouseUp();
+    }
 
-        public override void TouchEnded(CCTouch touch)
-        {
-            CCPoint touchLocation = touch.Location;
-            CCPoint nodePosition = ConvertToNodeSpace(touchLocation);
+    //virtual void accelerometer(UIAccelerometer* accelerometer, CCAcceleration* acceleration);
 
-            m_test.MouseUp();
-        }
-
-        //virtual void accelerometer(UIAccelerometer* accelerometer, CCAcceleration* acceleration);
-
-        public static Box2DView viewWithEntryID(int entryId)
-        {
-            var pView = new Box2DView();
-            pView.initWithEntryID(entryId);
-            return pView;
-        }
+    public static Box2DView viewWithEntryID(int entryId)
+    {
+        var pView = new Box2DView();
+        pView.initWithEntryID(entryId);
+        return pView;
     }
 }

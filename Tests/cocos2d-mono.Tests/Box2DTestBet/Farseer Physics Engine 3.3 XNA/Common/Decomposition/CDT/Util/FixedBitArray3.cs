@@ -33,86 +33,85 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Poly2Tri.Triangulation.Util
+namespace Poly2Tri.Triangulation.Util;
+
+public struct FixedBitArray3 : IEnumerable<bool>
 {
-    public struct FixedBitArray3 : IEnumerable<bool>
+    public bool _0, _1, _2;
+
+    public bool this[int index]
     {
-        public bool _0, _1, _2;
-
-        public bool this[int index]
+        get
         {
-            get
+            switch (index)
             {
-                switch (index)
-                {
-                    case 0:
-                        return _0;
-                    case 1:
-                        return _1;
-                    case 2:
-                        return _2;
-                    default:
-                        throw new IndexOutOfRangeException();
-                }
-            }
-            set
-            {
-                switch (index)
-                {
-                    case 0:
-                        _0 = value;
-                        break;
-                    case 1:
-                        _1 = value;
-                        break;
-                    case 2:
-                        _2 = value;
-                        break;
-                    default:
-                        throw new IndexOutOfRangeException();
-                }
+                case 0:
+                    return _0;
+                case 1:
+                    return _1;
+                case 2:
+                    return _2;
+                default:
+                    throw new IndexOutOfRangeException();
             }
         }
-
-        #region IEnumerable<bool> Members
-
-        public IEnumerator<bool> GetEnumerator()
+        set
         {
-            return Enumerate().GetEnumerator();
+            switch (index)
+            {
+                case 0:
+                    _0 = value;
+                    break;
+                case 1:
+                    _1 = value;
+                    break;
+                case 2:
+                    _2 = value;
+                    break;
+                default:
+                    throw new IndexOutOfRangeException();
+            }
         }
+    }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    #region IEnumerable<bool> Members
 
-        #endregion
+    public IEnumerator<bool> GetEnumerator()
+    {
+        return Enumerate().GetEnumerator();
+    }
 
-        public bool Contains(bool value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) return true;
-            return false;
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 
-        public int IndexOf(bool value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) return i;
-            return -1;
-        }
+    #endregion
 
-        public void Clear()
-        {
-            _0 = _1 = _2 = false;
-        }
+    public bool Contains(bool value)
+    {
+        for (int i = 0; i < 3; ++i) if (this[i] == value) return true;
+        return false;
+    }
 
-        public void Clear(bool value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) this[i] = false;
-        }
+    public int IndexOf(bool value)
+    {
+        for (int i = 0; i < 3; ++i) if (this[i] == value) return i;
+        return -1;
+    }
 
-        private IEnumerable<bool> Enumerate()
-        {
-            for (int i = 0; i < 3; ++i) yield return this[i];
-        }
+    public void Clear()
+    {
+        _0 = _1 = _2 = false;
+    }
+
+    public void Clear(bool value)
+    {
+        for (int i = 0; i < 3; ++i) if (this[i] == value) this[i] = false;
+    }
+
+    private IEnumerable<bool> Enumerate()
+    {
+        for (int i = 0; i < 3; ++i) yield return this[i];
     }
 }

@@ -7,12 +7,11 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace WP7Contrib.Communications.Compression
+namespace WP7Contrib.Communications.Compression;
+
+internal enum ZlibStreamFlavor
 {
-    internal enum ZlibStreamFlavor
-    {
-        ZLIB = 1950,
-        DEFLATE = 1951,
-        GZIP = 1952,
-    }
+    ZLIB = 1950,
+    DEFLATE = 1951,
+    GZIP = 1952,
 }

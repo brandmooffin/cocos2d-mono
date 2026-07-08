@@ -23,70 +23,69 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCTransitionFade : CCTransitionScene
 {
-    public class CCTransitionFade : CCTransitionScene
+    private const int kSceneFade = 2147483647;
+    protected CCColor4B m_tColor;
+
+    /// <summary>
+    /// creates the transition with a duration and with an RGB color
+    /// Example: FadeTransition::create(2, scene, ccc3(255,0,0); // red color
+    /// </summary>
+    public CCTransitionFade (float duration, CCScene scene, CCColor3B color) : base (duration, scene)
     {
-        private const int kSceneFade = 2147483647;
-        protected CCColor4B m_tColor;
+        InitWithDuration(duration, scene, color);
+    }
 
-        /// <summary>
-        /// creates the transition with a duration and with an RGB color
-        /// Example: FadeTransition::create(2, scene, ccc3(255,0,0); // red color
-        /// </summary>
-        public CCTransitionFade (float duration, CCScene scene, CCColor3B color) : base (duration, scene)
+    public CCTransitionFade (float t, CCScene scene) : this (t, scene, new CCColor3B())
+    {
+        //return Create(t, scene, new CCColor3B());
+    }
+
+    /// <summary>
+    /// initializes the transition with a duration and with an RGB color 
+    /// </summary>
+    protected virtual bool InitWithDuration(float duration, CCScene scene, CCColor3B color)
+    {
+        if (base.InitWithDuration(duration, scene))
         {
-            InitWithDuration(duration, scene, color);
+            m_tColor = new CCColor4B {R = color.R, G = color.G, B = color.B, A = 0};
         }
+        return true;
+    }
 
-        public CCTransitionFade (float t, CCScene scene) : this (t, scene, new CCColor3B())
-        {
-            //return Create(t, scene, new CCColor3B());
-        }
+    protected override bool InitWithDuration(float t, CCScene scene)
+    {
+        InitWithDuration(t, scene, new CCColor3B(Microsoft.Xna.Framework.Color.Black));
+        return true;
+    }
 
-        /// <summary>
-        /// initializes the transition with a duration and with an RGB color 
-        /// </summary>
-        protected virtual bool InitWithDuration(float duration, CCScene scene, CCColor3B color)
-        {
-            if (base.InitWithDuration(duration, scene))
-            {
-                m_tColor = new CCColor4B {R = color.R, G = color.G, B = color.B, A = 0};
-            }
-            return true;
-        }
+    public override void OnEnter()
+    {
+        base.OnEnter();
 
-        protected override bool InitWithDuration(float t, CCScene scene)
-        {
-            InitWithDuration(t, scene, new CCColor3B(Microsoft.Xna.Framework.Color.Black));
-            return true;
-        }
+        CCLayerColor l = new CCLayerColor(m_tColor);
+        m_pInScene.Visible = false;
 
-        public override void OnEnter()
-        {
-            base.OnEnter();
+        AddChild(l, 2, kSceneFade);
+        CCNode f = GetChildByTag(kSceneFade);
 
-            CCLayerColor l = new CCLayerColor(m_tColor);
-            m_pInScene.Visible = false;
+        var a = (CCActionInterval) new CCSequence
+                                       (
+                                           new CCFadeIn (m_fDuration / 2),
+                                           new CCCallFunc((HideOutShowIn)),
+                                           new CCFadeOut  (m_fDuration / 2),
+                                           new CCCallFunc((Finish))
+                                       );
 
-            AddChild(l, 2, kSceneFade);
-            CCNode f = GetChildByTag(kSceneFade);
+        f.RunAction(a);
+    }
 
-            var a = (CCActionInterval) new CCSequence
-                                           (
-                                               new CCFadeIn (m_fDuration / 2),
-                                               new CCCallFunc((HideOutShowIn)),
-                                               new CCFadeOut  (m_fDuration / 2),
-                                               new CCCallFunc((Finish))
-                                           );
-
-            f.RunAction(a);
-        }
-
-        public override void OnExit()
-        {
-            base.OnExit();
-            RemoveChildByTag(kSceneFade, false);
-        }
+    public override void OnExit()
+    {
+        base.OnExit();
+        RemoveChildByTag(kSceneFade, false);
     }
 }

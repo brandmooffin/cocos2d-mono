@@ -1,30 +1,30 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Media;
 using Cocos2D;
 using CocosDenshion;
-using System.Diagnostics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Media;
 
-namespace tests 
+namespace tests; 
+
+public class CocosDenshionTest : CCLayer
 {
-    public class CocosDenshionTest : CCLayer
-    {
-        string EFFECT_FILE = "Sounds/effect1";
-        string MUSIC_FILE = "Sounds/background";
-        int LINE_SPACE = 40;
+    string EFFECT_FILE = "Sounds/effect1";
+    string MUSIC_FILE = "Sounds/background";
+    int LINE_SPACE = 40;
 
-        CCMenu m_pItmeMenu;
+    CCMenu m_pItmeMenu;
 	    CCPoint m_tBeginPos;
 	    int m_nTestCount;
 	    int m_nSoundId;
 
-        public CocosDenshionTest()
-        {
-            m_pItmeMenu = null;
-            m_tBeginPos = new CCPoint(0,0);
-            m_nSoundId = 0;
+    public CocosDenshionTest()
+    {
+        m_pItmeMenu = null;
+        m_tBeginPos = new CCPoint(0,0);
+        m_nSoundId = 0;
 
 	        string[] testItems = {
 		        "play background music",
@@ -34,7 +34,7 @@ namespace tests
 		        "rewind background music",
 		        "is background music playing",
 		        "play effect",
-                "play effect repeatly",
+            "play effect repeatly",
 		        "stop effect",
 		        "unload effect",
 		        "add background music volume",
@@ -50,8 +50,8 @@ namespace tests
 
 	        for (int i = 0; i < m_nTestCount; ++i)
 	        {
-                CCLabelTTF label = new CCLabelTTF(testItems[i], "arial", 24);
-                CCMenuItemLabel pMenuItem = new CCMenuItemLabel(label, menuCallback);
+            CCLabelTTF label = new CCLabelTTF(testItems[i], "arial", 24);
+            CCMenuItemLabel pMenuItem = new CCMenuItemLabel(label, menuCallback);
 		
 		        m_pItmeMenu.AddChild(pMenuItem, i + 10000);
 		        pMenuItem.Position = new CCPoint( s.Width / 2, (s.Height - (i + 1) * LINE_SPACE) );
@@ -66,25 +66,25 @@ namespace tests
 	        // preload background music and effect
 	        CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic(CCFileUtils.FullPathFromRelativePath(MUSIC_FILE));
 	        CCSimpleAudioEngine.SharedEngine.PreloadEffect(CCFileUtils.FullPathFromRelativePath(EFFECT_FILE));
-    
-            // set default volume
-            CCSimpleAudioEngine.SharedEngine.EffectsVolume = 0.5f;
-            CCSimpleAudioEngine.SharedEngine.BackgroundMusicVolume = 0.5f;
-        }
 
-        ~CocosDenshionTest()
-        {
-        }
+        // set default volume
+        CCSimpleAudioEngine.SharedEngine.EffectsVolume = 0.5f;
+        CCSimpleAudioEngine.SharedEngine.BackgroundMusicVolume = 0.5f;
+    }
 
-        public override void OnExit()
-        {
+    ~CocosDenshionTest()
+    {
+    }
+
+    public override void OnExit()
+    {
 	        base.OnExit();
 
 	        CCSimpleAudioEngine.SharedEngine.End();
-        }
+    }
 
-        public void menuCallback(object pSender)
-        {
+    public void menuCallback(object pSender)
+    {
 	        // get the userdata, it's the index of the menu item clicked
 	        CCMenuItem pMenuItem = (CCMenuItem)(pSender);
 	        int nIdx = pMenuItem.ZOrder - 10000;
@@ -120,18 +120,18 @@ namespace tests
 		        }
 		        else
 		        {
-                    CCLog.Log("background music is not playing");
+                CCLog.Log("background music is not playing");
 		        }
 		        break;
 	        // play effect
 	        case 6:
 		        m_nSoundId = CCSimpleAudioEngine.SharedEngine.PlayEffect(CCFileUtils.FullPathFromRelativePath(EFFECT_FILE));
 		        break;
-            // play effect
-            case 7:
-                m_nSoundId = CCSimpleAudioEngine.SharedEngine.PlayEffect(CCFileUtils.FullPathFromRelativePath(EFFECT_FILE), true);
-                break;
-            // stop effect
+        // play effect
+        case 7:
+            m_nSoundId = CCSimpleAudioEngine.SharedEngine.PlayEffect(CCFileUtils.FullPathFromRelativePath(EFFECT_FILE), true);
+            break;
+        // stop effect
 	        case 8:
 		        CCSimpleAudioEngine.SharedEngine.StopEffect(m_nSoundId);
 		        break;
@@ -157,18 +157,18 @@ namespace tests
 		        break;
 	        }
 	
-        }
+    }
 
-        public override void TouchesBegan(List<CCTouch> pTouches)
-        {
-            CCTouch touch = pTouches.FirstOrDefault();
+    public override void TouchesBegan(List<CCTouch> pTouches)
+    {
+        CCTouch touch = pTouches.FirstOrDefault();
 
-            var m_tBeginPos = touch.Location;
-        }
+        var m_tBeginPos = touch.Location;
+    }
 
-        public override void TouchesMoved(List<CCTouch> pTouches)
-        {
-            CCTouch touch = pTouches.FirstOrDefault();
+    public override void TouchesMoved(List<CCTouch> pTouches)
+    {
+        CCTouch touch = pTouches.FirstOrDefault();
 
 	        CCPoint touchLocation = touch.LocationInView;	
 	        touchLocation = CCDirector.SharedDirector.ConvertToGl( touchLocation );
@@ -191,55 +191,54 @@ namespace tests
 
 	        m_pItmeMenu.Position = nextPos;
 	        m_tBeginPos = touchLocation;
-        }
-
-
     }
 
 
-    public class CocosDenshionTestScene : TestScene
+}
+
+
+public class CocosDenshionTestScene : TestScene
+{
+    private static int sceneIdx = -1;
+    private static int MAX_LAYER = 2;
+
+    protected override void NextTestCase() { nextTestAction(); }
+    protected override void PreviousTestCase() { backTestAction(); }
+    protected override void RestTestCase() { restartTestAction(); }
+
+    public override void runThisTest()
     {
-        private static int sceneIdx = -1;
-        private static int MAX_LAYER = 2;
-
-        protected override void NextTestCase() { nextTestAction(); }
-        protected override void PreviousTestCase() { backTestAction(); }
-        protected override void RestTestCase() { restartTestAction(); }
-
-        public override void runThisTest()
-        {
 	        CCLayer pLayer = nextTestAction();
 	        AddChild(pLayer);
 	        CCDirector.SharedDirector.ReplaceScene(this);
-        }
+    }
 
-        public static CCLayer createTestLayer(int nIndex)
+    public static CCLayer createTestLayer(int nIndex)
+    {
+        switch (nIndex)
         {
-            switch (nIndex)
-            {
-                case 0: return new CocosDenshionTest();
-                case 1: return new CocosDenshionExtendedTest();
-            }
-            return null;
+            case 0: return new CocosDenshionTest();
+            case 1: return new CocosDenshionExtendedTest();
         }
+        return null;
+    }
 
-        public static CCLayer nextTestAction()
-        {
-            sceneIdx++;
-            sceneIdx = sceneIdx % MAX_LAYER;
-            return createTestLayer(sceneIdx);
-        }
+    public static CCLayer nextTestAction()
+    {
+        sceneIdx++;
+        sceneIdx = sceneIdx % MAX_LAYER;
+        return createTestLayer(sceneIdx);
+    }
 
-        public static CCLayer backTestAction()
-        {
-            sceneIdx--;
-            if (sceneIdx < 0) sceneIdx += MAX_LAYER;
-            return createTestLayer(sceneIdx);
-        }
+    public static CCLayer backTestAction()
+    {
+        sceneIdx--;
+        if (sceneIdx < 0) sceneIdx += MAX_LAYER;
+        return createTestLayer(sceneIdx);
+    }
 
-        public static CCLayer restartTestAction()
-        {
-            return createTestLayer(sceneIdx);
-        }
+    public static CCLayer restartTestAction()
+    {
+        return createTestLayer(sceneIdx);
     }
 }

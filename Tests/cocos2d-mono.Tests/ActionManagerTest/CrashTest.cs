@@ -4,45 +4,44 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+
+public class CrashTest : ActionManagerTest
 {
+    string s_pPathGrossini = "Images/grossini";
 
-    public class CrashTest : ActionManagerTest
+    public override string title()
     {
-        string s_pPathGrossini = "Images/grossini";
+        return "Test 1. Should not crash";
+    }
 
-        public override string title()
-        {
-            return "Test 1. Should not crash";
-        }
+    public override void OnEnter()
+    {
+        base.OnEnter();
 
-        public override void OnEnter()
-        {
-            base.OnEnter();
+        CCSprite child = new CCSprite(s_pPathGrossini);
+        child.Position = (new CCPoint(200, 200));
+        AddChild(child, 1);
 
-            CCSprite child = new CCSprite(s_pPathGrossini);
-            child.Position = (new CCPoint(200, 200));
-            AddChild(child, 1);
+        //Sum of all action's duration is 1.5 second.
+        child.RunAction(new CCRotateBy (1.5f, 90));
+        child.RunAction(new CCSequence(
+                                                new CCDelayTime (1.4f),
+                                                new CCFadeOut  (1.1f))
+                        );
 
-            //Sum of all action's duration is 1.5 second.
-            child.RunAction(new CCRotateBy (1.5f, 90));
-            child.RunAction(new CCSequence(
-                                                    new CCDelayTime (1.4f),
-                                                    new CCFadeOut  (1.1f))
-                            );
+        //After 1.5 second, self will be removed.
+        RunAction(new CCSequence(
+                                        new CCDelayTime (1.4f),
+                                        new CCCallFunc((removeThis)))
+                 );
+    }
 
-            //After 1.5 second, self will be removed.
-            RunAction(new CCSequence(
-                                            new CCDelayTime (1.4f),
-                                            new CCCallFunc((removeThis)))
-                     );
-        }
+    public void removeThis()
+    {
+        m_pParent.RemoveChild(this, true);
 
-        public void removeThis()
-        {
-            m_pParent.RemoveChild(this, true);
-
-            nextCallback(this);
-        }
+        nextCallback(this);
     }
 }

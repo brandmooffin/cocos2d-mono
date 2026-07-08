@@ -29,12 +29,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace FarseerPhysics.Common.Decomposition.CDT
+namespace FarseerPhysics.Common.Decomposition.CDT;
+
+public enum Orientation
 {
-    public enum Orientation
-    {
-        CW,
-        CCW,
-        Collinear
-    }
+    CW,
+    CCW,
+    Collinear
 }

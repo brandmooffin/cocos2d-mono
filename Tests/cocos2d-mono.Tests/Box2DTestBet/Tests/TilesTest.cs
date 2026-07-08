@@ -32,95 +32,94 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+/// <summary>
+/// This stress tests the dynamic tree broad-phase. This also shows that tile
+/// based collision is _not_ smooth due to Box2D not knowing about adjacency.
+/// </summary>
+public class TilesTest : Test
 {
-    /// <summary>
-    /// This stress tests the dynamic tree broad-phase. This also shows that tile
-    /// based collision is _not_ smooth due to Box2D not knowing about adjacency.
-    /// </summary>
-    public class TilesTest : Test
+    private const int Count = 20;
+
+    private TilesTest()
     {
-        private const int Count = 20;
-
-        private TilesTest()
         {
+            const float a = 0.5f;
+            Body ground = BodyFactory.CreateBody(World, new Vector2(0, -a));
+            const int n = 200;
+            const int m = 10;
+            Vector2 position = Vector2.Zero;
+            position.Y = 0.0f;
+            for (int j = 0; j < m; ++j)
             {
-                const float a = 0.5f;
-                Body ground = BodyFactory.CreateBody(World, new Vector2(0, -a));
-                const int n = 200;
-                const int m = 10;
-                Vector2 position = Vector2.Zero;
-                position.Y = 0.0f;
-                for (int j = 0; j < m; ++j)
+                position.X = -n * a;
+                for (int i = 0; i < n; ++i)
                 {
-                    position.X = -n * a;
-                    for (int i = 0; i < n; ++i)
-                    {
-                        PolygonShape shape = new PolygonShape(0);
-                        shape.SetAsBox(a, a, position, 0.0f);
-                        ground.CreateFixture(shape);
-                        position.X += 2.0f * a;
-                    }
-                    position.Y -= 2.0f * a;
+                    PolygonShape shape = new PolygonShape(0);
+                    shape.SetAsBox(a, a, position, 0.0f);
+                    ground.CreateFixture(shape);
+                    position.X += 2.0f * a;
                 }
+                position.Y -= 2.0f * a;
             }
+        }
 
+        {
+            const float a = 0.5f;
+            Vertices box = PolygonTools.CreateRectangle(a, a);
+            PolygonShape shape = new PolygonShape(box, 5);
+
+            Vector2 x = new Vector2(-7.0f, 0.75f);
+            Vector2 deltaX = new Vector2(0.5625f, 1.25f);
+            Vector2 deltaY = new Vector2(1.125f, 0.0f);
+
+            for (int i = 0; i < Count; ++i)
             {
-                const float a = 0.5f;
-                Vertices box = PolygonTools.CreateRectangle(a, a);
-                PolygonShape shape = new PolygonShape(box, 5);
+                Vector2 y = x;
 
-                Vector2 x = new Vector2(-7.0f, 0.75f);
-                Vector2 deltaX = new Vector2(0.5625f, 1.25f);
-                Vector2 deltaY = new Vector2(1.125f, 0.0f);
-
-                for (int i = 0; i < Count; ++i)
+                for (int j = i; j < Count; ++j)
                 {
-                    Vector2 y = x;
+                    Body body = BodyFactory.CreateBody(World);
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = y;
+                    body.CreateFixture(shape);
 
-                    for (int j = i; j < Count; ++j)
-                    {
-                        Body body = BodyFactory.CreateBody(World);
-                        body.BodyType = BodyType.Dynamic;
-                        body.Position = y;
-                        body.CreateFixture(shape);
-
-                        y += deltaY;
-                    }
-
-                    x += deltaX;
+                    y += deltaY;
                 }
+
+                x += deltaX;
             }
         }
+    }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        ContactManager cm = World.ContactManager;
+        DynamicTreeBroadPhase dt = cm.BroadPhase as DynamicTreeBroadPhase;
+        if (dt != null)
         {
-            ContactManager cm = World.ContactManager;
-            DynamicTreeBroadPhase dt = cm.BroadPhase as DynamicTreeBroadPhase;
-            if (dt != null)
-            {
-                int height = dt.ComputeHeight();
+            int height = dt.ComputeHeight();
 
-                int leafCount = dt.ProxyCount;
-                int minimumNodeCount = 2 * leafCount - 1;
-                float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
-                DebugView.DrawString(50, TextLine, "Test of dynamic tree performance in worse case scenario.", height,
-                                     minimumHeight);
-                TextLine += 15;
-                DebugView.DrawString(50, TextLine, "I know this is slow. I hope to address this in a future update.",
-                                     height,
-                                     minimumHeight);
-                TextLine += 15;
-                DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}, min = {1}", height, minimumHeight);
-                TextLine += 15;
-            }
-
-            base.Update(settings, gameTime);
+            int leafCount = dt.ProxyCount;
+            int minimumNodeCount = 2 * leafCount - 1;
+            float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
+            DebugView.DrawString(50, TextLine, "Test of dynamic tree performance in worse case scenario.", height,
+                                 minimumHeight);
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine, "I know this is slow. I hope to address this in a future update.",
+                                 height,
+                                 minimumHeight);
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}, min = {1}", height, minimumHeight);
+            TextLine += 15;
         }
 
-        internal static Test Create()
-        {
-            return new TilesTest();
-        }
+        base.Update(settings, gameTime);
+    }
+
+    internal static Test Create()
+    {
+        return new TilesTest();
     }
 }

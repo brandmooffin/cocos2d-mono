@@ -23,18 +23,17 @@ THE SOFTWARE.
 using System;
 using System.Diagnostics;
 
-namespace Cocos2D
-{
-    public class CCLog
-    { 
-        public static void Log(string message)
-        {
-            Debug.WriteLine(message);
-        }
+namespace Cocos2D;
 
-        public static void Log(string format, params object[] args)
-        {
-            Debug.WriteLine(format, args);
-        }
+public class CCLog
+{ 
+    public static void Log(string message)
+    {
+        Debug.WriteLine(message);
+    }
+
+    public static void Log(string format, params object[] args)
+    {
+        Debug.WriteLine(format, args);
     }
 }

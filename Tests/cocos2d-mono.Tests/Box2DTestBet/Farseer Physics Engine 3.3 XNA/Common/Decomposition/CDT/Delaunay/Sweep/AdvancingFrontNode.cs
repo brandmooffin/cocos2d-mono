@@ -35,30 +35,29 @@
 // Future possibilities
 //   Comments!
 
-namespace Poly2Tri.Triangulation.Delaunay.Sweep
+namespace Poly2Tri.Triangulation.Delaunay.Sweep;
+
+public class AdvancingFrontNode
 {
-    public class AdvancingFrontNode
+    public AdvancingFrontNode Next;
+    public TriangulationPoint Point;
+    public AdvancingFrontNode Prev;
+    public DelaunayTriangle Triangle;
+    public double Value;
+
+    public AdvancingFrontNode(TriangulationPoint point)
     {
-        public AdvancingFrontNode Next;
-        public TriangulationPoint Point;
-        public AdvancingFrontNode Prev;
-        public DelaunayTriangle Triangle;
-        public double Value;
+        Point = point;
+        Value = point.X;
+    }
 
-        public AdvancingFrontNode(TriangulationPoint point)
-        {
-            Point = point;
-            Value = point.X;
-        }
+    public bool HasNext
+    {
+        get { return Next != null; }
+    }
 
-        public bool HasNext
-        {
-            get { return Next != null; }
-        }
-
-        public bool HasPrev
-        {
-            get { return Prev != null; }
-        }
+    public bool HasPrev
+    {
+        get { return Prev != null; }
     }
 }

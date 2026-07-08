@@ -1,125 +1,124 @@
 using System;
 using Cocos2D;
 
-namespace tests.Extensions
+namespace tests.Extensions;
+
+public class HelloCocosBuilderLayer : BaseLayer
 {
-    public class HelloCocosBuilderLayer : BaseLayer
+    public CCLabelTTF mTestTitleLabelTTF;
+    public CCSprite mBurstSprite;
+
+    public int mCustomPropertyInt;
+    public float mCustomPropertyFloat;
+    public bool mCustomPropertyBoolean;
+    public string mCustomPropertyString;
+
+    public override void OnNodeLoaded(CCNode node, CCNodeLoader nodeLoader)
     {
-        public CCLabelTTF mTestTitleLabelTTF;
-        public CCSprite mBurstSprite;
+        CCRotateBy ccRotateBy = new CCRotateBy (20.0f, 360);
+        CCRepeatForever ccRepeatForever = new CCRepeatForever (ccRotateBy);
+        mBurstSprite.RunAction(ccRepeatForever);
+    }
 
-        public int mCustomPropertyInt;
-        public float mCustomPropertyFloat;
-        public bool mCustomPropertyBoolean;
-        public string mCustomPropertyString;
+    public void openTest(string pCCBFileName, string pCCNodeName, CCNodeLoader pCCNodeLoader)
+    {
+        /* Create an autorelease CCNodeLoaderLibrary. */
+        CCNodeLoaderLibrary ccNodeLoaderLibrary = new CCNodeLoaderLibrary();
 
-        public override void OnNodeLoaded(CCNode node, CCNodeLoader nodeLoader)
+        ccNodeLoaderLibrary.RegisterCCNodeLoader("TestHeaderLayer", new Loader<TestHeaderLayer>());
+        if (pCCNodeName != null && pCCNodeLoader != null)
         {
-            CCRotateBy ccRotateBy = new CCRotateBy (20.0f, 360);
-            CCRepeatForever ccRepeatForever = new CCRepeatForever (ccRotateBy);
-            mBurstSprite.RunAction(ccRepeatForever);
+            ccNodeLoaderLibrary.RegisterCCNodeLoader(pCCNodeName, pCCNodeLoader);
         }
 
-        public void openTest(string pCCBFileName, string pCCNodeName, CCNodeLoader pCCNodeLoader)
-        {
-            /* Create an autorelease CCNodeLoaderLibrary. */
-            CCNodeLoaderLibrary ccNodeLoaderLibrary = new CCNodeLoaderLibrary();
+        /* Create an autorelease CCBReader. */
+        var ccbReader = new CCBReader(ccNodeLoaderLibrary);
 
-            ccNodeLoaderLibrary.RegisterCCNodeLoader("TestHeaderLayer", new Loader<TestHeaderLayer>());
-            if (pCCNodeName != null && pCCNodeLoader != null)
-            {
-                ccNodeLoaderLibrary.RegisterCCNodeLoader(pCCNodeName, pCCNodeLoader);
-            }
+        /* Read a ccbi file. */
+        // Load the scene from the ccbi-file, setting this class as
+        // the owner will cause lblTestTitle to be set by the CCBReader.
+        // lblTestTitle is in the TestHeader.ccbi, which is referenced
+        // from each of the test scenes.
+        CCNode node = ccbReader.ReadNodeGraphFromFile(pCCBFileName, this);
 
-            /* Create an autorelease CCBReader. */
-            var ccbReader = new CCBReader(ccNodeLoaderLibrary);
+        mTestTitleLabelTTF.Text = (pCCBFileName);
 
-            /* Read a ccbi file. */
-            // Load the scene from the ccbi-file, setting this class as
-            // the owner will cause lblTestTitle to be set by the CCBReader.
-            // lblTestTitle is in the TestHeader.ccbi, which is referenced
-            // from each of the test scenes.
-            CCNode node = ccbReader.ReadNodeGraphFromFile(pCCBFileName, this);
+        CCScene scene = new CCScene();
+        scene.AddChild(node);
 
-            mTestTitleLabelTTF.Text = (pCCBFileName);
+        /* Push the new scene with a fancy transition. */
+        CCColor3B transitionColor;
+        transitionColor.R = 0;
+        transitionColor.G = 0;
+        transitionColor.B = 0;
 
-            CCScene scene = new CCScene();
-            scene.AddChild(node);
+        CCDirector.SharedDirector.PushScene(new CCTransitionFade(0.5f, scene, transitionColor));
+    }
 
-            /* Push the new scene with a fancy transition. */
-            CCColor3B transitionColor;
-            transitionColor.R = 0;
-            transitionColor.G = 0;
-            transitionColor.B = 0;
+    public void onMenuTestClicked(object pSender, CCControlEvent pCCControlEvent)
+    {
+        openTest("ccb/ccb/TestMenus.ccbi", "TestMenusLayer", new Loader<MenuTestLayer>());
+    }
 
-            CCDirector.SharedDirector.PushScene(new CCTransitionFade(0.5f, scene, transitionColor));
-        }
+    public void onSpriteTestClicked(object pSender, CCControlEvent pCCControlEvent)
+    {
+        openTest("ccb/ccb/TestSprites.ccbi", "TestSpritesLayer", new Loader<SpriteTestLayer>());
+    }
 
-        public void onMenuTestClicked(object pSender, CCControlEvent pCCControlEvent)
-        {
-            openTest("ccb/ccb/TestMenus.ccbi", "TestMenusLayer", new Loader<MenuTestLayer>());
-        }
+    public void onButtonTestClicked(object pSender, CCControlEvent pCCControlEvent)
+    {
+        openTest("ccb/ccb/TestButtons.ccbi", "TestButtonsLayer", new Loader<ButtonTestLayer>());
+    }
 
-        public void onSpriteTestClicked(object pSender, CCControlEvent pCCControlEvent)
-        {
-            openTest("ccb/ccb/TestSprites.ccbi", "TestSpritesLayer", new Loader<SpriteTestLayer>());
-        }
+    public void onAnimationsTestClicked(object pSender, CCControlEvent pCCControlEvent)
+    {
+        // Load node graph (TestAnimations is a sub class of CCLayer) and retrieve the ccb action manager
+        CCBAnimationManager actionManager = null;
 
-        public void onButtonTestClicked(object pSender, CCControlEvent pCCControlEvent)
-        {
-            openTest("ccb/ccb/TestButtons.ccbi", "TestButtonsLayer", new Loader<ButtonTestLayer>());
-        }
+        /* Create an autorelease CCNodeLoaderLibrary. */
+        CCNodeLoaderLibrary ccNodeLoaderLibrary = new CCNodeLoaderLibrary();
 
-        public void onAnimationsTestClicked(object pSender, CCControlEvent pCCControlEvent)
-        {
-            // Load node graph (TestAnimations is a sub class of CCLayer) and retrieve the ccb action manager
-            CCBAnimationManager actionManager = null;
-
-            /* Create an autorelease CCNodeLoaderLibrary. */
-            CCNodeLoaderLibrary ccNodeLoaderLibrary = new CCNodeLoaderLibrary();
-
-            ccNodeLoaderLibrary.RegisterCCNodeLoader("TestHeaderLayer", new Loader<TestHeaderLayer>());
-            ccNodeLoaderLibrary.RegisterCCNodeLoader("TestAnimationsLayer", new Loader<AnimationsTestLayer>());
+        ccNodeLoaderLibrary.RegisterCCNodeLoader("TestHeaderLayer", new Loader<TestHeaderLayer>());
+        ccNodeLoaderLibrary.RegisterCCNodeLoader("TestAnimationsLayer", new Loader<AnimationsTestLayer>());
 
 
-            /* Create an autorelease CCBReader. */
-            var ccbReader = new CCBReader(ccNodeLoaderLibrary);
+        /* Create an autorelease CCBReader. */
+        var ccbReader = new CCBReader(ccNodeLoaderLibrary);
 
-            /* Read a ccbi file. */
-            // Load the scene from the ccbi-file, setting this class as
-            // the owner will cause lblTestTitle to be set by the CCBReader.
-            // lblTestTitle is in the TestHeader.ccbi, which is referenced
-            // from each of the test scenes.
-            CCNode animationsTest = ccbReader.ReadNodeGraphFromFile("ccb/ccb/TestAnimations.ccbi", this);
-            ((AnimationsTestLayer) animationsTest).setAnimationManager(ccbReader.AnimationManager);
+        /* Read a ccbi file. */
+        // Load the scene from the ccbi-file, setting this class as
+        // the owner will cause lblTestTitle to be set by the CCBReader.
+        // lblTestTitle is in the TestHeader.ccbi, which is referenced
+        // from each of the test scenes.
+        CCNode animationsTest = ccbReader.ReadNodeGraphFromFile("ccb/ccb/TestAnimations.ccbi", this);
+        ((AnimationsTestLayer) animationsTest).setAnimationManager(ccbReader.AnimationManager);
 
-            mTestTitleLabelTTF.Text = ("TestAnimations.ccbi");
+        mTestTitleLabelTTF.Text = ("TestAnimations.ccbi");
 
-            CCScene scene = new CCScene();
-            scene.AddChild(animationsTest);
+        CCScene scene = new CCScene();
+        scene.AddChild(animationsTest);
 
-            /* Push the new scene with a fancy transition. */
-            CCColor3B transitionColor;
-            transitionColor.R = 0;
-            transitionColor.G = 0;
-            transitionColor.B = 0;
+        /* Push the new scene with a fancy transition. */
+        CCColor3B transitionColor;
+        transitionColor.R = 0;
+        transitionColor.G = 0;
+        transitionColor.B = 0;
 
-            CCDirector.SharedDirector.PushScene(new CCTransitionFade(0.5f, scene, transitionColor));
-        }
+        CCDirector.SharedDirector.PushScene(new CCTransitionFade(0.5f, scene, transitionColor));
+    }
 
-        public void onParticleSystemTestClicked(object pSender, CCControlEvent pCCControlEvent)
-        {
-            openTest("ccb/ccb/TestParticleSystems.ccbi", "TestParticleSystemsLayer", new Loader<ParticleSystemTestLayer>());
-        }
+    public void onParticleSystemTestClicked(object pSender, CCControlEvent pCCControlEvent)
+    {
+        openTest("ccb/ccb/TestParticleSystems.ccbi", "TestParticleSystemsLayer", new Loader<ParticleSystemTestLayer>());
+    }
 
-        public void onScrollViewTestClicked(object pSender, CCControlEvent pCCControlEvent)
-        {
-            openTest("ccb/ccb/TestScrollViews.ccbi", "TestScrollViewsLayer", new Loader<ScrollViewTestLayer>());
-        }
+    public void onScrollViewTestClicked(object pSender, CCControlEvent pCCControlEvent)
+    {
+        openTest("ccb/ccb/TestScrollViews.ccbi", "TestScrollViewsLayer", new Loader<ScrollViewTestLayer>());
+    }
 
-        public void onTimelineCallbackSoundClicked(object pSender, CCControlEvent pCCControlEvent)
-        {
-            openTest("ccb/ccb/TestTimelineCallback.ccbi", "TimelineCallbackTestLayer", new Loader<TimelineCallbackTestLayer>());
-        }
+    public void onTimelineCallbackSoundClicked(object pSender, CCControlEvent pCCControlEvent)
+    {
+        openTest("ccb/ccb/TestTimelineCallback.ccbi", "TimelineCallbackTestLayer", new Loader<TimelineCallbackTestLayer>());
     }
 }

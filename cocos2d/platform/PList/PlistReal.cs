@@ -26,12 +26,12 @@
 
 using System;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public class PlistReal : PlistObject<float>
 	{
-        public PlistReal(float value)
-            : base(value)
+    public PlistReal(float value)
+        : base(value)
 		{
 		}
 
@@ -80,4 +80,3 @@ namespace Cocos2D
 	        get { throw new NotImplementedException(); }
 	    }
 	}
-}

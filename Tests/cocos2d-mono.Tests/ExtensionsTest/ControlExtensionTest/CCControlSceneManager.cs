@@ -1,24 +1,24 @@
 using System;
 using Cocos2D;
 
-namespace tests.Extensions
-{
+namespace tests.Extensions;
+
 	public class CCControlSceneManager 
 	{
-        
-        public const int kCCControlSliderTest = 0;
+    
+    public const int kCCControlSliderTest = 0;
 		//public const int kCCControlColourPickerTest = 2;
 		public const int kCCControlSwitchTest = 1;
 		public const int kCCControlButtonTest_HelloVariableSize = 2;
 		public const int kCCControlButtonTest_Event = 3;
 		public const int kCCControlButtonTest_Styling = 4;
-        public const int kCCControlButtonTest_Inset = 5;
+    public const int kCCControlButtonTest_Inset = 5;
 	    public const int kCCControlButtonTest_Potentiometer = 6;
-        public const int kCCControlButtonTest_ColourPicker = 7;
-        public const int kCCControlButtonTest_Stepper = 8;
-        public const int kCCControlButtonTest_Issue448 = 9;
+    public const int kCCControlButtonTest_ColourPicker = 7;
+    public const int kCCControlButtonTest_Stepper = 8;
+    public const int kCCControlButtonTest_Issue448 = 9;
 
-        public const int kCCControlTestMax = 10;
+    public const int kCCControlTestMax = 10;
 
 
 		public CCControlSceneManager()
@@ -33,11 +33,11 @@ namespace tests.Extensions
 		    "ControlButtonTest_HelloVariableSize",
 		    "ControlButtonTest_Event",
 		    "ControlButtonTest_Styling",
-            "ControlButtonTest_Inset",
-            "ControlButtonTest_Potentiometer",
-            "ControlButtonTest_ColourPicker",
-            "ControlButtonTest_Stepper",
-            "ControlButtonTest_Issue448"
+        "ControlButtonTest_Inset",
+        "ControlButtonTest_Potentiometer",
+        "ControlButtonTest_ColourPicker",
+        "ControlButtonTest_Stepper",
+        "ControlButtonTest_Issue448"
 		};
 
 		private static CCControlSceneManager sharedInstance = null;
@@ -94,17 +94,17 @@ namespace tests.Extensions
 					return CCControlButtonTest_Event.sceneWithTitle(s_testArray[m_nCurrentControlSceneId]);
 				case kCCControlButtonTest_Styling:
 					return CCControlButtonTest_Styling.sceneWithTitle(s_testArray[m_nCurrentControlSceneId]);
-                case kCCControlButtonTest_Inset:
-                    return CCControlButtonTest_Inset.sceneWithTitle(s_testArray[m_nCurrentControlSceneId]);
-                case kCCControlButtonTest_Potentiometer:
-                    return CCControlPotentiometerTest.sceneWithTitle(s_testArray[m_nCurrentControlSceneId]);
-                case kCCControlButtonTest_ColourPicker:
-                    return CCControlColourPickerTest.sceneWithTitle(s_testArray[m_nCurrentControlSceneId]);
-                case kCCControlButtonTest_Stepper:
-                    return CCControlStepperTest.sceneWithTitle(s_testArray[m_nCurrentControlSceneId]);
-                case kCCControlButtonTest_Issue448:
-                    return CCControlButtonTest_Issue448.sceneWithTitle(s_testArray[m_nCurrentControlSceneId]);
-            }
+            case kCCControlButtonTest_Inset:
+                return CCControlButtonTest_Inset.sceneWithTitle(s_testArray[m_nCurrentControlSceneId]);
+            case kCCControlButtonTest_Potentiometer:
+                return CCControlPotentiometerTest.sceneWithTitle(s_testArray[m_nCurrentControlSceneId]);
+            case kCCControlButtonTest_ColourPicker:
+                return CCControlColourPickerTest.sceneWithTitle(s_testArray[m_nCurrentControlSceneId]);
+            case kCCControlButtonTest_Stepper:
+                return CCControlStepperTest.sceneWithTitle(s_testArray[m_nCurrentControlSceneId]);
+            case kCCControlButtonTest_Issue448:
+                return CCControlButtonTest_Issue448.sceneWithTitle(s_testArray[m_nCurrentControlSceneId]);
+        }
 			return null;
 		}
 
@@ -114,4 +114,3 @@ namespace tests.Extensions
 		public virtual void setCurrentControlSceneId(int var){ m_nCurrentControlSceneId = var; }
 
 	}
-}

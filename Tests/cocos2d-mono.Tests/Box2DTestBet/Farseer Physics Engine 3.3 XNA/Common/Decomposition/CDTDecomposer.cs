@@ -30,81 +30,79 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Poly2Tri.Triangulation;
 using Poly2Tri.Triangulation.Delaunay;
 using Poly2Tri.Triangulation.Delaunay.Sweep;
 using Poly2Tri.Triangulation.Polygon;
 
-using System.Linq;
+namespace FarseerPhysics.Common.Decomposition;
 
-namespace FarseerPhysics.Common.Decomposition
+public static class CDTDecomposer
 {
-    public static class CDTDecomposer
+    public static List<Vertices> ConvexPartition(Vertices vertices)
     {
-        public static List<Vertices> ConvexPartition(Vertices vertices)
+        Polygon poly = new Polygon();
+
+        foreach (Vector2 vertex in vertices)
         {
-            Polygon poly = new Polygon();
-
-            foreach (Vector2 vertex in vertices)
-            {
-                poly.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
-            }
-
-            DTSweepContext tcx = new DTSweepContext();
-            tcx.PrepareTriangulation(poly);
-            DTSweep.Triangulate(tcx);
-
-            List<Vertices> results = new List<Vertices>();
-
-            foreach (DelaunayTriangle triangle in poly.Triangles)
-            {
-                Vertices v = new Vertices();
-                foreach (TriangulationPoint p in triangle.Points)
-                {
-                    v.Add(new Vector2((float)p.X, (float)p.Y));
-                }
-                results.Add(v);
-            }
-
-            return results;
+            poly.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
         }
 
-        public static List<Vertices> ConvexPartition(DetectedVertices vertices)
+        DTSweepContext tcx = new DTSweepContext();
+        tcx.PrepareTriangulation(poly);
+        DTSweep.Triangulate(tcx);
+
+        List<Vertices> results = new List<Vertices>();
+
+        foreach (DelaunayTriangle triangle in poly.Triangles)
         {
-            Polygon poly = new Polygon();
-            foreach (var vertex in vertices)
-                poly.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
-
-            if (vertices.Holes != null)
+            Vertices v = new Vertices();
+            foreach (TriangulationPoint p in triangle.Points)
             {
-                foreach (var holeVertices in vertices.Holes)
-                {
-                    Polygon hole = new Polygon();
-                    foreach (var vertex in holeVertices)
-                        hole.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
-
-                    poly.AddHole(hole);
-                }
+                v.Add(new Vector2((float)p.X, (float)p.Y));
             }
-
-            DTSweepContext tcx = new DTSweepContext();
-            tcx.PrepareTriangulation(poly);
-            DTSweep.Triangulate(tcx);
-
-            List<Vertices> results = new List<Vertices>();
-
-            foreach (DelaunayTriangle triangle in poly.Triangles)
-            {
-                Vertices v = new Vertices();
-                foreach (TriangulationPoint p in triangle.Points)
-                {
-                    v.Add(new Vector2((float)p.X, (float)p.Y));
-                }
-                results.Add(v);
-            }
-
-            return results;
+            results.Add(v);
         }
+
+        return results;
+    }
+
+    public static List<Vertices> ConvexPartition(DetectedVertices vertices)
+    {
+        Polygon poly = new Polygon();
+        foreach (var vertex in vertices)
+            poly.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
+
+        if (vertices.Holes != null)
+        {
+            foreach (var holeVertices in vertices.Holes)
+            {
+                Polygon hole = new Polygon();
+                foreach (var vertex in holeVertices)
+                    hole.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
+
+                poly.AddHole(hole);
+            }
+        }
+
+        DTSweepContext tcx = new DTSweepContext();
+        tcx.PrepareTriangulation(poly);
+        DTSweep.Triangulate(tcx);
+
+        List<Vertices> results = new List<Vertices>();
+
+        foreach (DelaunayTriangle triangle in poly.Triangles)
+        {
+            Vertices v = new Vertices();
+            foreach (TriangulationPoint p in triangle.Points)
+            {
+                v.Add(new Vector2((float)p.X, (float)p.Y));
+            }
+            results.Add(v);
+        }
+
+        return results;
     }
 }

@@ -4,122 +4,121 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class ActionManagerTest : CCLayer
 {
-    public class ActionManagerTest : CCLayer
+    string s_pPathB1 = "Images/b1";
+    string s_pPathB2 = "Images/b2";
+    string s_pPathR1 = "Images/r1";
+    string s_pPathR2 = "Images/r2";
+    string s_pPathF1 = "Images/f1";
+    string s_pPathF2 = "Images/f2";
+
+    protected CCTextureAtlas m_atlas;
+
+    protected string m_strTitle;
+
+    public ActionManagerTest() { }
+
+    public virtual string title()
     {
-        string s_pPathB1 = "Images/b1";
-        string s_pPathB2 = "Images/b2";
-        string s_pPathR1 = "Images/r1";
-        string s_pPathR2 = "Images/r2";
-        string s_pPathF1 = "Images/f1";
-        string s_pPathF2 = "Images/f2";
+        return "No title";
+    }
 
-        protected CCTextureAtlas m_atlas;
+    public override void OnEnter()
+    {
+        base.OnEnter();
 
-        protected string m_strTitle;
+        CCSize s = CCDirector.SharedDirector.WinSize;
 
-        public ActionManagerTest() { }
+        CCLabelTTF label = new CCLabelTTF(title(), "arial", 24);
+        Parent.AddChild(label, 11);
+        label.Position = (new CCPoint(s.Width / 2, s.Height - 10));
 
-        public virtual string title()
+        CCMenuItemImage item1 = new CCMenuItemImage(s_pPathB1, s_pPathB2, backCallback);
+        CCMenuItemImage item2 = new CCMenuItemImage(s_pPathR1, s_pPathR2, restartCallback);
+        CCMenuItemImage item3 = new CCMenuItemImage(s_pPathF1, s_pPathF2, nextCallback);
+
+        CCMenu menu = new CCMenu(item1, item2, item3);
+
+        menu.Position = CCPoint.Zero;
+        item1.Position = (new CCPoint(s.Width / 2 - 100, 20));
+        item2.Position = (new CCPoint(s.Width / 2, 20));
+        item3.Position = (new CCPoint(s.Width / 2 + 100, 20));
+
+        item1.Scale = 0.5f;
+        item2.Scale = 0.5f;
+        item3.Scale = 0.5f;
+
+        AddChild(menu, 11);
+    }
+
+    public void restartCallback(object pSender)
+    {
+        CCScene s = new ActionManagerTestScene();
+        s.AddChild(restartActionManagerAction());
+
+        CCDirector.SharedDirector.ReplaceScene(s);
+    }
+
+    public void nextCallback(object pSender)
+    {
+        CCScene s = new ActionManagerTestScene();
+        s.AddChild(nextActionManagerAction());
+        CCDirector.SharedDirector.ReplaceScene(s);
+    }
+
+    public void backCallback(object pSender)
+    {
+        CCScene s = new ActionManagerTestScene();
+        s.AddChild(backActionManagerAction());
+        CCDirector.SharedDirector.ReplaceScene(s);
+    }
+
+    public static int sceneIdx = -1;
+    public static int MAX_LAYER = 5;
+
+    public static CCLayer backActionManagerAction()
+    {
+        sceneIdx--;
+        int total = MAX_LAYER;
+        if (sceneIdx < 0)
+            sceneIdx += total;
+
+        CCLayer pLayer = createActionManagerLayer(sceneIdx);
+
+        return pLayer;
+    }
+
+    public static CCLayer createActionManagerLayer(int nIndex)
+    {
+        switch (nIndex)
         {
-            return "No title";
+            case 0: return new CrashTest();
+            case 1: return new LogicTest();
+            case 2: return new PauseTest();
+            case 3: return new RemoveTest();
+            case 4: return new ResumeTest();
         }
 
-        public override void OnEnter()
-        {
-            base.OnEnter();
+        return null;
+    }
 
-            CCSize s = CCDirector.SharedDirector.WinSize;
+    public static CCLayer nextActionManagerAction()
+    {
+        sceneIdx++;
+        sceneIdx %= MAX_LAYER;
 
-            CCLabelTTF label = new CCLabelTTF(title(), "arial", 24);
-            Parent.AddChild(label, 11);
-            label.Position = (new CCPoint(s.Width / 2, s.Height - 10));
+        CCLayer pLayer = createActionManagerLayer(sceneIdx);
 
-            CCMenuItemImage item1 = new CCMenuItemImage(s_pPathB1, s_pPathB2, backCallback);
-            CCMenuItemImage item2 = new CCMenuItemImage(s_pPathR1, s_pPathR2, restartCallback);
-            CCMenuItemImage item3 = new CCMenuItemImage(s_pPathF1, s_pPathF2, nextCallback);
+        return pLayer;
+    }
 
-            CCMenu menu = new CCMenu(item1, item2, item3);
+    public static CCLayer restartActionManagerAction()
+    {
+        CCLayer pLayer = createActionManagerLayer(sceneIdx);
 
-            menu.Position = CCPoint.Zero;
-            item1.Position = (new CCPoint(s.Width / 2 - 100, 20));
-            item2.Position = (new CCPoint(s.Width / 2, 20));
-            item3.Position = (new CCPoint(s.Width / 2 + 100, 20));
-
-            item1.Scale = 0.5f;
-            item2.Scale = 0.5f;
-            item3.Scale = 0.5f;
-
-            AddChild(menu, 11);
-        }
-
-        public void restartCallback(object pSender)
-        {
-            CCScene s = new ActionManagerTestScene();
-            s.AddChild(restartActionManagerAction());
-
-            CCDirector.SharedDirector.ReplaceScene(s);
-        }
-
-        public void nextCallback(object pSender)
-        {
-            CCScene s = new ActionManagerTestScene();
-            s.AddChild(nextActionManagerAction());
-            CCDirector.SharedDirector.ReplaceScene(s);
-        }
-
-        public void backCallback(object pSender)
-        {
-            CCScene s = new ActionManagerTestScene();
-            s.AddChild(backActionManagerAction());
-            CCDirector.SharedDirector.ReplaceScene(s);
-        }
-
-        public static int sceneIdx = -1;
-        public static int MAX_LAYER = 5;
-
-        public static CCLayer backActionManagerAction()
-        {
-            sceneIdx--;
-            int total = MAX_LAYER;
-            if (sceneIdx < 0)
-                sceneIdx += total;
-
-            CCLayer pLayer = createActionManagerLayer(sceneIdx);
-
-            return pLayer;
-        }
-
-        public static CCLayer createActionManagerLayer(int nIndex)
-        {
-            switch (nIndex)
-            {
-                case 0: return new CrashTest();
-                case 1: return new LogicTest();
-                case 2: return new PauseTest();
-                case 3: return new RemoveTest();
-                case 4: return new ResumeTest();
-            }
-
-            return null;
-        }
-
-        public static CCLayer nextActionManagerAction()
-        {
-            sceneIdx++;
-            sceneIdx %= MAX_LAYER;
-
-            CCLayer pLayer = createActionManagerLayer(sceneIdx);
-
-            return pLayer;
-        }
-
-        public static CCLayer restartActionManagerAction()
-        {
-            CCLayer pLayer = createActionManagerLayer(sceneIdx);
-
-            return pLayer;
-        }
+        return pLayer;
     }
 }

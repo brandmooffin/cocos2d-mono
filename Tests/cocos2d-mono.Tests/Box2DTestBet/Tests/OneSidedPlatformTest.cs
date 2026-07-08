@@ -31,73 +31,72 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class OneSidedPlatformTest : Test
 {
-    public class OneSidedPlatformTest : Test
+    private Fixture _character;
+    private Fixture _platform;
+    private float _radius, _top;
+
+    private OneSidedPlatformTest()
     {
-        private Fixture _character;
-        private Fixture _platform;
-        private float _radius, _top;
+        //Ground
+        BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-        private OneSidedPlatformTest()
+        // Platform
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Body body = BodyFactory.CreateBody(World);
+            body.Position = new Vector2(0.0f, 10.0f);
 
-            // Platform
-            {
-                Body body = BodyFactory.CreateBody(World);
-                body.Position = new Vector2(0.0f, 10.0f);
+            PolygonShape shape = new PolygonShape(1);
+            shape.SetAsBox(3.0f, 0.5f);
+            _platform = body.CreateFixture(shape);
 
-                PolygonShape shape = new PolygonShape(1);
-                shape.SetAsBox(3.0f, 0.5f);
-                _platform = body.CreateFixture(shape);
-
-                _top = 10.0f + 0.5f;
-            }
-
-            // Actor
-            {
-                Body body = BodyFactory.CreateBody(World);
-                body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(0.0f, 12.0f);
-
-                _radius = 0.5f;
-                CircleShape shape = new CircleShape(_radius, 20);
-                _character = body.CreateFixture(shape);
-
-                body.LinearVelocity = new Vector2(0.0f, -50.0f);
-            }
+            _top = 10.0f + 0.5f;
         }
 
-        protected override void PreSolve(Contact contact, ref Manifold oldManifold)
+        // Actor
         {
-            base.PreSolve(contact, ref oldManifold);
+            Body body = BodyFactory.CreateBody(World);
+            body.BodyType = BodyType.Dynamic;
+            body.Position = new Vector2(0.0f, 12.0f);
 
-            Fixture fixtureA = contact.FixtureA;
-            Fixture fixtureB = contact.FixtureB;
+            _radius = 0.5f;
+            CircleShape shape = new CircleShape(_radius, 20);
+            _character = body.CreateFixture(shape);
 
-            if (fixtureA != _platform && fixtureA != _character)
-            {
-                return;
-            }
+            body.LinearVelocity = new Vector2(0.0f, -50.0f);
+        }
+    }
 
-            if (fixtureB != _platform && fixtureB != _character)
-            {
-                return;
-            }
+    protected override void PreSolve(Contact contact, ref Manifold oldManifold)
+    {
+        base.PreSolve(contact, ref oldManifold);
 
-            Vector2 position = _character.Body.Position;
+        Fixture fixtureA = contact.FixtureA;
+        Fixture fixtureB = contact.FixtureB;
 
-            if (position.Y < _top + _radius - 3.0f * Settings.LinearSlop)
-            {
-                contact.Enabled = false;
-            }
+        if (fixtureA != _platform && fixtureA != _character)
+        {
+            return;
         }
 
-        internal static Test Create()
+        if (fixtureB != _platform && fixtureB != _character)
         {
-            return new OneSidedPlatformTest();
+            return;
         }
+
+        Vector2 position = _character.Body.Position;
+
+        if (position.Y < _top + _radius - 3.0f * Settings.LinearSlop)
+        {
+            contact.Enabled = false;
+        }
+    }
+
+    internal static Test Create()
+    {
+        return new OneSidedPlatformTest();
     }
 }

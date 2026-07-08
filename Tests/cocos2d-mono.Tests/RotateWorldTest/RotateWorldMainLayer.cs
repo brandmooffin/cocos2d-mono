@@ -4,56 +4,55 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class RotateWorldMainLayer : CCLayer
 {
-    public class RotateWorldMainLayer : CCLayer
+    public override void OnEnter()
     {
-        public override void OnEnter()
-        {
-            base.OnEnter();
+        base.OnEnter();
 
-            float x, y;
+        float x, y;
 
-            CCSize size = CCDirector.SharedDirector.WinSize;
-            x = size.Width;
-            y = size.Height;
+        CCSize size = CCDirector.SharedDirector.WinSize;
+        x = size.Width;
+        y = size.Height;
 
-            CCNode blue = new CCLayerColor(new CCColor4B(0, 0, 255, 255));
-            CCNode red = new CCLayerColor(new CCColor4B(255, 0, 0, 255));
-            CCNode green = new CCLayerColor(new CCColor4B(0, 255, 0, 255));
-            CCNode white = new CCLayerColor(new CCColor4B(255, 255, 255, 255));
+        CCNode blue = new CCLayerColor(new CCColor4B(0, 0, 255, 255));
+        CCNode red = new CCLayerColor(new CCColor4B(255, 0, 0, 255));
+        CCNode green = new CCLayerColor(new CCColor4B(0, 255, 0, 255));
+        CCNode white = new CCLayerColor(new CCColor4B(255, 255, 255, 255));
 
-            blue.Scale = (0.5f);
-            blue.Position = (new CCPoint(-x / 4, -y / 4));
-            blue.AddChild(SpriteLayer.node());
+        blue.Scale = (0.5f);
+        blue.Position = (new CCPoint(-x / 4, -y / 4));
+        blue.AddChild(SpriteLayer.node());
 
-            red.Scale = (0.5f);
-            red.Position = (new CCPoint(x / 4, -y / 4));
+        red.Scale = (0.5f);
+        red.Position = (new CCPoint(x / 4, -y / 4));
 
-            green.Scale = (0.5f);
-            green.Position = (new CCPoint(-x / 4, y / 4));
-            green.AddChild(TestLayer.node());
+        green.Scale = (0.5f);
+        green.Position = (new CCPoint(-x / 4, y / 4));
+        green.AddChild(TestLayer.node());
 
-            white.Scale = (0.5f);
-            white.Position = (new CCPoint(x / 4, y / 4));
+        white.Scale = (0.5f);
+        white.Position = (new CCPoint(x / 4, y / 4));
 
-            AddChild(blue, -1);
-            AddChild(white);
-            AddChild(green);
-            AddChild(red);
+        AddChild(blue, -1);
+        AddChild(white);
+        AddChild(green);
+        AddChild(red);
 
-            CCAction rot = new CCRotateBy (8, 720);
+        CCAction rot = new CCRotateBy (8, 720);
 
-            blue.RunAction(rot);
-            red.RunAction((CCAction)(rot.Copy()));
-            green.RunAction((CCAction)(rot.Copy()));
-            white.RunAction((CCAction)(rot.Copy()));
-        }
+        blue.RunAction(rot);
+        red.RunAction((CCAction)(rot.Copy()));
+        green.RunAction((CCAction)(rot.Copy()));
+        white.RunAction((CCAction)(rot.Copy()));
+    }
 
-        public static new RotateWorldMainLayer node()
-        {
-            RotateWorldMainLayer node = new RotateWorldMainLayer();
-            return node;
-        }
+    public static new RotateWorldMainLayer node()
+    {
+        RotateWorldMainLayer node = new RotateWorldMainLayer();
+        return node;
     }
 }

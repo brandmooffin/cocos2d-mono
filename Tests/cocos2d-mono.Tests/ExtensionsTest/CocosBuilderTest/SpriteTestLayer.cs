@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace tests.Extensions
+namespace tests.Extensions;
+
+class SpriteTestLayer: TestHeaderLayer
 {
-    class SpriteTestLayer: TestHeaderLayer
-    {
-    }
 }

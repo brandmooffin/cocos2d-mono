@@ -1,8 +1,8 @@
 using System;
 using Cocos2D;
 
-namespace tests.Extensions
-{
+namespace tests.Extensions;
+
 
 	public class ExtensionsTestScene : TestScene
 	{
@@ -14,15 +14,15 @@ namespace tests.Extensions
 			CCDirector.SharedDirector.ReplaceScene(this);
 		}
 
-        protected override void NextTestCase()
-        {
-        }
-        protected override void PreviousTestCase()
-        {
-        }
-        protected override void RestTestCase()
-        {
-        }
+    protected override void NextTestCase()
+    {
+    }
+    protected override void PreviousTestCase()
+    {
+    }
+    protected override void RestTestCase()
+    {
+    }
 
 		/*
 		TEST_NOTIFICATIONCENTER = 0,
@@ -41,7 +41,7 @@ namespace tests.Extensions
 		public static int LINE_SPACE = 40;
 		public static int kItemTagBasic = 1000;
 
-        public static string[] testsName = new string[] 
+    public static string[] testsName = new string[] 
 		{ 
 			//"NotificationCenterTest",
 			"CCControlButtonTest",
@@ -51,8 +51,7 @@ namespace tests.Extensions
 			//"EditBoxTest",
 			//#endif
 			"TableViewTest",
-            "Scale9SpriteTest"
+        "Scale9SpriteTest"
 		};
 
 	}
-}

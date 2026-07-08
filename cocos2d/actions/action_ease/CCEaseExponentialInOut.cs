@@ -1,40 +1,39 @@
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCEaseExponentialInOut : CCActionEase
 {
-    public class CCEaseExponentialInOut : CCActionEase
+    public CCEaseExponentialInOut(CCActionInterval pAction) : base(pAction)
     {
-        public CCEaseExponentialInOut(CCActionInterval pAction) : base(pAction)
-        {
-        }
+    }
 
-        public CCEaseExponentialInOut(CCFiniteTimeAction pAction) : base(pAction)
-        {
-        }
+    public CCEaseExponentialInOut(CCFiniteTimeAction pAction) : base(pAction)
+    {
+    }
 
-        public CCEaseExponentialInOut(CCEaseExponentialInOut easeExponentialInOut) : base(easeExponentialInOut)
-        {
-        }
+    public CCEaseExponentialInOut(CCEaseExponentialInOut easeExponentialInOut) : base(easeExponentialInOut)
+    {
+    }
 
-        public override void Update(float time)
-        {
-            m_pInner.Update(CCEaseMath.ExponentialInOut(time));
-        }
+    public override void Update(float time)
+    {
+        m_pInner.Update(CCEaseMath.ExponentialInOut(time));
+    }
 
-        public override object Copy(ICCCopyable pZone)
+    public override object Copy(ICCCopyable pZone)
+    {
+        if (pZone != null)
         {
-            if (pZone != null)
-            {
-                //in case of being called at sub class
-                var pCopy = pZone as CCEaseExponentialInOut;
-                pCopy.InitWithAction((CCActionInterval) (m_pInner.Copy()));
+            //in case of being called at sub class
+            var pCopy = pZone as CCEaseExponentialInOut;
+            pCopy.InitWithAction((CCActionInterval) (m_pInner.Copy()));
 
-                return pCopy;
-            }
-            return new CCEaseExponentialInOut(this);
+            return pCopy;
         }
+        return new CCEaseExponentialInOut(this);
+    }
 
-        public override CCFiniteTimeAction Reverse()
-        {
-            return new CCEaseExponentialInOut((CCActionInterval) m_pInner.Reverse());
-        }
+    public override CCFiniteTimeAction Reverse()
+    {
+        return new CCEaseExponentialInOut((CCActionInterval) m_pInner.Reverse());
     }
 }

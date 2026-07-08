@@ -28,200 +28,199 @@ using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.Dynamics.Joints
-{
-    // Point-to-point constraint
-    // Cdot = v2 - v1
-    //      = v2 + cross(w2, r2) - v1 - cross(w1, r1)
-    // J = [-I -r1_skew I r2_skew ]
-    // Identity used:
-    // w k % (rx i + ry j) = w * (-ry i + rx j)
+namespace FarseerPhysics.Dynamics.Joints;
 
-    // Angle constraint
-    // Cdot = w2 - w1
-    // J = [0 0 -1 0 0 1]
-    // K = invI1 + invI2
+// Point-to-point constraint
+// Cdot = v2 - v1
+//      = v2 + cross(w2, r2) - v1 - cross(w1, r1)
+// J = [-I -r1_skew I r2_skew ]
+// Identity used:
+// w k % (rx i + ry j) = w * (-ry i + rx j)
+
+// Angle constraint
+// Cdot = w2 - w1
+// J = [0 0 -1 0 0 1]
+// K = invI1 + invI2
+
+/// <summary>
+/// Friction joint. This is used for top-down friction.
+/// It provides 2D translational friction and angular friction.
+/// </summary>
+public class FixedFrictionJoint : Joint
+{
+    public Vector2 LocalAnchorA;
 
     /// <summary>
-    /// Friction joint. This is used for top-down friction.
-    /// It provides 2D translational friction and angular friction.
+    /// The maximum friction force in N.
     /// </summary>
-    public class FixedFrictionJoint : Joint
+    public float MaxForce;
+
+    /// <summary>
+    /// The maximum friction torque in N-m.
+    /// </summary>
+    public float MaxTorque;
+
+    private float _angularImpulse;
+    private float _angularMass;
+    private Vector2 _linearImpulse;
+    private Mat22 _linearMass;
+
+    public FixedFrictionJoint(Body body, Vector2 localAnchorA)
+        : base(body)
     {
-        public Vector2 LocalAnchorA;
+        JointType = JointType.FixedFriction;
+        LocalAnchorA = localAnchorA;
 
-        /// <summary>
-        /// The maximum friction force in N.
-        /// </summary>
-        public float MaxForce;
+        //Setting default max force and max torque
+        const float gravity = 10.0f;
 
-        /// <summary>
-        /// The maximum friction torque in N-m.
-        /// </summary>
-        public float MaxTorque;
+        // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
+        float radius = (float)Math.Sqrt(2.0 * (body.Inertia / body.Mass));
 
-        private float _angularImpulse;
-        private float _angularMass;
-        private Vector2 _linearImpulse;
-        private Mat22 _linearMass;
+        MaxForce = body.Mass * gravity;
+        MaxTorque = body.Mass * radius * gravity;
+    }
 
-        public FixedFrictionJoint(Body body, Vector2 localAnchorA)
-            : base(body)
+    public override Vector2 WorldAnchorA
+    {
+        get { return BodyA.GetWorldPoint(LocalAnchorA); }
+    }
+
+    public override Vector2 WorldAnchorB
+    {
+        get { return Vector2.Zero; }
+        set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+    }
+
+    public override Vector2 GetReactionForce(float invDT)
+    {
+        return invDT * _linearImpulse;
+    }
+
+    public override float GetReactionTorque(float invDT)
+    {
+        return invDT * _angularImpulse;
+    }
+
+    internal override void InitVelocityConstraints(ref TimeStep step)
+    {
+        Body bA = BodyA;
+
+        Transform xfA;
+        bA.GetTransform(out xfA);
+
+        // Compute the effective mass matrix.
+        Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
+
+        // J = [-I -r1_skew I r2_skew]
+        //     [ 0       -1 0       1]
+        // r_skew = [-ry; rx]
+
+        // Matlab
+        // K = [ mA+r1y^2*iA+mB+r2y^2*iB,  -r1y*iA*r1x-r2y*iB*r2x,          -r1y*iA-r2y*iB]
+        //     [  -r1y*iA*r1x-r2y*iB*r2x, mA+r1x^2*iA+mB+r2x^2*iB,           r1x*iA+r2x*iB]
+        //     [          -r1y*iA-r2y*iB,           r1x*iA+r2x*iB,                   iA+iB]
+
+        float mA = bA.InvMass;
+        float iA = bA.InvI;
+
+        Mat22 K1 = new Mat22();
+        K1.Col1.X = mA;
+        K1.Col2.X = 0.0f;
+        K1.Col1.Y = 0.0f;
+        K1.Col2.Y = mA;
+
+        Mat22 K2 = new Mat22();
+        K2.Col1.X = iA * rA.Y * rA.Y;
+        K2.Col2.X = -iA * rA.X * rA.Y;
+        K2.Col1.Y = -iA * rA.X * rA.Y;
+        K2.Col2.Y = iA * rA.X * rA.X;
+
+        Mat22 K12;
+        Mat22.Add(ref K1, ref K2, out K12);
+
+        _linearMass = K12.Inverse;
+
+        _angularMass = iA;
+        if (_angularMass > 0.0f)
         {
-            JointType = JointType.FixedFriction;
-            LocalAnchorA = localAnchorA;
-
-            //Setting default max force and max torque
-            const float gravity = 10.0f;
-
-            // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
-            float radius = (float)Math.Sqrt(2.0 * (body.Inertia / body.Mass));
-
-            MaxForce = body.Mass * gravity;
-            MaxTorque = body.Mass * radius * gravity;
+            _angularMass = 1.0f / _angularMass;
         }
 
-        public override Vector2 WorldAnchorA
+        if (Settings.EnableWarmstarting)
         {
-            get { return BodyA.GetWorldPoint(LocalAnchorA); }
+            // Scale impulses to support a variable time step.
+            _linearImpulse *= step.dtRatio;
+            _angularImpulse *= step.dtRatio;
+
+            Vector2 P = new Vector2(_linearImpulse.X, _linearImpulse.Y);
+
+            bA.LinearVelocityInternal -= mA * P;
+            bA.AngularVelocityInternal -= iA * (MathUtils.Cross(rA, P) + _angularImpulse);
+        }
+        else
+        {
+            _linearImpulse = Vector2.Zero;
+            _angularImpulse = 0.0f;
+        }
+    }
+
+    internal override void SolveVelocityConstraints(ref TimeStep step)
+    {
+        Body bA = BodyA;
+
+        Vector2 vA = bA.LinearVelocityInternal;
+        float wA = bA.AngularVelocityInternal;
+
+        float mA = bA.InvMass;
+        float iA = bA.InvI;
+
+        Transform xfA;
+        bA.GetTransform(out xfA);
+
+        Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
+
+        // Solve angular friction
+        {
+            float Cdot = -wA;
+            float impulse = -_angularMass * Cdot;
+
+            float oldImpulse = _angularImpulse;
+            float maxImpulse = step.dt * MaxTorque;
+            _angularImpulse = MathHelper.Clamp(_angularImpulse + impulse, -maxImpulse, maxImpulse);
+            impulse = _angularImpulse - oldImpulse;
+
+            wA -= iA * impulse;
         }
 
-        public override Vector2 WorldAnchorB
+        // Solve linear friction
         {
-            get { return Vector2.Zero; }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
-        }
+            Vector2 Cdot = -vA - MathUtils.Cross(wA, rA);
 
-        public override Vector2 GetReactionForce(float invDT)
-        {
-            return invDT * _linearImpulse;
-        }
+            Vector2 impulse = -MathUtils.Multiply(ref _linearMass, Cdot);
+            Vector2 oldImpulse = _linearImpulse;
+            _linearImpulse += impulse;
 
-        public override float GetReactionTorque(float invDT)
-        {
-            return invDT * _angularImpulse;
-        }
+            float maxImpulse = step.dt * MaxForce;
 
-        internal override void InitVelocityConstraints(ref TimeStep step)
-        {
-            Body bA = BodyA;
-
-            Transform xfA;
-            bA.GetTransform(out xfA);
-
-            // Compute the effective mass matrix.
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
-
-            // J = [-I -r1_skew I r2_skew]
-            //     [ 0       -1 0       1]
-            // r_skew = [-ry; rx]
-
-            // Matlab
-            // K = [ mA+r1y^2*iA+mB+r2y^2*iB,  -r1y*iA*r1x-r2y*iB*r2x,          -r1y*iA-r2y*iB]
-            //     [  -r1y*iA*r1x-r2y*iB*r2x, mA+r1x^2*iA+mB+r2x^2*iB,           r1x*iA+r2x*iB]
-            //     [          -r1y*iA-r2y*iB,           r1x*iA+r2x*iB,                   iA+iB]
-
-            float mA = bA.InvMass;
-            float iA = bA.InvI;
-
-            Mat22 K1 = new Mat22();
-            K1.Col1.X = mA;
-            K1.Col2.X = 0.0f;
-            K1.Col1.Y = 0.0f;
-            K1.Col2.Y = mA;
-
-            Mat22 K2 = new Mat22();
-            K2.Col1.X = iA * rA.Y * rA.Y;
-            K2.Col2.X = -iA * rA.X * rA.Y;
-            K2.Col1.Y = -iA * rA.X * rA.Y;
-            K2.Col2.Y = iA * rA.X * rA.X;
-
-            Mat22 K12;
-            Mat22.Add(ref K1, ref K2, out K12);
-
-            _linearMass = K12.Inverse;
-
-            _angularMass = iA;
-            if (_angularMass > 0.0f)
+            if (_linearImpulse.LengthSquared() > maxImpulse * maxImpulse)
             {
-                _angularMass = 1.0f / _angularMass;
+                _linearImpulse.Normalize();
+                _linearImpulse *= maxImpulse;
             }
 
-            if (Settings.EnableWarmstarting)
-            {
-                // Scale impulses to support a variable time step.
-                _linearImpulse *= step.dtRatio;
-                _angularImpulse *= step.dtRatio;
+            impulse = _linearImpulse - oldImpulse;
 
-                Vector2 P = new Vector2(_linearImpulse.X, _linearImpulse.Y);
-
-                bA.LinearVelocityInternal -= mA * P;
-                bA.AngularVelocityInternal -= iA * (MathUtils.Cross(rA, P) + _angularImpulse);
-            }
-            else
-            {
-                _linearImpulse = Vector2.Zero;
-                _angularImpulse = 0.0f;
-            }
+            vA -= mA * impulse;
+            wA -= iA * MathUtils.Cross(rA, impulse);
         }
 
-        internal override void SolveVelocityConstraints(ref TimeStep step)
-        {
-            Body bA = BodyA;
+        bA.LinearVelocityInternal = vA;
+        bA.AngularVelocityInternal = wA;
+    }
 
-            Vector2 vA = bA.LinearVelocityInternal;
-            float wA = bA.AngularVelocityInternal;
-
-            float mA = bA.InvMass;
-            float iA = bA.InvI;
-
-            Transform xfA;
-            bA.GetTransform(out xfA);
-
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
-
-            // Solve angular friction
-            {
-                float Cdot = -wA;
-                float impulse = -_angularMass * Cdot;
-
-                float oldImpulse = _angularImpulse;
-                float maxImpulse = step.dt * MaxTorque;
-                _angularImpulse = MathHelper.Clamp(_angularImpulse + impulse, -maxImpulse, maxImpulse);
-                impulse = _angularImpulse - oldImpulse;
-
-                wA -= iA * impulse;
-            }
-
-            // Solve linear friction
-            {
-                Vector2 Cdot = -vA - MathUtils.Cross(wA, rA);
-
-                Vector2 impulse = -MathUtils.Multiply(ref _linearMass, Cdot);
-                Vector2 oldImpulse = _linearImpulse;
-                _linearImpulse += impulse;
-
-                float maxImpulse = step.dt * MaxForce;
-
-                if (_linearImpulse.LengthSquared() > maxImpulse * maxImpulse)
-                {
-                    _linearImpulse.Normalize();
-                    _linearImpulse *= maxImpulse;
-                }
-
-                impulse = _linearImpulse - oldImpulse;
-
-                vA -= mA * impulse;
-                wA -= iA * MathUtils.Cross(rA, impulse);
-            }
-
-            bA.LinearVelocityInternal = vA;
-            bA.AngularVelocityInternal = wA;
-        }
-
-        internal override bool SolvePositionConstraints()
-        {
-            return true;
-        }
+    internal override bool SolvePositionConstraints()
+    {
+        return true;
     }
 }

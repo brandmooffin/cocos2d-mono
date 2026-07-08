@@ -45,16 +45,15 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 using System.IO;
 
-namespace Cocos2D.Compression.Zlib
-{
-    public class ZStreamException : IOException
-    {
-        public ZStreamException()
-        {
-        }
+namespace Cocos2D.Compression.Zlib;
 
-        public ZStreamException(String s) : base(s)
-        {
-        }
+public class ZStreamException : IOException
+{
+    public ZStreamException()
+    {
+    }
+
+    public ZStreamException(String s) : base(s)
+    {
     }
 }

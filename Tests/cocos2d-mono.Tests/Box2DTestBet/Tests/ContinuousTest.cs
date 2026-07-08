@@ -31,79 +31,78 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class ContinuousTest : Test
 {
-    public class ContinuousTest : Test
+    private float _angularVelocity;
+    private Body _box;
+
+    private ContinuousTest()
     {
-        private float _angularVelocity;
-        private Body _box;
+        List<Vertices> list = new List<Vertices>();
+        list.Add(PolygonTools.CreateLine(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f)));
+        list.Add(PolygonTools.CreateRectangle(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0));
 
-        private ContinuousTest()
+        BodyFactory.CreateCompoundPolygon(World, list, 0);
+
+        _box = BodyFactory.CreateRectangle(World, 4, 0.2f, 1);
+        _box.Position = new Vector2(0, 20);
+        _box.BodyType = BodyType.Dynamic;
+        //_box.Body.Rotation = 0.1f;
+
+        //_angularVelocity = 46.661274f;
+        _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
+        _box.LinearVelocity = new Vector2(0.0f, -100.0f);
+        _box.AngularVelocity = _angularVelocity;
+    }
+
+    private void Launch()
+    {
+        _box.SetTransform(new Vector2(0.0f, 20.0f), 0.0f);
+        _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
+        _box.LinearVelocity = new Vector2(0.0f, -100.0f);
+        _box.AngularVelocity = _angularVelocity;
+    }
+
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        if (StepCount == 12)
         {
-            List<Vertices> list = new List<Vertices>();
-            list.Add(PolygonTools.CreateLine(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f)));
-            list.Add(PolygonTools.CreateRectangle(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0));
-
-            BodyFactory.CreateCompoundPolygon(World, list, 0);
-
-            _box = BodyFactory.CreateRectangle(World, 4, 0.2f, 1);
-            _box.Position = new Vector2(0, 20);
-            _box.BodyType = BodyType.Dynamic;
-            //_box.Body.Rotation = 0.1f;
-
-            //_angularVelocity = 46.661274f;
-            _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
-            _box.LinearVelocity = new Vector2(0.0f, -100.0f);
-            _box.AngularVelocity = _angularVelocity;
+            StepCount += 0;
         }
 
-        private void Launch()
+        base.Update(settings, gameTime);
+
+        if (Distance.GJKCalls > 0)
         {
-            _box.SetTransform(new Vector2(0.0f, 20.0f), 0.0f);
-            _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
-            _box.LinearVelocity = new Vector2(0.0f, -100.0f);
-            _box.AngularVelocity = _angularVelocity;
+            DebugView.DrawString(50, TextLine, "GJK calls = {0}, Ave GJK iters = {1}, Max GJK iters = {2}",
+                                 Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls,
+                                 Distance.GJKMaxIters);
+            TextLine += 15;
         }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
+        if (TimeOfImpact.TOICalls > 0)
         {
-            if (StepCount == 12)
-            {
-                StepCount += 0;
-            }
+            DebugView.DrawString(50, TextLine, "TOI calls = {0}, Ave TOI iters = {1}, Max TOI iters = {2}",
+                                 TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float)TimeOfImpact.TOICalls,
+                                 TimeOfImpact.TOIMaxRootIters);
+            TextLine += 15;
 
-            base.Update(settings, gameTime);
-
-            if (Distance.GJKCalls > 0)
-            {
-                DebugView.DrawString(50, TextLine, "GJK calls = {0}, Ave GJK iters = {1}, Max GJK iters = {2}",
-                                     Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls,
-                                     Distance.GJKMaxIters);
-                TextLine += 15;
-            }
-
-            if (TimeOfImpact.TOICalls > 0)
-            {
-                DebugView.DrawString(50, TextLine, "TOI calls = {0}, Ave TOI iters = {1}, Max TOI iters = {2}",
-                                     TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float)TimeOfImpact.TOICalls,
-                                     TimeOfImpact.TOIMaxRootIters);
-                TextLine += 15;
-
-                DebugView.DrawString(50, TextLine, "Ave TOI root iters = {0}, Max TOI root iters = {1}",
-                                     TimeOfImpact.TOIRootIters / (float)TimeOfImpact.TOICalls,
-                                     TimeOfImpact.TOIMaxRootIters);
-                TextLine += 15;
-            }
-
-            if (StepCount % 60 == 0)
-            {
-                //Launch();
-            }
+            DebugView.DrawString(50, TextLine, "Ave TOI root iters = {0}, Max TOI root iters = {1}",
+                                 TimeOfImpact.TOIRootIters / (float)TimeOfImpact.TOICalls,
+                                 TimeOfImpact.TOIMaxRootIters);
+            TextLine += 15;
         }
 
-        internal static Test Create()
+        if (StepCount % 60 == 0)
         {
-            return new ContinuousTest();
+            //Launch();
         }
+    }
+
+    internal static Test Create()
+    {
+        return new ContinuousTest();
     }
 }

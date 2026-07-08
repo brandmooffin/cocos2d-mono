@@ -22,21 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCTransitionMoveInR : CCTransitionMoveInL
 {
-    public class CCTransitionMoveInR : CCTransitionMoveInL
+
+    public CCTransitionMoveInR() { }
+
+    public CCTransitionMoveInR (float t, CCScene scene) : base (t, scene)
+    { }
+
+    public override void InitScenes()
     {
-
-        public CCTransitionMoveInR() { }
-
-        public CCTransitionMoveInR (float t, CCScene scene) : base (t, scene)
-        { }
-
-        public override void InitScenes()
-        {
-            CCSize s = CCDirector.SharedDirector.WinSize;
-            m_pInScene.Position = new CCPoint(s.Width, 0);
-        }
-
+        CCSize s = CCDirector.SharedDirector.WinSize;
+        m_pInScene.Position = new CCPoint(s.Width, 0);
     }
+
 }

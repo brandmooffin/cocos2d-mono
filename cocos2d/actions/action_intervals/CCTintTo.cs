@@ -1,72 +1,71 @@
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCTintTo : CCActionInterval
 {
-    public class CCTintTo : CCActionInterval
+    protected CCColor3B m_from;
+    protected CCColor3B m_to;
+
+    public CCTintTo(float duration, byte red, byte green, byte blue)
     {
-        protected CCColor3B m_from;
-        protected CCColor3B m_to;
+        InitWithDuration(duration, red, green, blue);
+    }
 
-        public CCTintTo(float duration, byte red, byte green, byte blue)
+    protected CCTintTo(CCTintTo tintTo) : base(tintTo)
+    {
+        InitWithDuration(tintTo.m_fDuration, tintTo.m_to.R, tintTo.m_to.G, tintTo.m_to.B);
+    }
+
+    public bool InitWithDuration(float duration, byte red, byte green, byte blue)
+    {
+        if (base.InitWithDuration(duration))
         {
-            InitWithDuration(duration, red, green, blue);
+            m_to = new CCColor3B(red, green, blue);
+            return true;
         }
 
-        protected CCTintTo(CCTintTo tintTo) : base(tintTo)
+        return false;
+    }
+
+    public override object Copy(ICCCopyable zone)
+    {
+        if (zone != null && zone != null)
         {
-            InitWithDuration(tintTo.m_fDuration, tintTo.m_to.R, tintTo.m_to.G, tintTo.m_to.B);
+            var ret = zone as CCTintTo;
+            if (ret == null)
+            {
+                return null;
+            }
+
+            base.Copy(zone);
+
+            ret.InitWithDuration(m_fDuration, m_to.R, m_to.G, m_to.B);
+
+            return ret;
         }
-
-        public bool InitWithDuration(float duration, byte red, byte green, byte blue)
+        else
         {
-            if (base.InitWithDuration(duration))
-            {
-                m_to = new CCColor3B(red, green, blue);
-                return true;
-            }
-
-            return false;
+            return new CCTintTo(this);
         }
+    }
 
-        public override object Copy(ICCCopyable zone)
+    protected internal override void StartWithTarget(CCNode target)
+    {
+        base.StartWithTarget(target);
+        var protocol = m_pTarget as ICCRGBAProtocol;
+        if (protocol != null)
         {
-            if (zone != null && zone != null)
-            {
-                var ret = zone as CCTintTo;
-                if (ret == null)
-                {
-                    return null;
-                }
-
-                base.Copy(zone);
-
-                ret.InitWithDuration(m_fDuration, m_to.R, m_to.G, m_to.B);
-
-                return ret;
-            }
-            else
-            {
-                return new CCTintTo(this);
-            }
+            m_from = protocol.Color;
         }
+    }
 
-        protected internal override void StartWithTarget(CCNode target)
+    public override void Update(float time)
+    {
+        var protocol = m_pTarget as ICCRGBAProtocol;
+        if (protocol != null)
         {
-            base.StartWithTarget(target);
-            var protocol = m_pTarget as ICCRGBAProtocol;
-            if (protocol != null)
-            {
-                m_from = protocol.Color;
-            }
-        }
-
-        public override void Update(float time)
-        {
-            var protocol = m_pTarget as ICCRGBAProtocol;
-            if (protocol != null)
-            {
-                protocol.Color = new CCColor3B((byte) (m_from.R + (m_to.R - m_from.R) * time),
-                                               (byte) (m_from.G + (m_to.G - m_from.G) * time),
-                                               (byte) (m_from.B + (m_to.B - m_from.B) * time));
-            }
+            protocol.Color = new CCColor3B((byte) (m_from.R + (m_to.R - m_from.R) * time),
+                                           (byte) (m_from.G + (m_to.G - m_from.G) * time),
+                                           (byte) (m_from.B + (m_to.B - m_from.B) * time));
         }
     }
 }

@@ -22,8 +22,8 @@ using CoreText;
 using ImageIO;
 #endif
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public partial class CCLabel
 	{
 
@@ -93,11 +93,10 @@ namespace Cocos2D
 			CCLabelUtilities.NativeDrawString(_bitmap, s, _font, _brush, new CGRect(0,0,w,h));
 			_bitmapData = _bitmap.Data;
 
-            stride = (int)_bitmap.Width * 4;
+        stride = (int)_bitmap.Width * 4;
 
 			return (byte*)_bitmapData;
 		}
 
 	}
-}
 #endif

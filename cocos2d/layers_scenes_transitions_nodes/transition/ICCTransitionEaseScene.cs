@@ -23,14 +23,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public interface ICCTransitionEaseScene
 {
-    public interface ICCTransitionEaseScene
-    {
-        /// <summary>
-        ///  returns the Ease action that will be performed on a linear action.
-        ///@since v0.8.2
-        /// </summary>
-        CCFiniteTimeAction EaseAction(CCActionInterval action);
-    }
+    /// <summary>
+    ///  returns the Ease action that will be performed on a linear action.
+    ///@since v0.8.2
+    /// </summary>
+    CCFiniteTimeAction EaseAction(CCActionInterval action);
 }

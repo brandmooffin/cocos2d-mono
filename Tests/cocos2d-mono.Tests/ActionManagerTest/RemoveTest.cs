@@ -4,50 +4,49 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public enum KTag
 {
-    public enum KTag
+    kTagNode,
+    kTagGrossini,
+    kTagSequence,
+}
+public class RemoveTest : ActionManagerTest
+{
+    int kTagGrossini = 1;
+    string s_pPathGrossini = "Images/grossini";
+
+    public override string title() 
     {
-        kTagNode,
-        kTagGrossini,
-        kTagSequence,
+        return "Remove Test";
     }
-    public class RemoveTest : ActionManagerTest
+
+    public override void OnEnter()
     {
-        int kTagGrossini = 1;
-        string s_pPathGrossini = "Images/grossini";
+        base.OnEnter();
 
-        public override string title() 
-        {
-            return "Remove Test";
-        }
+        CCSize s = CCDirector.SharedDirector.WinSize;
 
-        public override void OnEnter()
-        {
-            base.OnEnter();
+        CCLabelTTF l = new CCLabelTTF("Should not crash", "arial", 16);
+        AddChild(l);
+        l.Position = (new CCPoint(s.Width / 2, 245));
 
-            CCSize s = CCDirector.SharedDirector.WinSize;
+        CCMoveBy pMove = new CCMoveBy (2, new CCPoint(200, 0));
+        CCCallFunc pCallback = new CCCallFunc(stopAction);
+        CCActionInterval pSequence = (CCActionInterval)new CCSequence(pMove, pCallback);
+        pSequence.Tag = (int)KTag.kTagSequence;
 
-            CCLabelTTF l = new CCLabelTTF("Should not crash", "arial", 16);
-            AddChild(l);
-            l.Position = (new CCPoint(s.Width / 2, 245));
+        CCSprite pChild = new CCSprite(s_pPathGrossini);
+        pChild.Position = (new CCPoint(200, 200));
 
-            CCMoveBy pMove = new CCMoveBy (2, new CCPoint(200, 0));
-            CCCallFunc pCallback = new CCCallFunc(stopAction);
-            CCActionInterval pSequence = (CCActionInterval)new CCSequence(pMove, pCallback);
-            pSequence.Tag = (int)KTag.kTagSequence;
+        AddChild(pChild, 1, kTagGrossini);
+        pChild.RunAction(pSequence);
+    }
 
-            CCSprite pChild = new CCSprite(s_pPathGrossini);
-            pChild.Position = (new CCPoint(200, 200));
-
-            AddChild(pChild, 1, kTagGrossini);
-            pChild.RunAction(pSequence);
-        }
-
-        public void stopAction()
-        {
-            CCNode pSprite = GetChildByTag(kTagGrossini);
-            pSprite.StopAction((int)KTag.kTagSequence);
-        }
+    public void stopAction()
+    {
+        CCNode pSprite = GetChildByTag(kTagGrossini);
+        pSprite.StopAction((int)KTag.kTagSequence);
     }
 }

@@ -22,12 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCTile
 {
-    public class CCTile
-    {
-        public CCGridSize Delta;
-        public CCPoint Position;
-        public CCPoint StartPosition;
-    }
+    public CCGridSize Delta;
+    public CCPoint Position;
+    public CCPoint StartPosition;
 }

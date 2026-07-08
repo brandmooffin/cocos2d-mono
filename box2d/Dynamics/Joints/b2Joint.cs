@@ -19,167 +19,166 @@ using System;
 using System.Diagnostics;
 using Box2D.Common;
 
-namespace Box2D.Dynamics.Joints
+namespace Box2D.Dynamics.Joints;
+
+public class b2Joint
 {
-    public class b2Joint
+    protected b2JointType m_type;
+    public b2Joint Prev;
+    public b2Joint Next;
+    public b2JointEdge m_edgeA;
+    public b2JointEdge m_edgeB;
+    public b2Body m_bodyA;
+    public b2Body m_bodyB;
+
+    protected int m_index;
+
+    public bool m_islandFlag;
+    protected bool m_collideConnected;
+
+    protected object m_userData;
+
+    public int Index
     {
-        protected b2JointType m_type;
-        public b2Joint Prev;
-        public b2Joint Next;
-        public b2JointEdge m_edgeA;
-        public b2JointEdge m_edgeB;
-        public b2Body m_bodyA;
-        public b2Body m_bodyB;
-
-        protected int m_index;
-
-        public bool m_islandFlag;
-        protected bool m_collideConnected;
-
-        protected object m_userData;
-
-        public int Index
-        {
-            get { return (m_index); }
-            set { m_index = value; }
-        }
-
-        public static b2Joint Create(b2JointDef def)
-        {
-            b2Joint joint = null;
-
-            switch (def.JointType)
-            {
-                case b2JointType.e_distanceJoint:
-                    {
-                        joint = new b2DistanceJoint((b2DistanceJointDef)def);
-                    }
-                    break;
-
-                case b2JointType.e_mouseJoint:
-                    {
-                        joint = new b2MouseJoint((b2MouseJointDef)def);
-                    }
-                    break;
-
-                case b2JointType.e_prismaticJoint:
-                    {
-                        joint = new b2PrismaticJoint((b2PrismaticJointDef)def);
-                    }
-                    break;
-
-                case b2JointType.e_revoluteJoint:
-                    {
-                        joint = new b2RevoluteJoint((b2RevoluteJointDef)def);
-                    }
-                    break;
-
-                case b2JointType.e_pulleyJoint:
-                    {
-                        joint = new b2PulleyJoint((b2PulleyJointDef)def);
-                    }
-                    break;
-
-                case b2JointType.e_gearJoint:
-                    {
-                        joint = new b2GearJoint((b2GearJointDef)def);
-                    }
-                    break;
-
-                case b2JointType.e_wheelJoint:
-                    {
-                        joint = new b2WheelJoint((b2WheelJointDef)def);
-                    }
-                    break;
-
-                case b2JointType.e_weldJoint:
-                    {
-                        joint = new b2WeldJoint((b2WeldJointDef)def);
-                    }
-                    break;
-
-                case b2JointType.e_frictionJoint:
-                    {
-                        joint = new b2FrictionJoint((b2FrictionJointDef)def);
-                    }
-                    break;
-
-                case b2JointType.e_ropeJoint:
-                    {
-                        joint = new b2RopeJoint((b2RopeJointDef)def);
-                    }
-                    break;
-
-                default:
-                    Debug.Assert(false);
-                    break;
-            }
-
-            return joint;
-        }
-
-        public b2Joint(b2JointDef def)
-        {
-            Debug.Assert(def.BodyA != def.BodyB);
-
-            m_type = def.JointType;
-            Prev = null;
-            Next = null;
-            m_bodyA = def.BodyA;
-            m_bodyB = def.BodyB;
-            m_index = 0;
-            m_collideConnected = def.CollideConnected;
-            m_islandFlag = false;
-            m_userData = def.UserData;
-            m_edgeA = new b2JointEdge();
-            m_edgeB = new b2JointEdge();
-        }
-
-        public bool IsActive()
-        {
-            return m_bodyA.IsActive() && m_bodyB.IsActive();
-        }
-
-        public virtual b2JointType GetJointType()
-        {
-            return m_type;
-        }
-
-        public virtual b2Body GetBodyA()
-        {
-            return m_bodyA;
-        }
-
-        public virtual b2Body GetBodyB()
-        {
-            return m_bodyB;
-        }
-
-        public virtual b2Joint GetNext()
-        {
-            return Next;
-        }
-
-        public virtual object GetUserData()
-        {
-            return m_userData;
-        }
-
-        public virtual void SetUserData(object data)
-        {
-            m_userData = data;
-        }
-
-        public virtual bool GetCollideConnected()
-        {
-            return m_collideConnected;
-        }
-
-        public virtual void InitVelocityConstraints(b2SolverData data) { }
-        public virtual void SolveVelocityConstraints(b2SolverData data) { }
-        public virtual bool SolvePositionConstraints(b2SolverData data) { return (false); }
-        public virtual void Dump() { }
-        public virtual b2Vec2 GetAnchorA() { return(b2Vec2.Zero); }
-        public virtual b2Vec2 GetAnchorB() { return (b2Vec2.Zero); }
+        get { return (m_index); }
+        set { m_index = value; }
     }
+
+    public static b2Joint Create(b2JointDef def)
+    {
+        b2Joint joint = null;
+
+        switch (def.JointType)
+        {
+            case b2JointType.e_distanceJoint:
+                {
+                    joint = new b2DistanceJoint((b2DistanceJointDef)def);
+                }
+                break;
+
+            case b2JointType.e_mouseJoint:
+                {
+                    joint = new b2MouseJoint((b2MouseJointDef)def);
+                }
+                break;
+
+            case b2JointType.e_prismaticJoint:
+                {
+                    joint = new b2PrismaticJoint((b2PrismaticJointDef)def);
+                }
+                break;
+
+            case b2JointType.e_revoluteJoint:
+                {
+                    joint = new b2RevoluteJoint((b2RevoluteJointDef)def);
+                }
+                break;
+
+            case b2JointType.e_pulleyJoint:
+                {
+                    joint = new b2PulleyJoint((b2PulleyJointDef)def);
+                }
+                break;
+
+            case b2JointType.e_gearJoint:
+                {
+                    joint = new b2GearJoint((b2GearJointDef)def);
+                }
+                break;
+
+            case b2JointType.e_wheelJoint:
+                {
+                    joint = new b2WheelJoint((b2WheelJointDef)def);
+                }
+                break;
+
+            case b2JointType.e_weldJoint:
+                {
+                    joint = new b2WeldJoint((b2WeldJointDef)def);
+                }
+                break;
+
+            case b2JointType.e_frictionJoint:
+                {
+                    joint = new b2FrictionJoint((b2FrictionJointDef)def);
+                }
+                break;
+
+            case b2JointType.e_ropeJoint:
+                {
+                    joint = new b2RopeJoint((b2RopeJointDef)def);
+                }
+                break;
+
+            default:
+                Debug.Assert(false);
+                break;
+        }
+
+        return joint;
+    }
+
+    public b2Joint(b2JointDef def)
+    {
+        Debug.Assert(def.BodyA != def.BodyB);
+
+        m_type = def.JointType;
+        Prev = null;
+        Next = null;
+        m_bodyA = def.BodyA;
+        m_bodyB = def.BodyB;
+        m_index = 0;
+        m_collideConnected = def.CollideConnected;
+        m_islandFlag = false;
+        m_userData = def.UserData;
+        m_edgeA = new b2JointEdge();
+        m_edgeB = new b2JointEdge();
+    }
+
+    public bool IsActive()
+    {
+        return m_bodyA.IsActive() && m_bodyB.IsActive();
+    }
+
+    public virtual b2JointType GetJointType()
+    {
+        return m_type;
+    }
+
+    public virtual b2Body GetBodyA()
+    {
+        return m_bodyA;
+    }
+
+    public virtual b2Body GetBodyB()
+    {
+        return m_bodyB;
+    }
+
+    public virtual b2Joint GetNext()
+    {
+        return Next;
+    }
+
+    public virtual object GetUserData()
+    {
+        return m_userData;
+    }
+
+    public virtual void SetUserData(object data)
+    {
+        m_userData = data;
+    }
+
+    public virtual bool GetCollideConnected()
+    {
+        return m_collideConnected;
+    }
+
+    public virtual void InitVelocityConstraints(b2SolverData data) { }
+    public virtual void SolveVelocityConstraints(b2SolverData data) { }
+    public virtual bool SolvePositionConstraints(b2SolverData data) { return (false); }
+    public virtual void Dump() { }
+    public virtual b2Vec2 GetAnchorA() { return(b2Vec2.Zero); }
+    public virtual b2Vec2 GetAnchorB() { return (b2Vec2.Zero); }
 }

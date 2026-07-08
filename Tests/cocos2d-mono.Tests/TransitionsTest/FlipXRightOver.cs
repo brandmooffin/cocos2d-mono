@@ -4,19 +4,18 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
-{
-    public class FlipXRightOver : CCTransitionFlipX
-    {
-        public FlipXRightOver(float t, CCScene s) : base(t, s, CCTransitionOrientation.RightOver)
-        {
+namespace tests;
 
-        }
-        [Obsolete("Use the parameter ctor instead.")]
-        public new static CCTransitionScene Create(float t, CCScene s)
-        {
-            return (new FlipXRightOver(t, s));
+public class FlipXRightOver : CCTransitionFlipX
+{
+    public FlipXRightOver(float t, CCScene s) : base(t, s, CCTransitionOrientation.RightOver)
+    {
+
+    }
+    [Obsolete("Use the parameter ctor instead.")]
+    public new static CCTransitionScene Create(float t, CCScene s)
+    {
+        return (new FlipXRightOver(t, s));
 //            return CCTransitionFlipX.Create(t, s, tOrientation.kOrientationRightOver);
-        }
     }
 }

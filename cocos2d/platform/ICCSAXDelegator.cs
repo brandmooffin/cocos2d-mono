@@ -22,12 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public interface ICCSAXDelegator
 {
-    public interface ICCSAXDelegator
-    {
-        void StartElement(object ctx, string name, string[] atts);
-        void EndElement(object ctx, string name);
-        void TextHandler(object ctx, byte[] ch, int len);
-    }
+    void StartElement(object ctx, string name, string[] atts);
+    void EndElement(object ctx, string name);
+    void TextHandler(object ctx, byte[] ch, int len);
 }

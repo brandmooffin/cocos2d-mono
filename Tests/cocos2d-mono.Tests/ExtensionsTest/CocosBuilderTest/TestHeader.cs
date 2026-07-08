@@ -1,12 +1,11 @@
 using Cocos2D;
 
-namespace tests.Extensions
+namespace tests.Extensions;
+
+public class TestHeaderLayer : BaseLayer
 {
-    public class TestHeaderLayer : BaseLayer
+    public void onBackClicked(object pSender)
     {
-        public void onBackClicked(object pSender)
-        {
-            CCDirector.SharedDirector.PopScene();
-        }
+        CCDirector.SharedDirector.PopScene();
     }
 }

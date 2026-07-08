@@ -1,32 +1,31 @@
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCReuseGrid : CCActionInstant
 {
-    public class CCReuseGrid : CCActionInstant
+    protected int m_nTimes;
+
+    protected virtual bool InitWithTimes(int times)
     {
-        protected int m_nTimes;
+        m_nTimes = times;
+        return true;
+    }
 
-        protected virtual bool InitWithTimes(int times)
+    protected internal override void StartWithTarget(CCNode target)
+    {
+        base.StartWithTarget(target);
+
+        if (m_pTarget.Grid != null && m_pTarget.Grid.Active)
         {
-            m_nTimes = times;
-            return true;
+            m_pTarget.Grid.ReuseGrid += m_nTimes;
         }
+    }
 
-        protected internal override void StartWithTarget(CCNode target)
-        {
-            base.StartWithTarget(target);
+    public CCReuseGrid()
+    {
+    }
 
-            if (m_pTarget.Grid != null && m_pTarget.Grid.Active)
-            {
-                m_pTarget.Grid.ReuseGrid += m_nTimes;
-            }
-        }
-
-        public CCReuseGrid()
-        {
-        }
-
-        public CCReuseGrid(int times)
-        {
-            InitWithTimes(times);
-        }
+    public CCReuseGrid(int times)
+    {
+        InitWithTimes(times);
     }
 }

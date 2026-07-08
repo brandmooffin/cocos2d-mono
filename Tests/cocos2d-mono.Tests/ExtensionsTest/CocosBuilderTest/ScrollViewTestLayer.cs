@@ -1,6 +1,5 @@
-namespace tests.Extensions
+namespace tests.Extensions;
+
+internal class ScrollViewTestLayer : BaseLayer
 {
-    internal class ScrollViewTestLayer : BaseLayer
-    {
-    }
 }

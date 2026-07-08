@@ -25,52 +25,52 @@
 // THE SOFTWARE.
 
 using System;
-using System.ComponentModel;
-using System.Xml;
-using System.IO;
-using System.Diagnostics;
-using Microsoft.Xna.Framework.Content;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Text;
+using System.Xml;
+using Microsoft.Xna.Framework.Content;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 #if IOS
-    [Foundation.Preserve (AllMembers = true)]
+[Foundation.Preserve (AllMembers = true)]
 #endif
-    public class PlistDocument : PlistObjectBase
+public class PlistDocument : PlistObjectBase
+{
+    private const string version = "1.0";
+
+    private PlistObjectBase root;
+
+    public PlistDocument(string data)
     {
-        private const string version = "1.0";
+        LoadFromXml(data);
+    }
 
-        private PlistObjectBase root;
+    /// <summary>
+    /// Load the plist from a stream. On XNA platforms you shoul use Game.TitleContainer.OpenStream() to get
+    /// a handle on your resource as a stream as it exists in the isolated title container space.
+    /// </summary>
+    /// <param name="data"></param>
+    public PlistDocument(Stream data)
+    {
+        LoadFromXmlFile(data);
+    }
 
-        public PlistDocument(string data)
-        {
-            LoadFromXml(data);
-        }
+    public PlistDocument()
+    {
+    }
 
-        /// <summary>
-        /// Load the plist from a stream. On XNA platforms you shoul use Game.TitleContainer.OpenStream() to get
-        /// a handle on your resource as a stream as it exists in the isolated title container space.
-        /// </summary>
-        /// <param name="data"></param>
-        public PlistDocument(Stream data)
-        {
-            LoadFromXmlFile(data);
-        }
+    public PlistDocument(PlistObjectBase root)
+    {
+        this.root = root;
+    }
 
-        public PlistDocument()
-        {
-        }
-
-        public PlistDocument(PlistObjectBase root)
-        {
-            this.root = root;
-        }
-
-        public void LoadFromXmlFile(Stream data)
-        {
-            data = SeekableStream(data);
+    public void LoadFromXmlFile(Stream data)
+    {
+        data = SeekableStream(data);
 			byte[] magicHeader = new byte[8];
 			data.Read(magicHeader, 0, 8);
 			data.Seek(0, SeekOrigin.Begin);
@@ -91,237 +91,237 @@ namespace Cocos2D
 				using (var reader = XmlReader.Create(data, settings))
 					LoadFromXml (reader);
 			}
-        }
+    }
 
-        public void LoadFromXmlFile(string path)
-        {
-            // Ignore DTDs and do not resolve external resources from the web.
-            var settings = new XmlReaderSettings()
-                {
-                    DtdProcessing = DtdProcessing.Ignore,
-				//ProhibitDtd = false,
-                    XmlResolver = null,
-                };
-            using (var reader = XmlReader.Create(path, settings))
-                LoadFromXml(reader);
-        }
-
-        public void LoadFromXml(string data)
-        {
-            // Ignore DTDs and do not resolve external resources from the web.
-            var settings = new XmlReaderSettings()
-                {
-                    CloseInput = true,
-                    DtdProcessing = DtdProcessing.Ignore,
-				//ProhibitDtd = false,
-                    XmlResolver = null,
-                };
-            using (var reader = XmlReader.Create(new StringReader(data), settings))
+    public void LoadFromXmlFile(string path)
+    {
+        // Ignore DTDs and do not resolve external resources from the web.
+        var settings = new XmlReaderSettings()
             {
-                LoadFromXml(reader);
-            }
-        }
+                DtdProcessing = DtdProcessing.Ignore,
+				//ProhibitDtd = false,
+                XmlResolver = null,
+            };
+        using (var reader = XmlReader.Create(path, settings))
+            LoadFromXml(reader);
+    }
 
-        public void LoadFromXml(XmlReader reader)
-        {
-            reader.ReadToDescendant("plist");
-            while (reader.Read() && reader.NodeType != XmlNodeType.Element) ;
-            if (!reader.EOF)
-                root = LoadFromNode(reader);
-        }
-
-        private Stream SeekableStream(Stream data)
-        {
-            if (data.CanSeek)
-                return data;
-
-            // Read the asset into memory in one go. This results in a ~50% reduction
-            // in load times on Android due to slow Android asset streams.
-            MemoryStream memStream = new MemoryStream();
-            data.CopyTo(memStream);
-            memStream.Seek(0, SeekOrigin.Begin);
-            data.Dispose();
-            return memStream;
-        }
-
-        private PlistObjectBase LoadFromNode(XmlReader reader)
-        {
-            Debug.Assert(reader.NodeType == XmlNodeType.Element);
-            bool isEmpty = reader.IsEmptyElement;
-            switch (reader.LocalName)
+    public void LoadFromXml(string data)
+    {
+        // Ignore DTDs and do not resolve external resources from the web.
+        var settings = new XmlReaderSettings()
             {
-                case "dict":
-                    var dict = new PlistDictionary(true);
-                    if (!isEmpty)
-                    {
-                        if (reader.ReadToDescendant("key"))
-                            dict = LoadDictionaryContents(reader, dict);
-                        reader.ReadEndElement();
-                    }
-                    return dict;
+                CloseInput = true,
+                DtdProcessing = DtdProcessing.Ignore,
+				//ProhibitDtd = false,
+                XmlResolver = null,
+            };
+        using (var reader = XmlReader.Create(new StringReader(data), settings))
+        {
+            LoadFromXml(reader);
+        }
+    }
 
-                case "array":
-                    if (isEmpty)
-                        return new PlistArray();
+    public void LoadFromXml(XmlReader reader)
+    {
+        reader.ReadToDescendant("plist");
+        while (reader.Read() && reader.NodeType != XmlNodeType.Element) ;
+        if (!reader.EOF)
+            root = LoadFromNode(reader);
+    }
 
-                    //advance to first node
-                    reader.ReadStartElement();
-                    while (reader.Read() && reader.NodeType != XmlNodeType.Element) ;
+    private Stream SeekableStream(Stream data)
+    {
+        if (data.CanSeek)
+            return data;
 
-                    // HACK: plist data in iPods is not even valid in some cases! Way to go Apple!
-                    // This hack checks to see if they really meant for this array to be a dict.
-                    if (reader.LocalName == "key")
-                    {
-                        var ret = LoadDictionaryContents(reader, new PlistDictionary(true));
-                        reader.ReadEndElement();
-                        return ret;
-                    }
+        // Read the asset into memory in one go. This results in a ~50% reduction
+        // in load times on Android due to slow Android asset streams.
+        MemoryStream memStream = new MemoryStream();
+        data.CopyTo(memStream);
+        memStream.Seek(0, SeekOrigin.Begin);
+        data.Dispose();
+        return memStream;
+    }
 
-                    var arr = new PlistArray();
-                    do
-                    {
-                        if (reader.NodeType == XmlNodeType.Element)
-                        {
-                            var val = LoadFromNode(reader);
-                            if (val != null)
-                                arr.Add(val);
-                        }
-                    } while (reader.Read() && reader.NodeType != XmlNodeType.EndElement);
+    private PlistObjectBase LoadFromNode(XmlReader reader)
+    {
+        Debug.Assert(reader.NodeType == XmlNodeType.Element);
+        bool isEmpty = reader.IsEmptyElement;
+        switch (reader.LocalName)
+        {
+            case "dict":
+                var dict = new PlistDictionary(true);
+                if (!isEmpty)
+                {
+                    if (reader.ReadToDescendant("key"))
+                        dict = LoadDictionaryContents(reader, dict);
                     reader.ReadEndElement();
-                    return arr;
-
-                case "string":
-                    return new PlistString(reader.ReadElementContentAsString());
-                case "integer":
-                    return new PlistInteger(reader.ReadElementContentAsInt());
-                case "real":
-                    return new PlistReal(reader.ReadElementContentAsFloat());
-                case "false":
-                    reader.ReadStartElement();
-                    if (!isEmpty)
-                        reader.ReadEndElement();
-                    return new PlistBoolean(false);
-                case "true":
-                    reader.ReadStartElement();
-                    if (!isEmpty)
-                        reader.ReadEndElement();
-                    return new PlistBoolean(true);
-                case "data":
-                    return new PlistData(reader.ReadElementContentAsString());
-                case "date":
-                    return new PlistDate(reader.ReadElementContentAsDateTime());
-                default:
-                    throw new XmlException(String.Format("Plist Node `{0}' is not supported", reader.LocalName));
-            }
-        }
-
-        private PlistDictionary LoadDictionaryContents(XmlReader reader, PlistDictionary dict)
-        {
-            Debug.Assert(reader.NodeType == XmlNodeType.Element && reader.LocalName == "key");
-            while (!reader.EOF && reader.NodeType == XmlNodeType.Element)
-            {
-                //string key = reader.ReadElementString ();
-                string key = reader.ReadElementContentAsString();
-                while (reader.NodeType != XmlNodeType.Element && reader.Read())
-                    if (reader.NodeType == XmlNodeType.EndElement)
-                        throw new Exception(String.Format("No value found for key {0}", key));
-                PlistObjectBase result = LoadFromNode(reader);
-                if (result != null)
-                    dict.Add(key, result);
-                
-                // when there is no whitespace between nodes, we might already be at
-                // the next key element, so reading to next sibling would jump over
-                // the next (current) key element
-                if (!"key".Equals(reader.Name))
-                    reader.ReadToNextSibling("key");                
-            }
-            return dict;
-        }
-
-        public PlistObjectBase Root
-        {
-            get { return root; }
-            set { root = value; }
-        }
-
-        public override void Write(System.Xml.XmlWriter writer)
-        {
-            writer.WriteStartDocument();
-            writer.WriteDocType("plist", "-//Apple Computer//DTD PLIST 1.0//EN", "http://www.apple.com/DTDs/PropertyList-1.0.dtd", null);
-            writer.WriteStartElement("plist");
-            writer.WriteAttributeString("version", version);
-            root.Write(writer);
-            writer.WriteEndDocument();
-        }
-
-        public override byte[] AsBinary
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override int AsInt
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override float AsFloat
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override string AsString
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override DateTime AsDate
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override bool AsBool
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override PlistArray AsArray
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override PlistDictionary AsDictionary
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public void WriteToFile(string filename)
-        {
-            using (var streamWriter = new StreamWriter(filename, false, System.Text.Encoding.UTF8))
-            {
-                var settings = new XmlWriterSettings()
-                    {
-                        Indent = true
-                    };
-
-                using (var writer = XmlWriter.Create(streamWriter, settings))
-                {
-                    Write(writer);
                 }
+                return dict;
+
+            case "array":
+                if (isEmpty)
+                    return new PlistArray();
+
+                //advance to first node
+                reader.ReadStartElement();
+                while (reader.Read() && reader.NodeType != XmlNodeType.Element) ;
+
+                // HACK: plist data in iPods is not even valid in some cases! Way to go Apple!
+                // This hack checks to see if they really meant for this array to be a dict.
+                if (reader.LocalName == "key")
+                {
+                    var ret = LoadDictionaryContents(reader, new PlistDictionary(true));
+                    reader.ReadEndElement();
+                    return ret;
+                }
+
+                var arr = new PlistArray();
+                do
+                {
+                    if (reader.NodeType == XmlNodeType.Element)
+                    {
+                        var val = LoadFromNode(reader);
+                        if (val != null)
+                            arr.Add(val);
+                    }
+                } while (reader.Read() && reader.NodeType != XmlNodeType.EndElement);
+                reader.ReadEndElement();
+                return arr;
+
+            case "string":
+                return new PlistString(reader.ReadElementContentAsString());
+            case "integer":
+                return new PlistInteger(reader.ReadElementContentAsInt());
+            case "real":
+                return new PlistReal(reader.ReadElementContentAsFloat());
+            case "false":
+                reader.ReadStartElement();
+                if (!isEmpty)
+                    reader.ReadEndElement();
+                return new PlistBoolean(false);
+            case "true":
+                reader.ReadStartElement();
+                if (!isEmpty)
+                    reader.ReadEndElement();
+                return new PlistBoolean(true);
+            case "data":
+                return new PlistData(reader.ReadElementContentAsString());
+            case "date":
+                return new PlistDate(reader.ReadElementContentAsDateTime());
+            default:
+                throw new XmlException(String.Format("Plist Node `{0}' is not supported", reader.LocalName));
+        }
+    }
+
+    private PlistDictionary LoadDictionaryContents(XmlReader reader, PlistDictionary dict)
+    {
+        Debug.Assert(reader.NodeType == XmlNodeType.Element && reader.LocalName == "key");
+        while (!reader.EOF && reader.NodeType == XmlNodeType.Element)
+        {
+            //string key = reader.ReadElementString ();
+            string key = reader.ReadElementContentAsString();
+            while (reader.NodeType != XmlNodeType.Element && reader.Read())
+                if (reader.NodeType == XmlNodeType.EndElement)
+                    throw new Exception(String.Format("No value found for key {0}", key));
+            PlistObjectBase result = LoadFromNode(reader);
+            if (result != null)
+                dict.Add(key, result);
+            
+            // when there is no whitespace between nodes, we might already be at
+            // the next key element, so reading to next sibling would jump over
+            // the next (current) key element
+            if (!"key".Equals(reader.Name))
+                reader.ReadToNextSibling("key");                
+        }
+        return dict;
+    }
+
+    public PlistObjectBase Root
+    {
+        get { return root; }
+        set { root = value; }
+    }
+
+    public override void Write(System.Xml.XmlWriter writer)
+    {
+        writer.WriteStartDocument();
+        writer.WriteDocType("plist", "-//Apple Computer//DTD PLIST 1.0//EN", "http://www.apple.com/DTDs/PropertyList-1.0.dtd", null);
+        writer.WriteStartElement("plist");
+        writer.WriteAttributeString("version", version);
+        root.Write(writer);
+        writer.WriteEndDocument();
+    }
+
+    public override byte[] AsBinary
+    {
+        get { throw new NotImplementedException(); }
+    }
+
+    public override int AsInt
+    {
+        get { throw new NotImplementedException(); }
+    }
+
+    public override float AsFloat
+    {
+        get { throw new NotImplementedException(); }
+    }
+
+    public override string AsString
+    {
+        get { throw new NotImplementedException(); }
+    }
+
+    public override DateTime AsDate
+    {
+        get { throw new NotImplementedException(); }
+    }
+
+    public override bool AsBool
+    {
+        get { throw new NotImplementedException(); }
+    }
+
+    public override PlistArray AsArray
+    {
+        get { throw new NotImplementedException(); }
+    }
+
+    public override PlistDictionary AsDictionary
+    {
+        get { throw new NotImplementedException(); }
+    }
+
+    public void WriteToFile(string filename)
+    {
+        using (var streamWriter = new StreamWriter(filename, false, System.Text.Encoding.UTF8))
+        {
+            var settings = new XmlWriterSettings()
+                {
+                    Indent = true
+                };
+
+            using (var writer = XmlWriter.Create(streamWriter, settings))
+            {
+                Write(writer);
             }
         }
+    }
 
-        public enum ValueType : byte
-        {
-            Array,
-            Bool,
-            Data,
-            Date,
-            Dictionary,
-            Integer,
-            Null,
-            Real,
-            String
-        }
+    public enum ValueType : byte
+    {
+        Array,
+        Bool,
+        Data,
+        Date,
+        Dictionary,
+        Integer,
+        Null,
+        Real,
+        String
+    }
 
 #region Binary Plist Reader
 
@@ -516,14 +516,14 @@ namespace Cocos2D
 			byte[] buffer = objectTable.GetRange(headerPosition + 1, byteCount).ToArray();
 			Array.Reverse(buffer);
 
-            if (byteCount > 4)
-            {
-                return new PlistReal((float)BitConverter.ToDouble(RegulateNullBytes(buffer, 8), 0));
-            }
-            else
-            {
-                return new PlistReal(BitConverter.ToSingle(RegulateNullBytes(buffer, 4), 0));
-            }
+        if (byteCount > 4)
+        {
+            return new PlistReal((float)BitConverter.ToDouble(RegulateNullBytes(buffer, 8), 0));
+        }
+        else
+        {
+            return new PlistReal(BitConverter.ToSingle(RegulateNullBytes(buffer, 4), 0));
+        }
 		}
 		private PlistString parseBinaryAsciiString(int headerPosition)
 		{
@@ -561,7 +561,7 @@ namespace Cocos2D
 
 			return new PlistString(Encoding.Unicode.GetString(buffer, 0, charCount));
 		}
-        private PlistArray parseBinaryByteArray(int headerPosition)
+    private PlistArray parseBinaryByteArray(int headerPosition)
 		{
 			int byteStartPosition;
 			int byteCount = getCount(headerPosition, out byteStartPosition);
@@ -645,74 +645,73 @@ namespace Cocos2D
 #endregion Binary Plist Reader
 
 
-        public class PlistDocumentReader : ContentTypeReader<PlistDocument>
+    public class PlistDocumentReader : ContentTypeReader<PlistDocument>
+    {
+        private string[] _stringPool;
+
+        protected override PlistDocument Read(ContentReader input, PlistDocument existingInstance)
         {
-            private string[] _stringPool;
-
-            protected override PlistDocument Read(ContentReader input, PlistDocument existingInstance)
+            if (existingInstance == null)
             {
-                if (existingInstance == null)
-                {
-                    existingInstance = new PlistDocument();
-                }
-
-                _stringPool = input.ReadObject<string[]>();
-
-                existingInstance.root = ReadValue(input);
-                
-                return existingInstance;
+                existingInstance = new PlistDocument();
             }
 
-            protected PlistObjectBase ReadValue(ContentReader input)
+            _stringPool = input.ReadObject<string[]>();
+
+            existingInstance.root = ReadValue(input);
+            
+            return existingInstance;
+        }
+
+        protected PlistObjectBase ReadValue(ContentReader input)
+        {
+            var type = (ValueType) input.ReadByte();
+
+            switch (type)
             {
-                var type = (ValueType) input.ReadByte();
+                case ValueType.Array:
+                    var count = input.ReadInt32();
+                    var array = new PlistArray(count);
+                    for (int i = 0; i < count; i++)
+                    {
+                        array.Add(ReadValue(input));
+                    }
+                    return array;
 
-                switch (type)
-                {
-                    case ValueType.Array:
-                        var count = input.ReadInt32();
-                        var array = new PlistArray(count);
-                        for (int i = 0; i < count; i++)
-                        {
-                            array.Add(ReadValue(input));
-                        }
-                        return array;
+                case ValueType.Bool:
+                    return new PlistBoolean(input.ReadBoolean());
 
-                    case ValueType.Bool:
-                        return new PlistBoolean(input.ReadBoolean());
+                case ValueType.Data:
+                    count = input.ReadInt32();
+                    return new PlistData(input.ReadBytes(count));
 
-                    case ValueType.Data:
-                        count = input.ReadInt32();
-                        return new PlistData(input.ReadBytes(count));
+                case ValueType.Date:
+                    return new PlistDate(input.ReadObject<DateTime>());
 
-                    case ValueType.Date:
-                        return new PlistDate(input.ReadObject<DateTime>());
+                case ValueType.Dictionary:
+                    count = input.ReadInt32();
+                    var dict = new PlistDictionary();
+                    for (int i = 0; i < count; i++)
+                    {
+                        string key = _stringPool[input.ReadInt32()];
+                        dict.Add(key, ReadValue(input));
+                    }
+                    return dict;
 
-                    case ValueType.Dictionary:
-                        count = input.ReadInt32();
-                        var dict = new PlistDictionary();
-                        for (int i = 0; i < count; i++)
-                        {
-                            string key = _stringPool[input.ReadInt32()];
-                            dict.Add(key, ReadValue(input));
-                        }
-                        return dict;
+                case ValueType.Integer:
+                    return new PlistInteger(input.ReadInt32());
 
-                    case ValueType.Integer:
-                        return new PlistInteger(input.ReadInt32());
+                case ValueType.Null:
+                    return new PlistNull();
 
-                    case ValueType.Null:
-                        return new PlistNull();
+                case ValueType.Real:
+                    return new PlistReal(input.ReadSingle());
 
-                    case ValueType.Real:
-                        return new PlistReal(input.ReadSingle());
+                case ValueType.String:
+                    return new PlistString(_stringPool[input.ReadInt32()]);
 
-                    case ValueType.String:
-                        return new PlistString(_stringPool[input.ReadInt32()]);
-
-                    default:
-                        throw new InvalidOperationException();
-                }
+                default:
+                    throw new InvalidOperationException();
             }
         }
     }

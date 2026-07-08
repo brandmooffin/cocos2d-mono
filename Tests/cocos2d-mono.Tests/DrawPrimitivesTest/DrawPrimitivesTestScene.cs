@@ -4,91 +4,90 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class DrawPrimitivesTestScene : TestScene
 {
-    public class DrawPrimitivesTestScene : TestScene
+    private static int sceneIdx = -1;
+    private static int MAX_LAYER = 13;
+
+    public override void runThisTest()
     {
-        private static int sceneIdx = -1;
-        private static int MAX_LAYER = 13;
+        CCLayer pLayer = nextTestAction();
+        AddChild(pLayer);
+        CCDirector.SharedDirector.ReplaceScene(this);
+    }
 
-        public override void runThisTest()
+    public static CCLayer createTestLayer(int nIndex)
+    {
+        switch (nIndex)
         {
-            CCLayer pLayer = nextTestAction();
-            AddChild(pLayer);
-            CCDirector.SharedDirector.ReplaceScene(this);
+            case 0:
+                return new DrawPrimitivesTest();
+            case 1:
+                return new DrawNodeTest();
+            case 2:
+                return new DrawPrimitivesWithRenderTextureTest();
+            case 3:
+                return new DrawPrimtivesLightningTest();
+            case 4:
+                return new DrawPrimitivesRoundRectTest();
+            case 5:
+                return new DrawPrimitivesRoundRectSpriteTest();
+            case 6:
+                return new DrawNodeFilledCircleTest();
+            case 7:
+                return new DrawNodeTriangleTest();
+            case 8:
+                return new DrawNodeOutlinesTest();
+            case 9:
+                return new DrawNodeDotCircleTest();
+            case 10:
+                return new DrawNodeColorConversionsTest();
+            case 11:
+                return new DrawNodeRetainedTest();
+            case 12:
+                return new DrawNodeRetainedRemoveTest();
         }
+        return null;
+    }
 
-        public static CCLayer createTestLayer(int nIndex)
-        {
-            switch (nIndex)
-            {
-                case 0:
-                    return new DrawPrimitivesTest();
-                case 1:
-                    return new DrawNodeTest();
-                case 2:
-                    return new DrawPrimitivesWithRenderTextureTest();
-                case 3:
-                    return new DrawPrimtivesLightningTest();
-                case 4:
-                    return new DrawPrimitivesRoundRectTest();
-                case 5:
-                    return new DrawPrimitivesRoundRectSpriteTest();
-                case 6:
-                    return new DrawNodeFilledCircleTest();
-                case 7:
-                    return new DrawNodeTriangleTest();
-                case 8:
-                    return new DrawNodeOutlinesTest();
-                case 9:
-                    return new DrawNodeDotCircleTest();
-                case 10:
-                    return new DrawNodeColorConversionsTest();
-                case 11:
-                    return new DrawNodeRetainedTest();
-                case 12:
-                    return new DrawNodeRetainedRemoveTest();
-            }
-            return null;
-        }
+    protected override void NextTestCase()
+    {
+        nextTestAction();
+    }
 
-        protected override void NextTestCase()
-        {
-            nextTestAction();
-        }
+    protected override void PreviousTestCase()
+    {
+        backTestAction();
+    }
 
-        protected override void PreviousTestCase()
-        {
-            backTestAction();
-        }
+    protected override void RestTestCase()
+    {
+        restartTestAction();
+    }
 
-        protected override void RestTestCase()
-        {
-            restartTestAction();
-        }
+    public static CCLayer nextTestAction()
+    {
+        sceneIdx++;
+        sceneIdx = sceneIdx % MAX_LAYER;
+        CCLayer pLayer = createTestLayer(sceneIdx);
+        return pLayer;
+    }
 
-        public static CCLayer nextTestAction()
-        {
-            sceneIdx++;
-            sceneIdx = sceneIdx % MAX_LAYER;
-            CCLayer pLayer = createTestLayer(sceneIdx);
-            return pLayer;
-        }
+    public static CCLayer backTestAction()
+    {
+        sceneIdx--;
+        int total = MAX_LAYER;
+        if (sceneIdx < 0)
+            sceneIdx += total;
+        CCLayer pLayer = createTestLayer(sceneIdx);
+        return pLayer;
+    }
 
-        public static CCLayer backTestAction()
-        {
-            sceneIdx--;
-            int total = MAX_LAYER;
-            if (sceneIdx < 0)
-                sceneIdx += total;
-            CCLayer pLayer = createTestLayer(sceneIdx);
-            return pLayer;
-        }
-
-        public static CCLayer restartTestAction()
-        {
-            CCLayer pLayer = createTestLayer(sceneIdx);
-            return pLayer;
-        }
+    public static CCLayer restartTestAction()
+    {
+        CCLayer pLayer = createTestLayer(sceneIdx);
+        return pLayer;
     }
 }

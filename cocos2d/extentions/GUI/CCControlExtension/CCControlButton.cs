@@ -2,811 +2,810 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public delegate void CCButtonTapDelegate(object sender);
+
+public class CCControlButton : CCControl
 {
-    public delegate void CCButtonTapDelegate(object sender);
+    /* Define the button margin for Left/Right edge */
+    public const int CCControlButtonMarginLR = 8; // px
+    /* Define the button margin for Top/Bottom edge */
+    public const int CCControlButtonMarginTB = 2; // px
 
-    public class CCControlButton : CCControl
+    public const int kZoomActionTag = (0x7CCB0001);
+    protected bool _parentInited;
+
+    protected CCNode _backgroundSprite;
+    protected Dictionary<CCControlState, CCNode> _backgroundSpriteDispatchTable;
+    protected string _currentTitle;
+
+    /** The current color used to display the title. */
+    protected CCColor3B _currentTitleColor;
+    protected bool _doesAdjustBackgroundImage;
+    protected bool _isPushed;
+    protected CCPoint _labelAnchorPoint;
+    protected int _marginH = CCControlButtonMarginLR;
+    protected int _marginV = CCControlButtonMarginTB;
+    protected CCSize _preferredSize;
+    protected Dictionary<CCControlState, CCColor3B> _titleColorDispatchTable;
+    protected Dictionary<CCControlState, string> _titleDispatchTable;
+    protected CCNode _titleLabel;
+    protected Dictionary<CCControlState, CCNode> _titleLabelDispatchTable;
+    protected bool _zoomOnTouchDown;
+
+    public event CCButtonTapDelegate OnButtonTap;
+
+    /// <summary>
+    /// Default ctor. Does nothing.
+    /// </summary>
+    public CCControlButton()
     {
-        /* Define the button margin for Left/Right edge */
-        public const int CCControlButtonMarginLR = 8; // px
-        /* Define the button margin for Top/Bottom edge */
-        public const int CCControlButtonMarginTB = 2; // px
+    }
 
-        public const int kZoomActionTag = (0x7CCB0001);
-        protected bool _parentInited;
+    public CCNode BackgroundSprite
+    {
+        get { return _backgroundSprite; }
+        set { _backgroundSprite = value; }
+    }
 
-        protected CCNode _backgroundSprite;
-        protected Dictionary<CCControlState, CCNode> _backgroundSpriteDispatchTable;
-        protected string _currentTitle;
+    public CCNode TitleLabel
+    {
+        get { return _titleLabel; }
+        set { _titleLabel = value; }
+    }
 
-        /** The current color used to display the title. */
-        protected CCColor3B _currentTitleColor;
-        protected bool _doesAdjustBackgroundImage;
-        protected bool _isPushed;
-        protected CCPoint _labelAnchorPoint;
-        protected int _marginH = CCControlButtonMarginLR;
-        protected int _marginV = CCControlButtonMarginTB;
-        protected CCSize _preferredSize;
-        protected Dictionary<CCControlState, CCColor3B> _titleColorDispatchTable;
-        protected Dictionary<CCControlState, string> _titleDispatchTable;
-        protected CCNode _titleLabel;
-        protected Dictionary<CCControlState, CCNode> _titleLabelDispatchTable;
-        protected bool _zoomOnTouchDown;
-
-        public event CCButtonTapDelegate OnButtonTap;
-
-        /// <summary>
-        /// Default ctor. Does nothing.
-        /// </summary>
-        public CCControlButton()
+    public override byte Opacity
+    {
+        get { return _realOpacity; }
+        set
         {
-        }
-
-        public CCNode BackgroundSprite
-        {
-            get { return _backgroundSprite; }
-            set { _backgroundSprite = value; }
-        }
-
-        public CCNode TitleLabel
-        {
-            get { return _titleLabel; }
-            set { _titleLabel = value; }
-        }
-
-        public override byte Opacity
-        {
-            get { return _realOpacity; }
-            set
+            base.Opacity = value;
+            foreach (ICCRGBAProtocol item in _backgroundSpriteDispatchTable.Values)
             {
-                base.Opacity = value;
-                foreach (ICCRGBAProtocol item in _backgroundSpriteDispatchTable.Values)
+                if (item != null)
                 {
-                    if (item != null)
-                    {
-                        item.Opacity = value;
-                    }
+                    item.Opacity = value;
                 }
             }
         }
+    }
 
-        public override CCColor3B Color
+    public override CCColor3B Color
+    {
+        get { return base._realColor; }
+        set
         {
-            get { return base._realColor; }
-            set
+            base.Color = value;
+            foreach (ICCRGBAProtocol item in _backgroundSpriteDispatchTable.Values)
             {
-                base.Color = value;
-                foreach (ICCRGBAProtocol item in _backgroundSpriteDispatchTable.Values)
+                if (item != null)
                 {
-                    if (item != null)
-                    {
-                        item.Color = value;
-                    }
+                    item.Color = value;
                 }
             }
         }
+    }
 
-        public override bool Enabled
+    public override bool Enabled
+    {
+        get { return base.Enabled; }
+        set
         {
-            get { return base.Enabled; }
-            set
+            base.Enabled = value;
+            NeedsLayout();
+        }
+    }
+
+    public override bool Selected
+    {
+        set
+        {
+            base.Selected = value;
+            NeedsLayout();
+        }
+    }
+
+    public override bool Highlighted
+    {
+        set
+        {
+            base.Highlighted = value;
+
+            CCAction action = GetAction(kZoomActionTag);
+            if (action != null)
             {
-                base.Enabled = value;
-                NeedsLayout();
+                StopAction(action);
+            }
+
+            NeedsLayout();
+
+            if (_zoomOnTouchDown)
+            {
+                float scaleValue = (Highlighted && Enabled && !Selected) ? 1.1f : 1.0f;
+                CCAction zoomAction = new CCScaleTo(0.05f, scaleValue);
+                zoomAction.Tag = kZoomActionTag;
+                RunAction(zoomAction);
             }
         }
+    }
 
-        public override bool Selected
+    public bool IsPushed
+    {
+        get { return _isPushed; }
+    }
+
+    public override void NeedsLayout()
+    {
+        if (!_parentInited)
         {
-            set
-            {
-                base.Selected = value;
-                NeedsLayout();
-            }
+            return;
+        }
+        // Hide the background and the label
+        if (_titleLabel != null)
+        {
+            _titleLabel.Visible = false;
+        }
+        if (_backgroundSprite != null)
+        {
+            _backgroundSprite.Visible = false;
+        }
+        // Update anchor of all labels
+        LabelAnchorPoint = _labelAnchorPoint;
+
+        // Update the label to match with the current state
+
+        _currentTitle = GetTitleForState(_state);
+        _currentTitleColor = GetTitleColorForState(_state);
+
+        TitleLabel = GetTitleLabelForState(_state);
+
+        var label = (ICCLabelProtocol) _titleLabel;
+        if (label != null && !String.IsNullOrEmpty(_currentTitle))
+        {
+            label.Text = (_currentTitle);
         }
 
-        public override bool Highlighted
+        var rgbaLabel = (ICCRGBAProtocol) _titleLabel;
+        if (rgbaLabel != null)
         {
-            set
-            {
-                base.Highlighted = value;
-
-                CCAction action = GetAction(kZoomActionTag);
-                if (action != null)
-                {
-                    StopAction(action);
-                }
-
-                NeedsLayout();
-
-                if (_zoomOnTouchDown)
-                {
-                    float scaleValue = (Highlighted && Enabled && !Selected) ? 1.1f : 1.0f;
-                    CCAction zoomAction = new CCScaleTo(0.05f, scaleValue);
-                    zoomAction.Tag = kZoomActionTag;
-                    RunAction(zoomAction);
-                }
-            }
+            rgbaLabel.Color = _currentTitleColor;
+        }
+        if (_titleLabel != null)
+        {
+            _titleLabel.Position = new CCPoint(ContentSize.Width / 2, ContentSize.Height / 2);
         }
 
-        public bool IsPushed
+        // Update the background sprite
+        BackgroundSprite = GetBackgroundSpriteForState(_state);
+        if (_backgroundSprite != null)
         {
-            get { return _isPushed; }
+            _backgroundSprite.Position = new CCPoint(ContentSize.Width / 2, ContentSize.Height / 2);
         }
 
-        public override void NeedsLayout()
+        // Get the title label size
+        CCSize titleLabelSize = CCSize.Zero;
+        if (_titleLabel != null)
         {
-            if (!_parentInited)
-            {
-                return;
-            }
-            // Hide the background and the label
-            if (_titleLabel != null)
-            {
-                _titleLabel.Visible = false;
-            }
+            titleLabelSize = _titleLabel.BoundingBox.Size;
+        }
+
+        // Adjust the background image if necessary
+        if (_doesAdjustBackgroundImage)
+        {
+            // Add the margins
             if (_backgroundSprite != null)
             {
-                _backgroundSprite.Visible = false;
+                _backgroundSprite.ContentSize = new CCSize(titleLabelSize.Width + _marginH * 2, titleLabelSize.Height + _marginV * 2);
             }
-            // Update anchor of all labels
-            LabelAnchorPoint = _labelAnchorPoint;
-
-            // Update the label to match with the current state
-
-            _currentTitle = GetTitleForState(_state);
-            _currentTitleColor = GetTitleColorForState(_state);
-
-            TitleLabel = GetTitleLabelForState(_state);
-
-            var label = (ICCLabelProtocol) _titleLabel;
-            if (label != null && !String.IsNullOrEmpty(_currentTitle))
+        }
+        else
+        {
+            //TODO: should this also have margins if one of the preferred sizes is relaxed?
+            if (_backgroundSprite != null && _backgroundSprite is CCScale9Sprite)
             {
-                label.Text = (_currentTitle);
-            }
-
-            var rgbaLabel = (ICCRGBAProtocol) _titleLabel;
-            if (rgbaLabel != null)
-            {
-                rgbaLabel.Color = _currentTitleColor;
-            }
-            if (_titleLabel != null)
-            {
-                _titleLabel.Position = new CCPoint(ContentSize.Width / 2, ContentSize.Height / 2);
-            }
-
-            // Update the background sprite
-            BackgroundSprite = GetBackgroundSpriteForState(_state);
-            if (_backgroundSprite != null)
-            {
-                _backgroundSprite.Position = new CCPoint(ContentSize.Width / 2, ContentSize.Height / 2);
-            }
-
-            // Get the title label size
-            CCSize titleLabelSize = CCSize.Zero;
-            if (_titleLabel != null)
-            {
-                titleLabelSize = _titleLabel.BoundingBox.Size;
-            }
-
-            // Adjust the background image if necessary
-            if (_doesAdjustBackgroundImage)
-            {
-                // Add the margins
-                if (_backgroundSprite != null)
+                CCSize preferredSize = ((CCScale9Sprite)_backgroundSprite).PreferredSize;
+                if (preferredSize.Width <= 0)
                 {
-                    _backgroundSprite.ContentSize = new CCSize(titleLabelSize.Width + _marginH * 2, titleLabelSize.Height + _marginV * 2);
+                    preferredSize.Width = titleLabelSize.Width;
                 }
+                if (preferredSize.Height <= 0)
+                {
+                    preferredSize.Height = titleLabelSize.Height;
+                }
+
+                _backgroundSprite.ContentSize = preferredSize;
+            }
+        }
+
+        // Set the content size
+        CCRect rectTitle = CCRect.Zero;
+        if (_titleLabel != null)
+        {
+            rectTitle = _titleLabel.BoundingBox;
+        }
+        CCRect rectBackground = CCRect.Zero;
+        if (_backgroundSprite != null)
+        {
+            rectBackground = _backgroundSprite.BoundingBox;
+        }
+
+        CCRect maxRect = CCControlUtils.CCRectUnion(rectTitle, rectBackground);
+        ContentSize = new CCSize(maxRect.Size.Width, maxRect.Size.Height);
+
+        if (_titleLabel != null)
+        {
+            _titleLabel.Position = new CCPoint(ContentSize.Width / 2, ContentSize.Height / 2);
+            // Make visible label
+            _titleLabel.Visible = true;
+        }
+
+        if (_backgroundSprite != null)
+        {
+            _backgroundSprite.Position = new CCPoint(ContentSize.Width / 2, ContentSize.Height / 2);
+            // Make visible the background
+            _backgroundSprite.Visible = true;
+        }
+    }
+
+    /** Adjust the background image. YES by default. If the property is set to NO, the 
+    background will use the prefered size of the background image. */
+
+    public void SetAdjustBackgroundImage(bool adjustBackgroundImage)
+    {
+        _doesAdjustBackgroundImage = adjustBackgroundImage;
+        NeedsLayout();
+    }
+
+    public bool DoesAdjustBackgroundImage()
+    {
+        return _doesAdjustBackgroundImage;
+    }
+
+
+    /** Adjust the button zooming on touchdown. Default value is YES. */
+
+    public bool ZoomOnTouchDown
+    {
+        set { _zoomOnTouchDown = value; }
+        get { return _zoomOnTouchDown; }
+    }
+
+    /** The prefered size of the button, if label is larger it will be expanded. */
+
+    public CCSize PreferredSize
+    {
+        get { return _preferredSize; }
+        set
+        {
+            if (value.Width == 0 && value.Height == 0)
+            {
+                _doesAdjustBackgroundImage = true;
             }
             else
             {
-                //TODO: should this also have margins if one of the preferred sizes is relaxed?
-                if (_backgroundSprite != null && _backgroundSprite is CCScale9Sprite)
+                _doesAdjustBackgroundImage = false;
+                foreach (var item in _backgroundSpriteDispatchTable)
                 {
-                    CCSize preferredSize = ((CCScale9Sprite)_backgroundSprite).PreferredSize;
-                    if (preferredSize.Width <= 0)
+                    var sprite = item.Value as CCScale9Sprite;
+                    if (sprite != null)
                     {
-                        preferredSize.Width = titleLabelSize.Width;
+                        sprite.PreferredSize = value;
                     }
-                    if (preferredSize.Height <= 0)
-                    {
-                        preferredSize.Height = titleLabelSize.Height;
-                    }
-
-                    _backgroundSprite.ContentSize = preferredSize;
                 }
             }
 
-            // Set the content size
-            CCRect rectTitle = CCRect.Zero;
-            if (_titleLabel != null)
-            {
-                rectTitle = _titleLabel.BoundingBox;
-            }
-            CCRect rectBackground = CCRect.Zero;
-            if (_backgroundSprite != null)
-            {
-                rectBackground = _backgroundSprite.BoundingBox;
-            }
+            _preferredSize = value;
 
-            CCRect maxRect = CCControlUtils.CCRectUnion(rectTitle, rectBackground);
-            ContentSize = new CCSize(maxRect.Size.Width, maxRect.Size.Height);
-
-            if (_titleLabel != null)
-            {
-                _titleLabel.Position = new CCPoint(ContentSize.Width / 2, ContentSize.Height / 2);
-                // Make visible label
-                _titleLabel.Visible = true;
-            }
-
-            if (_backgroundSprite != null)
-            {
-                _backgroundSprite.Position = new CCPoint(ContentSize.Width / 2, ContentSize.Height / 2);
-                // Make visible the background
-                _backgroundSprite.Visible = true;
-            }
-        }
-
-        /** Adjust the background image. YES by default. If the property is set to NO, the 
-        background will use the prefered size of the background image. */
-
-        public void SetAdjustBackgroundImage(bool adjustBackgroundImage)
-        {
-            _doesAdjustBackgroundImage = adjustBackgroundImage;
             NeedsLayout();
         }
+    }
 
-        public bool DoesAdjustBackgroundImage()
+
+    public CCPoint LabelAnchorPoint
+    {
+        get { return _labelAnchorPoint; }
+        set
         {
-            return _doesAdjustBackgroundImage;
-        }
-
-
-        /** Adjust the button zooming on touchdown. Default value is YES. */
-
-        public bool ZoomOnTouchDown
-        {
-            set { _zoomOnTouchDown = value; }
-            get { return _zoomOnTouchDown; }
-        }
-
-        /** The prefered size of the button, if label is larger it will be expanded. */
-
-        public CCSize PreferredSize
-        {
-            get { return _preferredSize; }
-            set
+            _labelAnchorPoint = value;
+            if (_titleLabel != null)
             {
-                if (value.Width == 0 && value.Height == 0)
-                {
-                    _doesAdjustBackgroundImage = true;
-                }
-                else
-                {
-                    _doesAdjustBackgroundImage = false;
-                    foreach (var item in _backgroundSpriteDispatchTable)
-                    {
-                        var sprite = item.Value as CCScale9Sprite;
-                        if (sprite != null)
-                        {
-                            sprite.PreferredSize = value;
-                        }
-                    }
-                }
-
-                _preferredSize = value;
-
-                NeedsLayout();
+                _titleLabel.AnchorPoint = value;
             }
         }
+    }
 
+    /** The current title that is displayed on the button. */
 
-        public CCPoint LabelAnchorPoint
+    //set the margins at once (so we only have to do one call of needsLayout)
+    protected virtual void SetMargins(int marginH, int marginV)
+    {
+        _marginV = marginV;
+        _marginH = marginH;
+        NeedsLayout();
+    }
+
+    public override bool Init()
+    {
+        return InitWithLabelAndBackgroundSprite(new CCLabelTTF("", "Arial", 12), new CCSprite());
+    }
+
+    public virtual bool InitWithLabelAndBackgroundSprite(CCNode node, CCNode backgroundSprite)
+    {
+        if (base.Init())
         {
-            get { return _labelAnchorPoint; }
-            set
-            {
-                _labelAnchorPoint = value;
-                if (_titleLabel != null)
-                {
-                    _titleLabel.AnchorPoint = value;
-                }
-            }
-        }
+            Debug.Assert(node != null, "Label must not be nil.");
+            var label = node as ICCLabelProtocol;
+            var rgbaLabel = node as ICCRGBAProtocol;
+            Debug.Assert(backgroundSprite != null, "Background sprite must not be nil.");
+            Debug.Assert(label != null || rgbaLabel != null || backgroundSprite != null);
 
-        /** The current title that is displayed on the button. */
+            _parentInited = true;
 
-        //set the margins at once (so we only have to do one call of needsLayout)
-        protected virtual void SetMargins(int marginH, int marginV)
-        {
-            _marginV = marginV;
-            _marginH = marginH;
+            // Initialize the button state tables
+            _titleDispatchTable = new Dictionary<CCControlState, string>();
+            _titleColorDispatchTable = new Dictionary<CCControlState, CCColor3B>();
+            _titleLabelDispatchTable = new Dictionary<CCControlState, CCNode>();
+            _backgroundSpriteDispatchTable = new Dictionary<CCControlState, CCNode>();
+
+            TouchEnabled = true;
+            _isPushed = false;
+            _zoomOnTouchDown = true;
+
+            _currentTitle = null;
+
+            // Adjust the background image by default
+            SetAdjustBackgroundImage(true);
+            PreferredSize = CCSize.Zero;
+            // Zooming button by default
+            _zoomOnTouchDown = true;
+
+            // Set the default anchor point
+            IgnoreAnchorPointForPosition = false;
+            AnchorPoint = new CCPoint(0.5f, 0.5f);
+
+            // Set the nodes
+            TitleLabel = node;
+            BackgroundSprite = backgroundSprite;
+
+            // Set the default color and opacity
+            Color = new CCColor3B(255, 255, 255);
+            Opacity = 255;
+            IsOpacityModifyRGB = true;
+
+            // Initialize the dispatch table
+
+            string tempString = label.Text;
+            //tempString->autorelease();
+            SetTitleForState(tempString, CCControlState.Normal);
+            SetTitleColorForState(rgbaLabel.Color, CCControlState.Normal);
+            SetTitleLabelForState(node, CCControlState.Normal);
+            SetBackgroundSpriteForState(backgroundSprite, CCControlState.Normal);
+
+            LabelAnchorPoint = new CCPoint(0.5f, 0.5f);
+
             NeedsLayout();
+
+            return true;
         }
+        //couldn't init the CCControl
+        return false;
+    }
 
-        public override bool Init()
+    public CCControlButton(CCNode label, CCNode backgroundSprite)
+    {
+        InitWithLabelAndBackgroundSprite(label, backgroundSprite);
+    }
+
+    protected virtual bool InitWithTitleAndFontNameAndFontSize(string title, string fontName, float fontSize)
+    {
+        CCLabelTTF label = new CCLabelTTF(title, fontName, fontSize);
+        return InitWithLabelAndBackgroundSprite(label, new CCNode());
+    }
+
+    public CCControlButton(string title, string fontName, float fontSize)
+    {
+        InitWithTitleAndFontNameAndFontSize(title, fontName, fontSize);
+    }
+
+    protected virtual bool InitWithBackgroundSprite(CCNode sprite)
+    {
+        CCLabelTTF label = new CCLabelTTF("", "Arial", 30);
+        return InitWithLabelAndBackgroundSprite(label, sprite);
+    }
+
+    public CCControlButton(CCNode sprite)
+    {
+        InitWithBackgroundSprite(sprite);
+    }
+
+    //events
+    public override bool TouchBegan(CCTouch pTouch)
+    {
+        if (!IsTouchInside(pTouch) || !Enabled)
         {
-            return InitWithLabelAndBackgroundSprite(new CCLabelTTF("", "Arial", 12), new CCSprite());
-        }
-
-        public virtual bool InitWithLabelAndBackgroundSprite(CCNode node, CCNode backgroundSprite)
-        {
-            if (base.Init())
-            {
-                Debug.Assert(node != null, "Label must not be nil.");
-                var label = node as ICCLabelProtocol;
-                var rgbaLabel = node as ICCRGBAProtocol;
-                Debug.Assert(backgroundSprite != null, "Background sprite must not be nil.");
-                Debug.Assert(label != null || rgbaLabel != null || backgroundSprite != null);
-
-                _parentInited = true;
-
-                // Initialize the button state tables
-                _titleDispatchTable = new Dictionary<CCControlState, string>();
-                _titleColorDispatchTable = new Dictionary<CCControlState, CCColor3B>();
-                _titleLabelDispatchTable = new Dictionary<CCControlState, CCNode>();
-                _backgroundSpriteDispatchTable = new Dictionary<CCControlState, CCNode>();
-
-                TouchEnabled = true;
-                _isPushed = false;
-                _zoomOnTouchDown = true;
-
-                _currentTitle = null;
-
-                // Adjust the background image by default
-                SetAdjustBackgroundImage(true);
-                PreferredSize = CCSize.Zero;
-                // Zooming button by default
-                _zoomOnTouchDown = true;
-
-                // Set the default anchor point
-                IgnoreAnchorPointForPosition = false;
-                AnchorPoint = new CCPoint(0.5f, 0.5f);
-
-                // Set the nodes
-                TitleLabel = node;
-                BackgroundSprite = backgroundSprite;
-
-                // Set the default color and opacity
-                Color = new CCColor3B(255, 255, 255);
-                Opacity = 255;
-                IsOpacityModifyRGB = true;
-
-                // Initialize the dispatch table
-
-                string tempString = label.Text;
-                //tempString->autorelease();
-                SetTitleForState(tempString, CCControlState.Normal);
-                SetTitleColorForState(rgbaLabel.Color, CCControlState.Normal);
-                SetTitleLabelForState(node, CCControlState.Normal);
-                SetBackgroundSpriteForState(backgroundSprite, CCControlState.Normal);
-
-                LabelAnchorPoint = new CCPoint(0.5f, 0.5f);
-
-                NeedsLayout();
-
-                return true;
-            }
-            //couldn't init the CCControl
             return false;
         }
 
-        public CCControlButton(CCNode label, CCNode backgroundSprite)
-        {
-            InitWithLabelAndBackgroundSprite(label, backgroundSprite);
-        }
+        _state = CCControlState.Highlighted;
+        _isPushed = true;
+        Highlighted = true;
+        SendActionsForControlEvents(CCControlEvent.TouchDown);
+        return true;
+    }
 
-        protected virtual bool InitWithTitleAndFontNameAndFontSize(string title, string fontName, float fontSize)
+    public override void TouchMoved(CCTouch pTouch)
+    {
+        if (!Enabled || !IsPushed || Selected)
         {
-            CCLabelTTF label = new CCLabelTTF(title, fontName, fontSize);
-            return InitWithLabelAndBackgroundSprite(label, new CCNode());
-        }
-
-        public CCControlButton(string title, string fontName, float fontSize)
-        {
-            InitWithTitleAndFontNameAndFontSize(title, fontName, fontSize);
-        }
-
-        protected virtual bool InitWithBackgroundSprite(CCNode sprite)
-        {
-            CCLabelTTF label = new CCLabelTTF("", "Arial", 30);
-            return InitWithLabelAndBackgroundSprite(label, sprite);
-        }
-
-        public CCControlButton(CCNode sprite)
-        {
-            InitWithBackgroundSprite(sprite);
-        }
-
-        //events
-        public override bool TouchBegan(CCTouch pTouch)
-        {
-            if (!IsTouchInside(pTouch) || !Enabled)
+            if (Highlighted)
             {
-                return false;
-            }
-
-            _state = CCControlState.Highlighted;
-            _isPushed = true;
-            Highlighted = true;
-            SendActionsForControlEvents(CCControlEvent.TouchDown);
-            return true;
-        }
-
-        public override void TouchMoved(CCTouch pTouch)
-        {
-            if (!Enabled || !IsPushed || Selected)
-            {
-                if (Highlighted)
-                {
-                    Highlighted = false;
-                }
-                return;
-            }
-
-            bool isTouchMoveInside = IsTouchInside(pTouch);
-            if (isTouchMoveInside && !_highlighted)
-            {
-                _state = CCControlState.Highlighted;
-                Highlighted = true;
-                SendActionsForControlEvents(CCControlEvent.TouchDragEnter);
-            }
-            else if (isTouchMoveInside && Highlighted)
-            {
-                SendActionsForControlEvents(CCControlEvent.TouchDragInside);
-            }
-            else if (!isTouchMoveInside && Highlighted)
-            {
-                _state = CCControlState.Normal;
                 Highlighted = false;
-
-                SendActionsForControlEvents(CCControlEvent.TouchDragExit);
             }
-            else if (!isTouchMoveInside && !Highlighted)
-            {
-                SendActionsForControlEvents(CCControlEvent.TouchDragOutside);
-            }
+            return;
         }
 
-        public override void TouchEnded(CCTouch pTouch)
+        bool isTouchMoveInside = IsTouchInside(pTouch);
+        if (isTouchMoveInside && !_highlighted)
+        {
+            _state = CCControlState.Highlighted;
+            Highlighted = true;
+            SendActionsForControlEvents(CCControlEvent.TouchDragEnter);
+        }
+        else if (isTouchMoveInside && Highlighted)
+        {
+            SendActionsForControlEvents(CCControlEvent.TouchDragInside);
+        }
+        else if (!isTouchMoveInside && Highlighted)
         {
             _state = CCControlState.Normal;
-            _isPushed = false;
             Highlighted = false;
 
-
-            if (IsTouchInside(pTouch))
-            {
-                if (OnButtonTap != null)
-                {
-                    OnButtonTap(this);
-                }
-                SendActionsForControlEvents(CCControlEvent.TouchUpInside);
-            }
-            else
-            {
-                SendActionsForControlEvents(CCControlEvent.TouchUpOutside);
-            }
+            SendActionsForControlEvents(CCControlEvent.TouchDragExit);
         }
-
-        public override void TouchCancelled(CCTouch pTouch)
+        else if (!isTouchMoveInside && !Highlighted)
         {
-            _state = CCControlState.Normal;
-            _isPushed = false;
-            Highlighted = false;
-            SendActionsForControlEvents(CCControlEvent.TouchCancel);
+            SendActionsForControlEvents(CCControlEvent.TouchDragOutside);
         }
+    }
 
-        /**
-        * Returns the title used for a state.
-        *
-        * @param state The state that uses the title. Possible values are described in
-        * "CCControlState".
-        *
-        * @return The title for the specified state.
-        */
+    public override void TouchEnded(CCTouch pTouch)
+    {
+        _state = CCControlState.Normal;
+        _isPushed = false;
+        Highlighted = false;
 
-        public virtual string GetTitleForState(CCControlState state)
+
+        if (IsTouchInside(pTouch))
         {
-            if (_titleDispatchTable != null)
+            if (OnButtonTap != null)
             {
-                string title;
-                if (_titleDispatchTable.TryGetValue(state, out title))
-                {
-                    return title;
-                }
-                if (_titleDispatchTable.TryGetValue(CCControlState.Normal, out title))
-                {
-                    return title;
-                }
+                OnButtonTap(this);
             }
-            return String.Empty;
+            SendActionsForControlEvents(CCControlEvent.TouchUpInside);
         }
+        else
+        {
+            SendActionsForControlEvents(CCControlEvent.TouchUpOutside);
+        }
+    }
 
-        /**
-    * Sets the title string to use for the specified state.
-    * If a property is not specified for a state, the default is to use
-    * the CCButtonStateNormal value.
+    public override void TouchCancelled(CCTouch pTouch)
+    {
+        _state = CCControlState.Normal;
+        _isPushed = false;
+        Highlighted = false;
+        SendActionsForControlEvents(CCControlEvent.TouchCancel);
+    }
+
+    /**
+    * Returns the title used for a state.
     *
-    * @param title The title string to use for the specified state.
-    * @param state The state that uses the specified title. The values are described
-    * in "CCControlState".
+    * @param state The state that uses the title. Possible values are described in
+    * "CCControlState".
+    *
+    * @return The title for the specified state.
     */
 
-        public virtual void SetTitleForState(string title, CCControlState state)
+    public virtual string GetTitleForState(CCControlState state)
+    {
+        if (_titleDispatchTable != null)
         {
-            if (_titleDispatchTable.ContainsKey(state))
+            string title;
+            if (_titleDispatchTable.TryGetValue(state, out title))
             {
-                _titleDispatchTable.Remove(state);
+                return title;
             }
-
-            if (!String.IsNullOrEmpty(title))
+            if (_titleDispatchTable.TryGetValue(CCControlState.Normal, out title))
             {
-                _titleDispatchTable.Add(state, title);
-            }
-
-            // If the current state if equal to the given state we update the layout
-            if (State == state)
-            {
-                NeedsLayout();
+                return title;
             }
         }
+        return String.Empty;
+    }
 
-        /**
-    * Returns the title color used for a state.
-    *
-    * @param state The state that uses the specified color. The values are described
-    * in "CCControlState".
-    *
-    * @return The color of the title for the specified state.
-    */
+    /**
+* Sets the title string to use for the specified state.
+* If a property is not specified for a state, the default is to use
+* the CCButtonStateNormal value.
+*
+* @param title The title string to use for the specified state.
+* @param state The state that uses the specified title. The values are described
+* in "CCControlState".
+*/
 
-        public virtual CCColor3B GetTitleColorForState(CCControlState state)
+    public virtual void SetTitleForState(string title, CCControlState state)
+    {
+        if (_titleDispatchTable.ContainsKey(state))
         {
-            if (_titleColorDispatchTable != null)
-            {
-                CCColor3B color;
-
-                if (_titleColorDispatchTable.TryGetValue(state, out color))
-                {
-                    return color;
-                }
-
-                if (_titleColorDispatchTable.TryGetValue(CCControlState.Normal, out color))
-                {
-                    return color;
-                }
-            }
-            return CCTypes.CCWhite;
+            _titleDispatchTable.Remove(state);
         }
 
-        /**
-    * Sets the color of the title to use for the specified state.
-    *
-    * @param color The color of the title to use for the specified state.
-    * @param state The state that uses the specified color. The values are described
-    * in "CCControlState".
-    */
-
-        public virtual void SetTitleColorForState(CCColor3B color, CCControlState state)
+        if (!String.IsNullOrEmpty(title))
         {
-            if (_titleColorDispatchTable.ContainsKey(state))
-            {
-                _titleColorDispatchTable.Remove(state);
-            }
-
-            _titleColorDispatchTable.Add(state, color);
-
-            // If the current state if equal to the given state we update the layout
-            if (State == state)
-            {
-                NeedsLayout();
-            }
+            _titleDispatchTable.Add(state, title);
         }
 
-        /**
-    * Returns the title label used for a state.
-    *
-    * @param state The state that uses the title label. Possible values are described
-    * in "CCControlState".
-    */
-
-        public virtual CCNode GetTitleLabelForState(CCControlState state)
+        // If the current state if equal to the given state we update the layout
+        if (State == state)
         {
-            CCNode titleLabel;
-            if (_titleLabelDispatchTable.TryGetValue(state, out titleLabel))
-            {
-                return titleLabel;
-            }
-            if (_titleLabelDispatchTable.TryGetValue(CCControlState.Normal, out titleLabel))
-            {
-                return titleLabel;
-            }
-            return null;
+            NeedsLayout();
         }
+    }
 
-        /**
-    * Sets the title label to use for the specified state.
-    * If a property is not specified for a state, the default is to use
-    * the CCButtonStateNormal value.
-    *
-    * @param title The title label to use for the specified state.
-    * @param state The state that uses the specified title. The values are described
-    * in "CCControlState".
-    */
+    /**
+* Returns the title color used for a state.
+*
+* @param state The state that uses the specified color. The values are described
+* in "CCControlState".
+*
+* @return The color of the title for the specified state.
+*/
 
-        public virtual void SetTitleLabelForState(CCNode titleLabel, CCControlState state)
+    public virtual CCColor3B GetTitleColorForState(CCControlState state)
+    {
+        if (_titleColorDispatchTable != null)
         {
-            CCNode previousLabel;
-            if (_titleLabelDispatchTable.TryGetValue(state, out previousLabel))
+            CCColor3B color;
+
+            if (_titleColorDispatchTable.TryGetValue(state, out color))
             {
-                RemoveChild(previousLabel, true);
-                _titleLabelDispatchTable.Remove(state);
+                return color;
             }
 
-            _titleLabelDispatchTable.Add(state, titleLabel);
-            titleLabel.Visible = false;
-            titleLabel.AnchorPoint = new CCPoint(0.5f, 0.5f);
-            AddChild(titleLabel, 1);
-
-            // If the current state if equal to the given state we update the layout
-            if (State == state)
+            if (_titleColorDispatchTable.TryGetValue(CCControlState.Normal, out color))
             {
-                NeedsLayout();
+                return color;
             }
         }
+        return CCTypes.CCWhite;
+    }
 
-        public virtual void SetTitleTtfForState(string fntFile, CCControlState state)
+    /**
+* Sets the color of the title to use for the specified state.
+*
+* @param color The color of the title to use for the specified state.
+* @param state The state that uses the specified color. The values are described
+* in "CCControlState".
+*/
+
+    public virtual void SetTitleColorForState(CCColor3B color, CCControlState state)
+    {
+        if (_titleColorDispatchTable.ContainsKey(state))
         {
-            string title = GetTitleForState(state);
-            if (title == null)
-            {
-                title = String.Empty;
-            }
-            SetTitleLabelForState(new CCLabelTTF(title, fntFile, 12), state);
+            _titleColorDispatchTable.Remove(state);
         }
 
-        public virtual string GetTitleTtfForState(CCControlState state)
+        _titleColorDispatchTable.Add(state, color);
+
+        // If the current state if equal to the given state we update the layout
+        if (State == state)
         {
-            var label = (ICCLabelProtocol) GetTitleLabelForState(state);
+            NeedsLayout();
+        }
+    }
+
+    /**
+* Returns the title label used for a state.
+*
+* @param state The state that uses the title label. Possible values are described
+* in "CCControlState".
+*/
+
+    public virtual CCNode GetTitleLabelForState(CCControlState state)
+    {
+        CCNode titleLabel;
+        if (_titleLabelDispatchTable.TryGetValue(state, out titleLabel))
+        {
+            return titleLabel;
+        }
+        if (_titleLabelDispatchTable.TryGetValue(CCControlState.Normal, out titleLabel))
+        {
+            return titleLabel;
+        }
+        return null;
+    }
+
+    /**
+* Sets the title label to use for the specified state.
+* If a property is not specified for a state, the default is to use
+* the CCButtonStateNormal value.
+*
+* @param title The title label to use for the specified state.
+* @param state The state that uses the specified title. The values are described
+* in "CCControlState".
+*/
+
+    public virtual void SetTitleLabelForState(CCNode titleLabel, CCControlState state)
+    {
+        CCNode previousLabel;
+        if (_titleLabelDispatchTable.TryGetValue(state, out previousLabel))
+        {
+            RemoveChild(previousLabel, true);
+            _titleLabelDispatchTable.Remove(state);
+        }
+
+        _titleLabelDispatchTable.Add(state, titleLabel);
+        titleLabel.Visible = false;
+        titleLabel.AnchorPoint = new CCPoint(0.5f, 0.5f);
+        AddChild(titleLabel, 1);
+
+        // If the current state if equal to the given state we update the layout
+        if (State == state)
+        {
+            NeedsLayout();
+        }
+    }
+
+    public virtual void SetTitleTtfForState(string fntFile, CCControlState state)
+    {
+        string title = GetTitleForState(state);
+        if (title == null)
+        {
+            title = String.Empty;
+        }
+        SetTitleLabelForState(new CCLabelTTF(title, fntFile, 12), state);
+    }
+
+    public virtual string GetTitleTtfForState(CCControlState state)
+    {
+        var label = (ICCLabelProtocol) GetTitleLabelForState(state);
+        var labelTtf = label as CCLabelTTF;
+        if (labelTtf != null)
+        {
+            return labelTtf.FontName;
+        }
+        return String.Empty;
+    }
+
+    public virtual void SetTitleTtfSizeForState(float size, CCControlState state)
+    {
+        var label = (ICCLabelProtocol) GetTitleLabelForState(state);
+        if (label != null)
+        {
             var labelTtf = label as CCLabelTTF;
             if (labelTtf != null)
             {
-                return labelTtf.FontName;
+                labelTtf.FontSize = size;
             }
-            return String.Empty;
         }
+    }
 
-        public virtual void SetTitleTtfSizeForState(float size, CCControlState state)
+    public virtual float GetTitleTtfSizeForState(CCControlState state)
+    {
+        var labelTtf = GetTitleLabelForState(state) as CCLabelTTF;
+        if (labelTtf != null)
         {
-            var label = (ICCLabelProtocol) GetTitleLabelForState(state);
-            if (label != null)
-            {
-                var labelTtf = label as CCLabelTTF;
-                if (labelTtf != null)
-                {
-                    labelTtf.FontSize = size;
-                }
-            }
+            return labelTtf.FontSize;
         }
+        return 0;
+    }
 
-        public virtual float GetTitleTtfSizeForState(CCControlState state)
+    /**
+ * Sets the font of the label, changes the label to a CCLabelBMFont if neccessary.
+ * @param fntFile The name of the font to change to
+ * @param state The state that uses the specified fntFile. The values are described
+ * in "CCControlState".
+ */
+
+    public virtual void SetTitleBmFontForState(string fntFile, CCControlState state)
+    {
+        string title = GetTitleForState(state);
+        if (title == null)
         {
-            var labelTtf = GetTitleLabelForState(state) as CCLabelTTF;
-            if (labelTtf != null)
-            {
-                return labelTtf.FontSize;
-            }
-            return 0;
+            title = String.Empty;
         }
+        SetTitleLabelForState(new CCLabelBMFont(title, fntFile), state);
+    }
 
-        /**
-     * Sets the font of the label, changes the label to a CCLabelBMFont if neccessary.
-     * @param fntFile The name of the font to change to
-     * @param state The state that uses the specified fntFile. The values are described
-     * in "CCControlState".
-     */
-
-        public virtual void SetTitleBmFontForState(string fntFile, CCControlState state)
+    public virtual string GetTitleBmFontForState(CCControlState state)
+    {
+        var label = (ICCLabelProtocol) GetTitleLabelForState(state);
+        var labelBmFont = label as CCLabelBMFont;
+        if (labelBmFont != null)
         {
-            string title = GetTitleForState(state);
-            if (title == null)
-            {
-                title = String.Empty;
-            }
-            SetTitleLabelForState(new CCLabelBMFont(title, fntFile), state);
+            return labelBmFont.FntFile;
         }
+        return String.Empty;
+    }
 
-        public virtual string GetTitleBmFontForState(CCControlState state)
+    /**
+* Returns the background sprite used for a state.
+*
+* @param state The state that uses the background sprite. Possible values are
+* described in "CCControlState".
+*/
+
+    public virtual CCNode GetBackgroundSpriteForState(CCControlState state)
+    {
+        CCNode backgroundSprite;
+        if (_backgroundSpriteDispatchTable.TryGetValue(state, out backgroundSprite))
         {
-            var label = (ICCLabelProtocol) GetTitleLabelForState(state);
-            var labelBmFont = label as CCLabelBMFont;
-            if (labelBmFont != null)
-            {
-                return labelBmFont.FntFile;
-            }
-            return String.Empty;
+            return backgroundSprite;
         }
+        if (_backgroundSpriteDispatchTable.TryGetValue(CCControlState.Normal, out backgroundSprite))
+        {
+            return backgroundSprite;
+        }
+        return null;
+    }
 
-        /**
-    * Returns the background sprite used for a state.
+    /**
+    * Sets the background sprite to use for the specified button state.
     *
-    * @param state The state that uses the background sprite. Possible values are
-    * described in "CCControlState".
+    * @param sprite The background sprite to use for the specified state.
+    * @param state The state that uses the specified image. The values are described
+    * in "CCControlState".
     */
 
-        public virtual CCNode GetBackgroundSpriteForState(CCControlState state)
+    public virtual void SetBackgroundSpriteForState(CCNode sprite, CCControlState state)
+    {
+        CCSize oldPreferredSize = _preferredSize;
+
+        CCNode previousBackgroundSprite;
+        if (_backgroundSpriteDispatchTable.TryGetValue(state, out previousBackgroundSprite))
         {
-            CCNode backgroundSprite;
-            if (_backgroundSpriteDispatchTable.TryGetValue(state, out backgroundSprite))
-            {
-                return backgroundSprite;
-            }
-            if (_backgroundSpriteDispatchTable.TryGetValue(CCControlState.Normal, out backgroundSprite))
-            {
-                return backgroundSprite;
-            }
-            return null;
+            RemoveChild(previousBackgroundSprite, true);
+            _backgroundSpriteDispatchTable.Remove(state);
         }
 
-        /**
-        * Sets the background sprite to use for the specified button state.
-        *
-        * @param sprite The background sprite to use for the specified state.
-        * @param state The state that uses the specified image. The values are described
-        * in "CCControlState".
-        */
+        _backgroundSpriteDispatchTable.Add(state, sprite);
+        sprite.Visible = false;
+        sprite.AnchorPoint = new CCPoint(0.5f, 0.5f);
+        
+        AddChild(sprite);
 
-        public virtual void SetBackgroundSpriteForState(CCNode sprite, CCControlState state)
+        if (_preferredSize.Width != 0 || _preferredSize.Height != 0 && sprite is CCScale9Sprite)
         {
-            CCSize oldPreferredSize = _preferredSize;
+            var scale9 = ((CCScale9Sprite) sprite);
 
-            CCNode previousBackgroundSprite;
-            if (_backgroundSpriteDispatchTable.TryGetValue(state, out previousBackgroundSprite))
+            if (oldPreferredSize.Equals(_preferredSize))
             {
-                RemoveChild(previousBackgroundSprite, true);
-                _backgroundSpriteDispatchTable.Remove(state);
+                // Force update of preferred size
+                scale9.PreferredSize = new CCSize(oldPreferredSize.Width + 1, oldPreferredSize.Height + 1);
             }
 
-            _backgroundSpriteDispatchTable.Add(state, sprite);
-            sprite.Visible = false;
-            sprite.AnchorPoint = new CCPoint(0.5f, 0.5f);
-            
-            AddChild(sprite);
-
-            if (_preferredSize.Width != 0 || _preferredSize.Height != 0 && sprite is CCScale9Sprite)
-            {
-                var scale9 = ((CCScale9Sprite) sprite);
-
-                if (oldPreferredSize.Equals(_preferredSize))
-                {
-                    // Force update of preferred size
-                    scale9.PreferredSize = new CCSize(oldPreferredSize.Width + 1, oldPreferredSize.Height + 1);
-                }
-
-                scale9.PreferredSize = _preferredSize;
-            }
-
-            // If the current state if equal to the given state we update the layout
-            if (State == state)
-            {
-                NeedsLayout();
-            }
+            scale9.PreferredSize = _preferredSize;
         }
 
-        /**
-     * Sets the background spriteFrame to use for the specified button state.
-     *
-     * @param spriteFrame The background spriteFrame to use for the specified state.
-     * @param state The state that uses the specified image. The values are described
-     * in "CCControlState".
-     */
-
-        public virtual void SetBackgroundSpriteFrameForState(CCSpriteFrame spriteFrame, CCControlState state)
+        // If the current state if equal to the given state we update the layout
+        if (State == state)
         {
-            CCScale9Sprite sprite = new CCScale9SpriteFrame(spriteFrame);
-            SetBackgroundSpriteForState(sprite, state);
+            NeedsLayout();
         }
+    }
+
+    /**
+ * Sets the background spriteFrame to use for the specified button state.
+ *
+ * @param spriteFrame The background spriteFrame to use for the specified state.
+ * @param state The state that uses the specified image. The values are described
+ * in "CCControlState".
+ */
+
+    public virtual void SetBackgroundSpriteFrameForState(CCSpriteFrame spriteFrame, CCControlState state)
+    {
+        CCScale9Sprite sprite = new CCScale9SpriteFrame(spriteFrame);
+        SetBackgroundSpriteForState(sprite, state);
     }
 }

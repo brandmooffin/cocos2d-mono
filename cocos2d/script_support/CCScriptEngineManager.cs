@@ -26,22 +26,21 @@ THE SOFTWARE.
 
 using System;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCScriptEngineManager
 {
-    public class CCScriptEngineManager
+    //private CCScriptEngineProtocol m_pScriptEngine;
+
+    public CCScriptEngineProtocol ScriptEngine { get; set; }
+
+    public static CCScriptEngineManager SharedScriptEngineManager
     {
-        //private CCScriptEngineProtocol m_pScriptEngine;
+        get { throw new NotImplementedException(); }
+    }
 
-        public CCScriptEngineProtocol ScriptEngine { get; set; }
-
-        public static CCScriptEngineManager SharedScriptEngineManager
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public void RemoveScriptEngine()
-        {
-            throw new NotImplementedException();
-        }
+    public void RemoveScriptEngine()
+    {
+        throw new NotImplementedException();
     }
 }

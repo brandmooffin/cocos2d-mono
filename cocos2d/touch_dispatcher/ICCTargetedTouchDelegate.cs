@@ -1,13 +1,12 @@
 
-namespace Cocos2D
-{
-    public interface ICCTargetedTouchDelegate : ICCTouchDelegate
-    {
-        bool TouchBegan(CCTouch pTouch);
+namespace Cocos2D;
 
-        // optional
-        void TouchMoved(CCTouch pTouch);
-        void TouchEnded(CCTouch pTouch);
-        void TouchCancelled(CCTouch pTouch);
-    }
+public interface ICCTargetedTouchDelegate : ICCTouchDelegate
+{
+    bool TouchBegan(CCTouch pTouch);
+
+    // optional
+    void TouchMoved(CCTouch pTouch);
+    void TouchEnded(CCTouch pTouch);
+    void TouchCancelled(CCTouch pTouch);
 }

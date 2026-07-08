@@ -1,35 +1,34 @@
-﻿using Cocos2D;
-using System;
+﻿using System;
+using Cocos2D;
 
-namespace cocos2d.actions.action_intervals
+namespace cocos2d.actions.action_intervals;
+
+public class CCRotateAnimation : CCFiniteTimeAction
 {
-    public class CCRotateAnimation : CCFiniteTimeAction
+    readonly float _targetRotation;
+    float _startAngle;
+
+    public CCRotateAnimation(float duration, float rotation) : base(duration)
     {
-        readonly float _targetRotation;
-        float _startAngle;
+        _targetRotation = rotation;
+    }
 
-        public CCRotateAnimation(float duration, float rotation) : base(duration)
-        {
-            _targetRotation = rotation;
-        }
+    public override CCFiniteTimeAction Reverse()
+    {
+        throw new NotImplementedException();
+    }
 
-        public override CCFiniteTimeAction Reverse()
-        {
-            throw new NotImplementedException();
-        }
+    protected internal override void StartWithTarget(CCNode target)
+    {
+        _startAngle = (Target as ICCRotationAnimationGetter).CurrentRotation;
+    }
 
-        protected internal override void StartWithTarget(CCNode target)
+    public override void Update(float time)
+    {
+        if (Target != null)
         {
-            _startAngle = (Target as ICCRotationAnimationGetter).CurrentRotation;
-        }
-
-        public override void Update(float time)
-        {
-            if (Target != null)
-            {
-                // calculate current percentage
-                Target.Rotation = _startAngle + (_targetRotation - _startAngle) * time;
-            }
+            // calculate current percentage
+            Target.Rotation = _startAngle + (_targetRotation - _startAngle) * time;
         }
     }
 }

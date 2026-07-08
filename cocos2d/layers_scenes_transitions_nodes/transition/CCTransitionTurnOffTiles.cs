@@ -23,53 +23,52 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
+namespace Cocos2D;
+
+/// <summary>
+/// @brief CCTransitionTurnOffTiles:
+/// Turn off the tiles of the outgoing scene in random order
+/// </summary>
+public class CCTransitionTurnOffTiles : CCTransitionScene, ICCTransitionEaseScene
 {
-    /// <summary>
-    /// @brief CCTransitionTurnOffTiles:
-    /// Turn off the tiles of the outgoing scene in random order
-    /// </summary>
-    public class CCTransitionTurnOffTiles : CCTransitionScene, ICCTransitionEaseScene
+    public CCTransitionTurnOffTiles() { }
+
+    public CCTransitionTurnOffTiles (float t, CCScene scene) : base (t, scene)
+    { }
+    
+
+    #region ICCTransitionEaseScene Members
+
+    public virtual CCFiniteTimeAction EaseAction(CCActionInterval action)
     {
-        public CCTransitionTurnOffTiles() { }
+        return action;
+    }
 
-        public CCTransitionTurnOffTiles (float t, CCScene scene) : base (t, scene)
-        { }
-        
+    #endregion
 
-        #region ICCTransitionEaseScene Members
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        CCSize s = CCDirector.SharedDirector.WinSize;
+        float aspect = s.Width / s.Height;
+        var x = (int) (12 * aspect);
+        int y = 12;
 
-        public virtual CCFiniteTimeAction EaseAction(CCActionInterval action)
-        {
-            return action;
-        }
+        CCTurnOffTiles toff = new CCTurnOffTiles(m_fDuration, new CCGridSize(x, y));
+        CCFiniteTimeAction action = EaseAction(toff);
+        m_pOutScene.RunAction
+            (
+                new CCSequence
+                    (
+                        action,
+                        new CCCallFunc((Finish)),
+                        new CCStopGrid()
+                    )
+            );
+    }
 
-        #endregion
-
-        public override void OnEnter()
-        {
-            base.OnEnter();
-            CCSize s = CCDirector.SharedDirector.WinSize;
-            float aspect = s.Width / s.Height;
-            var x = (int) (12 * aspect);
-            int y = 12;
-
-            CCTurnOffTiles toff = new CCTurnOffTiles(m_fDuration, new CCGridSize(x, y));
-            CCFiniteTimeAction action = EaseAction(toff);
-            m_pOutScene.RunAction
-                (
-                    new CCSequence
-                        (
-                            action,
-                            new CCCallFunc((Finish)),
-                            new CCStopGrid()
-                        )
-                );
-        }
-
-        protected override void SceneOrder()
-        {
-            m_bIsInSceneOnTop = false;
-        }
+    protected override void SceneOrder()
+    {
+        m_bIsInSceneOnTop = false;
     }
 }

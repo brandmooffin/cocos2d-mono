@@ -5,12 +5,12 @@ using System.IO;
 using System.Linq;
 
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCSpriteSheet
 {
-    public class CCSpriteSheet
-    {
-        private readonly Dictionary<string, CCSpriteFrame> _spriteFrames = new Dictionary<string, CCSpriteFrame>();
-        private readonly Dictionary<string, string> _spriteFramesAliases = new Dictionary<string, string>();
+    private readonly Dictionary<string, CCSpriteFrame> _spriteFrames = new Dictionary<string, CCSpriteFrame>();
+    private readonly Dictionary<string, string> _spriteFramesAliases = new Dictionary<string, string>();
 
 		private PlistType plistType = PlistType.Cocos2D;
 
@@ -27,63 +27,63 @@ namespace Cocos2D
 			SpriteKit
 		}
 
-        #region Constructors
+    #region Constructors
 
-        public CCSpriteSheet(Dictionary<string, CCSpriteFrame> frames)
+    public CCSpriteSheet(Dictionary<string, CCSpriteFrame> frames)
+    {
+        if (frames != null)
         {
-            if (frames != null)
+            _spriteFrames = new Dictionary<string, CCSpriteFrame>(frames);
+            AutoCreateAliasList();
+        }
+    }
+
+    public CCSpriteSheet(string fileName)
+    {
+        InitWithFile(fileName);
+    }
+
+    public CCSpriteSheet(string fileName, string textureFileName)
+    {
+        InitWithFile(fileName, textureFileName);
+    }
+
+    public CCSpriteSheet(string fileName, CCTexture2D texture)
+    {
+        InitWithFile(fileName, texture);
+    }
+
+    public CCSpriteSheet(Stream stream, CCTexture2D texture)
+    {
+        InitWithStream(stream, texture);
+    }
+
+    public CCSpriteSheet(Stream stream, string texture)
+    {
+        InitWithStream(stream, texture);
+    }
+
+    public CCSpriteSheet(PlistDictionary dictionary, CCTexture2D texture)
+    {
+        InitWithDictionary(dictionary, texture);
+    }
+    #endregion
+
+    private void AutoCreateAliasList()
+    {
+        foreach (string key in _spriteFrames.Keys)
+        {
+            int idx = key.LastIndexOf('.');
+            if (idx > -1)
             {
-                _spriteFrames = new Dictionary<string, CCSpriteFrame>(frames);
-                AutoCreateAliasList();
+                string alias = key.Substring(0, idx);
+                _spriteFramesAliases[alias] = key;
+                CCLog.Log("Created alias for frame {0} as {1}", key, alias);
             }
         }
+    }
 
-        public CCSpriteSheet(string fileName)
-        {
-            InitWithFile(fileName);
-        }
-
-        public CCSpriteSheet(string fileName, string textureFileName)
-        {
-            InitWithFile(fileName, textureFileName);
-        }
-
-        public CCSpriteSheet(string fileName, CCTexture2D texture)
-        {
-            InitWithFile(fileName, texture);
-        }
-
-        public CCSpriteSheet(Stream stream, CCTexture2D texture)
-        {
-            InitWithStream(stream, texture);
-        }
-
-        public CCSpriteSheet(Stream stream, string texture)
-        {
-            InitWithStream(stream, texture);
-        }
-
-        public CCSpriteSheet(PlistDictionary dictionary, CCTexture2D texture)
-        {
-            InitWithDictionary(dictionary, texture);
-        }
-        #endregion
-
-        private void AutoCreateAliasList()
-        {
-            foreach (string key in _spriteFrames.Keys)
-            {
-                int idx = key.LastIndexOf('.');
-                if (idx > -1)
-                {
-                    string alias = key.Substring(0, idx);
-                    _spriteFramesAliases[alias] = key;
-                    CCLog.Log("Created alias for frame {0} as {1}", key, alias);
-                }
-            }
-        }
-
-        private PlistType GetPlistType(PlistDictionary dict)
+    private PlistType GetPlistType(PlistDictionary dict)
 		{
 			var isSpriteKit = dict.ContainsKey ("format") ? dict ["format"].AsString == "APPL" : false;
 
@@ -91,12 +91,12 @@ namespace Cocos2D
 
 		}
 
-        private void InitWithFile(string fileName)
-        {
-            PlistDocument document = CCContentManager.SharedContentManager.Load<PlistDocument>(fileName);
+    private void InitWithFile(string fileName)
+    {
+        PlistDocument document = CCContentManager.SharedContentManager.Load<PlistDocument>(fileName);
 
-            var dict = document.Root.AsDictionary;
-            var texturePath = string.Empty;
+        var dict = document.Root.AsDictionary;
+        var texturePath = string.Empty;
 			plistFilePath = string.Empty;
 
 			plistType = GetPlistType (dict);
@@ -126,107 +126,107 @@ namespace Cocos2D
 				}
 			}
 
-            if (!string.IsNullOrEmpty(texturePath))
-            {
-                // build texture path relative to plist file
-                texturePath = CCFileUtils.FullPathFromRelativeFile(texturePath, fileName);
-            }
-            else
-            {
-                // build texture path by replacing file extension
-                texturePath = fileName;
+        if (!string.IsNullOrEmpty(texturePath))
+        {
+            // build texture path relative to plist file
+            texturePath = CCFileUtils.FullPathFromRelativeFile(texturePath, fileName);
+        }
+        else
+        {
+            // build texture path by replacing file extension
+            texturePath = fileName;
 
-                // remove .xxx
-                texturePath = CCFileUtils.RemoveExtension(texturePath);
+            // remove .xxx
+            texturePath = CCFileUtils.RemoveExtension(texturePath);
 
-                CCLog.Log("cocos2d: CCSpriteFrameCache: Trying to use file {0} as texture", texturePath);
-            }
+            CCLog.Log("cocos2d: CCSpriteFrameCache: Trying to use file {0} as texture", texturePath);
+        }
 
 			plistFilePath = Path.GetDirectoryName (texturePath);
 
-            CCTexture2D pTexture = CCTextureCache.SharedTextureCache.AddImage(texturePath);
+        CCTexture2D pTexture = CCTextureCache.SharedTextureCache.AddImage(texturePath);
 
-            if (pTexture != null)
-            {
-                InitWithDictionary(dict, pTexture);
-            }
-            else
-            {
-                CCLog.Log("CCSpriteSheet: Couldn't load texture");
-            }
+        if (pTexture != null)
+        {
+            InitWithDictionary(dict, pTexture);
+        }
+        else
+        {
+            CCLog.Log("CCSpriteSheet: Couldn't load texture");
+        }
+    }
+
+    private void InitWithFile(string fileName, string textureFileName)
+    {
+        Debug.Assert(textureFileName != null);
+        
+        CCTexture2D texture = CCTextureCache.SharedTextureCache.AddImage(textureFileName);
+
+        if (texture != null)
+        {
+            InitWithFile(fileName, texture);
+        }
+        else
+        {
+            CCLog.Log("CCSpriteSheet: couldn't load texture file. File not found {0}", textureFileName);
+        }
+    }
+
+    private void InitWithFile(string fileName, CCTexture2D texture)
+    {
+        PlistDocument document = CCContentManager.SharedContentManager.Load<PlistDocument>(fileName);
+
+        PlistDictionary dict = document.Root.AsDictionary;
+
+        InitWithDictionary(dict, texture);
+    }
+
+    private void InitWithStream(Stream stream, string textureFileName)
+    {
+        CCTexture2D texture = CCTextureCache.SharedTextureCache.AddImage(textureFileName);
+
+        if (texture != null)
+        {
+            InitWithStream(stream, texture);
+        }
+        else
+        {
+            CCLog.Log("CCSpriteSheet: couldn't load texture file. File not found {0}", textureFileName);
+        }
+    }
+
+    private void InitWithStream(Stream stream, CCTexture2D texture)
+    {
+        var document = new PlistDocument();
+        try
+        {
+            document.LoadFromXmlFile(stream);
+            plistType = GetPlistType(document.Root.AsDictionary);
+        }
+        catch (Exception)
+        {
+            throw (new Microsoft.Xna.Framework.Content.ContentLoadException("Failed to load the sprite sheet definition file from stream"));
         }
 
-        private void InitWithFile(string fileName, string textureFileName)
-        {
-            Debug.Assert(textureFileName != null);
-            
-            CCTexture2D texture = CCTextureCache.SharedTextureCache.AddImage(textureFileName);
+        PlistDictionary dict = document.Root.AsDictionary;
 
-            if (texture != null)
-            {
-                InitWithFile(fileName, texture);
-            }
-            else
-            {
-                CCLog.Log("CCSpriteSheet: couldn't load texture file. File not found {0}", textureFileName);
-            }
-        }
+        InitWithDictionary(dict, texture);
+    }
 
-        private void InitWithFile(string fileName, CCTexture2D texture)
-        {
-            PlistDocument document = CCContentManager.SharedContentManager.Load<PlistDocument>(fileName);
-
-            PlistDictionary dict = document.Root.AsDictionary;
-
-            InitWithDictionary(dict, texture);
-        }
-
-        private void InitWithStream(Stream stream, string textureFileName)
-        {
-            CCTexture2D texture = CCTextureCache.SharedTextureCache.AddImage(textureFileName);
-
-            if (texture != null)
-            {
-                InitWithStream(stream, texture);
-            }
-            else
-            {
-                CCLog.Log("CCSpriteSheet: couldn't load texture file. File not found {0}", textureFileName);
-            }
-        }
-
-        private void InitWithStream(Stream stream, CCTexture2D texture)
-        {
-            var document = new PlistDocument();
-            try
-            {
-                document.LoadFromXmlFile(stream);
-                plistType = GetPlistType(document.Root.AsDictionary);
-            }
-            catch (Exception)
-            {
-                throw (new Microsoft.Xna.Framework.Content.ContentLoadException("Failed to load the sprite sheet definition file from stream"));
-            }
-
-            PlistDictionary dict = document.Root.AsDictionary;
-
-            InitWithDictionary(dict, texture);
-        }
-
-        private void InitWithDictionary(PlistDictionary dict, CCTexture2D texture)
-        {
-            _spriteFrames.Clear();
-            _spriteFramesAliases.Clear();
+    private void InitWithDictionary(PlistDictionary dict, CCTexture2D texture)
+    {
+        _spriteFrames.Clear();
+        _spriteFramesAliases.Clear();
 
 			if (plistType == PlistType.SpriteKit)
 				LoadAppleDictionary (dict, texture);
 			else
 				LoadCocos2DDictionary(dict, texture);
-        }
+    }
 
-        #region Loaders
+    #region Loaders
 
-        private void LoadAppleDictionary(PlistDictionary dict, CCTexture2D texture)
+    private void LoadAppleDictionary(PlistDictionary dict, CCTexture2D texture)
 		{
 
 			var version = dict.ContainsKey ("version") ? dict ["version"].AsInt : 0; 
@@ -303,7 +303,7 @@ namespace Cocos2D
 					_spriteFrames [name] = spriteFrame;
 				}
 			}
-            AutoCreateAliasList();
+        AutoCreateAliasList();
 		}
 
 		private void LoadCocos2DDictionary(PlistDictionary dict, CCTexture2D texture)
@@ -437,17 +437,17 @@ namespace Cocos2D
 						);
 				}
 
-                spriteFrame.TextureFilename = pair.Key;
-                _spriteFrames[pair.Key] = spriteFrame;
+            spriteFrame.TextureFilename = pair.Key;
+            _spriteFrames[pair.Key] = spriteFrame;
 			}
-            AutoCreateAliasList();
+        AutoCreateAliasList();
 		}
 
-        #endregion
+    #endregion
 
-        #region Frame Access Methods
+    #region Frame Access Methods
 
-        public List<CCSpriteFrame> Frames 
+    public List<CCSpriteFrame> Frames 
 		{
 			get 
 			{
@@ -465,35 +465,34 @@ namespace Cocos2D
 		}
 
 
-        public CCSpriteFrame SpriteFrameByName(string name)
-        {
-            CCSpriteFrame frame;
+    public CCSpriteFrame SpriteFrameByName(string name)
+    {
+        CCSpriteFrame frame;
 
-            if (!_spriteFrames.TryGetValue(name, out frame))
+        if (!_spriteFrames.TryGetValue(name, out frame))
+        {
+            string key;
+            
+            if (_spriteFramesAliases.TryGetValue(name, out key))
             {
-                string key;
-                
-                if (_spriteFramesAliases.TryGetValue(name, out key))
+                if (!_spriteFrames.TryGetValue(key, out frame))
                 {
-                    if (!_spriteFrames.TryGetValue(key, out frame))
-                    {
-                        CCLog.Log("cocos2d: CCSpriteFrameCache: Frame '{0}' not found", key);
-                    }
+                    CCLog.Log("cocos2d: CCSpriteFrameCache: Frame '{0}' not found", key);
                 }
             }
-
-            if (frame != null)
-            {
-                CCLog.Log("cocos2d: {0} frame {1}", name, frame.Rect.ToString());
-            }
-            else
-            {
-                CCLog.Log("cocos2d: CCSpriteFrameCache: Frame '{0}' not found", name);
-            }
-            
-            return frame;
         }
 
-        #endregion
+        if (frame != null)
+        {
+            CCLog.Log("cocos2d: {0} frame {1}", name, frame.Rect.ToString());
+        }
+        else
+        {
+            CCLog.Log("cocos2d: CCSpriteFrameCache: Frame '{0}' not found", name);
+        }
+        
+        return frame;
     }
+
+    #endregion
 }

@@ -30,127 +30,126 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class ConfinedTest : Test
 {
-    public class ConfinedTest : Test
+    private const int ColumnCount = 0;
+    private const int RowCount = 0;
+
+    private ConfinedTest()
     {
-        private const int ColumnCount = 0;
-        private const int RowCount = 0;
-
-        private ConfinedTest()
         {
-            {
-                Body ground = BodyFactory.CreateBody(World);
+            Body ground = BodyFactory.CreateBody(World);
 
-                // Floor
-                EdgeShape shape = new EdgeShape(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
-                ground.CreateFixture(shape);
+            // Floor
+            EdgeShape shape = new EdgeShape(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
+            ground.CreateFixture(shape);
 
-                // Left wall
-                shape = new EdgeShape(new Vector2(-10.0f, 0.0f), new Vector2(-10.0f, 20.0f));
-                ground.CreateFixture(shape);
+            // Left wall
+            shape = new EdgeShape(new Vector2(-10.0f, 0.0f), new Vector2(-10.0f, 20.0f));
+            ground.CreateFixture(shape);
 
-                // Right wall
-                shape = new EdgeShape(new Vector2(10.0f, 0.0f), new Vector2(10.0f, 20.0f));
-                ground.CreateFixture(shape);
+            // Right wall
+            shape = new EdgeShape(new Vector2(10.0f, 0.0f), new Vector2(10.0f, 20.0f));
+            ground.CreateFixture(shape);
 
-                // Roof
-                shape = new EdgeShape(new Vector2(-10.0f, 20.0f), new Vector2(10.0f, 20.0f));
-                ground.CreateFixture(shape);
-            }
-
-            const float radius = 0.5f;
-            CircleShape shape2 = new CircleShape(radius, 1);
-            shape2.Position = Vector2.Zero;
-
-            for (int j = 0; j < ColumnCount; ++j)
-            {
-                for (int i = 0; i < RowCount; ++i)
-                {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
-                                                (2.0f * i + 1.0f) * radius);
-
-                    Fixture fixture = body.CreateFixture(shape2);
-                    fixture.Friction = 0.1f;
-                }
-            }
-
-            World.Gravity = Vector2.Zero;
+            // Roof
+            shape = new EdgeShape(new Vector2(-10.0f, 20.0f), new Vector2(10.0f, 20.0f));
+            ground.CreateFixture(shape);
         }
 
-        private void CreateCircle()
+        const float radius = 0.5f;
+        CircleShape shape2 = new CircleShape(radius, 1);
+        shape2.Position = Vector2.Zero;
+
+        for (int j = 0; j < ColumnCount; ++j)
         {
-            const float radius = 2f;
-            CircleShape shape = new CircleShape(radius, 1);
-            shape.Position = Vector2.Zero;
+            for (int i = 0; i < RowCount; ++i)
+            {
+                Body body = BodyFactory.CreateBody(World);
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
+                                            (2.0f * i + 1.0f) * radius);
 
-            Body body = BodyFactory.CreateBody(World);
-            body.BodyType = BodyType.Dynamic;
-            body.Position = new Vector2(Rand.RandomFloat(), 3.0f + Rand.RandomFloat());
-
-            Fixture fixture = body.CreateFixture(shape);
-            fixture.Friction = 0;
+                Fixture fixture = body.CreateFixture(shape2);
+                fixture.Friction = 0.1f;
+            }
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
-        {
-            if (keyboardManager.IsKeyDown(Keys.C))
-            {
-                CreateCircle();
-            }
+        World.Gravity = Vector2.Zero;
+    }
 
-            base.Keyboard(keyboardManager);
+    private void CreateCircle()
+    {
+        const float radius = 2f;
+        CircleShape shape = new CircleShape(radius, 1);
+        shape.Position = Vector2.Zero;
+
+        Body body = BodyFactory.CreateBody(World);
+        body.BodyType = BodyType.Dynamic;
+        body.Position = new Vector2(Rand.RandomFloat(), 3.0f + Rand.RandomFloat());
+
+        Fixture fixture = body.CreateFixture(shape);
+        fixture.Friction = 0;
+    }
+
+    public override void Keyboard(KeyboardManager keyboardManager)
+    {
+        if (keyboardManager.IsKeyDown(Keys.C))
+        {
+            CreateCircle();
         }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
+        base.Keyboard(keyboardManager);
+    }
+
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        foreach (Body b in World.BodyList)
         {
-            foreach (Body b in World.BodyList)
+            if (b.BodyType != BodyType.Dynamic)
             {
-                if (b.BodyType != BodyType.Dynamic)
-                {
-                    continue;
-                }
-
-                if (b.Awake)
-                {
-                }
+                continue;
             }
 
-            if (StepCount == 180)
+            if (b.Awake)
             {
-                StepCount += 0;
             }
-
-            //if (sleeping)
-            //{
-            //	CreateCircle();
-            //}
-
-            base.Update(settings, gameTime);
-
-            foreach (Body b in World.BodyList)
-            {
-                if (b.BodyType != BodyType.Dynamic)
-                {
-                    continue;
-                }
-
-                Vector2 p = b.Position;
-                if (p.X <= -10.0f || 10.0f <= p.X || p.Y <= 0.0f || 20.0f <= p.Y)
-                {
-                    p.X += 0.0f;
-                }
-            }
-
-            DebugView.DrawString(50, TextLine, "Press 'c' to create a circle.");
-            TextLine += 15;
         }
 
-        internal static Test Create()
+        if (StepCount == 180)
         {
-            return new ConfinedTest();
+            StepCount += 0;
         }
+
+        //if (sleeping)
+        //{
+        //	CreateCircle();
+        //}
+
+        base.Update(settings, gameTime);
+
+        foreach (Body b in World.BodyList)
+        {
+            if (b.BodyType != BodyType.Dynamic)
+            {
+                continue;
+            }
+
+            Vector2 p = b.Position;
+            if (p.X <= -10.0f || 10.0f <= p.X || p.Y <= 0.0f || 20.0f <= p.Y)
+            {
+                p.X += 0.0f;
+            }
+        }
+
+        DebugView.DrawString(50, TextLine, "Press 'c' to create a circle.");
+        TextLine += 15;
+    }
+
+    internal static Test Create()
+    {
+        return new ConfinedTest();
     }
 }

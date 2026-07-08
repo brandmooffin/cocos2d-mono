@@ -31,115 +31,114 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class VerticalStackTest : Test
 {
-    public class VerticalStackTest : Test
+    private const int ColumnCount = 5;
+    private const int RowCount = 16;
+    private Body[] _bodies = new Body[RowCount * ColumnCount];
+    private Body _bullet;
+    private int[] _indices = new int[RowCount * ColumnCount];
+
+    private VerticalStackTest()
     {
-        private const int ColumnCount = 5;
-        private const int RowCount = 16;
-        private Body[] _bodies = new Body[RowCount * ColumnCount];
-        private Body _bullet;
-        private int[] _indices = new int[RowCount * ColumnCount];
+        //Ground
+        BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+        BodyFactory.CreateEdge(World, new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
 
-        private VerticalStackTest()
+        float[] xs = new[] { 0.0f, -10.0f, -5.0f, 5.0f, 10.0f };
+
+        for (int j = 0; j < ColumnCount; ++j)
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-            BodyFactory.CreateEdge(World, new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
+            PolygonShape shape = new PolygonShape(1);
+            shape.SetAsBox(0.5f, 0.5f);
 
-            float[] xs = new[] { 0.0f, -10.0f, -5.0f, 5.0f, 10.0f };
-
-            for (int j = 0; j < ColumnCount; ++j)
+            for (int i = 0; i < RowCount; ++i)
             {
-                PolygonShape shape = new PolygonShape(1);
-                shape.SetAsBox(0.5f, 0.5f);
+                int n = j * RowCount + i;
+                Debug.Assert(n < RowCount * ColumnCount);
+                _indices[n] = n;
 
-                for (int i = 0; i < RowCount; ++i)
-                {
-                    int n = j * RowCount + i;
-                    Debug.Assert(n < RowCount * ColumnCount);
-                    _indices[n] = n;
+                const float x = 0.0f;
+                //float x = Rand.RandomFloat-0.02f, 0.02f);
+                //float x = i % 2 == 0 ? -0.025f : 0.025f;
+                Body body = BodyFactory.CreateBody(World);
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
+                body.UserData = _indices[n];
 
-                    const float x = 0.0f;
-                    //float x = Rand.RandomFloat-0.02f, 0.02f);
-                    //float x = i % 2 == 0 ? -0.025f : 0.025f;
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
-                    body.UserData = _indices[n];
+                _bodies[n] = body;
 
-                    _bodies[n] = body;
+                Fixture fixture = body.CreateFixture(shape);
+                fixture.Friction = 0.3f;
+            }
+        }
 
-                    Fixture fixture = body.CreateFixture(shape);
-                    fixture.Friction = 0.3f;
-                }
+        _bullet = null;
+    }
+
+    public override void Keyboard(KeyboardManager keyboardManager)
+    {
+        if (keyboardManager.IsNewKeyPress(Keys.OemComma))
+        {
+            if (_bullet != null)
+            {
+                World.RemoveBody(_bullet);
+                _bullet = null;
             }
 
-            _bullet = null;
-        }
-
-        public override void Keyboard(KeyboardManager keyboardManager)
-        {
-            if (keyboardManager.IsNewKeyPress(Keys.OemComma))
             {
-                if (_bullet != null)
-                {
-                    World.RemoveBody(_bullet);
-                    _bullet = null;
-                }
+                CircleShape shape = new CircleShape(0.25f, 20);
 
-                {
-                    CircleShape shape = new CircleShape(0.25f, 20);
+                _bullet = BodyFactory.CreateBody(World);
+                _bullet.BodyType = BodyType.Dynamic;
+                _bullet.IsBullet = true;
+                _bullet.Position = new Vector2(-31.0f, 5.0f);
 
-                    _bullet = BodyFactory.CreateBody(World);
-                    _bullet.BodyType = BodyType.Dynamic;
-                    _bullet.IsBullet = true;
-                    _bullet.Position = new Vector2(-31.0f, 5.0f);
+                Fixture fixture = _bullet.CreateFixture(shape);
+                fixture.Restitution = 0.05f;
 
-                    Fixture fixture = _bullet.CreateFixture(shape);
-                    fixture.Restitution = 0.05f;
-
-                    _bullet.LinearVelocity = new Vector2(400.0f, 0.0f);
-                }
+                _bullet.LinearVelocity = new Vector2(400.0f, 0.0f);
             }
-
-            base.Keyboard(keyboardManager);
         }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            base.Update(settings, gameTime);
+        base.Keyboard(keyboardManager);
+    }
 
-            DebugView.DrawString(50, TextLine, "Press: (,) to launch a bullet.");
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        base.Update(settings, gameTime);
 
-            //if (StepCount == 300)
-            //{
-            //    if (_bullet != null)
-            //    {
-            //        World.Remove(_bullet);
-            //        _bullet = null;
-            //    }
+        DebugView.DrawString(50, TextLine, "Press: (,) to launch a bullet.");
 
-            //    {
-            //        CircleShape shape = new CircleShape(0.25f, 20);
+        //if (StepCount == 300)
+        //{
+        //    if (_bullet != null)
+        //    {
+        //        World.Remove(_bullet);
+        //        _bullet = null;
+        //    }
 
-            //        _bullet = BodyFactory.CreateBody(World);
-            //        _bullet.BodyType = BodyType.Dynamic;
-            //        _bullet.Bullet = true;
-            //        _bullet.Position = new Vector2(-31.0f, 5.0f);
-            //        _bullet.LinearVelocity = new Vector2(400.0f, 0.0f);
+        //    {
+        //        CircleShape shape = new CircleShape(0.25f, 20);
 
-            //        Fixture fixture = _bullet.CreateFixture(shape);
-            //        fixture.Restitution = 0.05f;
-            //    }
-            //}
+        //        _bullet = BodyFactory.CreateBody(World);
+        //        _bullet.BodyType = BodyType.Dynamic;
+        //        _bullet.Bullet = true;
+        //        _bullet.Position = new Vector2(-31.0f, 5.0f);
+        //        _bullet.LinearVelocity = new Vector2(400.0f, 0.0f);
 
-            //TextLine += 15;
-        }
+        //        Fixture fixture = _bullet.CreateFixture(shape);
+        //        fixture.Restitution = 0.05f;
+        //    }
+        //}
 
-        internal static Test Create()
-        {
-            return new VerticalStackTest();
-        }
+        //TextLine += 15;
+    }
+
+    internal static Test Create()
+    {
+        return new VerticalStackTest();
     }
 }

@@ -23,80 +23,79 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCSplitCols : CCTiledGrid3DAction
 {
-    public class CCSplitCols : CCTiledGrid3DAction
+    protected int m_nCols;
+    protected CCSize m_winSize;
+
+    /// <summary>
+    ///  initializes the action with the number of columns to split and the duration 
+    /// </summary>
+    protected virtual bool InitWithDuration(float duration, int nCols)
     {
-        protected int m_nCols;
-        protected CCSize m_winSize;
+        m_nCols = nCols;
+        return base.InitWithDuration(duration, new CCGridSize(nCols, 1));
+    }
 
-        /// <summary>
-        ///  initializes the action with the number of columns to split and the duration 
-        /// </summary>
-        protected virtual bool InitWithDuration(float duration, int nCols)
+    public override object Copy(ICCCopyable pZone)
+    {
+        CCSplitCols pCopy;
+        if (pZone != null)
         {
-            m_nCols = nCols;
-            return base.InitWithDuration(duration, new CCGridSize(nCols, 1));
+            pCopy = (CCSplitCols) (pZone);
+        }
+        else
+        {
+            pCopy = new CCSplitCols();
+            pZone = (pCopy);
         }
 
-        public override object Copy(ICCCopyable pZone)
+        base.Copy(pZone);
+        pCopy.InitWithDuration(m_fDuration, m_nCols);
+
+        return pCopy;
+    }
+
+    public override void Update(float time)
+    {
+        int i;
+
+        for (i = 0; i < m_sGridSize.X; ++i)
         {
-            CCSplitCols pCopy;
-            if (pZone != null)
+            CCQuad3 coords = OriginalTile(new CCGridSize(i, 0));
+            float direction = 1;
+
+            if ((i % 2) == 0)
             {
-                pCopy = (CCSplitCols) (pZone);
-            }
-            else
-            {
-                pCopy = new CCSplitCols();
-                pZone = (pCopy);
+                direction = -1;
             }
 
-            base.Copy(pZone);
-            pCopy.InitWithDuration(m_fDuration, m_nCols);
+            coords.BottomLeft.Y += direction * m_winSize.Height * time;
+            coords.BottomRight.Y += direction * m_winSize.Height * time;
+            coords.TopLeft.Y += direction * m_winSize.Height * time;
+            coords.TopRight.Y += direction * m_winSize.Height * time;
 
-            return pCopy;
+            SetTile(new CCGridSize(i, 0), ref coords);
         }
+    }
 
-        public override void Update(float time)
-        {
-            int i;
+    protected internal override void StartWithTarget(CCNode target)
+    {
+        base.StartWithTarget(target);
+        m_winSize = CCDirector.SharedDirector.WinSizeInPixels;
+    }
 
-            for (i = 0; i < m_sGridSize.X; ++i)
-            {
-                CCQuad3 coords = OriginalTile(new CCGridSize(i, 0));
-                float direction = 1;
+    public CCSplitCols()
+    {
+    }
 
-                if ((i % 2) == 0)
-                {
-                    direction = -1;
-                }
-
-                coords.BottomLeft.Y += direction * m_winSize.Height * time;
-                coords.BottomRight.Y += direction * m_winSize.Height * time;
-                coords.TopLeft.Y += direction * m_winSize.Height * time;
-                coords.TopRight.Y += direction * m_winSize.Height * time;
-
-                SetTile(new CCGridSize(i, 0), ref coords);
-            }
-        }
-
-        protected internal override void StartWithTarget(CCNode target)
-        {
-            base.StartWithTarget(target);
-            m_winSize = CCDirector.SharedDirector.WinSizeInPixels;
-        }
-
-        public CCSplitCols()
-        {
-        }
-
-        /// <summary>
-        /// creates the action with the number of columns to split and the duration
-        /// </summary>
-        public CCSplitCols(float duration, int nCols) : base(duration)
-        {
-            InitWithDuration(duration, nCols);
-        }
+    /// <summary>
+    /// creates the action with the number of columns to split and the duration
+    /// </summary>
+    public CCSplitCols(float duration, int nCols) : base(duration)
+    {
+        InitWithDuration(duration, nCols);
     }
 }

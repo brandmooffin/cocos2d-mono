@@ -1,255 +1,254 @@
-using Microsoft.Xna.Framework.Graphics;
 using System;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCLabelTTF : CCSprite, ICCLabelProtocol
 {
-    public class CCLabelTTF : CCSprite, ICCLabelProtocol
+    private float m_fFontSize;
+    private CCTextAlignment m_hAlignment;
+    private string m_pFontName;
+    protected string m_pString = String.Empty;
+    private CCSize m_tDimensions;
+    private CCVerticalTextAlignment m_vAlignment;
+
+    public CCLabelTTF ()
     {
-        private float m_fFontSize;
-        private CCTextAlignment m_hAlignment;
-        private string m_pFontName;
-        protected string m_pString = String.Empty;
-        private CCSize m_tDimensions;
-        private CCVerticalTextAlignment m_vAlignment;
+        m_hAlignment = CCTextAlignment.Center;
+        m_vAlignment = CCVerticalTextAlignment.Top;
+        m_pFontName = string.Empty;
+        m_fFontSize = 0.0f;
 
-        public CCLabelTTF ()
-        {
-            m_hAlignment = CCTextAlignment.Center;
-            m_vAlignment = CCVerticalTextAlignment.Top;
-            m_pFontName = string.Empty;
-            m_fFontSize = 0.0f;
+        Init();
+    }
+    
+    public CCLabelTTF (string text, string fontName, float fontSize) : 
+        this (text, fontName, fontSize, CCSize.Zero, CCTextAlignment.Center,
+              CCVerticalTextAlignment.Top)
+    { }
+    
+    public CCLabelTTF (string text, string fontName, float fontSize, CCSize dimensions, CCTextAlignment hAlignment) :
+        this (text, fontName, fontSize, dimensions, hAlignment, CCVerticalTextAlignment.Top)
+    { }
+    
+    public CCLabelTTF (string text, string fontName, float fontSize, CCSize dimensions, CCTextAlignment hAlignment,
+                       CCVerticalTextAlignment vAlignment)
+    {
+        InitWithString(text, fontName, fontSize, dimensions, hAlignment, vAlignment);
+    }
 
-            Init();
-        }
-        
-        public CCLabelTTF (string text, string fontName, float fontSize) : 
-            this (text, fontName, fontSize, CCSize.Zero, CCTextAlignment.Center,
-                  CCVerticalTextAlignment.Top)
-        { }
-        
-        public CCLabelTTF (string text, string fontName, float fontSize, CCSize dimensions, CCTextAlignment hAlignment) :
-            this (text, fontName, fontSize, dimensions, hAlignment, CCVerticalTextAlignment.Top)
-        { }
-        
-        public CCLabelTTF (string text, string fontName, float fontSize, CCSize dimensions, CCTextAlignment hAlignment,
-                           CCVerticalTextAlignment vAlignment)
+    public string FontName
+    {
+        get { return m_pFontName; }
+        set
         {
-            InitWithString(text, fontName, fontSize, dimensions, hAlignment, vAlignment);
-        }
-
-        public string FontName
-        {
-            get { return m_pFontName; }
-            set
+            if (m_pFontName != value)
             {
-                if (m_pFontName != value)
+                m_pFontName = value;
+                if (m_pString.Length > 0)
                 {
-                    m_pFontName = value;
-                    if (m_pString.Length > 0)
-                    {
-                        Refresh();
-                    }
+                    Refresh();
                 }
             }
         }
+    }
 
-        public float FontSize
+    public float FontSize
+    {
+        get { return m_fFontSize; }
+        set
         {
-            get { return m_fFontSize; }
-            set
+            if (m_fFontSize != value)
             {
-                if (m_fFontSize != value)
+                m_fFontSize = value;
+                if (m_pString.Length > 0)
                 {
-                    m_fFontSize = value;
-                    if (m_pString.Length > 0)
-                    {
-                        Refresh();
-                    }
+                    Refresh();
                 }
             }
         }
+    }
 
-        public CCSize Dimensions
+    public CCSize Dimensions
+    {
+        get { return m_tDimensions; }
+        set
         {
-            get { return m_tDimensions; }
-            set
+            if (!m_tDimensions.Equals(value))
             {
-                if (!m_tDimensions.Equals(value))
+                m_tDimensions = value;
+                if (m_pString.Length > 0)
                 {
-                    m_tDimensions = value;
-                    if (m_pString.Length > 0)
-                    {
-                        Refresh();
-                    }
+                    Refresh();
                 }
             }
         }
+    }
 
-        public CCVerticalTextAlignment VerticalAlignment
+    public CCVerticalTextAlignment VerticalAlignment
+    {
+        get { return m_vAlignment; }
+        set
         {
-            get { return m_vAlignment; }
-            set
+            if (m_vAlignment != value)
             {
-                if (m_vAlignment != value)
+                m_vAlignment = value;
+                if (m_pString.Length > 0)
                 {
-                    m_vAlignment = value;
-                    if (m_pString.Length > 0)
-                    {
-                        Refresh();
-                    }
+                    Refresh();
                 }
             }
         }
+    }
 
-        public CCTextAlignment HorizontalAlignment
+    public CCTextAlignment HorizontalAlignment
+    {
+        get { return m_hAlignment; }
+        set
         {
-            get { return m_hAlignment; }
-            set
+            if (m_hAlignment != value)
             {
-                if (m_hAlignment != value)
+                m_hAlignment = value;
+                if (m_pString.Length > 0)
                 {
-                    m_hAlignment = value;
-                    if (m_pString.Length > 0)
-                    {
-                        Refresh();
-                    }
+                    Refresh();
                 }
-                    }
+            }
                 }
+            }
 
-        internal void Refresh()
+    internal void Refresh()
+    {
+        //
+        // This can only happen when the frame buffer is ready...
+        //
+        try
         {
-            //
-            // This can only happen when the frame buffer is ready...
-            //
-            try
-            {
-                updateTexture();
-                Dirty = false;
-            }
-            catch (Exception)
-            {
-            }
+            updateTexture();
+            Dirty = false;
         }
+        catch (Exception)
+        {
+        }
+    }
 
-        #region ICCLabelProtocol Members
+    #region ICCLabelProtocol Members
 
 /*
- * This is where the texture should be created, but it messes with the drawing 
- * of the object tree
- * 
-        public override void Draw()
+* This is where the texture should be created, but it messes with the drawing 
+* of the object tree
+* 
+    public override void Draw()
+    {
+        if (Dirty)
         {
-            if (Dirty)
+            updateTexture();
+            Dirty = false;
+        }
+        base.Draw();
+    }
+*/
+    public string Text
+    {
+        get { return m_pString; }
+        set
+        {
+            // This is called in the update() call, so it should not do any drawing ...
+            if (m_pString != value)
             {
+                m_pString = value;
                 updateTexture();
                 Dirty = false;
             }
-            base.Draw();
+            //            Dirty = true;
         }
-*/
-        public string Text
+    }
+
+    #endregion
+
+    public override string ToString()
+    {
+        return string.Format("FontName:{0}, FontSize:{1}", m_pFontName, m_fFontSize);
+    }
+
+    public override bool Init()
+    {
+        return InitWithString("", "Helvetica", 12);
+    }
+
+    public bool InitWithString(string label, string fontName, float fontSize, CCSize dimensions, CCTextAlignment alignment)
+    {
+        return InitWithString(label, fontName, fontSize, dimensions, alignment, CCVerticalTextAlignment.Top);
+    }
+
+    public bool InitWithString(string label, string fontName, float fontSize)
+    {
+        return InitWithString(label, fontName, fontSize, CCSize.Zero, CCTextAlignment.Left,
+                              CCVerticalTextAlignment.Top);
+    }
+
+
+    public bool InitWithString(string text, string fontName, float fontSize,
+                               CCSize dimensions, CCTextAlignment hAlignment,
+                               CCVerticalTextAlignment vAlignment)
+    {
+        if (base.Init())
         {
-            get { return m_pString; }
-            set
-            {
-                // This is called in the update() call, so it should not do any drawing ...
-                if (m_pString != value)
-                {
-                    m_pString = value;
-                    updateTexture();
-                    Dirty = false;
-                }
-                //            Dirty = true;
-            }
-        }
+            // shader program
+            //this->setShaderProgram(CCShaderCache::sharedShaderCache()->programForKey(SHADER_PROGRAM));
 
-        #endregion
+            m_tDimensions = new CCSize(dimensions.Width, dimensions.Height);
+            m_hAlignment = hAlignment;
+            m_vAlignment = vAlignment;
+            m_pFontName = fontName;
+            m_fFontSize = fontSize;
 
-        public override string ToString()
-        {
-            return string.Format("FontName:{0}, FontSize:{1}", m_pFontName, m_fFontSize);
-        }
+            Text = (text);
 
-        public override bool Init()
-        {
-            return InitWithString("", "Helvetica", 12);
-        }
-
-        public bool InitWithString(string label, string fontName, float fontSize, CCSize dimensions, CCTextAlignment alignment)
-        {
-            return InitWithString(label, fontName, fontSize, dimensions, alignment, CCVerticalTextAlignment.Top);
-        }
-
-        public bool InitWithString(string label, string fontName, float fontSize)
-        {
-            return InitWithString(label, fontName, fontSize, CCSize.Zero, CCTextAlignment.Left,
-                                  CCVerticalTextAlignment.Top);
-        }
-
-
-        public bool InitWithString(string text, string fontName, float fontSize,
-                                   CCSize dimensions, CCTextAlignment hAlignment,
-                                   CCVerticalTextAlignment vAlignment)
-        {
-            if (base.Init())
-            {
-                // shader program
-                //this->setShaderProgram(CCShaderCache::sharedShaderCache()->programForKey(SHADER_PROGRAM));
-
-                m_tDimensions = new CCSize(dimensions.Width, dimensions.Height);
-                m_hAlignment = hAlignment;
-                m_vAlignment = vAlignment;
-                m_pFontName = fontName;
-                m_fFontSize = fontSize;
-
-                Text = (text);
-
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
-        private void updateTexture()
-        {
-            CCTexture2D tex = new CCTexture2D();
+        return false;
+    }
+
+    private void updateTexture()
+    {
+        CCTexture2D tex = new CCTexture2D();
 #if DEBUG
-            CCLog.Log("CCLabelTTF: updating texture with string '{0}'", m_pString);
-            CCLog.Log("Font: {0}, Size: {1}", m_pFontName, m_fFontSize);
-            CCLog.Log("Dimensions: {0}, HAlignment: {1}, VAlignment: {2}", m_tDimensions, m_hAlignment, m_vAlignment);
-            CCLog.Log("Content Scale Factor: {0}", CCMacros.CCContentScaleFactor());
+        CCLog.Log("CCLabelTTF: updating texture with string '{0}'", m_pString);
+        CCLog.Log("Font: {0}, Size: {1}", m_pFontName, m_fFontSize);
+        CCLog.Log("Dimensions: {0}, HAlignment: {1}, VAlignment: {2}", m_tDimensions, m_hAlignment, m_vAlignment);
+        CCLog.Log("Content Scale Factor: {0}", CCMacros.CCContentScaleFactor());
 #endif
-            var result = tex.InitWithString(m_pString,
-                               m_tDimensions.PointsToPixels(),
-                               m_hAlignment,
-                               m_vAlignment,
-                               m_pFontName,
-                               m_fFontSize);
+        var result = tex.InitWithString(m_pString,
+                           m_tDimensions.PointsToPixels(),
+                           m_hAlignment,
+                           m_vAlignment,
+                           m_pFontName,
+                           m_fFontSize);
 
-            if (result)
+        if (result)
+        {
+            // Preserve IsAntialiased setting from the old texture
+            bool wasAntialiased = Texture?.IsAntialiased ?? CCTexture2D.DefaultAntialiased;
+
+            // Dispose of the old texture, if it exists
+            if (Texture != null)
             {
-                // Preserve IsAntialiased setting from the old texture
-                bool wasAntialiased = Texture?.IsAntialiased ?? CCTexture2D.DefaultAntialiased;
-
-                // Dispose of the old texture, if it exists
-                if (Texture != null)
-                {
-                    Texture.Dispose();
-                }
-
-                Texture = tex;
-                Texture.IsAntialiased = wasAntialiased;
-
-                CCRect rect = CCRect.Zero;
-                rect.Size = m_pobTexture.ContentSize;
-                SetTextureRect(rect);
+                Texture.Dispose();
             }
-            else
-            {
-                // Dispose of the new texture if it wasn't used
-                tex.Dispose();
-            }
+
+            Texture = tex;
+            Texture.IsAntialiased = wasAntialiased;
+
+            CCRect rect = CCRect.Zero;
+            rect.Size = m_pobTexture.ContentSize;
+            SetTextureRect(rect);
+        }
+        else
+        {
+            // Dispose of the new texture if it wasn't used
+            tex.Dispose();
         }
     }
 }

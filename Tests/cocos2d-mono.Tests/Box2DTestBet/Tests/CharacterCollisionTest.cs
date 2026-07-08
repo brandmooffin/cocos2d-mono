@@ -32,120 +32,119 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class CharacterCollisionTest : Test
 {
-    public class CharacterCollisionTest : Test
+    private bool _collision;
+
+    private CharacterCollisionTest()
     {
-        private bool _collision;
+        //Ground body
+        Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-        private CharacterCollisionTest()
+        // Collinear edges
+        EdgeShape shape = new EdgeShape(new Vector2(-8.0f, 1.0f), new Vector2(-6.0f, 1.0f));
+        ground.CreateFixture(shape);
+        shape = new EdgeShape(new Vector2(-6.0f, 1.0f), new Vector2(-4.0f, 1.0f));
+        ground.CreateFixture(shape);
+        shape = new EdgeShape(new Vector2(-4.0f, 1.0f), new Vector2(-2.0f, 1.0f));
+        ground.CreateFixture(shape);
+
+        // Square tiles
+        PolygonShape tile = new PolygonShape(1);
+        tile.SetAsBox(1.0f, 1.0f, new Vector2(4.0f, 3.0f), 0.0f);
+        ground.CreateFixture(tile);
+        tile.SetAsBox(1.0f, 1.0f, new Vector2(6.0f, 3.0f), 0.0f);
+        ground.CreateFixture(tile);
+        tile.SetAsBox(1.0f, 1.0f, new Vector2(8.0f, 3.0f), 0.0f);
+        ground.CreateFixture(tile);
+
+        // Square made from an edge loop.
+        Vertices vertices = new Vertices(4);
+        vertices.Add(new Vector2(-1.0f, 3.0f));
+        vertices.Add(new Vector2(1.0f, 3.0f));
+        vertices.Add(new Vector2(1.0f, 5.0f));
+        vertices.Add(new Vector2(-1.0f, 5.0f));
+        LoopShape loopShape = new LoopShape(vertices);
+        ground.CreateFixture(loopShape);
+
+        // Edge loop.
+        vertices = new Vertices(10);
+        vertices.Add(new Vector2(0.0f, 0.0f));
+        vertices.Add(new Vector2(6.0f, 0.0f));
+        vertices.Add(new Vector2(6.0f, 2.0f));
+        vertices.Add(new Vector2(4.0f, 1.0f));
+        vertices.Add(new Vector2(2.0f, 2.0f));
+        vertices.Add(new Vector2(-2.0f, 2.0f));
+        vertices.Add(new Vector2(-4.0f, 3.0f));
+        vertices.Add(new Vector2(-6.0f, 2.0f));
+        vertices.Add(new Vector2(-6.0f, 0.0f));
+
+        BodyFactory.CreateLoopShape(World, vertices, new Vector2(-10, 4));
+
+        // Square character
+        Body squareCharacter = BodyFactory.CreateRectangle(World, 1, 1, 20);
+        squareCharacter.Position = new Vector2(-3.0f, 5.0f);
+        squareCharacter.BodyType = BodyType.Dynamic;
+        squareCharacter.FixedRotation = true;
+        squareCharacter.SleepingAllowed = false;
+
+        squareCharacter.OnCollision += CharacterOnCollision;
+        squareCharacter.OnSeparation += CharacterOnSeparation;
+
+        // Square character 2
+        Body squareCharacter2 = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 20);
+        squareCharacter2.Position = new Vector2(-5.0f, 5.0f);
+        squareCharacter2.BodyType = BodyType.Dynamic;
+        squareCharacter2.FixedRotation = true;
+        squareCharacter2.SleepingAllowed = false;
+
+        // Hexagon character
+        float angle = 0.0f;
+        const float delta = Settings.Pi / 3.0f;
+        vertices = new Vertices(6);
+
+        for (int i = 0; i < 6; ++i)
         {
-            //Ground body
-            Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-
-            // Collinear edges
-            EdgeShape shape = new EdgeShape(new Vector2(-8.0f, 1.0f), new Vector2(-6.0f, 1.0f));
-            ground.CreateFixture(shape);
-            shape = new EdgeShape(new Vector2(-6.0f, 1.0f), new Vector2(-4.0f, 1.0f));
-            ground.CreateFixture(shape);
-            shape = new EdgeShape(new Vector2(-4.0f, 1.0f), new Vector2(-2.0f, 1.0f));
-            ground.CreateFixture(shape);
-
-            // Square tiles
-            PolygonShape tile = new PolygonShape(1);
-            tile.SetAsBox(1.0f, 1.0f, new Vector2(4.0f, 3.0f), 0.0f);
-            ground.CreateFixture(tile);
-            tile.SetAsBox(1.0f, 1.0f, new Vector2(6.0f, 3.0f), 0.0f);
-            ground.CreateFixture(tile);
-            tile.SetAsBox(1.0f, 1.0f, new Vector2(8.0f, 3.0f), 0.0f);
-            ground.CreateFixture(tile);
-
-            // Square made from an edge loop.
-            Vertices vertices = new Vertices(4);
-            vertices.Add(new Vector2(-1.0f, 3.0f));
-            vertices.Add(new Vector2(1.0f, 3.0f));
-            vertices.Add(new Vector2(1.0f, 5.0f));
-            vertices.Add(new Vector2(-1.0f, 5.0f));
-            LoopShape loopShape = new LoopShape(vertices);
-            ground.CreateFixture(loopShape);
-
-            // Edge loop.
-            vertices = new Vertices(10);
-            vertices.Add(new Vector2(0.0f, 0.0f));
-            vertices.Add(new Vector2(6.0f, 0.0f));
-            vertices.Add(new Vector2(6.0f, 2.0f));
-            vertices.Add(new Vector2(4.0f, 1.0f));
-            vertices.Add(new Vector2(2.0f, 2.0f));
-            vertices.Add(new Vector2(-2.0f, 2.0f));
-            vertices.Add(new Vector2(-4.0f, 3.0f));
-            vertices.Add(new Vector2(-6.0f, 2.0f));
-            vertices.Add(new Vector2(-6.0f, 0.0f));
-
-            BodyFactory.CreateLoopShape(World, vertices, new Vector2(-10, 4));
-
-            // Square character
-            Body squareCharacter = BodyFactory.CreateRectangle(World, 1, 1, 20);
-            squareCharacter.Position = new Vector2(-3.0f, 5.0f);
-            squareCharacter.BodyType = BodyType.Dynamic;
-            squareCharacter.FixedRotation = true;
-            squareCharacter.SleepingAllowed = false;
-
-            squareCharacter.OnCollision += CharacterOnCollision;
-            squareCharacter.OnSeparation += CharacterOnSeparation;
-
-            // Square character 2
-            Body squareCharacter2 = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 20);
-            squareCharacter2.Position = new Vector2(-5.0f, 5.0f);
-            squareCharacter2.BodyType = BodyType.Dynamic;
-            squareCharacter2.FixedRotation = true;
-            squareCharacter2.SleepingAllowed = false;
-
-            // Hexagon character
-            float angle = 0.0f;
-            const float delta = Settings.Pi / 3.0f;
-            vertices = new Vertices(6);
-
-            for (int i = 0; i < 6; ++i)
-            {
-                vertices.Add(new Vector2(0.5f * (float)Math.Cos(angle), 0.5f * (float)Math.Sin(angle)));
-                angle += delta;
-            }
-
-            Body hexCharacter = BodyFactory.CreatePolygon(World, vertices, 20);
-            hexCharacter.Position = new Vector2(-5.0f, 8.0f);
-            hexCharacter.BodyType = BodyType.Dynamic;
-            hexCharacter.FixedRotation = true;
-            hexCharacter.SleepingAllowed = false;
-
-            // Circle character
-            Body circleCharacter = BodyFactory.CreateCircle(World, 0.5f, 20);
-            circleCharacter.Position = new Vector2(3.0f, 5.0f);
-            circleCharacter.BodyType = BodyType.Dynamic;
-            circleCharacter.FixedRotation = true;
-            circleCharacter.SleepingAllowed = false;
+            vertices.Add(new Vector2(0.5f * (float)Math.Cos(angle), 0.5f * (float)Math.Sin(angle)));
+            angle += delta;
         }
 
-        private bool CharacterOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
-        {
-            _collision = true;
-            return true;
-        }
+        Body hexCharacter = BodyFactory.CreatePolygon(World, vertices, 20);
+        hexCharacter.Position = new Vector2(-5.0f, 8.0f);
+        hexCharacter.BodyType = BodyType.Dynamic;
+        hexCharacter.FixedRotation = true;
+        hexCharacter.SleepingAllowed = false;
 
-        private void CharacterOnSeparation(Fixture fixtureA, Fixture fixtureB)
-        {
-            _collision = false;
-        }
+        // Circle character
+        Body circleCharacter = BodyFactory.CreateCircle(World, 0.5f, 20);
+        circleCharacter.Position = new Vector2(3.0f, 5.0f);
+        circleCharacter.BodyType = BodyType.Dynamic;
+        circleCharacter.FixedRotation = true;
+        circleCharacter.SleepingAllowed = false;
+    }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            DebugView.DrawString(50, TextLine, _collision ? "OnCollision fired" : "OnSeparation fired");
+    private bool CharacterOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
+    {
+        _collision = true;
+        return true;
+    }
 
-            base.Update(settings, gameTime);
-        }
+    private void CharacterOnSeparation(Fixture fixtureA, Fixture fixtureB)
+    {
+        _collision = false;
+    }
 
-        public static Test Create()
-        {
-            return new CharacterCollisionTest();
-        }
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        DebugView.DrawString(50, TextLine, _collision ? "OnCollision fired" : "OnSeparation fired");
+
+        base.Update(settings, gameTime);
+    }
+
+    public static Test Create()
+    {
+        return new CharacterCollisionTest();
     }
 }

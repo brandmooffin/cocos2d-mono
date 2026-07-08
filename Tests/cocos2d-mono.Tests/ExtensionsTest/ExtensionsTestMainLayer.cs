@@ -1,7 +1,7 @@
 using Cocos2D;
 
-namespace tests.Extensions
-{
+namespace tests.Extensions;
+
 	public class ExtensionsMainLayer : CCLayer
 	{
 		public override void OnEnter()
@@ -55,13 +55,12 @@ namespace tests.Extensions
 				case ExtensionsTestScene.TEST_TABLEVIEW:
 					TableViewTestLayer.runTableViewTest();
 					break;
-                case ExtensionsTestScene.TEST_Scale9Sprite:
-                    var Manager = Scale9SpriteSceneManager.sharedSprite9SceneManager();
-                    CCDirector.SharedDirector.ReplaceScene(Manager.currentControlScene());
-                    break;
-                default:
+            case ExtensionsTestScene.TEST_Scale9Sprite:
+                var Manager = Scale9SpriteSceneManager.sharedSprite9SceneManager();
+                CCDirector.SharedDirector.ReplaceScene(Manager.currentControlScene());
+                break;
+            default:
 					break;
 			}
 		}
 	}
-}

@@ -24,84 +24,83 @@ THE SOFTWARE.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Cocos2D;
-using System.Diagnostics;
 
-namespace tests
+namespace tests;
+
+public enum PaddleState
 {
-    public enum PaddleState
+    kPaddleStateGrabbed,
+    kPaddleStateUngrabbed
+}
+
+public class Paddle : CCSprite//, ICCTargetedTouchDelegate
+{
+    PaddleState m_state;
+
+    public Paddle (CCTexture2D aTexture) : base (aTexture)
     {
-        kPaddleStateGrabbed,
-        kPaddleStateUngrabbed
+        m_state = PaddleState.kPaddleStateUngrabbed;
+        TouchEnabled = true;
     }
 
-    public class Paddle : CCSprite//, ICCTargetedTouchDelegate
+    public CCRect rect()
     {
-        PaddleState m_state;
+        CCSize s = Texture.ContentSize;
+        return new CCRect(-s.Width / 2, -s.Height / 2, s.Width, s.Height);
+    }
 
-        public Paddle (CCTexture2D aTexture) : base (aTexture)
-        {
-            m_state = PaddleState.kPaddleStateUngrabbed;
-            TouchEnabled = true;
-        }
+    public override void OnEnter()
+    {
+        base.OnEnter();
+    }
 
-        public CCRect rect()
-        {
-            CCSize s = Texture.ContentSize;
-            return new CCRect(-s.Width / 2, -s.Height / 2, s.Width, s.Height);
-        }
+    public override void OnExit()
+    {
+        base.OnExit();
+    }
 
-        public override void OnEnter()
-        {
-            base.OnEnter();
-        }
+    public bool containsTouchLocation(CCTouch touch)
+    {
+        return rect().ContainsPoint(ConvertTouchToNodeSpaceAr(touch));
+    }
 
-        public override void OnExit()
-        {
-            base.OnExit();
-        }
+    public override bool TouchBegan(CCTouch touch)
+    {
+        if (m_state != PaddleState.kPaddleStateUngrabbed) return false;
+        if (!containsTouchLocation(touch)) return false;
 
-        public bool containsTouchLocation(CCTouch touch)
-        {
-            return rect().ContainsPoint(ConvertTouchToNodeSpaceAr(touch));
-        }
+        m_state = PaddleState.kPaddleStateGrabbed;
+        return true;
+    }
 
-        public override bool TouchBegan(CCTouch touch)
-        {
-            if (m_state != PaddleState.kPaddleStateUngrabbed) return false;
-            if (!containsTouchLocation(touch)) return false;
+    public override void TouchMoved(CCTouch touch)
+    {
+        // If it weren't for the TouchDispatcher, you would need to keep a reference
+        // to the touch from touchBegan and check that the current touch is the same
+        // as that one.
+        // Actually, it would be even more complicated since in the Cocos dispatcher
+        // you get CCSets instead of 1 UITouch, so you'd need to loop through the set
+        // in each touchXXX method.
 
-            m_state = PaddleState.kPaddleStateGrabbed;
-            return true;
-        }
+        Debug.Assert(m_state == PaddleState.kPaddleStateGrabbed, "Paddle - Unexpected state!");
 
-        public override void TouchMoved(CCTouch touch)
-        {
-            // If it weren't for the TouchDispatcher, you would need to keep a reference
-            // to the touch from touchBegan and check that the current touch is the same
-            // as that one.
-            // Actually, it would be even more complicated since in the Cocos dispatcher
-            // you get CCSets instead of 1 UITouch, so you'd need to loop through the set
-            // in each touchXXX method.
+        var touchPoint = touch.Location;
 
-            Debug.Assert(m_state == PaddleState.kPaddleStateGrabbed, "Paddle - Unexpected state!");
+        base.Position = new CCPoint(touchPoint.X, base.Position.Y);
+    }
 
-            var touchPoint = touch.Location;
-
-            base.Position = new CCPoint(touchPoint.X, base.Position.Y);
-        }
-
-        public override void TouchEnded(CCTouch touch)
-        {
-            Debug.Assert(m_state == PaddleState.kPaddleStateGrabbed, "Paddle - Unexpected state!");
-            m_state = PaddleState.kPaddleStateUngrabbed;
-        }
+    public override void TouchEnded(CCTouch touch)
+    {
+        Debug.Assert(m_state == PaddleState.kPaddleStateGrabbed, "Paddle - Unexpected state!");
+        m_state = PaddleState.kPaddleStateUngrabbed;
+    }
 
 //        public void TouchCancelled(CCTouch pTouch)
 //        {
 //            throw new NotImplementedException();
 //        }
-    }
 }

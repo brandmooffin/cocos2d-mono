@@ -1,39 +1,38 @@
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCDelayTime : CCActionInterval
 {
-    public class CCDelayTime : CCActionInterval
+    public CCDelayTime(float d)
     {
-        public CCDelayTime(float d)
-        {
-            InitWithDuration(d);
-        }
+        InitWithDuration(d);
+    }
 
-        protected CCDelayTime(CCDelayTime delayTime) : base(delayTime)
-        {
-        }
+    protected CCDelayTime(CCDelayTime delayTime) : base(delayTime)
+    {
+    }
 
-        public override object Copy(ICCCopyable pZone)
+    public override object Copy(ICCCopyable pZone)
+    {
+        if (pZone != null)
         {
-            if (pZone != null)
-            {
-                //in case of being called at sub class
-                var pCopy = (CCDelayTime) (pZone);
-                base.Copy(pZone);
+            //in case of being called at sub class
+            var pCopy = (CCDelayTime) (pZone);
+            base.Copy(pZone);
 
-                return pCopy;
-            }
-            else
-            {
-                return new CCDelayTime(this);
-            }
+            return pCopy;
         }
-
-        public override void Update(float time)
+        else
         {
+            return new CCDelayTime(this);
         }
+    }
 
-        public override CCFiniteTimeAction Reverse()
-        {
-            return new CCDelayTime(m_fDuration);
-        }
+    public override void Update(float time)
+    {
+    }
+
+    public override CCFiniteTimeAction Reverse()
+    {
+        return new CCDelayTime(m_fDuration);
     }
 }

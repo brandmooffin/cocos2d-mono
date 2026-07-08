@@ -7,14 +7,13 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace WP7Contrib.Communications.Compression
+namespace WP7Contrib.Communications.Compression;
+
+internal enum FlushType
 {
-    internal enum FlushType
-    {
-        None,
-        Partial,
-        Sync,
-        Full,
-        Finish,
-    }
+    None,
+    Partial,
+    Sync,
+    Full,
+    Finish,
 }

@@ -1,40 +1,39 @@
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCEaseBackIn : CCActionEase
 {
-    public class CCEaseBackIn : CCActionEase
+    public CCEaseBackIn(CCActionInterval pAction) : base(pAction)
     {
-        public CCEaseBackIn(CCActionInterval pAction) : base(pAction)
-        {
-        }
+    }
 
-        public CCEaseBackIn(CCFiniteTimeAction pAction) : base(pAction)
-        {
-        }
+    public CCEaseBackIn(CCFiniteTimeAction pAction) : base(pAction)
+    {
+    }
 
-        protected CCEaseBackIn(CCEaseBackIn easeBackIn) : base(easeBackIn)
-        {
-        }
+    protected CCEaseBackIn(CCEaseBackIn easeBackIn) : base(easeBackIn)
+    {
+    }
 
-        public override void Update(float time)
-        {
-            m_pInner.Update(CCEaseMath.BackIn(time));
-        }
+    public override void Update(float time)
+    {
+        m_pInner.Update(CCEaseMath.BackIn(time));
+    }
 
-        public override CCFiniteTimeAction Reverse()
-        {
-            return new CCEaseBackOut((CCActionInterval) m_pInner.Reverse());
-        }
+    public override CCFiniteTimeAction Reverse()
+    {
+        return new CCEaseBackOut((CCActionInterval) m_pInner.Reverse());
+    }
 
-        public override object Copy(ICCCopyable pZone)
+    public override object Copy(ICCCopyable pZone)
+    {
+        if (pZone != null)
         {
-            if (pZone != null)
-            {
-                //in case of being called at sub class
-                var pCopy = pZone as CCEaseBackIn;
-                pCopy.InitWithAction((CCActionInterval) (m_pInner.Copy()));
+            //in case of being called at sub class
+            var pCopy = pZone as CCEaseBackIn;
+            pCopy.InitWithAction((CCActionInterval) (m_pInner.Copy()));
 
-                return pCopy;
-            }
-            return new CCEaseBackIn(this);
+            return pCopy;
         }
+        return new CCEaseBackIn(this);
     }
 }

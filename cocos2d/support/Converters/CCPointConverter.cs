@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public class CCPointConverter : TypeConverter
 	{
 
-        public CCPointConverter() { }
+    public CCPointConverter() { }
 
 		// Overrides the CanConvertFrom method of TypeConverter.
 		// The ITypeDescriptorContext interface provides the context for the
@@ -61,5 +61,4 @@ namespace Cocos2D
 		}
 
 	}
-}
 

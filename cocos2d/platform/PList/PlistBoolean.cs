@@ -26,8 +26,8 @@
 
 using System;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public class PlistBoolean : PlistObject<bool>
 	{
 		public PlistBoolean(bool value) : base(value)
@@ -46,39 +46,38 @@ namespace Cocos2D
 	    }
 
 	    public override int AsInt
-        {
-            get { throw new NotImplementedException(); }
-        }
+    {
+        get { throw new NotImplementedException(); }
+    }
 
-        public override float AsFloat
-        {
-            get { throw new NotImplementedException(); }
-        }
+    public override float AsFloat
+    {
+        get { throw new NotImplementedException(); }
+    }
 
-        public override string AsString
-        {
-            get { throw new NotImplementedException(); }
-        }
+    public override string AsString
+    {
+        get { throw new NotImplementedException(); }
+    }
 
-        public override DateTime AsDate
-        {
-            get { throw new NotImplementedException(); }
-        }
+    public override DateTime AsDate
+    {
+        get { throw new NotImplementedException(); }
+    }
 
-        public override bool AsBool
-        {
-            get { return Value; }
-        }
+    public override bool AsBool
+    {
+        get { return Value; }
+    }
 
-        public override PlistArray AsArray
-        {
-            get { return null; }
-        }
+    public override PlistArray AsArray
+    {
+        get { return null; }
+    }
 
-        public override PlistDictionary AsDictionary
-        {
-            get { return null; }
-        }
+    public override PlistDictionary AsDictionary
+    {
+        get { return null; }
+    }
 
 	}
-}
