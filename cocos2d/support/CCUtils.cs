@@ -23,80 +23,11 @@ THE SOFTWARE.
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using System.Globalization;
-#if !WINDOWS
-#if WINDOWSGL || LINUX
-using OpenTK.Graphics.OpenGL;
-#else
-using OpenTK.Graphics.ES20;
-using BeginMode = OpenTK.Graphics.ES20.All;
-using EnableCap = OpenTK.Graphics.ES20.All;
-using TextureTarget = OpenTK.Graphics.ES20.All;
-using BufferTarget = OpenTK.Graphics.ES20.All;
-using BufferUsageHint = OpenTK.Graphics.ES20.All;
-using DrawElementsType = OpenTK.Graphics.ES20.All;
-using GetPName = OpenTK.Graphics.ES20.All;
-using FramebufferErrorCode = OpenTK.Graphics.ES20.All;
-using FramebufferTarget = OpenTK.Graphics.ES20.All;
-using FramebufferAttachment = OpenTK.Graphics.ES20.All;
-using RenderbufferTarget = OpenTK.Graphics.ES20.All;
-using RenderbufferStorage = OpenTK.Graphics.ES20.All;
-#endif
-#endif
 
 namespace Cocos2D;
 
 public class CCUtils
 {
-
-    #if OPENGL
-    private static List<string> _GLExtensions = null;
-
-    public static List<string> GetGLExtensions()
-    {
-        // Setup extensions.
-        if(_GLExtensions == null) {
-            List<string> extensions = new List<string>();
-            #if GLES
-#if IOS
-            var extstring = GL.GetString(StringName.Extensions);
-            ErrorCode error = GL.GetError();
-            if (error != ErrorCode.NoError)
-                CCLog.Log("ERROR: The GL context is in error (" + error + ").");
-#else
-            var extstring = GL.GetString(StringName.Extensions);
-            All error = (RenderbufferTarget)GL.GetError();
-            if (error != All.False)
-                CCLog.Log("ERROR: The GL context is in error (" + error + ").");
-#endif
-            #elif MACOS
-
-				// for right now there are errors with GL before we even get here so the
-				// CheckGLError for MACOS is throwing errors even though the extensions are read
-				// correctly.  Placed this here for now so that we can continue the processing
-				// until we find the real error.
-				var extstring = GL.GetString(StringName.Extensions);
-
-				#else
-            ErrorCode error = GL.GetError();
-            if (error != ErrorCode.NoError)
-            {
-                CCLog.Log("ERROR: The GL context is in error (" + error + ").");
-            }
-            var extstring = GL.GetString(StringName.Extensions);
-#endif
-
-            if (!string.IsNullOrEmpty(extstring))
-            {
-                extensions.AddRange(extstring.Split(' '));
-                CCLog.Log("Supported GL extensions:");
-                foreach (string extension in extensions)
-                    CCLog.Log(extension);
-            }
-            _GLExtensions = extensions;
-        }
-        return _GLExtensions;
-    }
-    #endif
 
     /// <summary>
     /// Returns the Cardinal Spline position for a given set of control points, tension and time

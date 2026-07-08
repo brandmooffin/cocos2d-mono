@@ -7,16 +7,6 @@ using Cocos2D;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-#if OPENGL
-#if MACOS
-using MonoMac.OpenGL;
-#elif WINDOWS || LINUX
-using OpenTK.Graphics.OpenGL;
-#elif GLES
-using OpenTK.Graphics.ES20;
-#endif
-#endif
-
 namespace tests;
 
 public enum enumTag
