@@ -30,8 +30,8 @@ public class CCRawList<T> : IList<T>
 #if NETFRAMEWORK
     // .NET Framework-era targets (e.g. the PS5 fork's net452) lack
     // RuntimeHelpers.IsReferenceOrContainsReferences. Clearing unconditionally is the
-    // conservative equivalent: it never pins references, at the cost of clearing
-    // buffers of pure value types too.
+    // conservative equivalent: a returned buffer can never keep objects alive through
+    // stale references, at the cost of clearing buffers of pure value types too.
     private static readonly bool ClearOnReturn = true;
 #else
     private static readonly bool ClearOnReturn = RuntimeHelpers.IsReferenceOrContainsReferences<T>();
