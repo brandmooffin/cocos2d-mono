@@ -16,12 +16,12 @@ public class CCContentManager : ContentManager
     internal static void Initialize(IServiceProvider serviceProvider, string rootDirectory)
     {
         SharedContentManager = new CCContentManager(serviceProvider, rootDirectory);
-#if IOS || WINDOWS_PHONE8
+#if IOS
         InitializeContentTypeReaders();
 #endif
     }
 
-#if IOS || WINDOWS_PHONE8
+#if IOS
     private static bool s_readersInited;
 
     private static void InitializeContentTypeReaders()
