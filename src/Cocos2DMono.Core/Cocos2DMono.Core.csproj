@@ -6,7 +6,7 @@
 
     Contains NO lib/, NO build/, NO content/ - only a generated .nuspec declaring a
     strict-version dependency on Cocos2D-Mono with ExcludeAssets="build".
-    Runtime closure (MonoGame.Framework.*, OpenTK, SkiaSharp, System.Drawing.Common,
+    Runtime closure (MonoGame.Framework.*, SkiaSharp, System.Drawing.Common,
     BitMiracle.LibTiff.NET, SharpZipLib, Cocos2D-Mono.Box2D) flows transitively
     through Cocos2D-Mono.
 

@@ -173,7 +173,6 @@
   <!-- DesktopGL (base TFM) -->
   <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)'">
     <PackageReference Include="MonoGame.Framework.DesktopGL" />
-    <PackageReference Include="OpenTK" />
     <PackageReference Include="SkiaSharp" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
     <PackageReference Include="SkiaSharp.NativeAssets.macOS" />
@@ -190,13 +189,11 @@
   <!-- Android -->
   <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
     <PackageReference Include="MonoGame.Framework.Android" />
-    <PackageReference Include="OpenTK" />
   </ItemGroup>
 
   <!-- iOS -->
   <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
     <PackageReference Include="MonoGame.Framework.iOS" />
-    <PackageReference Include="OpenTK" />
   </ItemGroup>
 
   <!-- Source Link (all TFMs) -->
