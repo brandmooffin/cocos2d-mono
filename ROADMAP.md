@@ -25,6 +25,8 @@ Evolve toward a more composable, testable design — composition over deep inher
 ### Platforms
 Continue supporting desktop (Windows, macOS, Linux / DesktopGL), Android, and iOS. UWP / Xbox-UWP support is maintained separately in the [Cocos2D-Mono.UWP](https://github.com/Cocos2D-Mono/Cocos2D-Mono.UWP) repository.
 
+Console support, starting with **PlayStation 5**, is in development in a private repository, following the same model MonoGame uses for its console frameworks: access is limited to registered console developers under NDA. Reach out to broberts@cocos2d-mono.dev if you are a registered PlayStation developer interested in early access.
+
 ## Status at a glance
 
 | Theme | Status |
