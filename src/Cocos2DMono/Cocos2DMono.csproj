@@ -24,7 +24,9 @@
     <TargetFrameworks>$(Cocos2DTargetFrameworks)</TargetFrameworks>
     <OutputType>Library</OutputType>
     <RootNamespace>Cocos2D</RootNamespace>
-    <AssemblyName>Cocos2D</AssemblyName>
+    <!-- Assembly is Cocos2DMono (the product name); the source NAMESPACE remains Cocos2D
+         so code migrating from the legacy per-platform packages compiles unchanged. -->
+    <AssemblyName>Cocos2DMono</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 
