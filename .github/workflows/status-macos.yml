@@ -27,9 +27,8 @@ jobs:
               run_id: runId,
               per_page: 100,
             });
-            const matching = data.jobs.filter(j =>
-              j.name.startsWith('net9.0 (') && j.name.includes('on macos-latest')
-            );
+            // Matches the "DesktopGL macOS" matrix target label in build.yml.
+            const matching = data.jobs.filter(j => j.name.startsWith('DesktopGL macOS ('));
             core.info(`Matched ${matching.length} macOS cell(s):`);
             for (const j of matching) core.info(`  - ${j.name}: ${j.conclusion}`);
             if (matching.length === 0) {

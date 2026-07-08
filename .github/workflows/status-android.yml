@@ -27,7 +27,8 @@ jobs:
               run_id: runId,
               per_page: 100,
             });
-            const matching = data.jobs.filter(j => j.name.startsWith('net9.0-android35.0 ('));
+            // Matches the "Android" matrix target label in build.yml.
+            const matching = data.jobs.filter(j => j.name.startsWith('Android ('));
             core.info(`Matched ${matching.length} Android cell(s):`);
             for (const j of matching) core.info(`  - ${j.name}: ${j.conclusion}`);
             if (matching.length === 0) {

@@ -15,7 +15,11 @@ concurrency:
 
 jobs:
   build:
-    name: ${{ matrix.target.tfm }} (${{ matrix.configuration }}) on ${{ matrix.target.os }}
+    # The label-based job name ("DesktopGL Linux (Debug)", "iOS (Release)", ...)
+    # is what the Actions UI shows and what the status-*.yml badge shims match
+    # on - keep labels and shim predicates in sync. Labels deliberately do NOT
+    # embed the TFM, so check names stay stable across TFM bumps.
+    name: ${{ matrix.target.label }} (${{ matrix.configuration }})
     runs-on: ${{ matrix.target.os }}
     strategy:
       fail-fast: false
@@ -27,15 +31,15 @@ jobs:
           # DesktopGL (net9.0) is validated on all three desktop hosts - each
           # host bakes its own IsOSPlatform constant (LINUX / WINDOWSGL / MACOS)
           # and each feeds its own README status badge via the status-*.yml shims.
-          - { os: ubuntu-latest, tfm: net9.0, workloads: '' }
-          - { os: windows-latest, tfm: net9.0, workloads: '' }
-          - { os: macos-latest, tfm: net9.0, workloads: '' }
+          - { label: DesktopGL Linux,   os: ubuntu-latest,  tfm: net9.0, workloads: '' }
+          - { label: DesktopGL Windows, os: windows-latest, tfm: net9.0, workloads: '' }
+          - { label: DesktopGL macOS,   os: macos-latest,   tfm: net9.0, workloads: '' }
           # WindowsDX requires net9.0-windows7.0 which only builds on Windows.
-          - { os: windows-latest, tfm: net9.0-windows7.0, workloads: '' }
+          - { label: WindowsDX, os: windows-latest, tfm: net9.0-windows7.0, workloads: '' }
           # Android workload installs on Linux runners (cheaper than Windows).
-          - { os: ubuntu-latest, tfm: net9.0-android35.0, workloads: android }
+          - { label: Android, os: ubuntu-latest, tfm: net9.0-android35.0, workloads: android }
           # iOS requires a macOS host (Apple toolchain).
-          - { os: macos-latest, tfm: net9.0-ios18.0, workloads: ios }
+          - { label: iOS, os: macos-latest, tfm: net9.0-ios18.0, workloads: ios }
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
