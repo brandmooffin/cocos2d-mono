@@ -12,14 +12,14 @@ namespace CocosDenshion;
 /// </summary>
 public class CCSoundHandle : IDisposable
 {
-    private SoundEffectInstance m_instance;
-    private readonly int m_soundId;
-    private bool m_disposed;
+    private SoundEffectInstance _instance;
+    private readonly int _soundId;
+    private bool _disposed;
 
     internal CCSoundHandle(SoundEffectInstance instance, int soundId)
     {
-        m_instance = instance;
-        m_soundId = soundId;
+        _instance = instance;
+        _soundId = soundId;
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ public class CCSoundHandle : IDisposable
     /// </summary>
     public int SoundId
     {
-        get { return m_soundId; }
+        get { return _soundId; }
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ public class CCSoundHandle : IDisposable
     /// </summary>
     public bool IsPlaying
     {
-        get { return m_instance != null && !m_instance.IsDisposed && m_instance.State == SoundState.Playing; }
+        get { return _instance != null && !_instance.IsDisposed && _instance.State == SoundState.Playing; }
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public class CCSoundHandle : IDisposable
     /// </summary>
     public bool IsPaused
     {
-        get { return m_instance != null && !m_instance.IsDisposed && m_instance.State == SoundState.Paused; }
+        get { return _instance != null && !_instance.IsDisposed && _instance.State == SoundState.Paused; }
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public class CCSoundHandle : IDisposable
     /// </summary>
     public bool IsDisposed
     {
-        get { return m_disposed || m_instance == null || m_instance.IsDisposed; }
+        get { return _disposed || _instance == null || _instance.IsDisposed; }
     }
 
     /// <summary>
@@ -62,12 +62,12 @@ public class CCSoundHandle : IDisposable
         get
         {
             if (IsDisposed) return 0f;
-            return m_instance.Volume;
+            return _instance.Volume;
         }
         set
         {
             if (IsDisposed) return;
-            m_instance.Volume = Math.Max(0f, Math.Min(1f, value));
+            _instance.Volume = Math.Max(0f, Math.Min(1f, value));
         }
     }
 
@@ -79,12 +79,12 @@ public class CCSoundHandle : IDisposable
         get
         {
             if (IsDisposed) return 0f;
-            return m_instance.Pan;
+            return _instance.Pan;
         }
         set
         {
             if (IsDisposed) return;
-            m_instance.Pan = Math.Max(-1f, Math.Min(1f, value));
+            _instance.Pan = Math.Max(-1f, Math.Min(1f, value));
         }
     }
 
@@ -96,12 +96,12 @@ public class CCSoundHandle : IDisposable
         get
         {
             if (IsDisposed) return 0f;
-            return m_instance.Pitch;
+            return _instance.Pitch;
         }
         set
         {
             if (IsDisposed) return;
-            m_instance.Pitch = Math.Max(-1f, Math.Min(1f, value));
+            _instance.Pitch = Math.Max(-1f, Math.Min(1f, value));
         }
     }
 
@@ -113,12 +113,12 @@ public class CCSoundHandle : IDisposable
         get
         {
             if (IsDisposed) return false;
-            return m_instance.IsLooped;
+            return _instance.IsLooped;
         }
         set
         {
             if (IsDisposed) return;
-            m_instance.IsLooped = value;
+            _instance.IsLooped = value;
         }
     }
 
@@ -128,7 +128,7 @@ public class CCSoundHandle : IDisposable
     public void Stop()
     {
         if (IsDisposed) return;
-        m_instance.Stop();
+        _instance.Stop();
     }
 
     /// <summary>
@@ -137,8 +137,8 @@ public class CCSoundHandle : IDisposable
     public void Pause()
     {
         if (IsDisposed) return;
-        if (m_instance.State == SoundState.Playing)
-            m_instance.Pause();
+        if (_instance.State == SoundState.Playing)
+            _instance.Pause();
     }
 
     /// <summary>
@@ -147,8 +147,8 @@ public class CCSoundHandle : IDisposable
     public void Resume()
     {
         if (IsDisposed) return;
-        if (m_instance.State == SoundState.Paused)
-            m_instance.Play();
+        if (_instance.State == SoundState.Paused)
+            _instance.Play();
     }
 
     /// <summary>
@@ -156,14 +156,14 @@ public class CCSoundHandle : IDisposable
     /// </summary>
     public void Dispose()
     {
-        if (m_disposed) return;
-        m_disposed = true;
+        if (_disposed) return;
+        _disposed = true;
 
-        if (m_instance != null && !m_instance.IsDisposed)
+        if (_instance != null && !_instance.IsDisposed)
         {
-            m_instance.Stop();
-            m_instance.Dispose();
+            _instance.Stop();
+            _instance.Dispose();
         }
-        m_instance = null;
+        _instance = null;
     }
 }

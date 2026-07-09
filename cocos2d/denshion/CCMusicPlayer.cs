@@ -13,24 +13,24 @@ public class CCMusicPlayer
 {
     public static ulong s_mciError;
 
-    private bool m_IsRepeatingAfterClose;
-    private bool m_IsShuffleAfterClose;
-    //private MediaQueue m_QueueAfterClose;
-    private Song m_SongToPlayAfterClose;
-    private float m_VolumeAfterClose = 1f;
+    private bool _isRepeatingAfterClose;
+    private bool _isShuffleAfterClose;
+    //private MediaQueue _queueAfterClose;
+    private Song _songToPlayAfterClose;
+    private float _volumeAfterClose = 1f;
 
     /// <summary>
     /// Track if we did play our own game song, otherwise the media player is owned
     /// by the user of the device and that user is listening to background music.
     /// </summary>
-    private bool m_didPlayGameSong;
+    private bool _didPlayGameSong;
 
-    private Song m_music;
-    private int m_nSoundId;
+    private Song _music;
+    private int _soundId;
 
     public CCMusicPlayer()
     {
-        m_nSoundId = 0;
+        _soundId = 0;
         if (Microsoft.Xna.Framework.Media.MediaPlayer.State == MediaState.Playing)
         {
             SaveMediaState();
@@ -54,7 +54,7 @@ public class CCMusicPlayer
 
     public int SoundID
     {
-        get { return m_nSoundId; }
+        get { return _soundId; }
     }
 
     public void SaveMediaState()
@@ -62,10 +62,10 @@ public class CCMusicPlayer
         try
         {
             // User is playing a song, so remember the song state.
-            m_SongToPlayAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.Queue.ActiveSong;
-            m_VolumeAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.Volume;
-            m_IsRepeatingAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.IsRepeating;
-            m_IsShuffleAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.IsShuffled;
+            _songToPlayAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.Queue.ActiveSong;
+            _volumeAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.Volume;
+            _isRepeatingAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.IsRepeating;
+            _isShuffleAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.IsShuffled;
         }
         catch (Exception ex)
         {
@@ -76,14 +76,14 @@ public class CCMusicPlayer
 
     public void RestoreMediaState()
     {
-        if (m_SongToPlayAfterClose != null && m_didPlayGameSong)
+        if (_songToPlayAfterClose != null && _didPlayGameSong)
         {
             try
             {
-                Microsoft.Xna.Framework.Media.MediaPlayer.IsShuffled = m_IsShuffleAfterClose;
-                Microsoft.Xna.Framework.Media.MediaPlayer.IsRepeating = m_IsRepeatingAfterClose;
-                Microsoft.Xna.Framework.Media.MediaPlayer.Volume = m_VolumeAfterClose;
-                Microsoft.Xna.Framework.Media.MediaPlayer.Play(m_SongToPlayAfterClose);
+                Microsoft.Xna.Framework.Media.MediaPlayer.IsShuffled = _isShuffleAfterClose;
+                Microsoft.Xna.Framework.Media.MediaPlayer.IsRepeating = _isRepeatingAfterClose;
+                Microsoft.Xna.Framework.Media.MediaPlayer.Volume = _volumeAfterClose;
+                Microsoft.Xna.Framework.Media.MediaPlayer.Play(_songToPlayAfterClose);
         }
             catch (Exception ex)
             {
@@ -115,18 +115,18 @@ public class CCMusicPlayer
 
         Close();
 
-        m_music = CCContentManager.SharedContentManager.Load<Song>(pFileName);
+        _music = CCContentManager.SharedContentManager.Load<Song>(pFileName);
 
-        m_nSoundId = uId;
+        _soundId = uId;
     }
 
     public void Play(bool bLoop)
     {
-        if (null != m_music)
+        if (null != _music)
         {
             Microsoft.Xna.Framework.Media.MediaPlayer.IsRepeating = bLoop;
-            Microsoft.Xna.Framework.Media.MediaPlayer.Play(m_music);
-            m_didPlayGameSong = true;
+            Microsoft.Xna.Framework.Media.MediaPlayer.Play(_music);
+            _didPlayGameSong = true;
         }
     }
 
@@ -137,11 +137,11 @@ public class CCMusicPlayer
 
     public void Close()
     {
-        if (IsPlaying() && m_didPlayGameSong)
+        if (IsPlaying() && _didPlayGameSong)
         {
             Stop();
         }
-        m_music = null;
+        _music = null;
     }
 
     /// <summary>
@@ -177,9 +177,9 @@ public class CCMusicPlayer
 
         Stop();
 
-        if (null != m_music)
+        if (null != _music)
         {
-            Microsoft.Xna.Framework.Media.MediaPlayer.Play(m_music);
+            Microsoft.Xna.Framework.Media.MediaPlayer.Play(_music);
         }
         else if (s != null)
         {
@@ -208,7 +208,7 @@ public class CCMusicPlayer
     /// <returns></returns>
     public bool IsPlayingMySong()
     {
-        if (!m_didPlayGameSong)
+        if (!_didPlayGameSong)
         {
             return (false);
         }
