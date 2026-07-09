@@ -64,7 +64,7 @@
     <PackageId>Cocos2D-Mono.Core</PackageId>
     <Title>Cocos2D-Mono.Core</Title>
     <Product>Cocos2D-Mono.Core</Product>
-    <Description>Cocos2D-Mono.Core is a metapackage variant of Cocos2D-Mono that excludes the MonoGame.Content.Builder.Task MSBuild target. Reference this package instead of Cocos2D-Mono if you do not use the MonoGame content pipeline. The runtime DLL (Cocos2D.dll) is identical - only the build-time content-pipeline flow differs.</Description>
+    <Description>Cocos2D-Mono.Core is a metapackage variant of Cocos2D-Mono that excludes the MonoGame.Content.Builder.Task MSBuild target. Reference this package instead of Cocos2D-Mono if you do not use the MonoGame content pipeline. The runtime DLL (Cocos2DMono.dll) is identical - only the build-time content-pipeline flow differs.</Description>
     <PackageReleaseNotes>
 - Initial Cocos2D-Mono.Core release as part of the Stage C consolidation. Replaces the legacy .Core variant (previously Cocos2D-Mono.Core.{Platform}) with a single multi-targeted metapackage.
 - See https://github.com/Cocos2D-Mono/cocos2d-mono for the full changelog.
