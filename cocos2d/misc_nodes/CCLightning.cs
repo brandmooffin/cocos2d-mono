@@ -18,8 +18,8 @@ public struct CCLightningBolt
 
 public class CCLightning : CCDrawNode
 {
-    private float m_Sway = 65f;
-    private float m_Jaggedness = 1f/65f;
+    private float _sway = 65f;
+    private float _jaggedness = 1f/65f;
 
     /// <summary>
     /// Typical blue for lightning.
@@ -43,32 +43,32 @@ public class CCLightning : CCDrawNode
     {
         get
         {
-            return (m_Sway);
+            return (_sway);
         }
         set
         {
             if (value < 1f)
             {
-                m_Sway = 1f;
+                _sway = 1f;
             }
             else
             {
-                m_Sway = value;
+                _sway = value;
             }
-            m_Jaggedness = 1.0f / m_Sway;
+            _jaggedness = 1.0f / _sway;
         }
     }
 
-    private float m_GlowSize = .75f;
+    private float _glowSize = .75f;
     public virtual float GlowSize
     {
         get
         {
-            return (m_GlowSize);
+            return (_glowSize);
         }
         set
         {
-            m_GlowSize = value;
+            _glowSize = value;
         }
     }
 
@@ -81,7 +81,7 @@ public class CCLightning : CCDrawNode
     /// <summary>
     /// The bolts to draw in this node.
     /// </summary>
-    private List<BoltStatus> _Bolts = new List<BoltStatus>();
+    private List<BoltStatus> _bolts = new List<BoltStatus>();
 
     public CCLightning()
     {
@@ -101,7 +101,7 @@ public class CCLightning : CCDrawNode
     {
 	        base.Update(dt);
         bool bDidDraw = false;
-        foreach (BoltStatus bs in _Bolts)
+        foreach (BoltStatus bs in _bolts)
         {
             bs.CurrentTime += dt;
             if (bs.CurrentTime > bs.Bolt.StrikeTime)
@@ -170,12 +170,12 @@ public class CCLightning : CCDrawNode
     public override void Clear()
     {
         base.Clear();
-        _Bolts.Clear();
+        _bolts.Clear();
     }
 
     public void AddBolt(CCLightningBolt bolt) 
     {
-        _Bolts.Add(new BoltStatus() { 
+        _bolts.Add(new BoltStatus() { 
             Bolt = bolt, 
             Segments = CreateBolt(bolt.Start, bolt.End),
             CurrentTime = 0f,
@@ -214,12 +214,12 @@ public class CCLightning : CCDrawNode
 				float pos = positions[i];
 
 				// used to prevent sharp angles by ensuring very close positions also have small perpendicular variation.
-				float scale = (length * m_Jaggedness) * (pos - positions[i - 1]);
+				float scale = (length * _jaggedness) * (pos - positions[i - 1]);
 
 				// defines an envelope. Points near the middle of the bolt can be further from the central line.
 				float envelope = pos > 0.95f ? 20f * (1f - pos) : 1f;
 
-            float displacement = -m_Sway + 2f * m_Sway * CCMacros.CCRandomBetween0And1();
+            float displacement = -_sway + 2f * _sway * CCMacros.CCRandomBetween0And1();
 				displacement -= (displacement - prevDisplacement) * (1 - scale);
 				displacement *= envelope;
 

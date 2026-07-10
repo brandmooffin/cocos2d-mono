@@ -10,9 +10,9 @@ public class CCDrawNode : CCNode
 {
     const int DefaultBufferSize = 512;
 
-    private CCRawList<VertexPositionColor> m_pVertices;
-    private CCBlendFunc m_sBlendFunc;
-    private bool m_bDirty;
+    private CCRawList<VertexPositionColor> _vertices;
+    private CCBlendFunc _blendFunc;
+    private bool _dirty;
 
     public CCDrawNode()
     {
@@ -21,16 +21,16 @@ public class CCDrawNode : CCNode
 
     public CCBlendFunc BlendFunc
     {
-        get { return m_sBlendFunc; }
-        set { m_sBlendFunc = value; }
+        get { return _blendFunc; }
+        set { _blendFunc = value; }
     }
 
     public override bool Init()
     {
         base.Init();
 
-        m_sBlendFunc = CCBlendFunc.AlphaBlend;
-        m_pVertices = new CCRawList<VertexPositionColor>(DefaultBufferSize);
+        _blendFunc = CCBlendFunc.AlphaBlend;
+        _vertices = new CCRawList<VertexPositionColor>(DefaultBufferSize);
         return true;
     }
 
@@ -54,15 +54,15 @@ public class CCDrawNode : CCNode
         var c = new VertexPositionColor(new Vector3(pos.X + radius, pos.Y + radius, 0), cl);
         var d = new VertexPositionColor(new Vector3(pos.X + radius, pos.Y - radius, 0), cl);
 
-        m_pVertices.Add(a);
-        m_pVertices.Add(b);
-        m_pVertices.Add(c);
+        _vertices.Add(a);
+        _vertices.Add(b);
+        _vertices.Add(c);
 
-        m_pVertices.Add(a);
-        m_pVertices.Add(c);
-        m_pVertices.Add(d);
+        _vertices.Add(a);
+        _vertices.Add(c);
+        _vertices.Add(d);
 
-        m_bDirty = true;
+        _dirty = true;
     }
 
     /// <summary>
@@ -90,12 +90,12 @@ public class CCDrawNode : CCNode
                 new Vector3(center.X + (float)Math.Cos(angle2) * radius,
                             center.Y + (float)Math.Sin(angle2) * radius, 0), cl);
 
-            m_pVertices.Add(centerVertex);
-            m_pVertices.Add(v1);
-            m_pVertices.Add(v2);
+            _vertices.Add(centerVertex);
+            _vertices.Add(v1);
+            _vertices.Add(v2);
         }
 
-        m_bDirty = true;
+        _dirty = true;
     }
 
     /// <summary>
@@ -105,11 +105,11 @@ public class CCDrawNode : CCNode
     {
         var cl = new Color(color.R, color.G, color.B, color.A);
 
-        m_pVertices.Add(new VertexPositionColor(new Vector3(a.X, a.Y, 0), cl));
-        m_pVertices.Add(new VertexPositionColor(new Vector3(b.X, b.Y, 0), cl));
-        m_pVertices.Add(new VertexPositionColor(new Vector3(c.X, c.Y, 0), cl));
+        _vertices.Add(new VertexPositionColor(new Vector3(a.X, a.Y, 0), cl));
+        _vertices.Add(new VertexPositionColor(new Vector3(b.X, b.Y, 0), cl));
+        _vertices.Add(new VertexPositionColor(new Vector3(c.X, c.Y, 0), cl));
 
-        m_bDirty = true;
+        _dirty = true;
     }
     
     /// <summary>
@@ -142,32 +142,32 @@ public class CCDrawNode : CCNode
         var v6 = a - (nw - tw);
         var v7 = a + (nw + tw);
 
-        int returnIndex = m_pVertices.Count;
-        m_pVertices.Add(new VertexPositionColor(v0, cl)); //__t(v2fneg(v2fadd(n, t)))
-        m_pVertices.Add(new VertexPositionColor(v1, cl)); //__t(v2fsub(n, t))
-        m_pVertices.Add(new VertexPositionColor(v2, cl)); //__t(v2fneg(n))}
+        int returnIndex = _vertices.Count;
+        _vertices.Add(new VertexPositionColor(v0, cl)); //__t(v2fneg(v2fadd(n, t)))
+        _vertices.Add(new VertexPositionColor(v1, cl)); //__t(v2fsub(n, t))
+        _vertices.Add(new VertexPositionColor(v2, cl)); //__t(v2fneg(n))}
 
-        m_pVertices.Add(new VertexPositionColor(v3, cl)); //__t(n)
-        m_pVertices.Add(new VertexPositionColor(v1, cl)); //__t(v2fsub(n, t))
-        m_pVertices.Add(new VertexPositionColor(v2, cl)); //__t(v2fneg(n))
+        _vertices.Add(new VertexPositionColor(v3, cl)); //__t(n)
+        _vertices.Add(new VertexPositionColor(v1, cl)); //__t(v2fsub(n, t))
+        _vertices.Add(new VertexPositionColor(v2, cl)); //__t(v2fneg(n))
 
-        m_pVertices.Add(new VertexPositionColor(v3, cl)); //__t(n)
-        m_pVertices.Add(new VertexPositionColor(v4, cl)); //__t(v2fneg(n))
-        m_pVertices.Add(new VertexPositionColor(v2, cl)); //__t(v2fneg(n))
+        _vertices.Add(new VertexPositionColor(v3, cl)); //__t(n)
+        _vertices.Add(new VertexPositionColor(v4, cl)); //__t(v2fneg(n))
+        _vertices.Add(new VertexPositionColor(v2, cl)); //__t(v2fneg(n))
 
-        m_pVertices.Add(new VertexPositionColor(v3, cl)); //__t(n)
-        m_pVertices.Add(new VertexPositionColor(v4, cl)); //__t(v2fneg(n))
-        m_pVertices.Add(new VertexPositionColor(v5, cl)); //__t(n)
+        _vertices.Add(new VertexPositionColor(v3, cl)); //__t(n)
+        _vertices.Add(new VertexPositionColor(v4, cl)); //__t(v2fneg(n))
+        _vertices.Add(new VertexPositionColor(v5, cl)); //__t(n)
 
-        m_pVertices.Add(new VertexPositionColor(v6, cl)); //__t(v2fsub(t, n))
-        m_pVertices.Add(new VertexPositionColor(v4, cl)); //__t(v2fneg(n))
-        m_pVertices.Add(new VertexPositionColor(v5, cl)); //__t(n)
+        _vertices.Add(new VertexPositionColor(v6, cl)); //__t(v2fsub(t, n))
+        _vertices.Add(new VertexPositionColor(v4, cl)); //__t(v2fneg(n))
+        _vertices.Add(new VertexPositionColor(v5, cl)); //__t(n)
 
-        m_pVertices.Add(new VertexPositionColor(v6, cl)); //__t(v2fsub(t, n))
-        m_pVertices.Add(new VertexPositionColor(v7, cl)); //__t(v2fadd(n, t))
-        m_pVertices.Add(new VertexPositionColor(v5, cl)); //__t(n)
+        _vertices.Add(new VertexPositionColor(v6, cl)); //__t(v2fsub(t, n))
+        _vertices.Add(new VertexPositionColor(v7, cl)); //__t(v2fadd(n, t))
+        _vertices.Add(new VertexPositionColor(v5, cl)); //__t(n)
 
-        m_bDirty = true;
+        _dirty = true;
         return (returnIndex);
     }
 
@@ -183,15 +183,15 @@ public class CCDrawNode : CCNode
 
     public virtual void RemoveSegment(int vertexStart) 
     {
-        if (m_pVertices.Count == 18)
+        if (_vertices.Count == 18)
         {
-            m_pVertices.Clear();
+            _vertices.Clear();
         }
         else
         {
-            m_pVertices.RemoveRange(vertexStart, 18);
+            _vertices.RemoveRange(vertexStart, 18);
         }
-        m_bDirty = true;
+        _dirty = true;
     }
 
     /// <summary>
@@ -206,12 +206,12 @@ public class CCDrawNode : CCNode
     {
         for (int i = 0; i < count; i++)
         {
-            VertexPositionColor vpc = m_pVertices[start + i];
+            VertexPositionColor vpc = _vertices[start + i];
             Color c = vpc.Color;
             vpc.Color = new Color(c.R, c.G, c.B, (byte)(c.A * fadeFactor));
-            m_pVertices[start + i] = vpc;
+            _vertices[start + i] = vpc;
         }
-        m_bDirty = true;
+        _dirty = true;
     }
 
     /// <summary>
@@ -225,12 +225,12 @@ public class CCDrawNode : CCNode
     {
         for (int i = 0; i < count; i++)
         {
-            VertexPositionColor vpc = m_pVertices[start + i];
+            VertexPositionColor vpc = _vertices[start + i];
             Color c = vpc.Color;
             vpc.Color = new Color(c.R, c.G, c.B, (byte)(255f * fadeFactor));
-            m_pVertices[start + i] = vpc;
+            _vertices[start + i] = vpc;
         }
-        m_bDirty = true;
+        _dirty = true;
     }
 
     /** draw a polygon with a fill color and line color */
@@ -344,9 +344,9 @@ public class CCDrawNode : CCNode
             var v1 = verts[i + 1] - (extrude[i + 1].offset * inset);
             var v2 = verts[i + 2] - (extrude[i + 2].offset * inset);
 
-            m_pVertices.Add(new VertexPositionColor(v0, fillColor)); //__t(v2fzero)
-            m_pVertices.Add(new VertexPositionColor(v1, fillColor)); //__t(v2fzero)
-            m_pVertices.Add(new VertexPositionColor(v2, fillColor)); //__t(v2fzero)
+            _vertices.Add(new VertexPositionColor(v0, fillColor)); //__t(v2fzero)
+            _vertices.Add(new VertexPositionColor(v1, fillColor)); //__t(v2fzero)
+            _vertices.Add(new VertexPositionColor(v2, fillColor)); //__t(v2fzero)
         }
 
         for (int i = 0; i < count; i++)
@@ -367,13 +367,13 @@ public class CCDrawNode : CCNode
                 var outer0 = (v0 + (offset0 * borderWidth));
                 var outer1 = (v1 + (offset1 * borderWidth));
 
-                m_pVertices.Add(new VertexPositionColor(inner0, borderColor)); //__t(v2fneg(n0))
-                m_pVertices.Add(new VertexPositionColor(inner1, borderColor)); //__t(v2fneg(n0))
-                m_pVertices.Add(new VertexPositionColor(outer1, borderColor)); //__t(n0)
+                _vertices.Add(new VertexPositionColor(inner0, borderColor)); //__t(v2fneg(n0))
+                _vertices.Add(new VertexPositionColor(inner1, borderColor)); //__t(v2fneg(n0))
+                _vertices.Add(new VertexPositionColor(outer1, borderColor)); //__t(n0)
 
-                m_pVertices.Add(new VertexPositionColor(inner0, borderColor)); //__t(v2fneg(n0))
-                m_pVertices.Add(new VertexPositionColor(outer0, borderColor)); //__t(n0)
-                m_pVertices.Add(new VertexPositionColor(outer1, borderColor)); //__t(n0)
+                _vertices.Add(new VertexPositionColor(inner0, borderColor)); //__t(v2fneg(n0))
+                _vertices.Add(new VertexPositionColor(outer0, borderColor)); //__t(n0)
+                _vertices.Add(new VertexPositionColor(outer1, borderColor)); //__t(n0)
             }
             else
             {
@@ -382,16 +382,16 @@ public class CCDrawNode : CCNode
                 var outer0 = (v0 + (offset0 * 0.5f));
                 var outer1 = (v1 + (offset1 * 0.5f));
 
-                m_pVertices.Add(new VertexPositionColor(inner0, fillColor)); //__t(v2fzero)
-                m_pVertices.Add(new VertexPositionColor(inner1, fillColor)); //__t(v2fzero)
-                m_pVertices.Add(new VertexPositionColor(outer1, fillColor)); //__t(n0)
+                _vertices.Add(new VertexPositionColor(inner0, fillColor)); //__t(v2fzero)
+                _vertices.Add(new VertexPositionColor(inner1, fillColor)); //__t(v2fzero)
+                _vertices.Add(new VertexPositionColor(outer1, fillColor)); //__t(n0)
 
-                m_pVertices.Add(new VertexPositionColor(inner0, fillColor)); //__t(v2fzero)
-                m_pVertices.Add(new VertexPositionColor(outer0, fillColor)); //__t(n0)
-                m_pVertices.Add(new VertexPositionColor(outer1, fillColor)); //__t(n0)
+                _vertices.Add(new VertexPositionColor(inner0, fillColor)); //__t(v2fzero)
+                _vertices.Add(new VertexPositionColor(outer0, fillColor)); //__t(n0)
+                _vertices.Add(new VertexPositionColor(outer1, fillColor)); //__t(n0)
             }
         }
-        m_bDirty = true;
+        _dirty = true;
     }
 
     public void DrawLine(CCPoint from, CCPoint to, float lineWidth = 1, CCLineCap lineCap = CCLineCap.Butt)
@@ -431,13 +431,13 @@ public class CCDrawNode : CCNode
         var v3 = a + nw;
 
         // Triangles from beginning to end
-        m_pVertices.Add(new VertexPositionColor(v1, cl));
-        m_pVertices.Add(new VertexPositionColor(v2, cl));
-        m_pVertices.Add(new VertexPositionColor(v0, cl));
+        _vertices.Add(new VertexPositionColor(v1, cl));
+        _vertices.Add(new VertexPositionColor(v2, cl));
+        _vertices.Add(new VertexPositionColor(v0, cl));
 
-        m_pVertices.Add(new VertexPositionColor(v1, cl));
-        m_pVertices.Add(new VertexPositionColor(v2, cl));
-        m_pVertices.Add(new VertexPositionColor(v3, cl));
+        _vertices.Add(new VertexPositionColor(v1, cl));
+        _vertices.Add(new VertexPositionColor(v2, cl));
+        _vertices.Add(new VertexPositionColor(v3, cl));
 
         if (lineCap == CCLineCap.Round)
         {
@@ -449,7 +449,7 @@ public class CCDrawNode : CCNode
             DrawSolidArc(b, lineWidth, -mb, -MathHelper.Pi, color);
         }
 
-        m_bDirty = true;
+        _dirty = true;
     }
 
     // Used for drawing line caps
@@ -474,11 +474,11 @@ public class CCDrawNode : CCNode
 
         for (int i = 0; i < segments - 1; i++)
         {
-            m_pVertices.Add(new VertexPositionColor(pos, cl));
+            _vertices.Add(new VertexPositionColor(pos, cl));
 
             vert1.Vertices.X = x + pos.X;
             vert1.Vertices.Y = y + pos.Y;
-            m_pVertices.Add(new VertexPositionColor(new Vector3(vert1.Vertices.X, vert1.Vertices.Y, vert1.Vertices.Z), cl));
+            _vertices.Add(new VertexPositionColor(new Vector3(vert1.Vertices.X, vert1.Vertices.Y, vert1.Vertices.Z), cl));
 
             //calculate the tangential vector 
             //remember, the radial vector is (x, y) 
@@ -497,18 +497,18 @@ public class CCDrawNode : CCNode
             vert1.Vertices.X = x + pos.X;
             vert1.Vertices.Y = y + pos.Y;
 
-            m_pVertices.Add(new VertexPositionColor(new Vector3(vert1.Vertices.X, vert1.Vertices.Y, 0), cl));
+            _vertices.Add(new VertexPositionColor(new Vector3(vert1.Vertices.X, vert1.Vertices.Y, 0), cl));
         }
 
-        m_bDirty = true;
+        _dirty = true;
     }
 
     /** Clear the geometry in the node's buffer. */
 
     public virtual void Clear()
     {
-        m_pVertices = new CCRawList<VertexPositionColor>(DefaultBufferSize);
-        m_bDirty = true;
+        _vertices = new CCRawList<VertexPositionColor>(DefaultBufferSize);
+        _dirty = true;
         _toDraw = null;
         base.ContentSize = CCSize.Zero;
     }
@@ -523,23 +523,23 @@ public class CCDrawNode : CCNode
 
     public override void Draw()
     {
-        if (m_bDirty)
+        if (_dirty)
         {
-            m_bDirty = false;
+            _dirty = false;
             if (FilterPrimitivesByAlpha)
             {
-                _toDraw = m_pVertices.Elements.Where(x => x.Color.A > 0).ToArray();
+                _toDraw = _vertices.Elements.Where(x => x.Color.A > 0).ToArray();
             }
             else
             {
-                _toDraw = m_pVertices.Elements;
+                _toDraw = _vertices.Elements;
             }
         }
 
         if (_toDraw != null)
         {
             CCDrawManager.TextureEnabled = false;
-            CCDrawManager.BlendFunc(m_sBlendFunc);
+            CCDrawManager.BlendFunc(_blendFunc);
             CCDrawManager.DrawPrimitives(PrimitiveType.TriangleList, _toDraw, 0, _toDraw.Length / 3);
         }
     }

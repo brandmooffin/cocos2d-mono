@@ -13,9 +13,9 @@ public class CCParallaxScrollNode : CCNode
     /// </summary>
     private const float kDefaultPTMRatio = 32f;
 
-    private List<CCParallaxScrollOffset> m_ScrollOffsets;
-    private CCSpriteBatchNode m_Batch;
-    private CCSpriteSheet m_SpriteSheet;
+    private List<CCParallaxScrollOffset> _scrollOffsets;
+    private CCSpriteBatchNode _batch;
+    private CCSpriteSheet _spriteSheet;
 
     /// <summary>
     /// Scaling ratio for real world size to game world size.
@@ -27,15 +27,15 @@ public class CCParallaxScrollNode : CCNode
     /// </summary>
     public CCParallaxScrollNode()
     {
-        m_ScrollOffsets = new List<CCParallaxScrollOffset>();
+        _scrollOffsets = new List<CCParallaxScrollOffset>();
         PTMRatio = kDefaultPTMRatio;
     }
 
     public CCParallaxScrollNode(CCSpriteSheet sheet)
     {
-        m_SpriteSheet = sheet;
-        m_ScrollOffsets = new List<CCParallaxScrollOffset>();
-        m_Batch = new CCSpriteBatchNode(sheet.Frames[0].Texture);
+        _spriteSheet = sheet;
+        _scrollOffsets = new List<CCParallaxScrollOffset>();
+        _batch = new CCSpriteBatchNode(sheet.Frames[0].Texture);
         PTMRatio = kDefaultPTMRatio;
     }
     /// <summary>
@@ -45,20 +45,20 @@ public class CCParallaxScrollNode : CCNode
     /// <param name="textureName"></param>
     public CCParallaxScrollNode(string textureName)
     {
-        m_ScrollOffsets = new List<CCParallaxScrollOffset>();
-        m_Batch = new CCSpriteBatchNode(textureName);
+        _scrollOffsets = new List<CCParallaxScrollOffset>();
+        _batch = new CCSpriteBatchNode(textureName);
         PTMRatio = kDefaultPTMRatio;
     }
     public CCParallaxScrollNode(string textureName, string plistName)
         : this(textureName)
     {
-        m_SpriteSheet = new CCSpriteSheet(plistName, textureName);
+        _spriteSheet = new CCSpriteSheet(plistName, textureName);
     }
 
     public CCParallaxScrollNode(string textureName, Stream plistFile)
         : this(textureName)
     {
-        m_SpriteSheet = new CCSpriteSheet(plistFile, textureName);
+        _spriteSheet = new CCSpriteSheet(plistFile, textureName);
     }
 
     public void AddChild(CCSprite node, int z, CCPoint r, CCPoint p, CCPoint s)
@@ -70,10 +70,10 @@ public class CCParallaxScrollNode : CCNode
     {
         node.AnchorPoint = CCPoint.Zero;
         CCParallaxScrollOffset obj = new CCParallaxScrollOffset(node, r, p, s, v);
-        m_ScrollOffsets.Add(obj);
-        if (m_Batch != null)
+        _scrollOffsets.Add(obj);
+        if (_batch != null)
         {
-            m_Batch.AddChild(node, z);
+            _batch.AddChild(node, z);
         }
         else
         {
@@ -84,9 +84,9 @@ public class CCParallaxScrollNode : CCNode
     public void RemoveChild(CCSprite node, bool cleanup)
     {
         int removeAt = -1;
-        for (int i = 0; i < m_ScrollOffsets.Count; i++)
+        for (int i = 0; i < _scrollOffsets.Count; i++)
         {
-            CCParallaxScrollOffset scrollOffset = m_ScrollOffsets[i];
+            CCParallaxScrollOffset scrollOffset = _scrollOffsets[i];
             if (scrollOffset.Child == node)
             {
                 removeAt = i;
@@ -95,19 +95,19 @@ public class CCParallaxScrollNode : CCNode
         }
         if (removeAt != -1)
         {
-            m_ScrollOffsets.RemoveAt(removeAt);
+            _scrollOffsets.RemoveAt(removeAt);
         }
-        if (m_Batch != null)
+        if (_batch != null)
         {
-            m_Batch.RemoveChild(node, cleanup);
+            _batch.RemoveChild(node, cleanup);
         }
     }
     public override void RemoveAllChildren(bool cleanup = true)
     {
-        m_ScrollOffsets.Clear();
-        if (m_Batch != null)
+        _scrollOffsets.Clear();
+        if (_batch != null)
         {
-            m_Batch.RemoveAllChildren(cleanup);
+            _batch.RemoveAllChildren(cleanup);
         }
     }
     /// <summary>
@@ -121,9 +121,9 @@ public class CCParallaxScrollNode : CCNode
 
         CCPoint vel2 = vel * PTMRatio;
 
-        for (int i = m_ScrollOffsets.Count - 1; i >= 0; i--)
+        for (int i = _scrollOffsets.Count - 1; i >= 0; i--)
         {
-            CCParallaxScrollOffset scrollOffset = m_ScrollOffsets[i];
+            CCParallaxScrollOffset scrollOffset = _scrollOffsets[i];
             CCNode child = scrollOffset.Child;
 
             CCPoint relVel = scrollOffset.RelativeVelocity * PTMRatio;
@@ -156,9 +156,9 @@ public class CCParallaxScrollNode : CCNode
     /// <param name="dt"></param>
     public void UpdateWithYPosition(float y, float dt)
     {
-        for (int i = m_ScrollOffsets.Count - 1; i >= 0; i--)
+        for (int i = _scrollOffsets.Count - 1; i >= 0; i--)
         {
-            CCParallaxScrollOffset scrollOffset = m_ScrollOffsets[i];
+            CCParallaxScrollOffset scrollOffset = _scrollOffsets[i];
             CCNode child = scrollOffset.Child;
             float offset = y * scrollOffset.Ratio.Y;//ccpCompMult(pos, scrollOffset.ratio);
             child.Position = new CCPoint(child.Position.X, scrollOffset.OriginalPosition.Y + offset);
@@ -237,22 +237,22 @@ public class CCParallaxScrollNode : CCNode
     {
         get
         {
-            return (m_Batch);
+            return (_batch);
         }
         set
         {
-            m_Batch = value;
+            _batch = value;
         }
     }
     public List<CCParallaxScrollOffset> ScrollOffsets
     {
         get
         {
-            return (m_ScrollOffsets);
+            return (_scrollOffsets);
         }
         set
         {
-            m_ScrollOffsets = value;
+            _scrollOffsets = value;
         }
     }
 }

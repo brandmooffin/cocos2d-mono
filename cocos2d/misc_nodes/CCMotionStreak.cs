@@ -9,26 +9,26 @@ public class CCMotionStreak : CCNode, ICCTextureProtocol
 {
     protected bool m_bFastMode;
     protected bool m_bStartingPositionInitialized;
-    private float m_fFadeDelta;
-    private float m_fMinSeg;
-    private float m_fStroke;
-    private float[] m_pPointState;
-    private CCPoint[] m_pPointVertexes;
+    private float _fadeDelta;
+    private float _minSeg;
+    private float _stroke;
+    private float[] _pointState;
+    private CCPoint[] _pointVertexes;
     /** texture used for the motion streak */
-    private CCTexture2D m_pTexture;
-    private CCV3F_C4B_T2F[] m_pVertices;
-    private CCBlendFunc m_tBlendFunc;
-    private CCPoint m_tPositionR;
+    private CCTexture2D _texture;
+    private CCV3F_C4B_T2F[] _vertices;
+    private CCBlendFunc _blendFunc;
+    private CCPoint _positionR;
 
-    private int m_uMaxPoints;
-    private int m_uNuPoints;
-    private int m_uPreviousNuPoints;
+    private int _maxPoints;
+    private int _nuPoints;
+    private int _previousNuPoints;
 
     /** Pointers */
 
     public CCMotionStreak()
     {
-        m_tBlendFunc = CCBlendFunc.NonPremultiplied;
+        _blendFunc = CCBlendFunc.NonPremultiplied;
     }
 
     public CCMotionStreak(float fadeTime, float minSegLength, float streakWidth, CCColor3B color, string pathToTexture)
@@ -46,7 +46,7 @@ public class CCMotionStreak : CCNode, ICCTextureProtocol
         set
         {
             m_bStartingPositionInitialized = true;
-            m_tPositionR = value;
+            _positionR = value;
         }
     }
 
@@ -70,14 +70,14 @@ public class CCMotionStreak : CCNode, ICCTextureProtocol
 
     public CCTexture2D Texture
     {
-        get { return m_pTexture; }
-        set { m_pTexture = value; }
+        get { return _texture; }
+        set { _texture = value; }
     }
 
     public CCBlendFunc BlendFunc
     {
-        set { m_tBlendFunc = value; }
-        get { return (m_tBlendFunc); }
+        set { _blendFunc = value; }
+        get { return (_blendFunc); }
     }
 
     #endregion
@@ -109,23 +109,23 @@ public class CCMotionStreak : CCNode, ICCTextureProtocol
         IgnoreAnchorPointForPosition = true;
         m_bStartingPositionInitialized = false;
 
-        m_tPositionR = CCPoint.Zero;
+        _positionR = CCPoint.Zero;
         m_bFastMode = true;
-        m_fMinSeg = (minSeg == -1.0f) ? stroke / 5.0f : minSeg;
-        m_fMinSeg *= m_fMinSeg;
+        _minSeg = (minSeg == -1.0f) ? stroke / 5.0f : minSeg;
+        _minSeg *= _minSeg;
 
-        m_fStroke = stroke;
-        m_fFadeDelta = 1.0f / fade;
+        _stroke = stroke;
+        _fadeDelta = 1.0f / fade;
 
-        m_uMaxPoints = (int) (fade * 60.0f) + 2;
-        m_uNuPoints = 0;
-        m_pPointState = new float[m_uMaxPoints];
-        m_pPointVertexes = new CCPoint[m_uMaxPoints];
+        _maxPoints = (int) (fade * 60.0f) + 2;
+        _nuPoints = 0;
+        _pointState = new float[_maxPoints];
+        _pointVertexes = new CCPoint[_maxPoints];
 
-        m_pVertices = new CCV3F_C4B_T2F[(m_uMaxPoints + 1) * 2];
+        _vertices = new CCV3F_C4B_T2F[(_maxPoints + 1) * 2];
 
         // Set blend mode
-        m_tBlendFunc = CCBlendFunc.NonPremultiplied;
+        _blendFunc = CCBlendFunc.NonPremultiplied;
 
         Texture = texture;
         Color = color;
@@ -138,9 +138,9 @@ public class CCMotionStreak : CCNode, ICCTextureProtocol
     {
         Color = colors;
 
-        for (int i = 0; i < m_uNuPoints * 2; i++)
+        for (int i = 0; i < _nuPoints * 2; i++)
         {
-            m_pVertices[i].Colors = new CCColor4B(colors.R, colors.G, colors.B, 255);
+            _vertices[i].Colors = new CCColor4B(colors.R, colors.G, colors.B, 255);
         }
     }
 
@@ -151,17 +151,17 @@ public class CCMotionStreak : CCNode, ICCTextureProtocol
             return;
         }
 
-        delta *= m_fFadeDelta;
+        delta *= _fadeDelta;
 
         int newIdx, newIdx2, i, i2;
         int mov = 0;
 
         // Update current points
-        for (i = 0; i < m_uNuPoints; i++)
+        for (i = 0; i < _nuPoints; i++)
         {
-            m_pPointState[i] -= delta;
+            _pointState[i] -= delta;
 
-            if (m_pPointState[i] <= 0)
+            if (_pointState[i] <= 0)
             {
                 mov++;
             }
@@ -172,42 +172,42 @@ public class CCMotionStreak : CCNode, ICCTextureProtocol
                 if (mov > 0)
                 {
                     // Move data
-                    m_pPointState[newIdx] = m_pPointState[i];
+                    _pointState[newIdx] = _pointState[i];
 
                     // Move point
-                    m_pPointVertexes[newIdx] = m_pPointVertexes[i];
+                    _pointVertexes[newIdx] = _pointVertexes[i];
 
                     // Move vertices
                     i2 = i * 2;
                     newIdx2 = newIdx * 2;
-                    m_pVertices[newIdx2].Vertices = m_pVertices[i2].Vertices;
-                    m_pVertices[newIdx2 + 1].Vertices = m_pVertices[i2 + 1].Vertices;
+                    _vertices[newIdx2].Vertices = _vertices[i2].Vertices;
+                    _vertices[newIdx2 + 1].Vertices = _vertices[i2 + 1].Vertices;
 
                     // Move color
-                    m_pVertices[newIdx2].Colors = m_pVertices[i2].Colors;
-                    m_pVertices[newIdx2 + 1].Colors = m_pVertices[i2 + 1].Colors;
+                    _vertices[newIdx2].Colors = _vertices[i2].Colors;
+                    _vertices[newIdx2 + 1].Colors = _vertices[i2 + 1].Colors;
                 }
                 else
                 {
                     newIdx2 = newIdx * 2;
                 }
 
-                m_pVertices[newIdx2].Colors.A = m_pVertices[newIdx2 + 1].Colors.A = (byte) (m_pPointState[newIdx] * 255.0f);
+                _vertices[newIdx2].Colors.A = _vertices[newIdx2 + 1].Colors.A = (byte) (_pointState[newIdx] * 255.0f);
             }
         }
-        m_uNuPoints -= mov;
+        _nuPoints -= mov;
 
         // Append new point
         bool appendNewPoint = true;
-        if (m_uNuPoints >= m_uMaxPoints)
+        if (_nuPoints >= _maxPoints)
         {
             appendNewPoint = false;
         }
 
-        else if (m_uNuPoints > 0)
+        else if (_nuPoints > 0)
         {
-            bool a1 = m_pPointVertexes[m_uNuPoints - 1].DistanceSquared(ref m_tPositionR) < m_fMinSeg;
-            bool a2 = (m_uNuPoints != 1) && (m_pPointVertexes[m_uNuPoints - 2].DistanceSquared(ref m_tPositionR) < (m_fMinSeg * 2.0f));
+            bool a1 = _pointVertexes[_nuPoints - 1].DistanceSquared(ref _positionR) < _minSeg;
+            bool a2 = (_nuPoints != 1) && (_pointVertexes[_nuPoints - 2].DistanceSquared(ref _positionR) < (_minSeg * 2.0f));
 
             if (a1 || a2)
             {
@@ -217,45 +217,45 @@ public class CCMotionStreak : CCNode, ICCTextureProtocol
 
         if (appendNewPoint)
         {
-            m_pPointVertexes[m_uNuPoints] = m_tPositionR;
-            m_pPointState[m_uNuPoints] = 1.0f;
+            _pointVertexes[_nuPoints] = _positionR;
+            _pointState[_nuPoints] = 1.0f;
 
             // Color asignation
-            int offset = m_uNuPoints * 2;
-            m_pVertices[offset].Colors = m_pVertices[offset + 1].Colors = new CCColor4B(_displayedColor.R, _displayedColor.G, _displayedColor.B, 255);
+            int offset = _nuPoints * 2;
+            _vertices[offset].Colors = _vertices[offset + 1].Colors = new CCColor4B(_displayedColor.R, _displayedColor.G, _displayedColor.B, 255);
 
             // Generate polygon
-            if (m_uNuPoints > 0 && m_bFastMode)
+            if (_nuPoints > 0 && m_bFastMode)
             {
-                if (m_uNuPoints > 1)
+                if (_nuPoints > 1)
                 {
-                    VertexLineToPolygon(m_pPointVertexes, m_fStroke, m_pVertices, m_uNuPoints, 1);
+                    VertexLineToPolygon(_pointVertexes, _stroke, _vertices, _nuPoints, 1);
                 }
                 else
                 {
-                    VertexLineToPolygon(m_pPointVertexes, m_fStroke, m_pVertices, 0, 2);
+                    VertexLineToPolygon(_pointVertexes, _stroke, _vertices, 0, 2);
                 }
             }
 
-            m_uNuPoints++;
+            _nuPoints++;
         }
 
         if (!m_bFastMode)
         {
-            VertexLineToPolygon(m_pPointVertexes, m_fStroke, m_pVertices, 0, m_uNuPoints);
+            VertexLineToPolygon(_pointVertexes, _stroke, _vertices, 0, _nuPoints);
         }
 
         // Updated Tex Coords only if they are different than previous step
-        if (m_uNuPoints > 0 && m_uPreviousNuPoints != m_uNuPoints)
+        if (_nuPoints > 0 && _previousNuPoints != _nuPoints)
         {
-            float texDelta = 1.0f / m_uNuPoints;
-            for (i = 0; i < m_uNuPoints; i++)
+            float texDelta = 1.0f / _nuPoints;
+            for (i = 0; i < _nuPoints; i++)
             {
-                m_pVertices[i * 2].TexCoords = new CCTex2F(0, texDelta * i);
-                m_pVertices[i * 2 + 1].TexCoords = new CCTex2F(1, texDelta * i);
+                _vertices[i * 2].TexCoords = new CCTex2F(0, texDelta * i);
+                _vertices[i * 2 + 1].TexCoords = new CCTex2F(1, texDelta * i);
             }
 
-            m_uPreviousNuPoints = m_uNuPoints;
+            _previousNuPoints = _nuPoints;
         }
     }
 
@@ -390,14 +390,14 @@ public class CCMotionStreak : CCNode, ICCTextureProtocol
 
     private void Reset()
     {
-        m_uNuPoints = 0;
+        _nuPoints = 0;
     }
 
     public override void Draw()
     {
-        CCDrawManager.BlendFunc(m_tBlendFunc);
-        CCDrawManager.BindTexture(m_pTexture);
+        CCDrawManager.BlendFunc(_blendFunc);
+        CCDrawManager.BindTexture(_texture);
         CCDrawManager.VertexColorEnabled = true;
-        CCDrawManager.DrawPrimitives(PrimitiveType.TriangleStrip, m_pVertices, 0, m_uNuPoints * 2 - 2);
+        CCDrawManager.DrawPrimitives(PrimitiveType.TriangleStrip, _vertices, 0, _nuPoints * 2 - 2);
     }
 }
