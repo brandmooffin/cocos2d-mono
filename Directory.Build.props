@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
     <!-- Single source of truth for the package version (and assembly version only for projects
-         that generate assembly info). Bump here (plus the nuspecs) for a release instead of editing every csproj. -->
-    <Version>2.5.10</Version>
+         that generate assembly info). Bump here for a release; all packages inherit it. -->
+    <Version>2.5.11</Version>
 
     <!-- Centralized MonoGame version for all projects -->
     <MonoGameVersion>3.8.4.1</MonoGameVersion>

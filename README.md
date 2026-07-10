@@ -42,6 +42,26 @@ relocate `CCUserDefault` storage written by the old dedicated packages).
 
 Check out the [guides](https://cocos2d-mono.dev/docs/category/getting-started)!
 
+# Building & running the test app
+
+The library and its interactive test app build from a single solution, `Cocos2DMono.sln`
+(the per-platform solutions were retired when the build was consolidated).
+
+```bash
+# Build the library (all target frameworks)
+dotnet build Cocos2DMono.sln
+
+# Run the interactive test app on the desktop (DesktopGL / net9.0)
+dotnet run --project Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -f net9.0
+
+# Run the headless unit tests
+dotnet test Tests/Cocos2DMono.UnitTests/Cocos2DMono.UnitTests.csproj
+```
+
+The test app's scenes live in `Tests/cocos2d-mono.Tests/`; the multi-targeted
+`Cocos2DMono.IntegrationTests` project compiles them into a runnable host for each platform
+(desktop, Windows, Android, iOS). See [`Tests/README.md`](Tests/README.md) for details.
+
 # Contributing
 
 Thanks so much for your interest in cocos2d-mono and wanting to contribute to the project! Here's a [guide](https://cocos2d-mono.dev/docs/category/contributing) to help you get started.

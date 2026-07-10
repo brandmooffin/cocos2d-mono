@@ -4,6 +4,54 @@ All notable changes to Cocos2D-Mono are recorded here. This file was introduced 
 2.5.10; earlier releases are described in their GitHub release notes / git history.
 The project follows [Semantic Versioning](https://semver.org/) where practical.
 
+## 2.5.11 - 2026-07-10
+
+The debut of the **consolidated NuGet package line**. The build was collapsed from ~30
+per-platform projects into three multi-targeted packages, so the twelve per-platform
+packages are replaced by three that each cover every platform. Runtime behavior matches
+2.5.10 plus the fixes below; the .NET 10 / MonoGame 3.8.5 upgrade continues on the `2.6.0`
+line.
+
+### 📦 Packages — new IDs (migration required)
+
+The per-platform packages are retired (2.5.10 was their final release). Replace your
+reference with one of:
+
+| New package | Replaces | Use when |
+|---|---|---|
+| `Cocos2D-Mono` | `Cocos2D-Mono.{DesktopGL,Windows,Linux,macOS,Android,iOS}` | The engine, with the MonoGame content-pipeline (MGCB) build task. |
+| `Cocos2D-Mono.Core` | `Cocos2D-Mono.Core.{…}` | Same engine without the MGCB dependency. |
+| `Cocos2D-Mono.Box2D` | (was bundled) | Box2D physics port (also flows transitively through the above). |
+
+Each package multi-targets DesktopGL (Windows/Linux/macOS), WindowsDX, Android, and iOS;
+the correct target framework is selected automatically. UWP / Xbox-UWP remains in the
+separate [Cocos2D-Mono.UWP](https://github.com/Cocos2D-Mono/Cocos2D-Mono.UWP) repo.
+
+### ⚠️ Breaking / migration
+
+- **Assembly renamed** `Cocos2D.dll` → `Cocos2DMono.dll` (matching the product name). The
+  **namespace is unchanged (`Cocos2D`)**, so source and NuGet-resolved references need no
+  change; only by-name `<Reference>` entries or `Assembly.Load("Cocos2D")` / reflection by
+  assembly name are affected.
+- **OpenTK is no longer a dependency.** It was referenced but unused (its only consumer was
+  a long-dead GL-extensions probe). Consumers who relied on the transitive OpenTK reference
+  (uncommon) should add their own.
+
+### Added
+
+- `ICCUserDefaultStorage` + the settable `CCUserDefault.Storage` — a pluggable backend for
+  where `CCUserDefault` persists its settings file (file on desktop, isolated storage
+  elsewhere by default). Enables custom stores on platforms without a writable file system.
+
+### Fixed / changed (internal)
+
+- `CCAccelerometer`'s platform guard now states its intent (`ANDROID || IOS`) instead of a
+  "not desktop" exclusion; removed dead `WINDOWS_PHONE8` code.
+- `CCRawList<T>` clears returned pooled buffers unconditionally on .NET Framework targets
+  (which lack `RuntimeHelpers.IsReferenceOrContainsReferences`).
+- Modernized C#: file-scoped namespaces repo-wide; private fields adopt `_camelCase` in the
+  denshion and misc_nodes subsystems (ongoing, internal-only).
+
 ## 2.5.10 - 2026-06-15
 
 A modernization and hardening pass on the current runtime (.NET 9 / MonoGame 3.8.4.1).

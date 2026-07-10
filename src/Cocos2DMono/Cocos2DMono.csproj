@@ -35,9 +35,8 @@
     <Product>Cocos2D-Mono</Product>
     <Description>Cocos2D-Mono is a managed C# port of cocos2d-x built on MonoGame. This single package multi-targets DesktopGL (Windows-GL, Linux, macOS), WindowsDX, Android, and iOS.</Description>
     <PackageReleaseNotes>
-- Stage C3 modernization: collapsed 12 per-platform csprojs into a single multi-targeted package.
-- LibTiff is now Windows-only (matches the actual `#if WINDOWS` guard in CCTexture2D.cs).
-- Mac Catalyst is NOT shipped: MonoGame 3.8.4.1 has no maccatalyst asset. macOS desktop is served by the net9.0 DesktopGL TFM.
+2.5.11 - Debut of the consolidated package line. This single multi-targeted package (DesktopGL, WindowsDX, Android, iOS) replaces the per-platform Cocos2D-Mono.{DesktopGL,Windows,Linux,macOS,Android,iOS} packages; 2.5.10 was their final release.
+Migration: replace your per-platform PackageReference with Cocos2D-Mono - the correct target framework is selected automatically. The namespace is unchanged (Cocos2D), but the assembly is now Cocos2DMono.dll (was Cocos2D.dll) - this only affects by-name/reflection assembly references. OpenTK is no longer a dependency.
 - See https://github.com/Cocos2D-Mono/cocos2d-mono for the full changelog.
     </PackageReleaseNotes>
     <PackageTags>mono monogame cocos2d game gamedev 2d mgcb content-pipeline</PackageTags>
