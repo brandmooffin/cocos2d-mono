@@ -7,9 +7,9 @@ namespace Cocos2D;
 
 public partial class CCRenderTexture : CCNode
 {
-    private bool m_bFirstUsage = true;
+    private bool _firstUsage = true;
     protected SurfaceFormat m_ePixelFormat;
-    private RenderTarget2D m_pRenderTarget2D;
+    private RenderTarget2D _renderTarget2D;
     protected CCSprite m_pSprite;
     protected CCTexture2D m_pTexture;
 
@@ -41,7 +41,7 @@ public partial class CCRenderTexture : CCNode
 
     private void TextureReInit()
     {
-        m_pRenderTarget2D = null;
+        _renderTarget2D = null;
         m_pTexture = null;
         if (m_pSprite != null)
         {
@@ -57,10 +57,10 @@ public partial class CCRenderTexture : CCNode
         m_pTexture.OnReInit = TextureReInit;
         m_pTexture.IsAntialiased = false;
 
-        m_pRenderTarget2D = CCDrawManager.CreateRenderTarget(m_Width, m_Height, m_ColorFormat, m_DepthFormat, m_Usage);
-        m_pTexture.InitWithTexture(m_pRenderTarget2D, m_ColorFormat, true, false);
+        _renderTarget2D = CCDrawManager.CreateRenderTarget(_width, _height, _colorFormat, _depthFormat, _usage);
+        m_pTexture.InitWithTexture(_renderTarget2D, _colorFormat, true, false);
 
-        m_bFirstUsage = true;
+        _firstUsage = true;
 
         m_pSprite = new CCSprite(m_pTexture);
         //m_pSprite.scaleY = -1;
@@ -69,18 +69,18 @@ public partial class CCRenderTexture : CCNode
         AddChild(m_pSprite);
     }
 
-    private SurfaceFormat m_ColorFormat;
-    private DepthFormat m_DepthFormat;
-    private RenderTargetUsage m_Usage;
-    private int m_Width, m_Height;
+    private SurfaceFormat _colorFormat;
+    private DepthFormat _depthFormat;
+    private RenderTargetUsage _usage;
+    private int _width, _height;
 
     protected virtual bool InitWithWidthAndHeight(int w, int h, SurfaceFormat colorFormat, DepthFormat depthFormat, RenderTargetUsage usage)
     {
-        m_Width = (int)Math.Ceiling(w * CCMacros.CCContentScaleFactor());
-        m_Height = (int)Math.Ceiling(h * CCMacros.CCContentScaleFactor());
-        m_ColorFormat = colorFormat;
-        m_DepthFormat = depthFormat;
-        m_Usage = usage;
+        _width = (int)Math.Ceiling(w * CCMacros.CCContentScaleFactor());
+        _height = (int)Math.Ceiling(h * CCMacros.CCContentScaleFactor());
+        _colorFormat = colorFormat;
+        _depthFormat = depthFormat;
+        _usage = usage;
         MakeTexture();
         return true;
     }
@@ -114,10 +114,10 @@ public partial class CCRenderTexture : CCNode
 
         CCDrawManager.MultMatrix(ref projection);
 
-        if (m_bFirstUsage)
+        if (_firstUsage)
         {
             CCDrawManager.Clear(Microsoft.Xna.Framework.Color.Transparent);
-            m_bFirstUsage = false;
+            _firstUsage = false;
         }
     }
 

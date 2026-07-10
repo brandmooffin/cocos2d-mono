@@ -46,25 +46,25 @@ public class CCDrawNodeRetained : CCNode
 {
     const int DefaultBufferSize = 512;
 
-    private List<VertexPositionColor> m_vertices;
-    private List<CCShapeHandle> m_shapes;
-    private CCBlendFunc m_blendFunc;
-    private VertexPositionColor[] m_drawBuffer;
-    private int m_drawBufferCount;
-    private bool m_dirty;
+    private List<VertexPositionColor> _vertices;
+    private List<CCShapeHandle> _shapes;
+    private CCBlendFunc _blendFunc;
+    private VertexPositionColor[] _drawBuffer;
+    private int _drawBufferCount;
+    private bool _dirty;
 
     public CCDrawNodeRetained()
     {
-        m_blendFunc = CCBlendFunc.AlphaBlend;
-        m_vertices = new List<VertexPositionColor>(DefaultBufferSize);
-        m_shapes = new List<CCShapeHandle>();
-        m_dirty = true;
+        _blendFunc = CCBlendFunc.AlphaBlend;
+        _vertices = new List<VertexPositionColor>(DefaultBufferSize);
+        _shapes = new List<CCShapeHandle>();
+        _dirty = true;
     }
 
     public CCBlendFunc BlendFunc
     {
-        get { return m_blendFunc; }
-        set { m_blendFunc = value; }
+        get { return _blendFunc; }
+        set { _blendFunc = value; }
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ public class CCDrawNodeRetained : CCNode
     /// </summary>
     public int ShapeCount
     {
-        get { return m_shapes.Count; }
+        get { return _shapes.Count; }
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ public class CCDrawNodeRetained : CCNode
     /// </summary>
     public int VertexCount
     {
-        get { return m_vertices.Count; }
+        get { return _vertices.Count; }
     }
 
     #region Add Shapes
@@ -95,7 +95,7 @@ public class CCDrawNodeRetained : CCNode
             return AddFilledCircle(pos, radius, color);
         }
 
-        int start = m_vertices.Count;
+        int start = _vertices.Count;
         var cl = new Color(color.R, color.G, color.B, color.A);
 
         var a = new VertexPositionColor(new Vector3(pos.X - radius, pos.Y - radius, 0), cl);
@@ -103,12 +103,12 @@ public class CCDrawNodeRetained : CCNode
         var c = new VertexPositionColor(new Vector3(pos.X + radius, pos.Y + radius, 0), cl);
         var d = new VertexPositionColor(new Vector3(pos.X + radius, pos.Y - radius, 0), cl);
 
-        m_vertices.Add(a);
-        m_vertices.Add(b);
-        m_vertices.Add(c);
-        m_vertices.Add(a);
-        m_vertices.Add(c);
-        m_vertices.Add(d);
+        _vertices.Add(a);
+        _vertices.Add(b);
+        _vertices.Add(c);
+        _vertices.Add(a);
+        _vertices.Add(c);
+        _vertices.Add(d);
 
         return CreateHandle(start, 6);
     }
@@ -120,7 +120,7 @@ public class CCDrawNodeRetained : CCNode
     {
         if (segments < 3) segments = 3;
 
-        int start = m_vertices.Count;
+        int start = _vertices.Count;
         var cl = new Color(color.R, color.G, color.B, color.A);
         var centerVertex = new VertexPositionColor(new Vector3(center.X, center.Y, 0), cl);
         float increment = MathHelper.TwoPi / segments;
@@ -137,9 +137,9 @@ public class CCDrawNodeRetained : CCNode
                 new Vector3(center.X + (float)Math.Cos(angle2) * radius,
                             center.Y + (float)Math.Sin(angle2) * radius, 0), cl);
 
-            m_vertices.Add(centerVertex);
-            m_vertices.Add(v1);
-            m_vertices.Add(v2);
+            _vertices.Add(centerVertex);
+            _vertices.Add(v1);
+            _vertices.Add(v2);
         }
 
         return CreateHandle(start, segments * 3);
@@ -150,12 +150,12 @@ public class CCDrawNodeRetained : CCNode
     /// </summary>
     public CCShapeHandle AddTriangle(CCPoint a, CCPoint b, CCPoint c, CCColor4F color)
     {
-        int start = m_vertices.Count;
+        int start = _vertices.Count;
         var cl = new Color(color.R, color.G, color.B, color.A);
 
-        m_vertices.Add(new VertexPositionColor(new Vector3(a.X, a.Y, 0), cl));
-        m_vertices.Add(new VertexPositionColor(new Vector3(b.X, b.Y, 0), cl));
-        m_vertices.Add(new VertexPositionColor(new Vector3(c.X, c.Y, 0), cl));
+        _vertices.Add(new VertexPositionColor(new Vector3(a.X, a.Y, 0), cl));
+        _vertices.Add(new VertexPositionColor(new Vector3(b.X, b.Y, 0), cl));
+        _vertices.Add(new VertexPositionColor(new Vector3(c.X, c.Y, 0), cl));
 
         return CreateHandle(start, 3);
     }
@@ -165,7 +165,7 @@ public class CCDrawNodeRetained : CCNode
     /// </summary>
     public CCShapeHandle AddRect(CCRect rect, CCColor4F color)
     {
-        int start = m_vertices.Count;
+        int start = _vertices.Count;
         var cl = new Color(color.R, color.G, color.B, color.A);
 
         float x1 = rect.MinX, y1 = rect.MinY;
@@ -176,12 +176,12 @@ public class CCDrawNodeRetained : CCNode
         var tr = new VertexPositionColor(new Vector3(x2, y2, 0), cl);
         var tl = new VertexPositionColor(new Vector3(x1, y2, 0), cl);
 
-        m_vertices.Add(bl);
-        m_vertices.Add(br);
-        m_vertices.Add(tr);
-        m_vertices.Add(bl);
-        m_vertices.Add(tr);
-        m_vertices.Add(tl);
+        _vertices.Add(bl);
+        _vertices.Add(br);
+        _vertices.Add(tr);
+        _vertices.Add(bl);
+        _vertices.Add(tr);
+        _vertices.Add(tl);
 
         return CreateHandle(start, 6);
     }
@@ -198,7 +198,7 @@ public class CCDrawNodeRetained : CCNode
             return AddDot(from, radius, color);
         }
 
-        int start = m_vertices.Count;
+        int start = _vertices.Count;
         var cl = new Color(color.R, color.G, color.B, color.A);
 
         var a = from;
@@ -217,24 +217,24 @@ public class CCDrawNodeRetained : CCNode
         var v6 = a - (nw - tw);
         var v7 = a + (nw + tw);
 
-        m_vertices.Add(new VertexPositionColor(v0, cl));
-        m_vertices.Add(new VertexPositionColor(v1, cl));
-        m_vertices.Add(new VertexPositionColor(v2, cl));
-        m_vertices.Add(new VertexPositionColor(v3, cl));
-        m_vertices.Add(new VertexPositionColor(v1, cl));
-        m_vertices.Add(new VertexPositionColor(v2, cl));
-        m_vertices.Add(new VertexPositionColor(v3, cl));
-        m_vertices.Add(new VertexPositionColor(v4, cl));
-        m_vertices.Add(new VertexPositionColor(v2, cl));
-        m_vertices.Add(new VertexPositionColor(v3, cl));
-        m_vertices.Add(new VertexPositionColor(v4, cl));
-        m_vertices.Add(new VertexPositionColor(v5, cl));
-        m_vertices.Add(new VertexPositionColor(v6, cl));
-        m_vertices.Add(new VertexPositionColor(v4, cl));
-        m_vertices.Add(new VertexPositionColor(v5, cl));
-        m_vertices.Add(new VertexPositionColor(v6, cl));
-        m_vertices.Add(new VertexPositionColor(v7, cl));
-        m_vertices.Add(new VertexPositionColor(v5, cl));
+        _vertices.Add(new VertexPositionColor(v0, cl));
+        _vertices.Add(new VertexPositionColor(v1, cl));
+        _vertices.Add(new VertexPositionColor(v2, cl));
+        _vertices.Add(new VertexPositionColor(v3, cl));
+        _vertices.Add(new VertexPositionColor(v1, cl));
+        _vertices.Add(new VertexPositionColor(v2, cl));
+        _vertices.Add(new VertexPositionColor(v3, cl));
+        _vertices.Add(new VertexPositionColor(v4, cl));
+        _vertices.Add(new VertexPositionColor(v2, cl));
+        _vertices.Add(new VertexPositionColor(v3, cl));
+        _vertices.Add(new VertexPositionColor(v4, cl));
+        _vertices.Add(new VertexPositionColor(v5, cl));
+        _vertices.Add(new VertexPositionColor(v6, cl));
+        _vertices.Add(new VertexPositionColor(v4, cl));
+        _vertices.Add(new VertexPositionColor(v5, cl));
+        _vertices.Add(new VertexPositionColor(v6, cl));
+        _vertices.Add(new VertexPositionColor(v7, cl));
+        _vertices.Add(new VertexPositionColor(v5, cl));
 
         return CreateHandle(start, 18);
     }
@@ -253,12 +253,12 @@ public class CCDrawNodeRetained : CCNode
 
         for (int i = handle.StartIndex; i < handle.StartIndex + handle.VertexCount; i++)
         {
-            var v = m_vertices[i];
+            var v = _vertices[i];
             v.Position += off;
-            m_vertices[i] = v;
+            _vertices[i] = v;
         }
 
-        m_dirty = true;
+        _dirty = true;
     }
 
     /// <summary>
@@ -274,8 +274,8 @@ public class CCDrawNodeRetained : CCNode
         float cx = 0, cy = 0;
         for (int i = handle.StartIndex; i < handle.StartIndex + handle.VertexCount; i++)
         {
-            cx += m_vertices[i].Position.X;
-            cy += m_vertices[i].Position.Y;
+            cx += _vertices[i].Position.X;
+            cy += _vertices[i].Position.Y;
         }
         cx /= handle.VertexCount;
         cy /= handle.VertexCount;
@@ -283,12 +283,12 @@ public class CCDrawNodeRetained : CCNode
         var off = new Vector3(position.X - cx, position.Y - cy, 0);
         for (int i = handle.StartIndex; i < handle.StartIndex + handle.VertexCount; i++)
         {
-            var v = m_vertices[i];
+            var v = _vertices[i];
             v.Position += off;
-            m_vertices[i] = v;
+            _vertices[i] = v;
         }
 
-        m_dirty = true;
+        _dirty = true;
     }
 
     /// <summary>
@@ -301,12 +301,12 @@ public class CCDrawNodeRetained : CCNode
 
         for (int i = handle.StartIndex; i < handle.StartIndex + handle.VertexCount; i++)
         {
-            var v = m_vertices[i];
+            var v = _vertices[i];
             v.Color = cl;
-            m_vertices[i] = v;
+            _vertices[i] = v;
         }
 
-        m_dirty = true;
+        _dirty = true;
     }
 
     /// <summary>
@@ -318,12 +318,12 @@ public class CCDrawNodeRetained : CCNode
 
         for (int i = handle.StartIndex; i < handle.StartIndex + handle.VertexCount; i++)
         {
-            var v = m_vertices[i];
+            var v = _vertices[i];
             v.Color = new Color(v.Color.R, v.Color.G, v.Color.B, opacity);
-            m_vertices[i] = v;
+            _vertices[i] = v;
         }
 
-        m_dirty = true;
+        _dirty = true;
     }
 
     /// <summary>
@@ -339,21 +339,21 @@ public class CCDrawNodeRetained : CCNode
         int start = handle.StartIndex;
         int count = handle.VertexCount;
 
-        m_vertices.RemoveRange(start, count);
+        _vertices.RemoveRange(start, count);
 
         handle.Active = false;
-        m_shapes.Remove(handle);
+        _shapes.Remove(handle);
 
         // Update start indices for all shapes after the removed one
-        for (int i = 0; i < m_shapes.Count; i++)
+        for (int i = 0; i < _shapes.Count; i++)
         {
-            if (m_shapes[i].StartIndex > start)
+            if (_shapes[i].StartIndex > start)
             {
-                m_shapes[i].StartIndex -= count;
+                _shapes[i].StartIndex -= count;
             }
         }
 
-        m_dirty = true;
+        _dirty = true;
     }
 
     #endregion
@@ -363,39 +363,39 @@ public class CCDrawNodeRetained : CCNode
     /// </summary>
     public void Clear()
     {
-        m_vertices.Clear();
-        for (int i = 0; i < m_shapes.Count; i++)
+        _vertices.Clear();
+        for (int i = 0; i < _shapes.Count; i++)
         {
-            m_shapes[i].Active = false;
+            _shapes[i].Active = false;
         }
-        m_shapes.Clear();
-        m_drawBuffer = null;
-        m_dirty = true;
+        _shapes.Clear();
+        _drawBuffer = null;
+        _dirty = true;
     }
 
     public override void Draw()
     {
-        int vertCount = m_vertices.Count;
+        int vertCount = _vertices.Count;
         if (vertCount == 0) return;
 
-        if (m_dirty)
+        if (_dirty)
         {
-            m_dirty = false;
-            m_drawBufferCount = vertCount;
+            _dirty = false;
+            _drawBufferCount = vertCount;
 
             // Reuse existing array if large enough, otherwise grow
-            if (m_drawBuffer == null || m_drawBuffer.Length < vertCount)
+            if (_drawBuffer == null || _drawBuffer.Length < vertCount)
             {
-                m_drawBuffer = new VertexPositionColor[vertCount];
+                _drawBuffer = new VertexPositionColor[vertCount];
             }
-            m_vertices.CopyTo(m_drawBuffer);
+            _vertices.CopyTo(_drawBuffer);
         }
 
-        if (m_drawBuffer != null && m_drawBufferCount >= 3)
+        if (_drawBuffer != null && _drawBufferCount >= 3)
         {
             CCDrawManager.TextureEnabled = false;
-            CCDrawManager.BlendFunc(m_blendFunc);
-            CCDrawManager.DrawPrimitives(PrimitiveType.TriangleList, m_drawBuffer, 0, m_drawBufferCount / 3);
+            CCDrawManager.BlendFunc(_blendFunc);
+            CCDrawManager.DrawPrimitives(PrimitiveType.TriangleList, _drawBuffer, 0, _drawBufferCount / 3);
         }
     }
 
@@ -408,8 +408,8 @@ public class CCDrawNodeRetained : CCNode
             Owner = this,
             Active = true
         };
-        m_shapes.Add(handle);
-        m_dirty = true;
+        _shapes.Add(handle);
+        _dirty = true;
         return handle;
     }
 
