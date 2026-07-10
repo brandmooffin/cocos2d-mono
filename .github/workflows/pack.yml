@@ -1,14 +1,21 @@
 name: pack (consolidated packages)
 
-# Manual, release-time packing of the NEW consolidated packages
-# (Cocos2D-Mono, Cocos2D-Mono.Box2D, Cocos2D-Mono.Core) introduced in Stage C3/C5.
-# Produces the .nupkg/.snupkg set as a downloadable artifact - uploading to
-# nuget.org stays a manual, human step.
+# Packs the NEW consolidated packages (Cocos2D-Mono, Cocos2D-Mono.Box2D,
+# Cocos2D-Mono.Core) introduced in Stage C3/C5 and uploads the .nupkg/.snupkg set
+# as a downloadable artifact. Uploading to nuget.org stays a manual, human step.
+#
+# Runs automatically on every push to a release/** branch (release staging), so the
+# packages are always freshly built and ready to download for publish - and still
+# available on demand via workflow_dispatch. Because push events use the workflow
+# definition from the pushed ref, this triggers on release branches even before it
+# reaches the default branch.
 #
 # The legacy 12-package line (Cocos2D-Mono.{Platform} / .Core.{Platform})
 # ended with 2.5.10; these consolidated packages replace it (Stage C4).
 
 on:
+  push:
+    branches: ["release/**"]
   workflow_dispatch:
 
 jobs:
