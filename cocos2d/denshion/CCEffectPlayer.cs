@@ -7,13 +7,13 @@ namespace CocosDenshion;
 public class CCEffectPlayer
 {
     public static ulong s_mciError;
-    private SoundEffect m_effect;
+    private SoundEffect _effect;
     private SoundEffectInstance _sfxInstance;
-    private int m_nSoundId;
+    private int _soundId;
 
     public CCEffectPlayer()
     {
-        m_nSoundId = 0;
+        _soundId = 0;
     }
 
     public static float Volume
@@ -44,7 +44,7 @@ public class CCEffectPlayer
 
         try
         {
-            m_effect = CCContentManager.SharedContentManager.Load<SoundEffect>(pFileName);
+            _effect = CCContentManager.SharedContentManager.Load<SoundEffect>(pFileName);
         }
         catch (Exception)
         {
@@ -52,17 +52,17 @@ public class CCEffectPlayer
             if (srcfile.IndexOf('.') > -1)
             {
                 srcfile = srcfile.Substring(0, srcfile.LastIndexOf('.'));
-                m_effect = CCContentManager.SharedContentManager.Load<SoundEffect>(srcfile);
+                _effect = CCContentManager.SharedContentManager.Load<SoundEffect>(srcfile);
             }
         }
         // Do not get an instance here b/c it is very slow. 
-        //_sfxInstance = m_effect.CreateInstance();
-        m_nSoundId = uId;
+        //_sfxInstance = _effect.CreateInstance();
+        _soundId = uId;
     }
 
     public void Play(bool bLoop)
     {
-        if (null == m_effect)
+        if (null == _effect)
         {
             return;
         }
@@ -70,7 +70,7 @@ public class CCEffectPlayer
         {
             // If looping, then get an instance of this sound effect so that it can be
             // stopped.
-            _sfxInstance = m_effect.CreateInstance();
+            _sfxInstance = _effect.CreateInstance();
             _sfxInstance.IsLooped = true;
         }
         if (_sfxInstance != null)
@@ -79,7 +79,7 @@ public class CCEffectPlayer
         }
         else
         {
-            m_effect.Play();
+            _effect.Play();
         }
     }
 
@@ -95,7 +95,7 @@ public class CCEffectPlayer
     /// <param name="volume">Volume from 0.0 to 1.0.</param>
     public void Play(bool bLoop, float volume)
     {
-        if (null == m_effect)
+        if (null == _effect)
         {
             return;
         }
@@ -103,7 +103,7 @@ public class CCEffectPlayer
         // For non-looping sounds without instance control, use the lightweight static Play
         if (!bLoop)
         {
-            m_effect.Play(Math.Max(0f, Math.Min(1f, volume)), 0f, 0f);
+            _effect.Play(Math.Max(0f, Math.Min(1f, volume)), 0f, 0f);
             return;
         }
 
@@ -114,7 +114,7 @@ public class CCEffectPlayer
             _sfxInstance.Dispose();
         }
 
-        _sfxInstance = m_effect.CreateInstance();
+        _sfxInstance = _effect.CreateInstance();
         _sfxInstance.IsLooped = bLoop;
         _sfxInstance.Volume = Math.Max(0f, Math.Min(1f, volume));
         _sfxInstance.Play();
@@ -126,15 +126,15 @@ public class CCEffectPlayer
     /// </summary>
     internal SoundEffectInstance CreateInstance()
     {
-        if (m_effect == null) return null;
-        return m_effect.CreateInstance();
+        if (_effect == null) return null;
+        return _effect.CreateInstance();
     }
 
     public void Close()
     {
         Stop();
 
-        m_effect = null;
+        _effect = null;
     }
 
     public void Pause()
@@ -181,7 +181,7 @@ public class CCEffectPlayer
 
     public int SoundID
     {
-        get { return m_nSoundId; }
+        get { return _soundId; }
     }
 
     // the volume is gloabal, it will affect other effects' volume
