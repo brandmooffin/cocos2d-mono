@@ -81,7 +81,7 @@ public class CCLightning : CCDrawNode
     /// <summary>
     /// The bolts to draw in this node.
     /// </summary>
-    private List<BoltStatus> _Bolts = new List<BoltStatus>();
+    private List<BoltStatus> _bolts = new List<BoltStatus>();
 
     public CCLightning()
     {
@@ -101,7 +101,7 @@ public class CCLightning : CCDrawNode
     {
 	        base.Update(dt);
         bool bDidDraw = false;
-        foreach (BoltStatus bs in _Bolts)
+        foreach (BoltStatus bs in _bolts)
         {
             bs.CurrentTime += dt;
             if (bs.CurrentTime > bs.Bolt.StrikeTime)
@@ -170,12 +170,12 @@ public class CCLightning : CCDrawNode
     public override void Clear()
     {
         base.Clear();
-        _Bolts.Clear();
+        _bolts.Clear();
     }
 
     public void AddBolt(CCLightningBolt bolt) 
     {
-        _Bolts.Add(new BoltStatus() { 
+        _bolts.Add(new BoltStatus() { 
             Bolt = bolt, 
             Segments = CreateBolt(bolt.Start, bolt.End),
             CurrentTime = 0f,
