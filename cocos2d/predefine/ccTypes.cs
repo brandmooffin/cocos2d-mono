@@ -28,1148 +28,1148 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+
+public enum CCLineCap
 {
+    Butt,
+    Round,
+    Square,
+}
 
-    public enum CCLineCap
+/// <summary>
+/// RGB color composed of bytes 3 bytes
+/// @since v0.8
+/// </summary>
+public struct CCColor3B
+{
+    //ccColor3B predefined colors
+    //! White color (255,255,255)
+    public static readonly CCColor3B White = new CCColor3B(255, 255, 255);
+    //! Yellow color (255,255,0)
+    public static readonly CCColor3B Yellow = new CCColor3B(255, 255, 0);
+    //! Blue color (0,0,255)
+    public static readonly CCColor3B Blue = new CCColor3B(0, 0, 255);
+    //! Green Color (0,255,0)
+    public static readonly CCColor3B Green = new CCColor3B(0, 255, 0);
+    //! Red Color (255,0,0,)
+    public static readonly CCColor3B Red = new CCColor3B(255, 0, 0);
+    //! Magenta Color (255,0,255)
+    public static readonly CCColor3B Magenta = new CCColor3B(255, 0, 255);
+    //! Black Color (0,0,0)
+    public static readonly CCColor3B Black = new CCColor3B(0, 0, 0);
+    //! Orange Color (255,127,0)
+    public static readonly CCColor3B Orange = new CCColor3B(255, 127, 0);
+    //! Gray Color (166,166,166)
+    public static readonly CCColor3B Gray = new CCColor3B(166, 166, 166);
+    public static readonly CCColor3B DarkGray = new CCColor3B(128, 128, 128);
+
+    /*
+    public CCColor3B()
     {
-        Butt,
-        Round,
-        Square,
+        r = 0;
+        g = 0;
+        b = 0;
+    }
+    */
+    public CCColor3B(byte inr, byte ing, byte inb)
+    {
+        R = inr;
+        G = ing;
+        B = inb;
     }
 
     /// <summary>
-    /// RGB color composed of bytes 3 bytes
-    /// @since v0.8
+    /// Convert Color value of XNA Framework to CCColor3B type
     /// </summary>
-    public struct CCColor3B
+    public CCColor3B(Microsoft.Xna.Framework.Color color)
     {
-        //ccColor3B predefined colors
-        //! White color (255,255,255)
-        public static readonly CCColor3B White = new CCColor3B(255, 255, 255);
-        //! Yellow color (255,255,0)
-        public static readonly CCColor3B Yellow = new CCColor3B(255, 255, 0);
-        //! Blue color (0,0,255)
-        public static readonly CCColor3B Blue = new CCColor3B(0, 0, 255);
-        //! Green Color (0,255,0)
-        public static readonly CCColor3B Green = new CCColor3B(0, 255, 0);
-        //! Red Color (255,0,0,)
-        public static readonly CCColor3B Red = new CCColor3B(255, 0, 0);
-        //! Magenta Color (255,0,255)
-        public static readonly CCColor3B Magenta = new CCColor3B(255, 0, 255);
-        //! Black Color (0,0,0)
-        public static readonly CCColor3B Black = new CCColor3B(0, 0, 0);
-        //! Orange Color (255,127,0)
-        public static readonly CCColor3B Orange = new CCColor3B(255, 127, 0);
-        //! Gray Color (166,166,166)
-        public static readonly CCColor3B Gray = new CCColor3B(166, 166, 166);
-        public static readonly CCColor3B DarkGray = new CCColor3B(128, 128, 128);
+        R = color.R;
+        G = color.G;
+        B = color.B;
+    }
 
-        /*
-        public CCColor3B()
-        {
-            r = 0;
-            g = 0;
-            b = 0;
-        }
-        */
-        public CCColor3B(byte inr, byte ing, byte inb)
-        {
-            R = inr;
-            G = ing;
-            B = inb;
-        }
+    public byte R;
+    public byte G;
+    public byte B;
 
-        /// <summary>
-        /// Convert Color value of XNA Framework to CCColor3B type
-        /// </summary>
-        public CCColor3B(Microsoft.Xna.Framework.Color color)
-        {
-            R = color.R;
-            G = color.G;
-            B = color.B;
-        }
+    public static implicit operator Color(CCColor3B point)
+    {
+        return new Color(point.R, point.G, point.B);
+    }
 
-        public byte R;
-        public byte G;
-        public byte B;
+    public CCColor4B AsColor4B()
+    {
+        return (new CCColor4B(R, G, B, 255));
+    }
 
-        public static implicit operator Color(CCColor3B point)
-        {
-            return new Color(point.R, point.G, point.B);
-        }
+    public CCColor4B AsColor4B(byte alpha)
+    {
+        return (new CCColor4B(R, G, B, alpha));
+    }
 
-        public CCColor4B AsColor4B()
-        {
-            return (new CCColor4B(R, G, B, 255));
-        }
+    public CCColor4F AsColor4F()
+    {
+        return (new CCColor4F(R/255f, G/255f, B/255f, 1f));
+    }
+    public CCColor4F AsColor4F(float alpha)
+    {
+        return (new CCColor4F(R/255f, G/255f, B/255f, alpha));
+    }
+}
 
-        public CCColor4B AsColor4B(byte alpha)
-        {
-            return (new CCColor4B(R, G, B, alpha));
-        }
+/// <summary>
+/// RGBA color composed of 4 bytes
+/// @since v0.8
+/// </summary>
+public struct CCColor4B
+{
+    //ccColor4B predefined colors
+    //! White color (255,255,255)
+    public static readonly CCColor4B White = new CCColor4B(255, 255, 255, 255);
+    //! Yellow color (255,255,0)
+    public static readonly CCColor4B Yellow = new CCColor4B(255, 255, 0, 255);
+    //! Blue color (0,0,255)
+    public static readonly CCColor4B Blue = new CCColor4B(0, 0, 255, 255);
+    //! Green Color (0,255,0)
+    public static readonly CCColor4B Green = new CCColor4B(0, 255, 0, 255);
+    //! Red Color (255,0,0,)
+    public static readonly CCColor4B Red = new CCColor4B(255, 0, 0, 255);
+    //! Magenta Color (255,0,255)
+    public static readonly CCColor4B Magenta = new CCColor4B(255, 0, 255, 255);
+    //! Black Color (0,0,0)
+    public static readonly CCColor4B Black = new CCColor4B(0, 0, 0, 255);
+    //! Orange Color (255,127,0)
+    public static readonly CCColor4B Orange = new CCColor4B(255, 127, 0, 255);
+    //! Gray Color (166,166,166)
+    public static readonly CCColor4B Gray = new CCColor4B(166, 166, 166, 255);
+    public static readonly CCColor4B LightGray = new CCColor4B(211, 211, 211, 255);
+    public static readonly CCColor4B AliceBlue = new CCColor4B(240, 248, 255, 255);
+    public static readonly CCColor4B Aquamarine = new CCColor4B(127, 255, 212, 255);
+    public static readonly CCColor4B Transparent = new CCColor4B(0, 0, 0, 0);
 
-        public CCColor4F AsColor4F()
-        {
-            return (new CCColor4F(R/255f, G/255f, B/255f, 1f));
-        }
-        public CCColor4F AsColor4F(float alpha)
-        {
-            return (new CCColor4F(R/255f, G/255f, B/255f, alpha));
-        }
+    public byte R;
+    public byte G;
+    public byte B;
+    public byte A;
+
+    public CCColor4B(byte inr, byte ing, byte inb)
+    {
+        R = inr;
+        G = ing;
+        B = inb;
+        A = 255;
+    }
+
+    public CCColor4B(byte inr, byte ing, byte inb, byte ina)
+    {
+        R = inr;
+        G = ing;
+        B = inb;
+        A = ina;
+    }
+
+    public CCColor4B(float inr, float ing, float inb, float ina)
+    {
+        R = (byte)inr;
+        G = (byte)ing;
+        B = (byte)inb;
+        A = (byte)ina;
     }
 
     /// <summary>
-    /// RGBA color composed of 4 bytes
-    /// @since v0.8
+    /// Convert Color value of XNA Framework to CCColor4B type
     /// </summary>
-    public struct CCColor4B
+    public CCColor4B(Microsoft.Xna.Framework.Color color)
     {
-        //ccColor4B predefined colors
-        //! White color (255,255,255)
-        public static readonly CCColor4B White = new CCColor4B(255, 255, 255, 255);
-        //! Yellow color (255,255,0)
-        public static readonly CCColor4B Yellow = new CCColor4B(255, 255, 0, 255);
-        //! Blue color (0,0,255)
-        public static readonly CCColor4B Blue = new CCColor4B(0, 0, 255, 255);
-        //! Green Color (0,255,0)
-        public static readonly CCColor4B Green = new CCColor4B(0, 255, 0, 255);
-        //! Red Color (255,0,0,)
-        public static readonly CCColor4B Red = new CCColor4B(255, 0, 0, 255);
-        //! Magenta Color (255,0,255)
-        public static readonly CCColor4B Magenta = new CCColor4B(255, 0, 255, 255);
-        //! Black Color (0,0,0)
-        public static readonly CCColor4B Black = new CCColor4B(0, 0, 0, 255);
-        //! Orange Color (255,127,0)
-        public static readonly CCColor4B Orange = new CCColor4B(255, 127, 0, 255);
-        //! Gray Color (166,166,166)
-        public static readonly CCColor4B Gray = new CCColor4B(166, 166, 166, 255);
-        public static readonly CCColor4B LightGray = new CCColor4B(211, 211, 211, 255);
-        public static readonly CCColor4B AliceBlue = new CCColor4B(240, 248, 255, 255);
-        public static readonly CCColor4B Aquamarine = new CCColor4B(127, 255, 212, 255);
-        public static readonly CCColor4B Transparent = new CCColor4B(0, 0, 0, 0);
+        R = color.R;
+        G = color.G;
+        B = color.B;
+        A = color.A;
+    }
 
-        public byte R;
-        public byte G;
-        public byte B;
-        public byte A;
+    public override string ToString()
+    {
+        return (string.Format("{0},{1},{2},{3}", R, G, B, A));
+    }
 
-        public CCColor4B(byte inr, byte ing, byte inb)
+    public static CCColor4B Parse(string s)
+    {
+        string[] f = s.Split(',');
+        return (new CCColor4B(byte.Parse(f[0]), byte.Parse(f[1]), byte.Parse(f[2]), byte.Parse(f[3])));
+    }
+
+    public static implicit operator Color(CCColor4B point)
+    {
+        return new Color(point.R, point.G, point.B, point.A);
+    }
+
+    public static implicit operator CCColor3B(CCColor4B point)
+    {
+        return new CCColor3B(point.R, point.G, point.B);
+    }
+
+    public static implicit operator CCColor4B(CCColor3B point)
+    {
+        return new CCColor4B(point.R, point.G, point.B, 255);
+    }
+
+    public static implicit operator CCColor4F(CCColor4B point)
+    {
+        return new CCColor4F(point.R / 255f, point.G / 255f, point.B / 255f, point.A / 255f);
+    }
+
+    public static implicit operator CCColor4B(CCColor4F point)
+    {
+        return new CCColor4B(
+            (byte)Math.Min(point.R * 255f, 255f),
+            (byte)Math.Min(point.G * 255f, 255f),
+            (byte)Math.Min(point.B * 255f, 255f),
+            (byte)Math.Min(point.A * 255f, 255f));
+    }
+
+    public static CCColor4B Lerp(CCColor4B value1, CCColor4B value2, float amount)
+    {
+        CCColor4B color;
+
+        color.A = (byte)(value1.A + ((value2.A - value1.A) * amount));
+        color.R = (byte)(value1.R + ((value2.R - value1.R) * amount));
+        color.G = (byte)(value1.G + ((value2.G - value1.G) * amount));
+        color.B = (byte)(value1.B + ((value2.B - value1.B) * amount));
+
+        return color;
+    }
+
+    public static CCColor4B operator *(CCColor4B p1, CCColor4B p2)
+    {
+        return new CCColor4B((byte)(p1.R * p2.R), (byte)(p1.G * p2.G), (byte)(p1.B * p2.B), (byte)(p1.A * p2.A));
+    }
+
+    public static CCColor4B operator *(CCColor4B p1, float scale)
+    {
+        return new CCColor4B((byte)(p1.R * scale), (byte)(p1.G * scale), (byte)(p1.B * scale), (byte)(p1.A * scale));
+    }
+
+    public static CCColor4B operator *(float scale, CCColor4B p1)
+    {
+        return (p1 * scale);
+    }
+
+    public static CCColor4B operator /(CCColor4B p1, float div)
+    {
+        return new CCColor4B((byte)(p1.R / div), (byte)(p1.G / div), (byte)(p1.B / div), (byte)(p1.A / div));
+    }
+
+    public static bool operator ==(CCColor4B p1, CCColor4B p2)
+    {
+        return p1.R == p2.R && p1.G == p2.G && p1.B == p2.B && p1.A == p2.A;
+    }
+
+    public static bool operator !=(CCColor4B p1, CCColor4B p2)
+    {
+        return p1.R != p2.R || p1.G != p2.G || p1.B != p2.B || p1.A != p2.A;
+    }
+}
+
+/// <summary>
+/// RGBA color composed of 4 floats
+/// @since v0.8
+/// </summary>
+public struct CCColor4F
+{
+    public static readonly CCColor4F White = new CCColor4F(1f, 1f, 1f, 1f);
+    public static readonly CCColor4F Black = new CCColor4F(0f, 0f, 0f, 1f);
+    public static readonly CCColor4F Red = new CCColor4F(1f, 0f, 0f, 1f);
+    public static readonly CCColor4F Green = new CCColor4F(0f, 1f, 0f, 1f);
+    public static readonly CCColor4F Blue = new CCColor4F(0f, 0f, 1f, 1f);
+    public static readonly CCColor4F Yellow = new CCColor4F(1f, 1f, 0f, 1f);
+    public static readonly CCColor4F Magenta = new CCColor4F(1f, 0f, 1f, 1f);
+    public static readonly CCColor4F Orange = new CCColor4F(1f, 0.5f, 0f, 1f);
+    public static readonly CCColor4F Gray = new CCColor4F(0.65f, 0.65f, 0.65f, 1f);
+    public static readonly CCColor4F Transparent = new CCColor4F(0f, 0f, 0f, 0f);
+
+    public CCColor4F(float inr, float ing, float inb, float ina)
+    {
+        R = inr;
+        G = ing;
+        B = inb;
+        A = ina;
+    }
+
+    public float R;
+    public float G;
+    public float B;
+    public float A;
+
+    public override string ToString()
+    {
+        return (string.Format("{0},{1},{2},{3}", R, G, B, A));
+    }
+
+    public static CCColor4F Parse(string s)
+    {
+        string[] f = s.Split(',');
+        if (f.Length == 4)
         {
-            R = inr;
-            G = ing;
-            B = inb;
-            A = 255;
+            return (new CCColor4F(float.Parse(f[0]), float.Parse(f[1]), float.Parse(f[2]), float.Parse(f[3])));
         }
+        return (new CCColor4F(float.Parse(f[0]), float.Parse(f[1]), float.Parse(f[2]), 1f));
+    }
 
-        public CCColor4B(byte inr, byte ing, byte inb, byte ina)
-        {
-            R = inr;
-            G = ing;
-            B = inb;
-            A = ina;
-        }
+    public static implicit operator Color(CCColor4F point)
+    {
+        return new Color(point.R, point.G, point.B, point.A);
+    }
 
-        public CCColor4B(float inr, float ing, float inb, float ina)
-        {
-            R = (byte)inr;
-            G = (byte)ing;
-            B = (byte)inb;
-            A = (byte)ina;
-        }
+    public static implicit operator CCColor3B(CCColor4F point)
+    {
+        return new CCColor3B((byte)(point.R * point.A * 255f), (byte)(point.G*point.A*255f), (byte)(point.B*point.A*255));
+    }
 
-        /// <summary>
-        /// Convert Color value of XNA Framework to CCColor4B type
-        /// </summary>
-        public CCColor4B(Microsoft.Xna.Framework.Color color)
-        {
-            R = color.R;
-            G = color.G;
-            B = color.B;
-            A = color.A;
-        }
+    public static implicit operator CCColor4F(CCColor3B point)
+    {
+        return new CCColor4F((float)point.R/255f, (float)point.G/255f, (float)point.B/255f, 1f);
+    }
 
-        public override string ToString()
-        {
-            return (string.Format("{0},{1},{2},{3}", R, G, B, A));
-        }
+    public static CCColor4F operator +(CCColor4F c, float amt)
+    {
+        CCColor4F nc = new CCColor4F(c.R + amt, c.G + amt, c.B + amt, c.A);
+        return (nc);
+    }
 
-        public static CCColor4B Parse(string s)
-        {
-            string[] f = s.Split(',');
-            return (new CCColor4B(byte.Parse(f[0]), byte.Parse(f[1]), byte.Parse(f[2]), byte.Parse(f[3])));
-        }
+    public static CCColor4F operator *(CCColor4F c, float amt) 
+    {
+        CCColor4F nc = new CCColor4F(c.R * amt, c.G * amt, c.B * amt, c.A);
+        return (nc);
+    }
 
-        public static implicit operator Color(CCColor4B point)
-        {
-            return new Color(point.R, point.G, point.B, point.A);
-        }
+    public static CCColor4F operator /(CCColor4F c, float amt)
+    {
+        CCColor4F nc = new CCColor4F(c.R / amt, c.G / amt, c.B / amt, c.A);
+        return (nc);
+    }
 
-        public static implicit operator CCColor3B(CCColor4B point)
-        {
-            return new CCColor3B(point.R, point.G, point.B);
-        }
+    public static CCColor4F Lerp(CCColor4F value1, CCColor4F value2, float amount)
+    {
+        CCColor4F color;
 
-        public static implicit operator CCColor4B(CCColor3B point)
-        {
-            return new CCColor4B(point.R, point.G, point.B, 255);
-        }
+        color.A = (value1.A + ((value2.A - value1.A) * amount));
+        color.R = (value1.R + ((value2.R - value1.R) * amount));
+        color.G = (value1.G + ((value2.G - value1.G) * amount));
+        color.B = (value1.B + ((value2.B - value1.B) * amount));
 
-        public static implicit operator CCColor4F(CCColor4B point)
-        {
-            return new CCColor4F(point.R / 255f, point.G / 255f, point.B / 255f, point.A / 255f);
-        }
+        return color;
+    }
 
-        public static implicit operator CCColor4B(CCColor4F point)
-        {
-            return new CCColor4B(
-                (byte)Math.Min(point.R * 255f, 255f),
-                (byte)Math.Min(point.G * 255f, 255f),
-                (byte)Math.Min(point.B * 255f, 255f),
-                (byte)Math.Min(point.A * 255f, 255f));
-        }
+    public static bool operator ==(CCColor4F p1, CCColor4F p2)
+    {
+        return p1.R == p2.R && p1.G == p2.G && p1.B == p2.B && p1.A == p2.A;
+    }
 
-        public static CCColor4B Lerp(CCColor4B value1, CCColor4B value2, float amount)
-        {
-            CCColor4B color;
+    public static bool operator !=(CCColor4F p1, CCColor4F p2)
+    {
+        return p1.R != p2.R || p1.G != p2.G || p1.B != p2.B || p1.A != p2.A;
+    }
+}
 
-            color.A = (byte)(value1.A + ((value2.A - value1.A) * amount));
-            color.R = (byte)(value1.R + ((value2.R - value1.R) * amount));
-            color.G = (byte)(value1.G + ((value2.G - value1.G) * amount));
-            color.B = (byte)(value1.B + ((value2.B - value1.B) * amount));
+/// <summary>
+/// A vertex composed of 2 floats: x, y
+/// @since v0.8
+/// </summary>
+public struct CCVertex2F
+{
+    /*
+    public ccVertex2F()
+    {
+        x = 0.0f;
+        y = 0.0f;
+    }
+    */
 
-            return color;
-        }
+    public CCVertex2F(float inx, float iny)
+    {
+        X = inx;
+        Y = iny;
+    }
 
-        public static CCColor4B operator *(CCColor4B p1, CCColor4B p2)
-        {
-            return new CCColor4B((byte)(p1.R * p2.R), (byte)(p1.G * p2.G), (byte)(p1.B * p2.B), (byte)(p1.A * p2.A));
-        }
+    public float X;
+    public float Y;
+}
 
-        public static CCColor4B operator *(CCColor4B p1, float scale)
-        {
-            return new CCColor4B((byte)(p1.R * scale), (byte)(p1.G * scale), (byte)(p1.B * scale), (byte)(p1.A * scale));
-        }
+/// <summary>
+/// A vertex composed of 2 floats: x, y
+/// @since v0.8
+/// </summary>
+public struct CCVertex3F
+{
+    public static readonly CCVertex3F Zero = new CCVertex3F();
 
-        public static CCColor4B operator *(float scale, CCColor4B p1)
-        {
-            return (p1 * scale);
-        }
+    public CCVertex3F(float inx, float iny, float inz)
+    {
+        X = inx;
+        Y = iny;
+        Z = inz;
+    }
 
-        public static CCColor4B operator /(CCColor4B p1, float div)
-        {
-            return new CCColor4B((byte)(p1.R / div), (byte)(p1.G / div), (byte)(p1.B / div), (byte)(p1.A / div));
-        }
+    public float X;
+    public float Y;
+    public float Z;
 
-        public static bool operator ==(CCColor4B p1, CCColor4B p2)
-        {
-            return p1.R == p2.R && p1.G == p2.G && p1.B == p2.B && p1.A == p2.A;
-        }
+    public override string ToString()
+    {
+        return String.Format("ccVertex3F x:{0}, y:{1}, z:{2}", X, Y, Z);
+    }
+}
 
-        public static bool operator !=(CCColor4B p1, CCColor4B p2)
-        {
-            return p1.R != p2.R || p1.G != p2.G || p1.B != p2.B || p1.A != p2.A;
-        }
+/// <summary>
+/// A texcoord composed of 2 floats: u, y
+/// @since v0.8
+/// </summary>
+public struct CCTex2F
+{
+    /*
+    public ccTex2F()
+    {
+        u = 0.0f;
+        v = 0.0f;
+    }
+    */
+    public CCTex2F(float inu, float inv)
+    {
+        U = inu;
+        V = inv;
+    }
+
+    public float U;
+    public float V;
+
+    public override string ToString()
+    {
+        return String.Format("ccTex2F u:{0}, v:{1}", U, V);
+    }
+}
+
+/// <summary>
+/// Point Sprite component
+/// </summary>
+public class CCPointSprite
+{
+    public CCPointSprite()
+    {
+        Position = new CCVertex2F();
+        Color = new CCColor4B();
+        Size = 0.0f;
+    }
+
+    public CCVertex2F Position;		// 8 bytes
+    public CCColor4B Color;		// 4 bytes
+    public float Size;		// 4 bytes
+}
+
+/// <summary>
+/// A 2D Quad. 4 * 2 floats
+/// </summary>
+public class CCQuad2
+{
+    public CCQuad2()
+    {
+        TopLeft = new CCVertex2F();
+        TopRight = new CCVertex2F();
+        BottomLeft = new CCVertex2F();
+        BottomRight = new CCVertex2F();
+    }
+
+    public CCVertex2F TopLeft;
+    public CCVertex2F TopRight;
+    public CCVertex2F BottomLeft;
+    public CCVertex2F BottomRight;
+}
+
+/// <summary>
+/// A 3D Quad. 4 * 3 floats
+/// </summary>
+public struct CCQuad3
+{
+    /*
+    public ccQuad3()
+    {
+        tl = new ccVertex3F();
+        tr = new ccVertex3F();
+        bl = new ccVertex3F();
+        br = new ccVertex3F();
+    }
+    */
+    public CCVertex3F BottomLeft;
+    public CCVertex3F BottomRight;
+    public CCVertex3F TopLeft;
+    public CCVertex3F TopRight;
+}
+
+/// <summary>
+/// A 2D grid size
+/// </summary>
+public struct CCGridSize
+{
+    public CCGridSize(int inx, int iny)
+    {
+        X = inx;
+        Y = iny;
+    }
+
+    public int X;
+    public int Y;
+}
+
+public struct CCPointI
+{
+    public int X;
+    public int Y;
+
+    public CCPointI(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    public int Distance(ref CCPointI p)
+    {
+        var hside = X - p.X;
+        var vside = Y - p.Y;
+
+        return (int)Math.Sqrt(hside * hside + vside * vside);
+    }
+
+    public int DistanceSQ(ref CCPointI p)
+    {
+        var hside = X - p.X;
+        var vside = Y - p.Y;
+
+        return hside * hside + vside * vside;
+    }
+
+    public bool Equals(ref CCPointI p)
+    {
+        return X == p.X && Y == p.Y;
+    }
+
+    public static implicit operator CCPoint(CCPointI p)
+    {
+        return new CCPoint(p.X, p.Y);
+    }
+
+    #region Operator Overloads
+
+    public static bool operator ==(CCPointI p1, CCPointI p2)
+    {
+        return p1.X == p2.X && p1.Y == p2.Y;
+    }
+
+    public static bool operator !=(CCPointI p1, CCPointI p2)
+    {
+        return p1.X != p2.X || p1.Y != p2.Y;
+    }
+
+    public static CCPointI operator -(CCPointI p1, CCPointI p2)
+    {
+        CCPointI pt;
+        pt.X = p1.X - p2.X;
+        pt.Y = p1.Y - p2.Y;
+        return pt;
+    }
+
+    public static CCPointI operator -(CCPointI p1)
+    {
+        CCPointI pt;
+        pt.X = -p1.X;
+        pt.Y = -p1.Y;
+        return pt;
+    }
+
+    public static CCPointI operator +(CCPointI p1, CCPointI p2)
+    {
+        CCPointI pt;
+        pt.X = p1.X + p2.X;
+        pt.Y = p1.Y + p2.Y;
+        return pt;
+    }
+
+    public static CCPointI operator +(CCPointI p1)
+    {
+        CCPointI pt;
+        pt.X = +p1.X;
+        pt.Y = +p1.Y;
+        return pt;
+    }
+
+    #endregion
+}
+
+public struct CCSizeI
+{
+    public int Width;
+    public int Height;
+
+    public CCSizeI(int width, int height)
+    {
+        Width = width;
+        Height = height;
+    }
+
+    public static implicit operator CCSize(CCSizeI p)
+    {
+        return new CCSize(p.Width, p.Height);
+    }
+}
+
+public struct CCBoundingBoxI
+{
+    public static readonly CCBoundingBoxI Zero = new CCBoundingBoxI(0, 0, 0, 0);
+    public static readonly CCBoundingBoxI Null = new CCBoundingBoxI(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
+
+    public int MinX;
+    public int MinY;
+    public int MaxX;
+    public int MaxY;
+
+    public CCBoundingBoxI(int minx, int miny, int maxx, int maxy)
+    {
+        MinX = minx;
+        MinY = miny;
+        MaxX = maxx;
+        MaxY = maxy;
+    }
+
+    public CCSizeI Size
+    {
+        get { return new CCSizeI(MaxX - MinX, MaxY - MinY); }
+    }
+
+    public void ExpandToCircle(int x, int y, int radius)
+    {
+        Debug.Assert(radius >= 0);
+
+        MinX = Math.Min(MinX, x - radius);
+        MinY = Math.Min(MinY, y - radius);
+        MaxX = Math.Max(MaxX, x + radius);
+        MaxY = Math.Max(MaxY, y + radius);
+    }
+
+    public void ExpandToCircle(ref CCPointI point, int radius)
+    {
+        ExpandToCircle(point.X, point.Y, radius);
+    }
+
+    public void ExpandToPoint(int x, int y)
+    {
+        MinX = Math.Min(MinX, x);
+        MinY = Math.Min(MinY, y);
+        MaxX = Math.Max(MaxX, x);
+        MaxY = Math.Max(MaxY, y);
+    }
+
+    public void ExpandToPoint(ref CCPointI point)
+    {
+        ExpandToPoint(point.X, point.Y);
+    }
+
+    public void ExpandToRect(ref CCBoundingBoxI r)
+    {
+        MinX = Math.Min(MinX, r.MinX);
+        MinY = Math.Min(MinY, r.MinY);
+        MaxX = Math.Max(MaxX, r.MaxX);
+        MaxY = Math.Max(MaxY, r.MaxY);
+    }
+
+    public bool ContainsPoint(int x, int y)
+    {
+        return x >= MinX && x <= MaxX && y >= MinY && y <= MaxY;
+    }
+
+    public bool Intersects(ref CCBoundingBoxI rect)
+    {
+        return !(MaxX < rect.MinX || rect.MaxX < MinX || MaxY < rect.MinY || rect.MaxY < MinY);
+    }
+
+    public void SetLerp(CCBoundingBoxI a, CCBoundingBoxI b, float ratio)
+    {
+        MinX = CCMathHelper.Lerp(a.MinX, b.MinX, ratio);
+        MinY = CCMathHelper.Lerp(a.MinY, b.MinY, ratio);
+        MaxX = CCMathHelper.Lerp(a.MaxX, b.MaxX, ratio);
+        MaxY = CCMathHelper.Lerp(a.MaxY, b.MaxY, ratio);
+    }
+
+    public CCBoundingBoxI Transform(ref CCAffineTransform matrix)
+    {
+        var top = MinY;
+        var left = MinX;
+        var right = MaxX;
+        var bottom = MaxY;
+
+        var topLeft = new CCPointI(left, top);
+        var topRight = new CCPointI(right, top);
+        var bottomLeft = new CCPointI(left, bottom);
+        var bottomRight = new CCPointI(right, bottom);
+
+        matrix.Transform(ref topLeft.X, ref topLeft.Y);
+        matrix.Transform(ref topRight.X, ref topRight.Y);
+        matrix.Transform(ref bottomLeft.X, ref bottomLeft.Y);
+        matrix.Transform(ref bottomRight.X, ref bottomRight.Y);
+
+        int minX = Math.Min(Math.Min(topLeft.X, topRight.X), Math.Min(bottomLeft.X, bottomRight.X));
+        int maxX = Math.Max(Math.Max(topLeft.X, topRight.X), Math.Max(bottomLeft.X, bottomRight.X));
+        int minY = Math.Min(Math.Min(topLeft.Y, topRight.Y), Math.Min(bottomLeft.Y, bottomRight.Y));
+        int maxY = Math.Max(Math.Max(topLeft.Y, topRight.Y), Math.Max(bottomLeft.Y, bottomRight.Y));
+
+        return new CCBoundingBoxI(minX, minY, maxX, maxY);
+    }
+
+    public static implicit operator CCRect(CCBoundingBoxI box)
+    {
+        return new CCRect(box.MinX, box.MinY, box.MaxX - box.MinX, box.MaxY - box.MinY);
+    }
+
+    public static bool operator ==(CCBoundingBoxI b1, CCBoundingBoxI b2)
+    {
+        return b1.MinX == b2.MinX && b1.MaxX == b2.MaxX && b1.MinY == b2.MinY && b1.MaxY == b2.MaxY;
+    }
+
+    public static bool operator !=(CCBoundingBoxI b1, CCBoundingBoxI b2)
+    {
+        return b1.MinX != b2.MinX || b1.MaxX != b2.MaxX || b1.MinY != b2.MinY || b1.MaxY != b2.MaxY;
+    }
+}
+
+/// <summary>
+/// a Point with a vertex point, a tex coord point and a color 4B
+/// </summary>
+public class CCV2F_C4B_T2F
+{
+    public CCV2F_C4B_T2F()
+    {
+        Vertices = new CCVertex2F();
+        Colors = new CCColor4B();
+        TexCoords = new CCTex2F();
     }
 
     /// <summary>
-    /// RGBA color composed of 4 floats
-    /// @since v0.8
+    /// vertices (2F)
     /// </summary>
-    public struct CCColor4F
+    public CCVertex2F Vertices;
+
+    /// <summary>
+    /// colors (4B)
+    /// </summary>
+    public CCColor4B Colors;
+
+    /// <summary>
+    /// tex coords (2F)
+    /// </summary>
+    public CCTex2F TexCoords;
+}
+
+/// <summary>
+/// a Point with a vertex point, a tex coord point and a color 4F
+/// </summary>
+public class CCV2F_C4F_T2F
+{
+    public CCV2F_C4F_T2F()
     {
-        public static readonly CCColor4F White = new CCColor4F(1f, 1f, 1f, 1f);
-        public static readonly CCColor4F Black = new CCColor4F(0f, 0f, 0f, 1f);
-        public static readonly CCColor4F Red = new CCColor4F(1f, 0f, 0f, 1f);
-        public static readonly CCColor4F Green = new CCColor4F(0f, 1f, 0f, 1f);
-        public static readonly CCColor4F Blue = new CCColor4F(0f, 0f, 1f, 1f);
-        public static readonly CCColor4F Yellow = new CCColor4F(1f, 1f, 0f, 1f);
-        public static readonly CCColor4F Magenta = new CCColor4F(1f, 0f, 1f, 1f);
-        public static readonly CCColor4F Orange = new CCColor4F(1f, 0.5f, 0f, 1f);
-        public static readonly CCColor4F Gray = new CCColor4F(0.65f, 0.65f, 0.65f, 1f);
-        public static readonly CCColor4F Transparent = new CCColor4F(0f, 0f, 0f, 0f);
+        Vertices = new CCVertex2F();
+        Colors = new CCColor4F();
+        TexCoords = new CCTex2F();
+    }
 
-        public CCColor4F(float inr, float ing, float inb, float ina)
-        {
-            R = inr;
-            G = ing;
-            B = inb;
-            A = ina;
-        }
+    /// <summary>
+    /// vertices (2F)
+    /// </summary>
+    public CCVertex2F Vertices;
 
-        public float R;
-        public float G;
-        public float B;
-        public float A;
+    /// <summary>
+    /// colors (4F)
+    /// </summary>
+    public CCColor4F Colors;
 
-        public override string ToString()
-        {
-            return (string.Format("{0},{1},{2},{3}", R, G, B, A));
-        }
+    /// <summary>
+    /// tex coords (2F)
+    /// </summary>
+    public CCTex2F TexCoords;
+}
 
-        public static CCColor4F Parse(string s)
-        {
-            string[] f = s.Split(',');
-            if (f.Length == 4)
+/// <summary>
+/// a Point with a vertex point and a color 4B
+/// </summary>
+public struct CCV3F_C4B : IVertexType
+{
+    public static readonly VertexDeclaration VertexDeclaration;
+
+    public CCVertex3F Vertices;
+    public CCColor4B Colors;
+
+    VertexDeclaration IVertexType.VertexDeclaration
+    {
+        get { return VertexDeclaration; }
+    }
+
+    public CCV3F_C4B(CCVertex3F position, CCColor4B color)
+    {
+        this.Vertices = position;
+        Colors = color;
+    }
+
+    public CCV3F_C4B(CCPoint position, CCColor4B color)
+    {
+        this.Vertices = CCVertex3F.Zero;
+        this.Vertices.X = position.X;
+        this.Vertices.Y = position.Y;
+        Colors = color;
+    }
+
+    static CCV3F_C4B()
+    {
+        var elements = new VertexElement[]
             {
-                return (new CCColor4F(float.Parse(f[0]), float.Parse(f[1]), float.Parse(f[2]), float.Parse(f[3])));
-            }
-            return (new CCColor4F(float.Parse(f[0]), float.Parse(f[1]), float.Parse(f[2]), 1f));
-        }
-
-        public static implicit operator Color(CCColor4F point)
-        {
-            return new Color(point.R, point.G, point.B, point.A);
-        }
-
-        public static implicit operator CCColor3B(CCColor4F point)
-        {
-            return new CCColor3B((byte)(point.R * point.A * 255f), (byte)(point.G*point.A*255f), (byte)(point.B*point.A*255));
-        }
-
-        public static implicit operator CCColor4F(CCColor3B point)
-        {
-            return new CCColor4F((float)point.R/255f, (float)point.G/255f, (float)point.B/255f, 1f);
-        }
-
-        public static CCColor4F operator +(CCColor4F c, float amt)
-        {
-            CCColor4F nc = new CCColor4F(c.R + amt, c.G + amt, c.B + amt, c.A);
-            return (nc);
-        }
-
-        public static CCColor4F operator *(CCColor4F c, float amt) 
-        {
-            CCColor4F nc = new CCColor4F(c.R * amt, c.G * amt, c.B * amt, c.A);
-            return (nc);
-        }
-
-        public static CCColor4F operator /(CCColor4F c, float amt)
-        {
-            CCColor4F nc = new CCColor4F(c.R / amt, c.G / amt, c.B / amt, c.A);
-            return (nc);
-        }
-
-        public static CCColor4F Lerp(CCColor4F value1, CCColor4F value2, float amount)
-        {
-            CCColor4F color;
-
-            color.A = (value1.A + ((value2.A - value1.A) * amount));
-            color.R = (value1.R + ((value2.R - value1.R) * amount));
-            color.G = (value1.G + ((value2.G - value1.G) * amount));
-            color.B = (value1.B + ((value2.B - value1.B) * amount));
-
-            return color;
-        }
-
-        public static bool operator ==(CCColor4F p1, CCColor4F p2)
-        {
-            return p1.R == p2.R && p1.G == p2.G && p1.B == p2.B && p1.A == p2.A;
-        }
-
-        public static bool operator !=(CCColor4F p1, CCColor4F p2)
-        {
-            return p1.R != p2.R || p1.G != p2.G || p1.B != p2.B || p1.A != p2.A;
-        }
+                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+                new VertexElement(12, VertexElementFormat.Color, VertexElementUsage.Color, 0),
+            };
+        VertexDeclaration = new VertexDeclaration(elements);
     }
+}
+
+/// <summary>
+/// a Point with a vertex point, a tex coord point and a color 4B
+/// </summary>
+//TODO: Use VertexPositionColorTexture
+public struct CCV3F_C4B_T2F : IVertexType
+{
+    /// <summary>
+    /// vertices (3F)
+    /// </summary>
+    public CCVertex3F Vertices;			// 12 bytes
 
     /// <summary>
-    /// A vertex composed of 2 floats: x, y
-    /// @since v0.8
+    /// colors (4B)
     /// </summary>
-    public struct CCVertex2F
-    {
-        /*
-        public ccVertex2F()
-        {
-            x = 0.0f;
-            y = 0.0f;
-        }
-        */
-
-        public CCVertex2F(float inx, float iny)
-        {
-            X = inx;
-            Y = iny;
-        }
-
-        public float X;
-        public float Y;
-    }
+    public CCColor4B Colors;				// 4 bytes
 
     /// <summary>
-    /// A vertex composed of 2 floats: x, y
-    /// @since v0.8
+    /// tex coords (2F)
     /// </summary>
-    public struct CCVertex3F
+    public CCTex2F TexCoords;			// 8 byts
+
+    public static readonly VertexDeclaration VertexDeclaration;
+
+    static CCV3F_C4B_T2F()
     {
-        public static readonly CCVertex3F Zero = new CCVertex3F();
-
-        public CCVertex3F(float inx, float iny, float inz)
-        {
-            X = inx;
-            Y = iny;
-            Z = inz;
-        }
-
-        public float X;
-        public float Y;
-        public float Z;
-
-        public override string ToString()
-        {
-            return String.Format("ccVertex3F x:{0}, y:{1}, z:{2}", X, Y, Z);
-        }
-    }
-
-    /// <summary>
-    /// A texcoord composed of 2 floats: u, y
-    /// @since v0.8
-    /// </summary>
-    public struct CCTex2F
-    {
-        /*
-        public ccTex2F()
-        {
-            u = 0.0f;
-            v = 0.0f;
-        }
-        */
-        public CCTex2F(float inu, float inv)
-        {
-            U = inu;
-            V = inv;
-        }
-
-        public float U;
-        public float V;
-
-        public override string ToString()
-        {
-            return String.Format("ccTex2F u:{0}, v:{1}", U, V);
-        }
-    }
-
-    /// <summary>
-    /// Point Sprite component
-    /// </summary>
-    public class CCPointSprite
-    {
-        public CCPointSprite()
-        {
-            Position = new CCVertex2F();
-            Color = new CCColor4B();
-            Size = 0.0f;
-        }
-
-        public CCVertex2F Position;		// 8 bytes
-        public CCColor4B Color;		// 4 bytes
-        public float Size;		// 4 bytes
-    }
-
-    /// <summary>
-    /// A 2D Quad. 4 * 2 floats
-    /// </summary>
-    public class CCQuad2
-    {
-        public CCQuad2()
-        {
-            TopLeft = new CCVertex2F();
-            TopRight = new CCVertex2F();
-            BottomLeft = new CCVertex2F();
-            BottomRight = new CCVertex2F();
-        }
-
-        public CCVertex2F TopLeft;
-        public CCVertex2F TopRight;
-        public CCVertex2F BottomLeft;
-        public CCVertex2F BottomRight;
-    }
-
-    /// <summary>
-    /// A 3D Quad. 4 * 3 floats
-    /// </summary>
-    public struct CCQuad3
-    {
-        /*
-        public ccQuad3()
-        {
-            tl = new ccVertex3F();
-            tr = new ccVertex3F();
-            bl = new ccVertex3F();
-            br = new ccVertex3F();
-        }
-        */
-        public CCVertex3F BottomLeft;
-        public CCVertex3F BottomRight;
-        public CCVertex3F TopLeft;
-        public CCVertex3F TopRight;
-    }
-
-    /// <summary>
-    /// A 2D grid size
-    /// </summary>
-    public struct CCGridSize
-    {
-        public CCGridSize(int inx, int iny)
-        {
-            X = inx;
-            Y = iny;
-        }
-
-        public int X;
-        public int Y;
-    }
-
-    public struct CCPointI
-    {
-        public int X;
-        public int Y;
-
-        public CCPointI(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-
-        public int Distance(ref CCPointI p)
-        {
-            var hside = X - p.X;
-            var vside = Y - p.Y;
-
-            return (int)Math.Sqrt(hside * hside + vside * vside);
-        }
-
-        public int DistanceSQ(ref CCPointI p)
-        {
-            var hside = X - p.X;
-            var vside = Y - p.Y;
-
-            return hside * hside + vside * vside;
-        }
-
-        public bool Equals(ref CCPointI p)
-        {
-            return X == p.X && Y == p.Y;
-        }
-
-        public static implicit operator CCPoint(CCPointI p)
-        {
-            return new CCPoint(p.X, p.Y);
-        }
-
-        #region Operator Overloads
-
-        public static bool operator ==(CCPointI p1, CCPointI p2)
-        {
-            return p1.X == p2.X && p1.Y == p2.Y;
-        }
-
-        public static bool operator !=(CCPointI p1, CCPointI p2)
-        {
-            return p1.X != p2.X || p1.Y != p2.Y;
-        }
-
-        public static CCPointI operator -(CCPointI p1, CCPointI p2)
-        {
-            CCPointI pt;
-            pt.X = p1.X - p2.X;
-            pt.Y = p1.Y - p2.Y;
-            return pt;
-        }
-
-        public static CCPointI operator -(CCPointI p1)
-        {
-            CCPointI pt;
-            pt.X = -p1.X;
-            pt.Y = -p1.Y;
-            return pt;
-        }
-
-        public static CCPointI operator +(CCPointI p1, CCPointI p2)
-        {
-            CCPointI pt;
-            pt.X = p1.X + p2.X;
-            pt.Y = p1.Y + p2.Y;
-            return pt;
-        }
-
-        public static CCPointI operator +(CCPointI p1)
-        {
-            CCPointI pt;
-            pt.X = +p1.X;
-            pt.Y = +p1.Y;
-            return pt;
-        }
-
-        #endregion
-    }
-
-    public struct CCSizeI
-    {
-        public int Width;
-        public int Height;
-
-        public CCSizeI(int width, int height)
-        {
-            Width = width;
-            Height = height;
-        }
-
-        public static implicit operator CCSize(CCSizeI p)
-        {
-            return new CCSize(p.Width, p.Height);
-        }
-    }
-
-    public struct CCBoundingBoxI
-    {
-        public static readonly CCBoundingBoxI Zero = new CCBoundingBoxI(0, 0, 0, 0);
-        public static readonly CCBoundingBoxI Null = new CCBoundingBoxI(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
-
-        public int MinX;
-        public int MinY;
-        public int MaxX;
-        public int MaxY;
-
-        public CCBoundingBoxI(int minx, int miny, int maxx, int maxy)
-        {
-            MinX = minx;
-            MinY = miny;
-            MaxX = maxx;
-            MaxY = maxy;
-        }
-
-        public CCSizeI Size
-        {
-            get { return new CCSizeI(MaxX - MinX, MaxY - MinY); }
-        }
-
-        public void ExpandToCircle(int x, int y, int radius)
-        {
-            Debug.Assert(radius >= 0);
-
-            MinX = Math.Min(MinX, x - radius);
-            MinY = Math.Min(MinY, y - radius);
-            MaxX = Math.Max(MaxX, x + radius);
-            MaxY = Math.Max(MaxY, y + radius);
-        }
-
-        public void ExpandToCircle(ref CCPointI point, int radius)
-        {
-            ExpandToCircle(point.X, point.Y, radius);
-        }
-
-        public void ExpandToPoint(int x, int y)
-        {
-            MinX = Math.Min(MinX, x);
-            MinY = Math.Min(MinY, y);
-            MaxX = Math.Max(MaxX, x);
-            MaxY = Math.Max(MaxY, y);
-        }
-
-        public void ExpandToPoint(ref CCPointI point)
-        {
-            ExpandToPoint(point.X, point.Y);
-        }
-
-        public void ExpandToRect(ref CCBoundingBoxI r)
-        {
-            MinX = Math.Min(MinX, r.MinX);
-            MinY = Math.Min(MinY, r.MinY);
-            MaxX = Math.Max(MaxX, r.MaxX);
-            MaxY = Math.Max(MaxY, r.MaxY);
-        }
-
-        public bool ContainsPoint(int x, int y)
-        {
-            return x >= MinX && x <= MaxX && y >= MinY && y <= MaxY;
-        }
-
-        public bool Intersects(ref CCBoundingBoxI rect)
-        {
-            return !(MaxX < rect.MinX || rect.MaxX < MinX || MaxY < rect.MinY || rect.MaxY < MinY);
-        }
-
-        public void SetLerp(CCBoundingBoxI a, CCBoundingBoxI b, float ratio)
-        {
-            MinX = CCMathHelper.Lerp(a.MinX, b.MinX, ratio);
-            MinY = CCMathHelper.Lerp(a.MinY, b.MinY, ratio);
-            MaxX = CCMathHelper.Lerp(a.MaxX, b.MaxX, ratio);
-            MaxY = CCMathHelper.Lerp(a.MaxY, b.MaxY, ratio);
-        }
-
-        public CCBoundingBoxI Transform(ref CCAffineTransform matrix)
-        {
-            var top = MinY;
-            var left = MinX;
-            var right = MaxX;
-            var bottom = MaxY;
-
-            var topLeft = new CCPointI(left, top);
-            var topRight = new CCPointI(right, top);
-            var bottomLeft = new CCPointI(left, bottom);
-            var bottomRight = new CCPointI(right, bottom);
-
-            matrix.Transform(ref topLeft.X, ref topLeft.Y);
-            matrix.Transform(ref topRight.X, ref topRight.Y);
-            matrix.Transform(ref bottomLeft.X, ref bottomLeft.Y);
-            matrix.Transform(ref bottomRight.X, ref bottomRight.Y);
-
-            int minX = Math.Min(Math.Min(topLeft.X, topRight.X), Math.Min(bottomLeft.X, bottomRight.X));
-            int maxX = Math.Max(Math.Max(topLeft.X, topRight.X), Math.Max(bottomLeft.X, bottomRight.X));
-            int minY = Math.Min(Math.Min(topLeft.Y, topRight.Y), Math.Min(bottomLeft.Y, bottomRight.Y));
-            int maxY = Math.Max(Math.Max(topLeft.Y, topRight.Y), Math.Max(bottomLeft.Y, bottomRight.Y));
-
-            return new CCBoundingBoxI(minX, minY, maxX, maxY);
-        }
-
-        public static implicit operator CCRect(CCBoundingBoxI box)
-        {
-            return new CCRect(box.MinX, box.MinY, box.MaxX - box.MinX, box.MaxY - box.MinY);
-        }
-
-        public static bool operator ==(CCBoundingBoxI b1, CCBoundingBoxI b2)
-        {
-            return b1.MinX == b2.MinX && b1.MaxX == b2.MaxX && b1.MinY == b2.MinY && b1.MaxY == b2.MaxY;
-        }
-
-        public static bool operator !=(CCBoundingBoxI b1, CCBoundingBoxI b2)
-        {
-            return b1.MinX != b2.MinX || b1.MaxX != b2.MaxX || b1.MinY != b2.MinY || b1.MaxY != b2.MaxY;
-        }
-    }
-
-    /// <summary>
-    /// a Point with a vertex point, a tex coord point and a color 4B
-    /// </summary>
-    public class CCV2F_C4B_T2F
-    {
-        public CCV2F_C4B_T2F()
-        {
-            Vertices = new CCVertex2F();
-            Colors = new CCColor4B();
-            TexCoords = new CCTex2F();
-        }
-
-        /// <summary>
-        /// vertices (2F)
-        /// </summary>
-        public CCVertex2F Vertices;
-
-        /// <summary>
-        /// colors (4B)
-        /// </summary>
-        public CCColor4B Colors;
-
-        /// <summary>
-        /// tex coords (2F)
-        /// </summary>
-        public CCTex2F TexCoords;
-    }
-
-    /// <summary>
-    /// a Point with a vertex point, a tex coord point and a color 4F
-    /// </summary>
-    public class CCV2F_C4F_T2F
-    {
-        public CCV2F_C4F_T2F()
-        {
-            Vertices = new CCVertex2F();
-            Colors = new CCColor4F();
-            TexCoords = new CCTex2F();
-        }
-
-        /// <summary>
-        /// vertices (2F)
-        /// </summary>
-        public CCVertex2F Vertices;
-
-        /// <summary>
-        /// colors (4F)
-        /// </summary>
-        public CCColor4F Colors;
-
-        /// <summary>
-        /// tex coords (2F)
-        /// </summary>
-        public CCTex2F TexCoords;
-    }
-
-    /// <summary>
-    /// a Point with a vertex point and a color 4B
-    /// </summary>
-    public struct CCV3F_C4B : IVertexType
-    {
-        public static readonly VertexDeclaration VertexDeclaration;
-
-        public CCVertex3F Vertices;
-        public CCColor4B Colors;
-
-        VertexDeclaration IVertexType.VertexDeclaration
-        {
-            get { return VertexDeclaration; }
-        }
-
-        public CCV3F_C4B(CCVertex3F position, CCColor4B color)
-        {
-            this.Vertices = position;
-            Colors = color;
-        }
-
-        public CCV3F_C4B(CCPoint position, CCColor4B color)
-        {
-            this.Vertices = CCVertex3F.Zero;
-            this.Vertices.X = position.X;
-            this.Vertices.Y = position.Y;
-            Colors = color;
-        }
-
-        static CCV3F_C4B()
-        {
-            var elements = new VertexElement[]
-                {
-                    new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
-                    new VertexElement(12, VertexElementFormat.Color, VertexElementUsage.Color, 0),
-                };
-            VertexDeclaration = new VertexDeclaration(elements);
-        }
-    }
-
-    /// <summary>
-    /// a Point with a vertex point, a tex coord point and a color 4B
-    /// </summary>
-    //TODO: Use VertexPositionColorTexture
-    public struct CCV3F_C4B_T2F : IVertexType
-    {
-        /// <summary>
-        /// vertices (3F)
-        /// </summary>
-        public CCVertex3F Vertices;			// 12 bytes
-
-        /// <summary>
-        /// colors (4B)
-        /// </summary>
-        public CCColor4B Colors;				// 4 bytes
-
-        /// <summary>
-        /// tex coords (2F)
-        /// </summary>
-        public CCTex2F TexCoords;			// 8 byts
-
-        public static readonly VertexDeclaration VertexDeclaration;
-
-        static CCV3F_C4B_T2F()
-        {
-            var elements = new VertexElement[]
-                {
-                    new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
-                    new VertexElement(12, VertexElementFormat.Color, VertexElementUsage.Color, 0),
-                    new VertexElement(0x10, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0)
-                };
-            VertexDeclaration = new VertexDeclaration(elements);
-        }
-
-        VertexDeclaration IVertexType.VertexDeclaration
-        {
-            get { return VertexDeclaration; }
-        }
-    }
-
-    /// <summary>
-    /// 4 ccVertex2FTex2FColor4B Quad
-    /// </summary>
-    public class CCV2F_C4B_T2F_Quad
-    {
-        public CCV2F_C4B_T2F_Quad()
-        {
-            BottomLeft = new CCV2F_C4B_T2F();
-            BottomRight = new CCV2F_C4B_T2F();
-            TopLeft = new CCV2F_C4B_T2F();
-            TopRight = new CCV2F_C4B_T2F();
-        }
-
-        /// <summary>
-        /// bottom left
-        /// </summary>
-        public CCV2F_C4B_T2F BottomLeft;
-
-        /// <summary>
-        /// bottom right
-        /// </summary>
-        public CCV2F_C4B_T2F BottomRight;
-
-        /// <summary>
-        /// top left
-        /// </summary>
-        public CCV2F_C4B_T2F TopLeft;
-
-        /// <summary>
-        /// top right
-        /// </summary>
-        public CCV2F_C4B_T2F TopRight;
-    }
-
-    /// <summary>
-    /// 4 ccVertex3FTex2FColor4B
-    /// </summary>
-    public struct CCV3F_C4B_T2F_Quad : IVertexType
-    {
-        /// <summary>
-        /// top left
-        /// </summary>
-        public CCV3F_C4B_T2F TopLeft;
-
-        /// <summary>
-        /// bottom left
-        /// </summary>
-        public CCV3F_C4B_T2F BottomLeft;
-
-        /// <summary>
-        /// top right
-        /// </summary>
-        public CCV3F_C4B_T2F TopRight;
-
-        /// <summary>
-        /// bottom right
-        /// </summary>
-        public CCV3F_C4B_T2F BottomRight;
-
-        public static readonly VertexDeclaration VertexDeclaration;
-
-        static CCV3F_C4B_T2F_Quad()
-        {
-            var elements = new VertexElement[]
-                {
-                    new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
-                    new VertexElement(12, VertexElementFormat.Color, VertexElementUsage.Color, 0),
-                    new VertexElement(0x10, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0)
-                };
-            VertexDeclaration = new VertexDeclaration(elements);
-        }
-
-        VertexDeclaration IVertexType.VertexDeclaration
-        {
-            get { return VertexDeclaration; }
-        }
-    }
-
-    /// <summary>
-    /// 4 ccVertex2FTex2FColor4F Quad
-    /// </summary>
-    public class CCV2F_C4F_T2F_Quad
-    {
-        public CCV2F_C4F_T2F_Quad()
-        {
-            TopLeft = new CCV2F_C4F_T2F();
-            BottomLeft = new CCV2F_C4F_T2F();
-            TopRight = new CCV2F_C4F_T2F();
-            BottomRight = new CCV2F_C4F_T2F();
-        }
-
-        /// <summary>
-        /// bottom left
-        /// </summary>
-        public CCV2F_C4F_T2F BottomLeft;
-
-        /// <summary>
-        /// bottom right
-        /// </summary>
-        public CCV2F_C4F_T2F BottomRight;
-
-        /// <summary>
-        /// top left
-        /// </summary>
-        public CCV2F_C4F_T2F TopLeft;
-
-        /// <summary>
-        /// top right
-        /// </summary>
-        public CCV2F_C4F_T2F TopRight;
-    }
-
-    /// <summary>
-    /// Blend Function used for textures
-    /// </summary>
-    public struct CCBlendFunc
-    {
-        public static readonly CCBlendFunc AlphaBlend = new CCBlendFunc(CCOGLES.GL_ONE, CCOGLES.GL_ONE_MINUS_SRC_ALPHA);
-        public static readonly CCBlendFunc Additive = new CCBlendFunc(CCOGLES.GL_SRC_ALPHA, CCOGLES.GL_ONE);
-        public static readonly CCBlendFunc NonPremultiplied = new CCBlendFunc(CCOGLES.GL_SRC_ALPHA, CCOGLES.GL_ONE_MINUS_SRC_ALPHA);
-        public static readonly CCBlendFunc Opaque = new CCBlendFunc(CCOGLES.GL_ONE, CCOGLES.GL_ZERO);
-
-        public CCBlendFunc(int src, int dst)
-        {
-            this.Source = src;
-            this.Destination = dst;
-        }
-
-        /// <summary>
-        /// source blend function
-        /// </summary>
-        public int Source;
-
-        /// <summary>
-        /// destination blend function
-        /// </summary>
-        public int Destination;
-
-        public static bool operator ==(CCBlendFunc b1, CCBlendFunc b2)
-        {
-            return b1.Source == b2.Source && b1.Destination == b2.Destination;
-        }
-
-        public static bool operator !=(CCBlendFunc b1, CCBlendFunc b2)
-        {
-            return b1.Source != b2.Source || b1.Destination != b2.Destination;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is CCBlendFunc)
+        var elements = new VertexElement[]
             {
-                return this == (CCBlendFunc) obj;
-            }
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+                new VertexElement(12, VertexElementFormat.Color, VertexElementUsage.Color, 0),
+                new VertexElement(0x10, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0)
+            };
+        VertexDeclaration = new VertexDeclaration(elements);
     }
 
-    public enum CCTextAlignment
+    VertexDeclaration IVertexType.VertexDeclaration
     {
-        Left,
-        Center,
-        Right,
+        get { return VertexDeclaration; }
     }
+}
 
-    public enum CCVerticalTextAlignment
+/// <summary>
+/// 4 ccVertex2FTex2FColor4B Quad
+/// </summary>
+public class CCV2F_C4B_T2F_Quad
+{
+    public CCV2F_C4B_T2F_Quad()
     {
-        Top,
-        Center,
-        Bottom
+        BottomLeft = new CCV2F_C4B_T2F();
+        BottomRight = new CCV2F_C4B_T2F();
+        TopLeft = new CCV2F_C4B_T2F();
+        TopRight = new CCV2F_C4B_T2F();
     }
 
-    public enum CCTextLineBreakMode
+    /// <summary>
+    /// bottom left
+    /// </summary>
+    public CCV2F_C4B_T2F BottomLeft;
+
+    /// <summary>
+    /// bottom right
+    /// </summary>
+    public CCV2F_C4B_T2F BottomRight;
+
+    /// <summary>
+    /// top left
+    /// </summary>
+    public CCV2F_C4B_T2F TopLeft;
+
+    /// <summary>
+    /// top right
+    /// </summary>
+    public CCV2F_C4B_T2F TopRight;
+}
+
+/// <summary>
+/// 4 ccVertex3FTex2FColor4B
+/// </summary>
+public struct CCV3F_C4B_T2F_Quad : IVertexType
+{
+    /// <summary>
+    /// top left
+    /// </summary>
+    public CCV3F_C4B_T2F TopLeft;
+
+    /// <summary>
+    /// bottom left
+    /// </summary>
+    public CCV3F_C4B_T2F BottomLeft;
+
+    /// <summary>
+    /// top right
+    /// </summary>
+    public CCV3F_C4B_T2F TopRight;
+
+    /// <summary>
+    /// bottom right
+    /// </summary>
+    public CCV3F_C4B_T2F BottomRight;
+
+    public static readonly VertexDeclaration VertexDeclaration;
+
+    static CCV3F_C4B_T2F_Quad()
     {
-        SmartBreak,
-        WordBreak,
-        CharacterBreak,
-        NoBreak
+        var elements = new VertexElement[]
+            {
+                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+                new VertexElement(12, VertexElementFormat.Color, VertexElementUsage.Color, 0),
+                new VertexElement(0x10, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0)
+            };
+        VertexDeclaration = new VertexDeclaration(elements);
     }
 
-    public class CCTypes
+    VertexDeclaration IVertexType.VertexDeclaration
     {
-        //ccColor3B predefined colors
-        //! White color (255,255,255)
-        public static readonly CCColor3B CCWhite = new CCColor3B(255, 255, 255);
-        //! Yellow color (255,255,0)
-        public static readonly CCColor3B CCYellow = new CCColor3B(255, 255, 0);
-        //! Blue color (0,0,255)
-        public static readonly CCColor3B CCBlue = new CCColor3B(0, 0, 255);
-        //! Green Color (0,255,0)
-        public static readonly CCColor3B CCGreen = new CCColor3B(0, 255, 0);
-        //! Red Color (255,0,0,)
-        public static readonly CCColor3B CCRed = new CCColor3B(255, 0, 0);
-        //! Magenta Color (255,0,255)
-        public static readonly CCColor3B CCMagenta = new CCColor3B(255, 0, 255);
-        //! Black Color (0,0,0)
-        public static readonly CCColor3B CCBlack = new CCColor3B(0, 0, 0);
-        //! Orange Color (255,127,0)
-        public static readonly CCColor3B CCOrange = new CCColor3B(255, 127, 0);
-        //! Gray Color (166,166,166)
-        public static readonly CCColor3B CCGray = new CCColor3B(166, 166, 166);
+        get { return VertexDeclaration; }
+    }
+}
 
-        //! helper macro that creates an ccColor3B type
-        static public CCColor3B CreateColor(byte r, byte g, byte b)
-        {
-            CCColor3B c = new CCColor3B(r, g, b);
-            return c;
-        }
-
-        //! helper macro that creates an ccColor4B type
-        public static CCColor4B CreateColor(byte r, byte g, byte b, byte o)
-        {
-            CCColor4B c = new CCColor4B(r, g, b, o);
-            return c;
-        }
-
-        /** Returns a ccColor4F from a ccColor3B. Alpha will be 1.
-         @since v0.99.1
-         */
-        public static CCColor4F CreateColor(CCColor3B c)
-        {
-            CCColor4F c4 = new CCColor4F(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, 1.0f);
-            return c4;
-        }
-
-        /** Returns a ccColor4F from a ccColor4B.
-         @since v0.99.1
-         */
-        public static CCColor4F CreateColor(CCColor4B c)
-        {
-            CCColor4F c4 = new CCColor4F(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, c.A / 255.0f);
-            return c4;
-        }
-
-        /** returns YES if both ccColor4F are equal. Otherwise it returns NO.
-         @since v0.99.1
-         */
-        public static bool ColorsAreEqual(CCColor4F a, CCColor4F b)
-        {
-            return a.R == b.R && a.G == b.G && a.B == b.B && a.A == b.A;
-        }
-
-        public static CCVertex2F Vertex2(float x, float y)
-        {
-            CCVertex2F c = new CCVertex2F(x, y);
-            return c;
-        }
-
-        public static CCVertex3F Vertex3(float x, float y, float z)
-        {
-            CCVertex3F c = new CCVertex3F(x, y, z);
-            return c;
-        }
-
-        public static CCTex2F Tex2(float u, float v)
-        {
-            CCTex2F t = new CCTex2F(u, v);
-            return t;
-        }
-
-        //! helper function to create a ccGridSize
-        public static CCGridSize GridSize(int x, int y)
-        {
-            CCGridSize v = new CCGridSize(x, y);
-            return v;
-        }
-
-        // Make a color from hue, saturation and value parameters. Hue should be
-        // between 0 and 6, while saturation and value should be between 0 and 1.
-        public static CCColor4F HSVToColor(float h, float s, float v)
-        {
-            if (h == 0 && s == 0)
-                return new CCColor4F(v, v, v, 1f);
-
-            float c = s * v;
-            float x = c * (1 - Math.Abs(h % 2 - 1));
-            float m = v - c;
-
-            if (h < 1) return new CCColor4F(c + m, x + m, m, 1f);
-            else if (h < 2) return new CCColor4F(x + m, c + m, m, 1f);
-            else if (h < 3) return new CCColor4F(m, c + m, x + m, 1f);
-            else if (h < 4) return new CCColor4F(m, x + m, c + m, 1f);
-            else if (h < 5) return new CCColor4F(x + m, m, c + m, 1f);
-            else return new CCColor4F(c + m, m, x + m,1f);
-        }
+/// <summary>
+/// 4 ccVertex2FTex2FColor4F Quad
+/// </summary>
+public class CCV2F_C4F_T2F_Quad
+{
+    public CCV2F_C4F_T2F_Quad()
+    {
+        TopLeft = new CCV2F_C4F_T2F();
+        BottomLeft = new CCV2F_C4F_T2F();
+        TopRight = new CCV2F_C4F_T2F();
+        BottomRight = new CCV2F_C4F_T2F();
     }
 
-}//namespace   cocos2d 
+    /// <summary>
+    /// bottom left
+    /// </summary>
+    public CCV2F_C4F_T2F BottomLeft;
+
+    /// <summary>
+    /// bottom right
+    /// </summary>
+    public CCV2F_C4F_T2F BottomRight;
+
+    /// <summary>
+    /// top left
+    /// </summary>
+    public CCV2F_C4F_T2F TopLeft;
+
+    /// <summary>
+    /// top right
+    /// </summary>
+    public CCV2F_C4F_T2F TopRight;
+}
+
+/// <summary>
+/// Blend Function used for textures
+/// </summary>
+public struct CCBlendFunc
+{
+    public static readonly CCBlendFunc AlphaBlend = new CCBlendFunc(CCOGLES.GL_ONE, CCOGLES.GL_ONE_MINUS_SRC_ALPHA);
+    public static readonly CCBlendFunc Additive = new CCBlendFunc(CCOGLES.GL_SRC_ALPHA, CCOGLES.GL_ONE);
+    public static readonly CCBlendFunc NonPremultiplied = new CCBlendFunc(CCOGLES.GL_SRC_ALPHA, CCOGLES.GL_ONE_MINUS_SRC_ALPHA);
+    public static readonly CCBlendFunc Opaque = new CCBlendFunc(CCOGLES.GL_ONE, CCOGLES.GL_ZERO);
+
+    public CCBlendFunc(int src, int dst)
+    {
+        this.Source = src;
+        this.Destination = dst;
+    }
+
+    /// <summary>
+    /// source blend function
+    /// </summary>
+    public int Source;
+
+    /// <summary>
+    /// destination blend function
+    /// </summary>
+    public int Destination;
+
+    public static bool operator ==(CCBlendFunc b1, CCBlendFunc b2)
+    {
+        return b1.Source == b2.Source && b1.Destination == b2.Destination;
+    }
+
+    public static bool operator !=(CCBlendFunc b1, CCBlendFunc b2)
+    {
+        return b1.Source != b2.Source || b1.Destination != b2.Destination;
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is CCBlendFunc)
+        {
+            return this == (CCBlendFunc) obj;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
+}
+
+public enum CCTextAlignment
+{
+    Left,
+    Center,
+    Right,
+}
+
+public enum CCVerticalTextAlignment
+{
+    Top,
+    Center,
+    Bottom
+}
+
+public enum CCTextLineBreakMode
+{
+    SmartBreak,
+    WordBreak,
+    CharacterBreak,
+    NoBreak
+}
+
+public class CCTypes
+{
+    //ccColor3B predefined colors
+    //! White color (255,255,255)
+    public static readonly CCColor3B CCWhite = new CCColor3B(255, 255, 255);
+    //! Yellow color (255,255,0)
+    public static readonly CCColor3B CCYellow = new CCColor3B(255, 255, 0);
+    //! Blue color (0,0,255)
+    public static readonly CCColor3B CCBlue = new CCColor3B(0, 0, 255);
+    //! Green Color (0,255,0)
+    public static readonly CCColor3B CCGreen = new CCColor3B(0, 255, 0);
+    //! Red Color (255,0,0,)
+    public static readonly CCColor3B CCRed = new CCColor3B(255, 0, 0);
+    //! Magenta Color (255,0,255)
+    public static readonly CCColor3B CCMagenta = new CCColor3B(255, 0, 255);
+    //! Black Color (0,0,0)
+    public static readonly CCColor3B CCBlack = new CCColor3B(0, 0, 0);
+    //! Orange Color (255,127,0)
+    public static readonly CCColor3B CCOrange = new CCColor3B(255, 127, 0);
+    //! Gray Color (166,166,166)
+    public static readonly CCColor3B CCGray = new CCColor3B(166, 166, 166);
+
+    //! helper macro that creates an ccColor3B type
+    static public CCColor3B CreateColor(byte r, byte g, byte b)
+    {
+        CCColor3B c = new CCColor3B(r, g, b);
+        return c;
+    }
+
+    //! helper macro that creates an ccColor4B type
+    public static CCColor4B CreateColor(byte r, byte g, byte b, byte o)
+    {
+        CCColor4B c = new CCColor4B(r, g, b, o);
+        return c;
+    }
+
+    /** Returns a ccColor4F from a ccColor3B. Alpha will be 1.
+     @since v0.99.1
+     */
+    public static CCColor4F CreateColor(CCColor3B c)
+    {
+        CCColor4F c4 = new CCColor4F(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, 1.0f);
+        return c4;
+    }
+
+    /** Returns a ccColor4F from a ccColor4B.
+     @since v0.99.1
+     */
+    public static CCColor4F CreateColor(CCColor4B c)
+    {
+        CCColor4F c4 = new CCColor4F(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, c.A / 255.0f);
+        return c4;
+    }
+
+    /** returns YES if both ccColor4F are equal. Otherwise it returns NO.
+     @since v0.99.1
+     */
+    public static bool ColorsAreEqual(CCColor4F a, CCColor4F b)
+    {
+        return a.R == b.R && a.G == b.G && a.B == b.B && a.A == b.A;
+    }
+
+    public static CCVertex2F Vertex2(float x, float y)
+    {
+        CCVertex2F c = new CCVertex2F(x, y);
+        return c;
+    }
+
+    public static CCVertex3F Vertex3(float x, float y, float z)
+    {
+        CCVertex3F c = new CCVertex3F(x, y, z);
+        return c;
+    }
+
+    public static CCTex2F Tex2(float u, float v)
+    {
+        CCTex2F t = new CCTex2F(u, v);
+        return t;
+    }
+
+    //! helper function to create a ccGridSize
+    public static CCGridSize GridSize(int x, int y)
+    {
+        CCGridSize v = new CCGridSize(x, y);
+        return v;
+    }
+
+    // Make a color from hue, saturation and value parameters. Hue should be
+    // between 0 and 6, while saturation and value should be between 0 and 1.
+    public static CCColor4F HSVToColor(float h, float s, float v)
+    {
+        if (h == 0 && s == 0)
+            return new CCColor4F(v, v, v, 1f);
+
+        float c = s * v;
+        float x = c * (1 - Math.Abs(h % 2 - 1));
+        float m = v - c;
+
+        if (h < 1) return new CCColor4F(c + m, x + m, m, 1f);
+        else if (h < 2) return new CCColor4F(x + m, c + m, m, 1f);
+        else if (h < 3) return new CCColor4F(m, c + m, x + m, 1f);
+        else if (h < 4) return new CCColor4F(m, x + m, c + m, 1f);
+        else if (h < 5) return new CCColor4F(x + m, m, c + m, 1f);
+        else return new CCColor4F(c + m, m, x + m,1f);
+    }
+}
+
+//namespace   cocos2d 
 

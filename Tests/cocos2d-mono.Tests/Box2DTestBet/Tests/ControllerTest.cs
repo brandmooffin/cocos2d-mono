@@ -30,70 +30,69 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class ControllerTest : Test
 {
-    public class ControllerTest : Test
+    private ControllerTest()
     {
-        private ControllerTest()
+        //Ground
+        BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+
+        //Create the gravity controller
+        GravityController gravity = new GravityController(20);
+        gravity.DisabledOnGroup = 3;
+        gravity.EnabledOnGroup = 2;
+        gravity.DisabledOnCategories = Category.Cat2;
+        gravity.EnabledOnCategories = Category.Cat3;
+
+        World.AddController(gravity);
+
+        Vector2 startPosition = new Vector2(-10, 2);
+        Vector2 offset = new Vector2(2);
+
+        //Create the planet
+        Body planet = BodyFactory.CreateBody(World);
+        planet.Position = new Vector2(0, 20);
+
+        CircleShape planetShape = new CircleShape(2, 1);
+        planet.CreateFixture(planetShape);
+
+        //Add the planet as the one that has gravity
+        gravity.AddBody(planet);
+
+        //Create 10 smaller circles
+        for (int i = 0; i < 10; i++)
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Body circle = BodyFactory.CreateBody(World);
+            circle.BodyType = BodyType.Dynamic;
+            circle.Position = startPosition + offset * i;
+            circle.SleepingAllowed = false;
 
-            //Create the gravity controller
-            GravityController gravity = new GravityController(20);
-            gravity.DisabledOnGroup = 3;
-            gravity.EnabledOnGroup = 2;
-            gravity.DisabledOnCategories = Category.Cat2;
-            gravity.EnabledOnCategories = Category.Cat3;
+            CircleShape circleShape = new CircleShape(1, 0.1f);
+            Fixture fix = circle.CreateFixture(circleShape);
+            fix.CollisionCategories = Category.Cat3;
+            fix.CollisionGroup = 2;
 
-            World.AddController(gravity);
-
-            Vector2 startPosition = new Vector2(-10, 2);
-            Vector2 offset = new Vector2(2);
-
-            //Create the planet
-            Body planet = BodyFactory.CreateBody(World);
-            planet.Position = new Vector2(0, 20);
-
-            CircleShape planetShape = new CircleShape(2, 1);
-            planet.CreateFixture(planetShape);
-
-            //Add the planet as the one that has gravity
-            gravity.AddBody(planet);
-
-            //Create 10 smaller circles
-            for (int i = 0; i < 10; i++)
+            if (i == 4)
             {
-                Body circle = BodyFactory.CreateBody(World);
-                circle.BodyType = BodyType.Dynamic;
-                circle.Position = startPosition + offset * i;
-                circle.SleepingAllowed = false;
+                circle.ControllerFilter.IgnoreController(ControllerType.GravityController);
+            }
 
-                CircleShape circleShape = new CircleShape(1, 0.1f);
-                Fixture fix = circle.CreateFixture(circleShape);
-                fix.CollisionCategories = Category.Cat3;
-                fix.CollisionGroup = 2;
+            if (i == 5)
+            {
+                fix.CollisionCategories = Category.Cat2;
+            }
 
-                if (i == 4)
-                {
-                    circle.ControllerFilter.IgnoreController(ControllerType.GravityController);
-                }
-
-                if (i == 5)
-                {
-                    fix.CollisionCategories = Category.Cat2;
-                }
-
-                if (i == 6)
-                {
-                    fix.CollisionGroup = 3;
-                }
+            if (i == 6)
+            {
+                fix.CollisionGroup = 3;
             }
         }
+    }
 
-        public static Test Create()
-        {
-            return new ControllerTest();
-        }
+    public static Test Create()
+    {
+        return new ControllerTest();
     }
 }

@@ -28,8 +28,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public class PlistDictionary : PlistObjectBase, IEnumerable<KeyValuePair<string, PlistObjectBase>>
 	{
 		private List<string> keys;
@@ -68,13 +68,13 @@ namespace Cocos2D
 			}
 		}
 
-        public IList<string> Keys
+    public IList<string> Keys
+    {
+        get
         {
-            get
-            {
-                return (keys);
-            }
+            return (keys);
         }
+    }
 
 		public override void Write (System.Xml.XmlWriter writer)
 		{
@@ -167,11 +167,11 @@ namespace Cocos2D
 		public PlistObjectBase this[string key] {
 			get
 			{
-                PlistObjectBase value;
-                if (dict.TryGetValue(key, out value))
-                    return value;
-                return _null;
-            }
+            PlistObjectBase value;
+            if (dict.TryGetValue(key, out value))
+                return value;
+            return _null;
+        }
 			set {
 				if (keys != null) {
 					if (!dict.ContainsKey (key))
@@ -210,4 +210,3 @@ namespace Cocos2D
 			return GetEnumerator ();
 		}
 	}
-}

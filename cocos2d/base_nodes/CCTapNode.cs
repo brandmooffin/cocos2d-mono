@@ -1,146 +1,145 @@
-﻿using Cocos2D;
-using System;
+﻿using System;
+using Cocos2D;
 
-namespace cocos2d.base_nodes
+namespace cocos2d.base_nodes;
+
+public class CCTapNode<T> : CCNode, IDisposable
 {
-    public class CCTapNode<T> : CCNode, IDisposable
+    public delegate void TapHandler(T data, CCNode node, CCPoint tapLocation);
+    public event TapHandler OnTapped;
+    public delegate void TouchBeginHandler(T data, CCNode node, CCPoint touchLocation);
+    public event TouchBeginHandler OnTouchBegin;
+    private bool _active;
+    protected bool _disposed { get; private set; }
+
+    public CCTapNode(bool isSwallowTouches = true)
     {
-        public delegate void TapHandler(T data, CCNode node, CCPoint tapLocation);
-        public event TapHandler OnTapped;
-        public delegate void TouchBeginHandler(T data, CCNode node, CCPoint touchLocation);
-        public event TouchBeginHandler OnTouchBegin;
-        private bool _active;
-        protected bool _disposed { get; private set; }
+        TouchMode = CCTouchMode.OneByOne;
+        IsSwallowTouches = isSwallowTouches;
 
-        public CCTapNode(bool isSwallowTouches = true)
+        Active = true;
+        Init();
+    }
+
+    public bool IsSwallowTouches { get; set; }
+
+    public virtual T Data { get; set; }
+
+    public bool Active
+    {
+        get
         {
-            TouchMode = CCTouchMode.OneByOne;
-            IsSwallowTouches = isSwallowTouches;
-
-            Active = true;
-            Init();
+            return TouchEnabled;
         }
-
-        public bool IsSwallowTouches { get; set; }
-
-        public virtual T Data { get; set; }
-
-        public bool Active
+        set
         {
-            get
+            TouchEnabled = value;
+        }
+    }
+
+    public override bool TouchBegan(CCTouch touch)
+    {
+        try
+        {
+            if (WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
             {
-                return TouchEnabled;
-            }
-            set
-            {
-                TouchEnabled = value;
+                TouchBegan(touch.Location);
+                return IsSwallowTouches;
             }
         }
-
-        public override bool TouchBegan(CCTouch touch)
+        catch (Exception ex)
         {
-            try
-            {
-                if (WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
-                {
-                    TouchBegan(touch.Location);
-                    return IsSwallowTouches;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("Touch began failed with exception " + ex.Message);
-            }
-            return false;
+            System.Diagnostics.Debug.WriteLine("Touch began failed with exception " + ex.Message);
         }
+        return false;
+    }
 
-        public override void TouchEnded(CCTouch touch)
+    public override void TouchEnded(CCTouch touch)
+    {
+        try
         {
-            try
+            if (WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
             {
-                if (WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
-                {
-                    Tapped(touch.Location);
-                }
-                else
-                {
-                    ReleasedOutside();
-                }
+                Tapped(touch.Location);
             }
-            catch (Exception ex)
+            else
             {
-                System.Diagnostics.Debug.WriteLine("Touch ended failed with exception " + ex.Message);
                 ReleasedOutside();
             }
         }
-
-        public override void TouchMoved(CCTouch touch)
+        catch (Exception ex)
         {
-            try
+            System.Diagnostics.Debug.WriteLine("Touch ended failed with exception " + ex.Message);
+            ReleasedOutside();
+        }
+    }
+
+    public override void TouchMoved(CCTouch touch)
+    {
+        try
+        {
+            if (WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
             {
-                if (WorldBoundingBox.ContainsPoint(touch.Location) && Visible)
-                {
-                    DragInside(touch.Location);
-                }
-                else
-                {
-                    DragOutside(touch.Location);
-                }
+                DragInside(touch.Location);
             }
-            catch (Exception ex)
+            else
             {
-                System.Diagnostics.Debug.WriteLine("Touch moved failed with exception " + ex.Message);
                 DragOutside(touch.Location);
             }
         }
-
-        /// <summary>
-        /// Adjust content size to its children;
-        /// </summary>
-        protected void RefreshContentSize()
+        catch (Exception ex)
         {
-            CCSize newContentSize = new CCSize();
-            foreach (var child in Children)
-            {
-                newContentSize.Height = Math.Max(newContentSize.Height, child.ContentSize.Height);
-                newContentSize.Width = Math.Max(newContentSize.Width, child.ContentSize.Width);
-            }
-            ContentSize = newContentSize;
+            System.Diagnostics.Debug.WriteLine("Touch moved failed with exception " + ex.Message);
+            DragOutside(touch.Location);
         }
+    }
 
-        protected virtual void Tapped(CCPoint tapLocation)
+    /// <summary>
+    /// Adjust content size to its children;
+    /// </summary>
+    protected void RefreshContentSize()
+    {
+        CCSize newContentSize = new CCSize();
+        foreach (var child in Children)
         {
-            OnTapped?.Invoke(Data, this, tapLocation);
+            newContentSize.Height = Math.Max(newContentSize.Height, child.ContentSize.Height);
+            newContentSize.Width = Math.Max(newContentSize.Width, child.ContentSize.Width);
         }
+        ContentSize = newContentSize;
+    }
 
-        protected virtual void ReleasedOutside()
+    protected virtual void Tapped(CCPoint tapLocation)
+    {
+        OnTapped?.Invoke(Data, this, tapLocation);
+    }
+
+    protected virtual void ReleasedOutside()
+    {
+
+    }
+
+    protected virtual void TouchBegan(CCPoint touchLocation)
+    {
+        OnTouchBegin?.Invoke(Data, this, touchLocation);
+    }
+
+    protected virtual void DragInside(CCPoint position)
+    {
+
+    }
+
+    protected virtual void DragOutside(CCPoint position)
+    {
+
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (!_disposed)
         {
-
+            _disposed = true;
+            Active = false;
         }
-
-        protected virtual void TouchBegan(CCPoint touchLocation)
-        {
-            OnTouchBegin?.Invoke(Data, this, touchLocation);
-        }
-
-        protected virtual void DragInside(CCPoint position)
-        {
-
-        }
-
-        protected virtual void DragOutside(CCPoint position)
-        {
-
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                _disposed = true;
-                Active = false;
-            }
-            base.Dispose(disposing);
-        }
+        base.Dispose(disposing);
     }
 }

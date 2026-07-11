@@ -23,23 +23,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
-{
-    /// <summary>
-    /// @brief CCTransitionFadeUp:
-    /// Fade the tiles of the outgoing scene from the bottom to the top.
-    /// </summary>
-    public class CCTransitionFadeUp : CCTransitionFadeTR
-    {
-        public override CCActionInterval CreateAction(CCGridSize size)
-        {
-            return new CCFadeOutUpTiles(m_fDuration, size);
-        }
-        public CCTransitionFadeUp() { }
+namespace Cocos2D;
 
-        public CCTransitionFadeUp(float t, CCScene scene) : base(t, scene)
-        {
-            InitWithDuration(t, scene);
-        }
+/// <summary>
+/// @brief CCTransitionFadeUp:
+/// Fade the tiles of the outgoing scene from the bottom to the top.
+/// </summary>
+public class CCTransitionFadeUp : CCTransitionFadeTR
+{
+    public override CCActionInterval CreateAction(CCGridSize size)
+    {
+        return new CCFadeOutUpTiles(m_fDuration, size);
+    }
+    public CCTransitionFadeUp() { }
+
+    public CCTransitionFadeUp(float t, CCScene scene) : base(t, scene)
+    {
+        InitWithDuration(t, scene);
     }
 }

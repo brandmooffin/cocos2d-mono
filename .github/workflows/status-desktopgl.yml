@@ -1,0 +1,48 @@
+name: DesktopGL
+
+# Lightweight status reflector: triggered by completion of the canonical
+# `build (matrix)` workflow, reads the per-cell conclusions via the API, and
+# succeeds/fails with the worst conclusion across the cells matching this
+# platform. Exists to give the README a stable per-platform badge URL after
+# the per-platform build workflows were consolidated into the matrix.
+
+on:
+  workflow_run:
+    workflows: ["build (matrix)"]
+    types: [completed]
+
+permissions:
+  actions: read
+
+jobs:
+  status:
+    name: Reflect DesktopGL matrix cells
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror DesktopGL matrix-cell conclusions
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const runId = context.payload.workflow_run.id;
+            const { data } = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: runId,
+              per_page: 100,
+            });
+            // All DesktopGL cells, every host ("DesktopGL Linux (Debug)",
+            // "DesktopGL Windows (Release)", ...). Matches the matrix target
+            // labels in build.yml - keep in sync.
+            const matching = data.jobs.filter(j => j.name.startsWith('DesktopGL'));
+            core.info(`Matched ${matching.length} DesktopGL cell(s):`);
+            for (const j of matching) core.info(`  - ${j.name}: ${j.conclusion}`);
+            if (matching.length === 0) {
+              core.setFailed(`No DesktopGL cells found in upstream run ${runId}`);
+              return;
+            }
+            const bad = matching.filter(j => j.conclusion !== 'success');
+            if (bad.length > 0) {
+              core.setFailed(`DesktopGL cell(s) not successful: ${bad.map(j => `${j.name}=${j.conclusion}`).join(', ')}`);
+              return;
+            }
+            core.info('All DesktopGL cells passed.');

@@ -29,12 +29,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Poly2Tri.Triangulation
+namespace Poly2Tri.Triangulation;
+
+public enum TriangulationMode
 {
-    public enum TriangulationMode
-    {
-        Unconstrained,
-        Constrained,
-        Polygon
-    }
+    Unconstrained,
+    Constrained,
+    Polygon
 }

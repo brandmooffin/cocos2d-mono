@@ -28,59 +28,58 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class ShapeEditingTest : Test
 {
-    public class ShapeEditingTest : Test
+    private Body _body;
+    private Fixture _fixture2;
+
+    private ShapeEditingTest()
     {
-        private Body _body;
-        private Fixture _fixture2;
+        //Ground
+        BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-        private ShapeEditingTest()
+        _body = BodyFactory.CreateBody(World);
+        _body.BodyType = BodyType.Dynamic;
+        _body.Position = new Vector2(0.0f, 10.0f);
+
+        Vertices box = PolygonTools.CreateRectangle(4.0f, 4.0f);
+        PolygonShape shape2 = new PolygonShape(box, 10);
+        _body.CreateFixture(shape2);
+
+        _fixture2 = null;
+    }
+
+    public override void Keyboard(KeyboardManager keyboardManager)
+    {
+        if (keyboardManager.IsNewKeyPress(Keys.C) && _fixture2 == null)
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            CircleShape shape = new CircleShape(3.0f, 10);
+            shape.Position = new Vector2(0.5f, -4.0f);
+            _fixture2 = _body.CreateFixture(shape);
+            _body.Awake = true;
+        }
 
-            _body = BodyFactory.CreateBody(World);
-            _body.BodyType = BodyType.Dynamic;
-            _body.Position = new Vector2(0.0f, 10.0f);
-
-            Vertices box = PolygonTools.CreateRectangle(4.0f, 4.0f);
-            PolygonShape shape2 = new PolygonShape(box, 10);
-            _body.CreateFixture(shape2);
-
+        if (keyboardManager.IsNewKeyPress(Keys.D) && _fixture2 != null)
+        {
+            _body.DestroyFixture(_fixture2);
             _fixture2 = null;
+            _body.Awake = true;
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
-        {
-            if (keyboardManager.IsNewKeyPress(Keys.C) && _fixture2 == null)
-            {
-                CircleShape shape = new CircleShape(3.0f, 10);
-                shape.Position = new Vector2(0.5f, -4.0f);
-                _fixture2 = _body.CreateFixture(shape);
-                _body.Awake = true;
-            }
+        base.Keyboard(keyboardManager);
+    }
 
-            if (keyboardManager.IsNewKeyPress(Keys.D) && _fixture2 != null)
-            {
-                _body.DestroyFixture(_fixture2);
-                _fixture2 = null;
-                _body.Awake = true;
-            }
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        base.Update(settings, gameTime);
+        DebugView.DrawString(50, TextLine, "Press: (c) create a shape, (d) destroy a shape.");
+        TextLine += 15;
+    }
 
-            base.Keyboard(keyboardManager);
-        }
-
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine, "Press: (c) create a shape, (d) destroy a shape.");
-            TextLine += 15;
-        }
-
-        internal static Test Create()
-        {
-            return new ShapeEditingTest();
-        }
+    internal static Test Create()
+    {
+        return new ShapeEditingTest();
     }
 }

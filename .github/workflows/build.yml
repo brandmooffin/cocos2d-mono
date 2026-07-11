@@ -1,0 +1,104 @@
+name: build (matrix)
+
+# Matrix CI for the consolidated csprojs under src/ (Stage C3). Runs side-by-side
+# with the 13 legacy per-platform *_build.yml workflows during the transition;
+# the legacy workflows are retired at the CI cutover (Stage C4).
+
+on:
+  push:
+    branches: [ dev, master ]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # The label-based job name ("DesktopGL Linux (Debug)", "iOS (Release)", ...)
+    # is what the Actions UI shows and what the status-*.yml badge shims match
+    # on - keep labels and shim predicates in sync. Labels deliberately do NOT
+    # embed the TFM, so check names stay stable across TFM bumps.
+    name: ${{ matrix.target.label }} (${{ matrix.configuration }})
+    runs-on: ${{ matrix.target.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Two real top-level dimensions (configuration x target) so GitHub
+        # Actions produces a true cartesian product.
+        configuration: [Debug, Release]
+        target:
+          # DesktopGL (net9.0) is validated on all three desktop hosts - each
+          # host bakes its own IsOSPlatform constant (LINUX / WINDOWSGL / MACOS)
+          # and each feeds its own README status badge via the status-*.yml shims.
+          - { label: DesktopGL Linux,   os: ubuntu-latest,  tfm: net9.0, workloads: '' }
+          - { label: DesktopGL Windows, os: windows-latest, tfm: net9.0, workloads: '' }
+          - { label: DesktopGL macOS,   os: macos-latest,   tfm: net9.0, workloads: '' }
+          # WindowsDX requires net9.0-windows7.0 which only builds on Windows.
+          - { label: WindowsDX, os: windows-latest, tfm: net9.0-windows7.0, workloads: '' }
+          # Android workload installs on Linux runners (cheaper than Windows).
+          - { label: Android, os: ubuntu-latest, tfm: net9.0-android35.0, workloads: android }
+          # iOS requires a macOS host (Apple toolchain).
+          - { label: iOS, os: macos-latest, tfm: net9.0-ios18.0, workloads: ios }
+
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+        with:
+          global-json-file: global.json
+
+      - name: Setup Java (Android only)
+        if: matrix.target.workloads == 'android'
+        uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # v4.8.0
+        with:
+          distribution: microsoft
+          java-version: "17"
+
+      - name: Install .NET workloads
+        if: matrix.target.workloads != ''
+        run: dotnet workload install ${{ matrix.target.workloads }} --ignore-failed-sources
+
+      # Build per-TFM so non-Windows hosts never evaluate the Windows TFM
+      # (restoring the full <TargetFrameworks> on macOS/Linux raises NETSDK1100
+      # for net9.0-windows7.0). -p:TargetFrameworks=<tfm> narrows each project
+      # to the single TFM being built. Box2D builds first so Cocos2DMono's
+      # ProjectReference resolves from a populated cache.
+      - name: Build Box2D
+        run: dotnet build src/Box2D/Box2D.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
+
+      - name: Build Cocos2DMono
+        run: dotnet build src/Cocos2DMono/Cocos2DMono.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
+
+      # The integration-test host builds on desktop TFMs on WINDOWS runners only:
+      # - mobile cells: building the app triggers minutes of AOT + MGCB content
+      #   processing for a maintainer-run visual test app the cells don't execute;
+      # - linux/macos cells: the shared Content.mgcb has 29 spritefonts that
+      #   resolve Windows system fonts by name (Arial etc.), which do not exist
+      #   on those runners, so the MGCB content build fails.
+      # The legacy per-platform CI never built any test app - it built the
+      # library alone - so Windows-only integration builds still exceed the old
+      # coverage.
+      - name: Build IntegrationTests (Windows desktop only)
+        if: runner.os == 'Windows' && (matrix.target.tfm == 'net9.0' || matrix.target.tfm == 'net9.0-windows7.0')
+        run: dotnet build Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
+
+  # Aggregate gate over every matrix cell. Branch protection should require THIS
+  # check (stable name) rather than individual cell names, which embed TFM + OS
+  # and would silently break the required-checks list at the next TFM bump.
+  gate:
+    name: gate
+    runs-on: ubuntu-latest
+    needs: build
+    if: always()
+    steps:
+      - name: All matrix cells succeeded?
+        run: |
+          if [ "${{ needs.build.result }}" != "success" ]; then
+            echo "matrix result: ${{ needs.build.result }}"
+            exit 1
+          fi
+          echo "all matrix cells succeeded"

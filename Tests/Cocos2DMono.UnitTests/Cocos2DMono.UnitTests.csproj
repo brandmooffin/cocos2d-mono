@@ -10,19 +10,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <PackageReference Include="xunit" Version="2.9.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
 
   <!--
-    References the existing DesktopGL build for now. When Stage C lands the
-    consolidated csproj, this reference moves to it. The math types under test
-    (CCPoint/CCSize/CCRect/CCAffineTransform) are pure value types and need no
-    graphics device, so the suite runs headless.
+    References the consolidated csproj (Stage C4a) so the suite defends the
+    assembly that ships from src/; resolves its net9.0 TFM. The suite runs
+    headless (pure value types + a graphics-free director init).
   -->
   <ItemGroup>
-    <ProjectReference Include="..\..\cocos2d\cocos2d.DesktopGL\cocos2d.DesktopGL.csproj" />
+    <ProjectReference Include="..\..\src\Cocos2DMono\Cocos2DMono.csproj" />
   </ItemGroup>
 
 </Project>

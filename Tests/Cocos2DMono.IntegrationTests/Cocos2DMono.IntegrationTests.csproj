@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      Stage C4a: consolidated integration-test host. Replaces the 13 legacy
+      per-platform test app csprojs with a single multi-targeted exe, built
+      against the consolidated src/ projects.
+
+      Source still lives under Tests/cocos2d-mono.Tests/ during the side-by-side
+      transition; this csproj globs it. The legacy per-platform test csprojs are
+      deleted at the Stage C4 cutover.
+    -->
+    <TargetFrameworks>$(Cocos2DTargetFrameworks)</TargetFrameworks>
+    <RootNamespace>tests</RootNamespace>
+    <AssemblyName>Cocos2DMono.IntegrationTests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <!-- Desktop-only manifest + icon. Android / iOS have their own. -->
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' or '$(TargetFramework)' == '$(Cocos2DWindowsTfm)'">
+    <ApplicationManifest>..\..\Tests\cocos2d-mono.Tests\app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\Tests\cocos2d-mono.Tests\Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Per-TFM platform defines (mirror Cocos2DMono.csproj exactly).
+       ============================================================ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)'">
+    <OutputType>WinExe</OutputType>
+    <DefineConstants>$(DefineConstants);OPENGL;MONOGAME;DESKTOPGL</DefineConstants>
+    <MonoGamePlatform>DesktopGL</MonoGamePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`Windows`))' == 'true'">
+    <DefineConstants>$(DefineConstants);WINDOWSGL</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`OSX`))' == 'true'">
+    <DefineConstants>$(DefineConstants);MACOS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`Linux`))' == 'true'">
+    <DefineConstants>$(DefineConstants);LINUX</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DWindowsTfm)'">
+    <OutputType>WinExe</OutputType>
+    <!-- Mirrors Cocos2DMono.csproj net9.0-windows7.0 DefineConstants: WINDOWS;XNA
+         only (no MONOGAME — see Cocos2DMono.csproj rationale around CCContentManager
+         accessibility). -->
+    <DefineConstants>$(DefineConstants);WINDOWS;XNA</DefineConstants>
+    <UseWindowsForms>true</UseWindowsForms>
+    <MonoGamePlatform>Windows</MonoGamePlatform>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Android (net9.0-android35.0)
+       ============================================================ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
+    <OutputType>Exe</OutputType>
+    <DefineConstants>$(DefineConstants);ANDROID;OPENGL;GLES;MONOGAME</DefineConstants>
+    <MonoGamePlatform>Android</MonoGamePlatform>
+    <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
+    <AndroidApplication>true</AndroidApplication>
+    <AndroidManifest>Android\AndroidManifest.xml</AndroidManifest>
+    <MonoAndroidResourcePrefix>Android\Resources</MonoAndroidResourcePrefix>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
+    <AndroidResource Include="Android\Resources\**\*.xml" />
+    <AndroidResource Include="Android\Resources\**\*.axml" />
+    <AndroidResource Include="Android\Resources\**\*.png" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       iOS (net9.0-ios18.0)
+       ============================================================ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
+    <OutputType>Exe</OutputType>
+    <DefineConstants>$(DefineConstants);__IOS__;__MOBILE__;__UNIFIED__;IPHONE;IOS;GLES;OPENGL;MONOGAME</DefineConstants>
+    <MonoGamePlatform>iOS</MonoGamePlatform>
+    <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
+    <IPhoneResourcePrefix>iOS</IPhoneResourcePrefix>
+    <CodesignEntitlements>iOS\Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <!-- iOS\SceneDelegate.cs lives inside this project's directory now (after
+       Phase 1c-b file moves). The SDK's implicit Compile glob would pull it
+       into every TFM and fail on non-iOS hosts with CS0246 against Foundation/
+       UIKit/RegisterAttribute. Remove globally, re-include for iOS only. -->
+  <ItemGroup>
+    <Compile Remove="iOS\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
+    <Compile Include="iOS\**\*.cs" />
+    <None Include="iOS\Info.plist" Link="Info.plist" LogicalName="Info.plist" />
+    <None Include="iOS\Entitlements.plist" Link="Entitlements.plist" />
+    <InterfaceDefinition Include="iOS\LaunchScreen.storyboard" Link="LaunchScreen.storyboard" />
+    <ImageAsset Include="iOS\Assets.xcassets\**\*.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="iOS\Assets.xcassets\**\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+  </ItemGroup>
+
+  <!-- ============================================================
+       Source globbing (replaces cocos2d-mono.Tests.projitems)
+       ============================================================ -->
+  <PropertyGroup>
+    <TestsSourceRoot>..\..\Tests\cocos2d-mono.Tests\</TestsSourceRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Glob the shared Tests source. Exclusions:
+        bin/ obj/                        build artifacts
+        cocos2d-mono.Tests.*             legacy per-platform test csproj folders (deleted
+                                         at the C4 cutover; exclude kept defensively)
+        Properties\AssemblyInfo*.cs      SDK auto-generates assembly info.
+        **\*.Designer.cs                 generated; none today, glob is defensive.
+
+      Both Box2DTestBet/ (Farseer Physics 3.3 XNA, self-contained namespaces
+      FarseerPhysics.* / Poly2Tri.* / tests.classes.tests.Box2DTestBet) AND
+      Box2DTestBet(Box2D)/ (modern Box2D port, namespace Box2D.TestBed) are
+      INCLUDED. TestController.cs:350/352 reference both — Farseer's
+      tests.classes.tests.Box2DTestBet.Box2dTestBedScene and the modern
+      Box2D.TestBed.Box2dTestBedScene — for a runtime switch between the two
+      test beds. No type collisions: types live in different namespaces.
+    -->
+    <Compile Include="$(TestsSourceRoot)**\*.cs"
+             Exclude="$(TestsSourceRoot)bin\**;$(TestsSourceRoot)obj\**;$(TestsSourceRoot)cocos2d-mono.Tests.*\**;$(TestsSourceRoot)Properties\AssemblyInfo*.cs;$(TestsSourceRoot)**\*.Designer.cs" />
+  </ItemGroup>
+
+  <!-- Embedded resources (icons, .config) at the Tests root. -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\Tests\cocos2d-mono.Tests\Icon.bmp"
+                     Link="Icon.bmp" />
+    <EmbeddedResource Include="..\..\Tests\cocos2d-mono.Tests\Icon.ico"
+                     Link="Icon.ico" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       Project references
+       ============================================================ -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Cocos2DMono\Cocos2DMono.csproj" />
+    <ProjectReference Include="..\..\src\Box2D\Box2D.csproj" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       MGCB content reference (Phase 1b step 3)
+
+       MGCB needs the `dotnet-mgcb` tool from .config/dotnet-tools.json.
+       The RestoreDotnetTools target invokes `dotnet tool restore` before
+       MSBuild's Restore phase so the tool is available when MGCB runs.
+       ============================================================ -->
+  <ItemGroup>
+    <!-- Version supplied by the repo-root Directory.Packages.props (CPM). -->
+    <PackageReference Include="MonoGame.Content.Builder.Task" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="..\cocos2d-mono.Tests\Content\Content.mgcb">
+      <Link>Content\Content.mgcb</Link>
+    </MonoGameContentReference>
+  </ItemGroup>
+
+  <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
+    <Exec Command="dotnet tool restore"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
+          ConsoleToMSBuild="true" />
+  </Target>
+
+</Project>

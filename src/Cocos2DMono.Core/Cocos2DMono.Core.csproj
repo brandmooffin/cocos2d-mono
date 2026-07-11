@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Cocos2D-Mono.Core - payload-free metapackage (Stage C5).
+
+    Contains NO lib/, NO build/, NO content/ - only a generated .nuspec declaring a
+    strict-version dependency on Cocos2D-Mono with ExcludeAssets="build".
+    Runtime closure (MonoGame.Framework.*, SkiaSharp, System.Drawing.Common,
+    BitMiracle.LibTiff.NET, SharpZipLib, Cocos2D-Mono.Box2D) flows transitively
+    through Cocos2D-Mono.
+
+    This replaces the historical .Core variant from the legacy 12-nuspec era
+    (Cocos2D-Mono.Core.{Platform} packages) which existed for consumers who
+    didn't want MGCB; the only difference between the legacy main vs .Core
+    nuspecs was the MGCB dependency. NOTE (verified empirically against MGCB
+    3.8.4.1): the MGCB package ships build/ targets only - no buildTransitive/ -
+    so SDK-style consumers of the MAIN package do not import the MGCB targets
+    transitively either; game projects that use the content pipeline reference
+    MonoGame.Content.Builder.Task directly (standard MonoGame practice). For
+    such consumers, main and .Core behave identically today. .Core exists for
+    migration continuity from the legacy .Core.{Platform} line, and its asset
+    exclusion is insurance: if a future MGCB ships buildTransitive/ targets,
+    they would start flowing through the main package while remaining
+    suppressed through this one.
+
+    NOTE: restore of this project requires the freshly-packed Cocos2D-Mono
+    .nupkg in a reachable feed (the strict [$(Version)] pin cannot resolve
+    otherwise). The pack workflow packs the main package first and restores
+    this project against the artifacts folder as a local feed; locally use
+      dotnet restore src/Cocos2DMono.Core -s <artifacts-dir> -s https://api.nuget.org/v3/index.json
+    This project is therefore deliberately NOT in Cocos2DMono.sln.
+  -->
+
+  <PropertyGroup>
+    <!-- TFMs match Cocos2DMono.csproj exactly (via the shared dials in the
+         repo-root Directory.Build.props). The metapackage carries one
+         dependency per TFM in its generated .nuspec. -->
+    <TargetFrameworks>$(Cocos2DTargetFrameworks)</TargetFrameworks>
+
+    <!-- This project produces NO binaries. The csproj exists only as a vehicle
+         for `dotnet pack` to emit a metapackage .nupkg. -->
+    <IsPackable>true</IsPackable>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <!-- NOTE: IncludeContentInPack must stay TRUE (the default). Setting it false also
+         suppresses the explicit <None Pack="true"> items below, which is what previously
+         broke the icon (NU5046) and the readme (NU5039) - it was misdiagnosed as an
+         IncludeBuildOutput problem. This project has no Content items, so the default is
+         harmless: the package stays payload-free apart from the icon and readme. -->
+    <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+
+    <!-- Symbols: a metapackage has nothing to symbolize. -->
+    <IncludeSymbols>false</IncludeSymbols>
+
+    <!-- NU5128 'Some target frameworks declared in the dependencies group of the
+         nuspec and the lib/ref folder do not have exact matches' - expected for
+         a metapackage, suppress at the package level. -->
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+
+    <!-- Opt out of Central Package Management for this csproj so the inline
+         `Version="[$(Version)]"` strict pin to the matching main-package
+         version stays self-contained. CPM otherwise blocks per-PackageReference
+         Version attributes with NU1008. -->
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+
+    <!-- NuGet metadata: differentiate this from the main package. -->
+    <PackageId>Cocos2D-Mono.Core</PackageId>
+    <Title>Cocos2D-Mono.Core</Title>
+    <Product>Cocos2D-Mono.Core</Product>
+    <Description>Cocos2D-Mono.Core is a metapackage variant of Cocos2D-Mono that excludes the MonoGame.Content.Builder.Task MSBuild target. Reference this package instead of Cocos2D-Mono if you do not use the MonoGame content pipeline. The runtime DLL (Cocos2DMono.dll) is identical - only the build-time content-pipeline flow differs.</Description>
+    <PackageReleaseNotes>
+2.5.11 - Debut of Cocos2D-Mono.Core, the content-pipeline-free metapackage variant. Single multi-targeted package replacing the per-platform Cocos2D-Mono.Core.{DesktopGL,Windows,Linux,macOS,Android,iOS} packages; 2.5.10 was their final release. Same runtime as Cocos2D-Mono, without the MonoGame.Content.Builder.Task dependency.
+- See https://github.com/Cocos2D-Mono/cocos2d-mono for the full changelog.
+    </PackageReleaseNotes>
+    <PackageTags>mono monogame cocos2d game gamedev 2d no-content-pipeline</PackageTags>
+    <!-- Icon + readme so the NuGet page isn't a bare card (nuget.org warns on upload
+         without a readme). Both work now that IncludeContentInPack is left at its default. -->
+    <PackageIcon>logo-small.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Logos\logo-small.png" Pack="True" PackagePath="" Visible="false" />
+    <None Include="README.md" Pack="True" PackagePath="" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       The single dependency. Strict version pin [$(Version)] keeps the
+       metapackage locked to the matching main package - preventing
+       drift in cases where a consumer references both directly.
+
+       ExcludeAssets="build" excludes Cocos2D-Mono's build/analyzer assets
+       on this edge, and NuGet propagates the exclusion down the dependency
+       chain. Today that is defense-in-depth (MGCB 3.8.4.1 ships build/ only,
+       which never flows transitively - see the header note); it becomes
+       load-bearing the day the MGCB package adds buildTransitive/ targets.
+       ============================================================ -->
+  <ItemGroup>
+    <PackageReference Include="Cocos2D-Mono"
+                      Version="[$(Version)]"
+                      ExcludeAssets="build" />
+  </ItemGroup>
+
+  <!-- Logo + README intentionally NOT packed here (see PackageIcon comment above). -->
+
+</Project>

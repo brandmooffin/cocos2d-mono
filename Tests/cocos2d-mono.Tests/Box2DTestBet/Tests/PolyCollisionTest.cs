@@ -30,102 +30,101 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class PolyCollisionTest : Test
 {
-    public class PolyCollisionTest : Test
+    private float _angleB;
+    private PolygonShape _polygonA = new PolygonShape(1);
+    private PolygonShape _polygonB = new PolygonShape(1);
+    private Vector2 _positionB;
+
+    private Transform _transformA;
+    private Transform _transformB;
+
+    private PolyCollisionTest()
     {
-        private float _angleB;
-        private PolygonShape _polygonA = new PolygonShape(1);
-        private PolygonShape _polygonB = new PolygonShape(1);
-        private Vector2 _positionB;
-
-        private Transform _transformA;
-        private Transform _transformB;
-
-        private PolyCollisionTest()
         {
-            {
-                _polygonA.SetAsBox(0.2f, 0.4f);
-                _transformA.Set(Vector2.Zero, 0.0f);
-            }
-
-            {
-                _polygonB.SetAsBox(0.5f, 0.5f);
-                _positionB = new Vector2(19.345284f, 1.5632932f);
-                _angleB = 1.9160721f;
-                _transformB.Set(_positionB, _angleB);
-            }
+            _polygonA.SetAsBox(0.2f, 0.4f);
+            _transformA.Set(Vector2.Zero, 0.0f);
         }
 
-        internal static Test Create()
         {
-            return new PolyCollisionTest();
-        }
-
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            Manifold manifold = new Manifold();
-            Collision.Collision.CollidePolygons(ref manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
-
-            Vector2 normal;
-            FixedArray2<Vector2> points;
-            Collision.Collision.GetWorldManifold(ref manifold, ref _transformA, _polygonA.Radius,
-                                                 ref _transformB, _polygonB.Radius, out normal, out points);
-
-            DebugView.DrawString(50, TextLine, "Point count = {0:n0}", manifold.PointCount);
-            TextLine += 15;
-            DebugView.BeginCustomDraw();
-            {
-                Color color = new Color(0.9f, 0.9f, 0.9f);
-                Vector2[] v = new Vector2[Settings.MaxPolygonVertices];
-                for (int i = 0; i < _polygonA.Vertices.Count; ++i)
-                {
-                    v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
-                }
-                DebugView.DrawPolygon(v, _polygonA.Vertices.Count, color);
-
-                for (int i = 0; i < _polygonB.Vertices.Count; ++i)
-                {
-                    v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
-                }
-                DebugView.DrawPolygon(v, _polygonB.Vertices.Count, color);
-            }
-
-            for (int i = 0; i < manifold.PointCount; ++i)
-            {
-                DebugView.DrawPoint(points[i], 0.1f, new Color(0.9f, 0.3f, 0.3f));
-            }
-            DebugView.EndCustomDraw();
-        }
-
-        public override void Keyboard(KeyboardManager keyboardManager)
-        {
-            if (keyboardManager.IsKeyDown(Keys.A))
-            {
-                _positionB.X -= 0.1f;
-            }
-            if (keyboardManager.IsKeyDown(Keys.D))
-            {
-                _positionB.X += 0.1f;
-            }
-            if (keyboardManager.IsKeyDown(Keys.S))
-            {
-                _positionB.Y -= 0.1f;
-            }
-            if (keyboardManager.IsKeyDown(Keys.W))
-            {
-                _positionB.Y += 0.1f;
-            }
-            if (keyboardManager.IsKeyDown(Keys.Q))
-            {
-                _angleB += 0.1f * Settings.Pi;
-            }
-            if (keyboardManager.IsKeyDown(Keys.E))
-            {
-                _angleB -= 0.1f * Settings.Pi;
-            }
-
+            _polygonB.SetAsBox(0.5f, 0.5f);
+            _positionB = new Vector2(19.345284f, 1.5632932f);
+            _angleB = 1.9160721f;
             _transformB.Set(_positionB, _angleB);
         }
+    }
+
+    internal static Test Create()
+    {
+        return new PolyCollisionTest();
+    }
+
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        Manifold manifold = new Manifold();
+        Collision.Collision.CollidePolygons(ref manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
+
+        Vector2 normal;
+        FixedArray2<Vector2> points;
+        Collision.Collision.GetWorldManifold(ref manifold, ref _transformA, _polygonA.Radius,
+                                             ref _transformB, _polygonB.Radius, out normal, out points);
+
+        DebugView.DrawString(50, TextLine, "Point count = {0:n0}", manifold.PointCount);
+        TextLine += 15;
+        DebugView.BeginCustomDraw();
+        {
+            Color color = new Color(0.9f, 0.9f, 0.9f);
+            Vector2[] v = new Vector2[Settings.MaxPolygonVertices];
+            for (int i = 0; i < _polygonA.Vertices.Count; ++i)
+            {
+                v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
+            }
+            DebugView.DrawPolygon(v, _polygonA.Vertices.Count, color);
+
+            for (int i = 0; i < _polygonB.Vertices.Count; ++i)
+            {
+                v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
+            }
+            DebugView.DrawPolygon(v, _polygonB.Vertices.Count, color);
+        }
+
+        for (int i = 0; i < manifold.PointCount; ++i)
+        {
+            DebugView.DrawPoint(points[i], 0.1f, new Color(0.9f, 0.3f, 0.3f));
+        }
+        DebugView.EndCustomDraw();
+    }
+
+    public override void Keyboard(KeyboardManager keyboardManager)
+    {
+        if (keyboardManager.IsKeyDown(Keys.A))
+        {
+            _positionB.X -= 0.1f;
+        }
+        if (keyboardManager.IsKeyDown(Keys.D))
+        {
+            _positionB.X += 0.1f;
+        }
+        if (keyboardManager.IsKeyDown(Keys.S))
+        {
+            _positionB.Y -= 0.1f;
+        }
+        if (keyboardManager.IsKeyDown(Keys.W))
+        {
+            _positionB.Y += 0.1f;
+        }
+        if (keyboardManager.IsKeyDown(Keys.Q))
+        {
+            _angleB += 0.1f * Settings.Pi;
+        }
+        if (keyboardManager.IsKeyDown(Keys.E))
+        {
+            _angleB -= 0.1f * Settings.Pi;
+        }
+
+        _transformB.Set(_positionB, _angleB);
     }
 }

@@ -29,37 +29,36 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class SphereStackTest : Test
 {
-    public class SphereStackTest : Test
+    private const int Count = 10;
+    private Body[] _bodies = new Body[Count];
+
+    private SphereStackTest()
     {
-        private const int Count = 10;
-        private Body[] _bodies = new Body[Count];
+        //Ground
+        BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-        private SphereStackTest()
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            CircleShape shape = new CircleShape(1.0f, 1);
 
+            for (int i = 0; i < Count; ++i)
             {
-                CircleShape shape = new CircleShape(1.0f, 1);
+                _bodies[i] = BodyFactory.CreateBody(World);
+                _bodies[i].BodyType = BodyType.Dynamic;
+                _bodies[i].Position = new Vector2(0.0f, 4.0f + 3.0f * i);
 
-                for (int i = 0; i < Count; ++i)
-                {
-                    _bodies[i] = BodyFactory.CreateBody(World);
-                    _bodies[i].BodyType = BodyType.Dynamic;
-                    _bodies[i].Position = new Vector2(0.0f, 4.0f + 3.0f * i);
+                _bodies[i].CreateFixture(shape);
 
-                    _bodies[i].CreateFixture(shape);
-
-                    //_bodies[i].SetLinearVelocity(new Vector2(0.0f, -100.0f));
-                }
+                //_bodies[i].SetLinearVelocity(new Vector2(0.0f, -100.0f));
             }
         }
+    }
 
-        public static Test Create()
-        {
-            return new SphereStackTest();
-        }
+    public static Test Create()
+    {
+        return new SphereStackTest();
     }
 }

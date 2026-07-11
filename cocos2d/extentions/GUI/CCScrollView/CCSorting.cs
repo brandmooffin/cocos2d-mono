@@ -1,38 +1,38 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public interface ICCSortableObject
 {
-    public interface ICCSortableObject
+    int ObjectID { set; get; }
+}
+
+internal class CCSortedObject : ICCSortableObject
+{
+    private int objectID;
+
+    public CCSortedObject()
     {
-        int ObjectID { set; get; }
+        objectID = 0;
     }
 
-    internal class CCSortedObject : ICCSortableObject
+    #region CCSortableObject Members
+
+    public virtual int ObjectID
     {
-        private int objectID;
+        set { objectID = value; }
+        get { return objectID; }
+    }
 
-        public CCSortedObject()
-        {
-            objectID = 0;
-        }
+    #endregion
+};
 
-        #region CCSortableObject Members
+public class CCArrayForObjectSorting : List<object>
+{
+    public const int CC_INVALID_INDEX = -1;
 
-        public virtual int ObjectID
-        {
-            set { objectID = value; }
-            get { return objectID; }
-        }
-
-        #endregion
-    };
-
-    public class CCArrayForObjectSorting : List<object>
-    {
-        public const int CC_INVALID_INDEX = -1;
-
-        /*!
+    /*!
 		 * Inserts a given object into array.
 		 * 
 		 * Inserts a given object into array with key and value that are used in
@@ -44,17 +44,17 @@ namespace Cocos2D
 		 * @param object to insert
 		 */
 
-        public void InsertSortedObject(ICCSortableObject obj)
-        {
-            int idx;
-            var pObj = (object) obj;
-            Debug.Assert(pObj != null, "Invalid parameter.");
-            idx = IndexOfSortedObject(obj);
+    public void InsertSortedObject(ICCSortableObject obj)
+    {
+        int idx;
+        var pObj = (object) obj;
+        Debug.Assert(pObj != null, "Invalid parameter.");
+        idx = IndexOfSortedObject(obj);
 
-            Insert(idx, pObj);
-        }
+        Insert(idx, pObj);
+    }
 
-        /*!
+    /*!
 		 * Removes an object in array.
 		 *
 		 * Removes an object with given key and value. If no object is found in array
@@ -63,28 +63,28 @@ namespace Cocos2D
 		 * @param value to remove
 		 */
 
-        public void RemoveSortedObject(ICCSortableObject obj)
+    public void RemoveSortedObject(ICCSortableObject obj)
+    {
+        if (Count == 0)
         {
-            if (Count == 0)
-            {
-                return;
-            }
-            int idx;
-            ICCSortableObject foundObj;
-            idx = IndexOfSortedObject(obj);
+            return;
+        }
+        int idx;
+        ICCSortableObject foundObj;
+        idx = IndexOfSortedObject(obj);
 
-            if (idx < Count && idx != CC_INVALID_INDEX)
-            {
-                foundObj = (ICCSortableObject) this[idx];
+        if (idx < Count && idx != CC_INVALID_INDEX)
+        {
+            foundObj = (ICCSortableObject) this[idx];
 
-                if (foundObj.ObjectID == obj.ObjectID)
-                {
-                    RemoveAt(idx);
-                }
+            if (foundObj.ObjectID == obj.ObjectID)
+            {
+                RemoveAt(idx);
             }
         }
+    }
 
-        /*!
+    /*!
 		 * Sets a new value of the key for the given object.
 		 * 
 		 * In case where sorting value must be changed, this message must be sent to
@@ -95,58 +95,58 @@ namespace Cocos2D
 		 * @param object the object which has the value
 		 */
 
-        public void SetObjectID_ofSortedObject(int tag, ICCSortableObject obj)
+    public void SetObjectID_ofSortedObject(int tag, ICCSortableObject obj)
+    {
+        ICCSortableObject foundObj;
+        int idx;
+
+        idx = IndexOfSortedObject(obj);
+        if (idx < Count && idx != CC_INVALID_INDEX)
         {
-            ICCSortableObject foundObj;
-            int idx;
+            foundObj = (ICCSortableObject) (this[idx]);
+            var pObj = (object) foundObj;
 
-            idx = IndexOfSortedObject(obj);
-            if (idx < Count && idx != CC_INVALID_INDEX)
+            if (foundObj.ObjectID == obj.ObjectID)
             {
-                foundObj = (ICCSortableObject) (this[idx]);
-                var pObj = (object) foundObj;
+                RemoveAt(idx);
+                foundObj.ObjectID = tag;
+                InsertSortedObject(foundObj);
+            }
+            else
+            {
+            }
+        }
+    }
 
-                if (foundObj.ObjectID == obj.ObjectID)
-                {
-                    RemoveAt(idx);
-                    foundObj.ObjectID = tag;
-                    InsertSortedObject(foundObj);
-                }
-                else
-                {
-                }
+    public ICCSortableObject ObjectWithObjectID(int tag)
+    {
+        if (Count == 0)
+        {
+            return null;
+        }
+
+        ICCSortableObject foundObj;
+
+        foundObj = new CCSortedObject();
+        foundObj.ObjectID = tag;
+
+        int idx = IndexOfSortedObject(foundObj);
+
+        foundObj = null;
+
+        if (idx < Count && idx != CC_INVALID_INDEX)
+        {
+            foundObj = (ICCSortableObject) (this[idx]);
+            if (foundObj.ObjectID != tag)
+            {
+                foundObj = null;
             }
         }
 
-        public ICCSortableObject ObjectWithObjectID(int tag)
-        {
-            if (Count == 0)
-            {
-                return null;
-            }
+        return foundObj;
+    }
 
-            ICCSortableObject foundObj;
-
-            foundObj = new CCSortedObject();
-            foundObj.ObjectID = tag;
-
-            int idx = IndexOfSortedObject(foundObj);
-
-            foundObj = null;
-
-            if (idx < Count && idx != CC_INVALID_INDEX)
-            {
-                foundObj = (ICCSortableObject) (this[idx]);
-                if (foundObj.ObjectID != tag)
-                {
-                    foundObj = null;
-                }
-            }
-
-            return foundObj;
-        }
-
-        /*!
+    /*!
 		 * Returns an object with given key and value.
 		 * 
 		 * Returns an object with given key and value. If no object is found,
@@ -155,11 +155,11 @@ namespace Cocos2D
 		 * @param value to locate object
 		 * @return object found or nil.
 		 */
-        //public CCSortableObject getObjectWithObjectID(int tag)
-        //{
-        //}
+    //public CCSortableObject getObjectWithObjectID(int tag)
+    //{
+    //}
 
-        /*!
+    /*!
 		 * Returns an index of the object with given key and value.
 		 *
 		 * Returns the index of an object with given key and value. 
@@ -171,36 +171,35 @@ namespace Cocos2D
 		 * @return index of an object found
 		 */
 
-        public int IndexOfSortedObject(ICCSortableObject obj)
+    public int IndexOfSortedObject(ICCSortableObject obj)
+    {
+        int idx = 0;
+        if (obj != null)
         {
-            int idx = 0;
-            if (obj != null)
-            {
-                //       object* pObj = (object*)bsearch((object*)&object, data->arr, data->num, sizeof(object*), _compareObject);
-                // FIXME: need to use binary search to improve performance
-                int uPrevObjectID = 0;
-                int uOfSortObjectID = obj.ObjectID;
+            //       object* pObj = (object*)bsearch((object*)&object, data->arr, data->num, sizeof(object*), _compareObject);
+            // FIXME: need to use binary search to improve performance
+            int uPrevObjectID = 0;
+            int uOfSortObjectID = obj.ObjectID;
 
-                foreach (object pObj in this)
+            foreach (object pObj in this)
+            {
+                var pSortableObj = (ICCSortableObject) pObj;
+
+                int uCurObjectID = pSortableObj.ObjectID;
+                if ((uOfSortObjectID == uCurObjectID)
+                    || (uOfSortObjectID >= uPrevObjectID && uOfSortObjectID < uCurObjectID))
                 {
-                    var pSortableObj = (ICCSortableObject) pObj;
-
-                    int uCurObjectID = pSortableObj.ObjectID;
-                    if ((uOfSortObjectID == uCurObjectID)
-                        || (uOfSortObjectID >= uPrevObjectID && uOfSortObjectID < uCurObjectID))
-                    {
-                        break;
-                    }
-
-                    uPrevObjectID = uCurObjectID;
-                    idx++;
+                    break;
                 }
+
+                uPrevObjectID = uCurObjectID;
+                idx++;
             }
-            else
-            {
-                idx = CC_INVALID_INDEX;
-            }
-            return idx;
         }
-    };
-}
+        else
+        {
+            idx = CC_INVALID_INDEX;
+        }
+        return idx;
+    }
+};

@@ -4,514 +4,624 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public enum CCClipMode
 {
-    public enum CCClipMode
+    /// <summary>
+    /// No clipping of children
+    /// </summary>
+    None,
+    /// <summary>
+    /// Clipping with a ScissorRect
+    /// </summary>
+    Bounds,
+    /// <summary>
+    /// Clipping with the ScissorRect and in a RenderTarget
+    /// </summary>
+    BoundsWithRenderTarget
+}
+
+/// <summary>
+/// Holds the drawing state for a CCGameView instance.
+/// Used to support multiple views by saving/restoring state between draws.
+/// </summary>
+/// <remarks>
+/// This state captures viewport, matrices, and resolution settings. It does not save
+/// lower-level graphics state such as the current texture, effect, blend state, or render target.
+/// Views sharing a graphics device should ensure compatible rendering states, or explicitly
+/// set the required graphics state at the beginning of each draw call.
+/// </remarks>
+public class CCDrawManagerState
+{
+    public Matrix WorldMatrix;
+    public Matrix ViewMatrix;
+    public Matrix ProjectionMatrix;
+    public Matrix CombinedMatrix;
+    public Matrix[] MatrixStack;
+    public int StackIndex;
+    public CCSize DesignResolutionSize;
+    public CCSize ScreenSize;
+    public CCRect ViewPortRect;
+    public float ScaleX;
+    public float ScaleY;
+    public CCResolutionPolicy ResolutionPolicy;
+    public Viewport Viewport;
+    public bool DepthTest;
+
+    public CCDrawManagerState()
     {
-        /// <summary>
-        /// No clipping of children
-        /// </summary>
-        None,
-        /// <summary>
-        /// Clipping with a ScissorRect
-        /// </summary>
-        Bounds,
-        /// <summary>
-        /// Clipping with the ScissorRect and in a RenderTarget
-        /// </summary>
-        BoundsWithRenderTarget
+        MatrixStack = new Matrix[100];
+        WorldMatrix = Matrix.Identity;
+        ViewMatrix = Matrix.Identity;
+        ProjectionMatrix = Matrix.Identity;
+        CombinedMatrix = Matrix.Identity;
+        StackIndex = 0;
+        ScaleX = 1.0f;
+        ScaleY = 1.0f;
+        DepthTest = true;
+        ResolutionPolicy = CCResolutionPolicy.UnKnown;
     }
+}
+
+public static class CCDrawManager
+{
+    private const int DefaultQuadBufferSize = 1024 * 4;
+    public static string DefaultFont = "arial";
+
+    public static BasicEffect PrimitiveEffect;
+    public static AlphaTestEffect AlphaTestEffect;
+
+    private static BasicEffect m_defaultEffect;
+    private static Effect m_currentEffect;
+    private static readonly Stack<Effect> m_effectStack = new Stack<Effect>();
+
+    public static SpriteBatch spriteBatch;
+    internal static GraphicsDevice graphicsDevice;
+
+    internal static Matrix m_worldMatrix;
+    internal static Matrix m_viewMatrix;
+    internal static Matrix m_projectionMatrix;
+
+    private static readonly Matrix[] m_matrixStack = new Matrix[100];
+    private static int m_stackIndex;
+
+    internal static Matrix m_Matrix;
+    private static Matrix m_TmpMatrix;
+
+    private static RenderTarget2D m_renderTarget = null;
+
+    private static Texture2D m_currentTexture;
+    private static bool m_textureEnabled;
+    private static bool m_vertexColorEnabled;
+
+    private static readonly Dictionary<CCBlendFunc, BlendState> m_blendStates = new Dictionary<CCBlendFunc, BlendState>();
+
+    private static DepthStencilState m_DepthEnableStencilState;
+    private static DepthStencilState m_DepthDisableStencilState;
+
+    //Flags
+    private static bool m_worldMatrixChanged;
+    private static bool m_projectionMatrixChanged;
+    private static bool m_viewMatrixChanged;
+    private static bool m_textureChanged;
+    private static bool m_effectChanged;
+
+    private static int m_lastWidth;
+    private static int m_lastHeight;
+    private static bool m_depthTest = true;
+    private static CCBlendFunc m_currBlend = CCBlendFunc.AlphaBlend;
+    private static RenderTarget2D m_currRenderTarget;
+    private static Viewport m_savedViewport;
+    private static CCQuadVertexBuffer m_quadsBuffer;
+    private static CCIndexBuffer<short> m_quadsIndexBuffer;
+
+    public static int DrawCount;
 
     /// <summary>
-    /// Holds the drawing state for a CCGameView instance.
-    /// Used to support multiple views by saving/restoring state between draws.
+    /// Default sampler state for rendering. Set to SamplerState.PointClamp for pixel-perfect rendering.
+    /// Must be set before CCDrawManager.Initialize() is called, or call it and then re-initialize.
+    /// Default is SamplerState.LinearClamp.
     /// </summary>
-    /// <remarks>
-    /// This state captures viewport, matrices, and resolution settings. It does not save
-    /// lower-level graphics state such as the current texture, effect, blend state, or render target.
-    /// Views sharing a graphics device should ensure compatible rendering states, or explicitly
-    /// set the required graphics state at the beginning of each draw call.
-    /// </remarks>
-    public class CCDrawManagerState
-    {
-        public Matrix WorldMatrix;
-        public Matrix ViewMatrix;
-        public Matrix ProjectionMatrix;
-        public Matrix CombinedMatrix;
-        public Matrix[] MatrixStack;
-        public int StackIndex;
-        public CCSize DesignResolutionSize;
-        public CCSize ScreenSize;
-        public CCRect ViewPortRect;
-        public float ScaleX;
-        public float ScaleY;
-        public CCResolutionPolicy ResolutionPolicy;
-        public Viewport Viewport;
-        public bool DepthTest;
+    public static SamplerState DefaultSamplerState { get; set; } = SamplerState.LinearClamp;
 
-        public CCDrawManagerState()
+    private static CCV3F_C4B_T2F[] m_quadVertices;
+    private static float m_fScaleX;
+    private static float m_fScaleY;
+    private static CCRect m_obViewPortRect;
+    private static CCSize m_obScreenSize;
+    private static CCSize m_obDesignResolutionSize;
+    private static CCResolutionPolicy m_eResolutionPolicy = CCResolutionPolicy.UnKnown;
+    private static float m_fFrameZoomFactor = 1.0f;
+    private static DepthFormat m_PlatformDepthFormat = DepthFormat.Depth24;
+    // ref: http://www.khronos.org/registry/gles/extensions/NV/GL_NV_texture_npot_2D_mipmap.txt
+    private static bool m_AllowNonPower2Textures = true;
+
+    internal static CCRawList<CCV3F_C4B_T2F> _tmpVertices = new CCRawList<CCV3F_C4B_T2F>();
+
+    private static bool m_bNeedReinitResources;
+
+    internal static Game m_Game;
+
+    public static bool VertexColorEnabled
+    {
+        get { return m_vertexColorEnabled; }
+        set
         {
-            MatrixStack = new Matrix[100];
-            WorldMatrix = Matrix.Identity;
-            ViewMatrix = Matrix.Identity;
-            ProjectionMatrix = Matrix.Identity;
-            CombinedMatrix = Matrix.Identity;
-            StackIndex = 0;
-            ScaleX = 1.0f;
-            ScaleY = 1.0f;
-            DepthTest = true;
-            ResolutionPolicy = CCResolutionPolicy.UnKnown;
+            if (m_vertexColorEnabled != value)
+            {
+                m_vertexColorEnabled = value;
+                m_textureChanged = true;
+            }
         }
     }
 
-    public static class CCDrawManager
+    public static bool TextureEnabled
     {
-        private const int DefaultQuadBufferSize = 1024 * 4;
-        public static string DefaultFont = "arial";
-
-        public static BasicEffect PrimitiveEffect;
-        public static AlphaTestEffect AlphaTestEffect;
-
-        private static BasicEffect m_defaultEffect;
-        private static Effect m_currentEffect;
-        private static readonly Stack<Effect> m_effectStack = new Stack<Effect>();
-
-        public static SpriteBatch spriteBatch;
-        internal static GraphicsDevice graphicsDevice;
-
-        internal static Matrix m_worldMatrix;
-        internal static Matrix m_viewMatrix;
-        internal static Matrix m_projectionMatrix;
-
-        private static readonly Matrix[] m_matrixStack = new Matrix[100];
-        private static int m_stackIndex;
-
-        internal static Matrix m_Matrix;
-        private static Matrix m_TmpMatrix;
-
-        private static RenderTarget2D m_renderTarget = null;
-
-        private static Texture2D m_currentTexture;
-        private static bool m_textureEnabled;
-        private static bool m_vertexColorEnabled;
-
-        private static readonly Dictionary<CCBlendFunc, BlendState> m_blendStates = new Dictionary<CCBlendFunc, BlendState>();
-
-        private static DepthStencilState m_DepthEnableStencilState;
-        private static DepthStencilState m_DepthDisableStencilState;
-
-        //Flags
-        private static bool m_worldMatrixChanged;
-        private static bool m_projectionMatrixChanged;
-        private static bool m_viewMatrixChanged;
-        private static bool m_textureChanged;
-        private static bool m_effectChanged;
-
-        private static int m_lastWidth;
-        private static int m_lastHeight;
-        private static bool m_depthTest = true;
-        private static CCBlendFunc m_currBlend = CCBlendFunc.AlphaBlend;
-        private static RenderTarget2D m_currRenderTarget;
-        private static Viewport m_savedViewport;
-        private static CCQuadVertexBuffer m_quadsBuffer;
-        private static CCIndexBuffer<short> m_quadsIndexBuffer;
-
-        public static int DrawCount;
-
-        /// <summary>
-        /// Default sampler state for rendering. Set to SamplerState.PointClamp for pixel-perfect rendering.
-        /// Must be set before CCDrawManager.Initialize() is called, or call it and then re-initialize.
-        /// Default is SamplerState.LinearClamp.
-        /// </summary>
-        public static SamplerState DefaultSamplerState { get; set; } = SamplerState.LinearClamp;
-
-        private static CCV3F_C4B_T2F[] m_quadVertices;
-        private static float m_fScaleX;
-        private static float m_fScaleY;
-        private static CCRect m_obViewPortRect;
-        private static CCSize m_obScreenSize;
-        private static CCSize m_obDesignResolutionSize;
-        private static CCResolutionPolicy m_eResolutionPolicy = CCResolutionPolicy.UnKnown;
-        private static float m_fFrameZoomFactor = 1.0f;
-        private static DepthFormat m_PlatformDepthFormat = DepthFormat.Depth24;
-        // ref: http://www.khronos.org/registry/gles/extensions/NV/GL_NV_texture_npot_2D_mipmap.txt
-        private static bool m_AllowNonPower2Textures = true;
-
-        internal static CCRawList<CCV3F_C4B_T2F> _tmpVertices = new CCRawList<CCV3F_C4B_T2F>();
-
-        private static bool m_bNeedReinitResources;
-
-        internal static Game m_Game;
-
-        public static bool VertexColorEnabled
+        get { return m_textureEnabled; }
+        set
         {
-            get { return m_vertexColorEnabled; }
-            set
+            if (m_textureEnabled != value)
             {
-                if (m_vertexColorEnabled != value)
-                {
-                    m_vertexColorEnabled = value;
-                    m_textureChanged = true;
-                }
+                m_textureEnabled = value;
+                m_textureChanged = true;
             }
         }
+    }
 
-        public static bool TextureEnabled
+    public static DepthStencilState DepthStencilState
+    {
+        get { return graphicsDevice.DepthStencilState; }
+        set { graphicsDevice.DepthStencilState = value; }
+    }
+
+    public static GraphicsDevice GraphicsDevice
+    {
+        get { return graphicsDevice; }
+    }
+
+    public static BlendState BlendState
+    {
+        get { return graphicsDevice.BlendState; }
+        set
         {
-            get { return m_textureEnabled; }
-            set
+            graphicsDevice.BlendState = value;
+            m_currBlend.Source = -1;
+            m_currBlend.Destination = -1;
+        }
+    }
+
+    public static Matrix ViewMatrix
+    {
+        get { return m_viewMatrix; }
+        set
+        {
+            m_viewMatrix = value;
+            m_viewMatrixChanged = true;
+        }
+    }
+
+    public static Matrix ProjectionMatrix
+    {
+        get { return m_projectionMatrix; }
+        set
+        {
+            m_projectionMatrix = value;
+            m_projectionMatrixChanged = true;
+        }
+    }
+
+    public static Matrix WorldMatrix
+    {
+        get { return m_Matrix; }
+        set
+        {
+            m_Matrix = m_worldMatrix = value;
+            m_worldMatrixChanged = true;
+        }
+    }
+
+    public static CCSize DesignResolutionSize
+    {
+        get { return m_obDesignResolutionSize; }
+    }
+
+    public static CCResolutionPolicy ResolutionPolicy
+    {
+        get { return m_eResolutionPolicy; }
+    }
+
+    public static CCSize FrameSize
+    {
+        get { return m_obScreenSize; }
+        set { m_obDesignResolutionSize = m_obScreenSize = value; }
+    }
+
+    public static bool DepthTest
+    {
+        get { return m_depthTest; }
+        set
+        {
+            m_depthTest = value;
+            if (graphicsDevice != null)
             {
-                if (m_textureEnabled != value)
-                {
-                    m_textureEnabled = value;
-                    m_textureChanged = true;
-                }
+                // NOTE: This must be disabled when primitives are drawing, e.g. lines, polylines, etc.
+                graphicsDevice.DepthStencilState = value ? m_DepthEnableStencilState : m_DepthDisableStencilState;
+                //graphicsDevice.DepthStencilState = value ? DepthStencilState.Default : DepthStencilState.None;
             }
         }
+    }
 
-        public static DepthStencilState DepthStencilState
+    public static CCSize VisibleSize
+    {
+        get
         {
-            get { return graphicsDevice.DepthStencilState; }
-            set { graphicsDevice.DepthStencilState = value; }
-        }
-
-        public static GraphicsDevice GraphicsDevice
-        {
-            get { return graphicsDevice; }
-        }
-
-        public static BlendState BlendState
-        {
-            get { return graphicsDevice.BlendState; }
-            set
+            if (m_eResolutionPolicy == CCResolutionPolicy.NoBorder)
             {
-                graphicsDevice.BlendState = value;
-                m_currBlend.Source = -1;
-                m_currBlend.Destination = -1;
-            }
-        }
-
-        public static Matrix ViewMatrix
-        {
-            get { return m_viewMatrix; }
-            set
-            {
-                m_viewMatrix = value;
-                m_viewMatrixChanged = true;
-            }
-        }
-
-        public static Matrix ProjectionMatrix
-        {
-            get { return m_projectionMatrix; }
-            set
-            {
-                m_projectionMatrix = value;
-                m_projectionMatrixChanged = true;
-            }
-        }
-
-        public static Matrix WorldMatrix
-        {
-            get { return m_Matrix; }
-            set
-            {
-                m_Matrix = m_worldMatrix = value;
-                m_worldMatrixChanged = true;
-            }
-        }
-
-        public static CCSize DesignResolutionSize
-        {
-            get { return m_obDesignResolutionSize; }
-        }
-
-        public static CCResolutionPolicy ResolutionPolicy
-        {
-            get { return m_eResolutionPolicy; }
-        }
-
-        public static CCSize FrameSize
-        {
-            get { return m_obScreenSize; }
-            set { m_obDesignResolutionSize = m_obScreenSize = value; }
-        }
-
-        public static bool DepthTest
-        {
-            get { return m_depthTest; }
-            set
-            {
-                m_depthTest = value;
-                if (graphicsDevice != null)
-                {
-                    // NOTE: This must be disabled when primitives are drawing, e.g. lines, polylines, etc.
-                    graphicsDevice.DepthStencilState = value ? m_DepthEnableStencilState : m_DepthDisableStencilState;
-                    //graphicsDevice.DepthStencilState = value ? DepthStencilState.Default : DepthStencilState.None;
-                }
-            }
-        }
-
-        public static CCSize VisibleSize
-        {
-            get
-            {
-                if (m_eResolutionPolicy == CCResolutionPolicy.NoBorder)
-                {
-                    return new CCSize(m_obScreenSize.Width / m_fScaleX, m_obScreenSize.Height / m_fScaleY);
-                }
-                else
-                {
-                    return m_obDesignResolutionSize;
-                }
-            }
-        }
-
-        public static CCPoint VisibleOrigin
-        {
-            get
-            {
-                if (m_eResolutionPolicy == CCResolutionPolicy.NoBorder)
-                {
-                    return new CCPoint((m_obDesignResolutionSize.Width - m_obScreenSize.Width / m_fScaleX) / 2,
-                                       (m_obDesignResolutionSize.Height - m_obScreenSize.Height / m_fScaleY) / 2);
-                }
-                else
-                {
-                    return CCPoint.Zero;
-                }
-            }
-        }
-
-        private static List<RasterizerState> _rasterizerStatesCache = new List<RasterizerState>();
-
-        private static RasterizerState GetScissorRasterizerState(bool scissorEnabled)
-        {
-            var currentState = graphicsDevice.RasterizerState;
-            
-            for (int i = 0; i < _rasterizerStatesCache.Count; i++)
-            {
-                var state = _rasterizerStatesCache[i];
-                if (
-                    state.ScissorTestEnable == scissorEnabled &&
-                    currentState.CullMode == state.CullMode &&
-                    currentState.DepthBias == state.DepthBias &&
-                    currentState.FillMode == state.FillMode &&
-                    currentState.MultiSampleAntiAlias == state.MultiSampleAntiAlias &&
-                    currentState.SlopeScaleDepthBias == state.SlopeScaleDepthBias
-                    )
-                {
-                    return state;
-                }
-            }
-
-            var newState = new RasterizerState
-            {
-                ScissorTestEnable = scissorEnabled,
-                CullMode = currentState.CullMode,
-                DepthBias = currentState.DepthBias,
-                FillMode = currentState.FillMode,
-                MultiSampleAntiAlias = currentState.MultiSampleAntiAlias,
-                SlopeScaleDepthBias = currentState.SlopeScaleDepthBias
-            };
-
-            _rasterizerStatesCache.Add(newState);
-
-            return newState;
-        }
-
-        public static bool ScissorRectEnabled
-        {
-            get { return graphicsDevice.RasterizerState.ScissorTestEnable; }
-            set
-            {
-                if (graphicsDevice.RasterizerState.ScissorTestEnable != value)
-                {
-                    graphicsDevice.RasterizerState = GetScissorRasterizerState(value);
-                }
-            }
-        }
-
-        public static CCRect ViewPortRect
-        {
-            get { return m_obViewPortRect; }
-        }
-
-        public static float ScaleX
-        {
-            get { return m_fScaleX; }
-        }
-
-        public static float ScaleY
-        {
-            get { return m_fScaleY; }
-        }
-
-        /// <summary>
-        /// Converts screen coordinates (pixels from top-left) to game/design coordinates
-        /// using the current resolution policy and scale factors.
-        /// </summary>
-        public static CCPoint ConvertScreenToGameCoords(float screenX, float screenY)
-        {
-            float gameX = (screenX - m_obViewPortRect.Origin.X) / m_fScaleX;
-            float gameY = (m_obScreenSize.Height - screenY - m_obViewPortRect.Origin.Y) / m_fScaleY;
-            return new CCPoint(gameX, gameY);
-        }
-
-        private static IGraphicsDeviceService m_graphicsService;
-        private static PresentationParameters m_presentationParameters = new PresentationParameters();
-        private static GraphicsDeviceManager m_GraphicsDeviceMgr;
-
-        private static void UpdatePresentationParametrs(GraphicsDeviceManager manager)
-        {
-            var pp = m_presentationParameters;
-
-            pp.BackBufferWidth = manager.PreferredBackBufferWidth;
-            pp.BackBufferHeight = manager.PreferredBackBufferHeight;
-            pp.BackBufferFormat = manager.PreferredBackBufferFormat;
-            pp.DepthStencilFormat = manager.PreferredDepthStencilFormat;
-            pp.RenderTargetUsage = m_presentationParameters.RenderTargetUsage;
-            if (manager.PreferMultiSampling && pp.MultiSampleCount == 0)
-            {
-                pp.MultiSampleCount = 4;
-            }
-            else if (!manager.PreferMultiSampling)
-            {
-                pp.MultiSampleCount = 0;
-            }
-        }
-
-        public static void InitializeDisplay(Game game, GraphicsDeviceManager graphics, DisplayOrientation supportedOrientations)
-        {
-            m_GraphicsDeviceMgr = graphics;
-            m_bHasStencilBuffer = (graphics.PreferredDepthStencilFormat == DepthFormat.Depth24Stencil8);
-            SetOrientation(supportedOrientations, false);
-
-            m_Game = game;
-
-#if ANDROID
-            graphics.IsFullScreen = true;
-#endif
-
-#if WINDOWS || WINDOWSGL || MACOS || LINUX
-            game.IsMouseVisible = true;
-            graphics.IsFullScreen = false;
-#endif
-        }
-
-        public static void Init(IGraphicsDeviceService service)
-        {
-            m_graphicsService = service;
-            m_presentationParameters = new PresentationParameters()
-            {
-                RenderTargetUsage = RenderTargetUsage.PreserveContents,
-                DepthStencilFormat = DepthFormat.Depth24Stencil8,
-                BackBufferFormat = SurfaceFormat.Color
-            };
-            
-            service.DeviceCreated += GraphicsDeviceDeviceCreated;
-
-            var manager = service as GraphicsDeviceManager;
-
-            if (manager != null)
-            {
-                UpdatePresentationParametrs(manager);
-
-                manager.PreparingDeviceSettings += GraphicsPreparingDeviceSettings;
+                return new CCSize(m_obScreenSize.Width / m_fScaleX, m_obScreenSize.Height / m_fScaleY);
             }
             else
             {
-                if (service.GraphicsDevice != null)
-                {
-                    Init(service.GraphicsDevice);
-                }
+                return m_obDesignResolutionSize;
+            }
+        }
+    }
+
+    public static CCPoint VisibleOrigin
+    {
+        get
+        {
+            if (m_eResolutionPolicy == CCResolutionPolicy.NoBorder)
+            {
+                return new CCPoint((m_obDesignResolutionSize.Width - m_obScreenSize.Width / m_fScaleX) / 2,
+                                   (m_obDesignResolutionSize.Height - m_obScreenSize.Height / m_fScaleY) / 2);
+            }
+            else
+            {
+                return CCPoint.Zero;
+            }
+        }
+    }
+
+    private static List<RasterizerState> _rasterizerStatesCache = new List<RasterizerState>();
+
+    private static RasterizerState GetScissorRasterizerState(bool scissorEnabled)
+    {
+        var currentState = graphicsDevice.RasterizerState;
+        
+        for (int i = 0; i < _rasterizerStatesCache.Count; i++)
+        {
+            var state = _rasterizerStatesCache[i];
+            if (
+                state.ScissorTestEnable == scissorEnabled &&
+                currentState.CullMode == state.CullMode &&
+                currentState.DepthBias == state.DepthBias &&
+                currentState.FillMode == state.FillMode &&
+                currentState.MultiSampleAntiAlias == state.MultiSampleAntiAlias &&
+                currentState.SlopeScaleDepthBias == state.SlopeScaleDepthBias
+                )
+            {
+                return state;
             }
         }
 
-        /// <summary>
-        /// Called just before the graphics device for the presentation is created. This method callback is used to setup
-        /// the device settings. The WindowSetup is used to set the presentation parameters.
-        /// </summary>
-        static void GraphicsPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
+        var newState = new RasterizerState
         {
-            var gdipp = e.GraphicsDeviceInformation.PresentationParameters;
-            var pp = m_presentationParameters;
+            ScissorTestEnable = scissorEnabled,
+            CullMode = currentState.CullMode,
+            DepthBias = currentState.DepthBias,
+            FillMode = currentState.FillMode,
+            MultiSampleAntiAlias = currentState.MultiSampleAntiAlias,
+            SlopeScaleDepthBias = currentState.SlopeScaleDepthBias
+        };
 
-            gdipp.RenderTargetUsage = pp.RenderTargetUsage;
-            gdipp.DepthStencilFormat = pp.DepthStencilFormat;
-            gdipp.BackBufferFormat = pp.BackBufferFormat;
-            gdipp.MultiSampleCount = pp.MultiSampleCount;
+        _rasterizerStatesCache.Add(newState);
 
-            //if (graphicsDevice == null)
+        return newState;
+    }
+
+    public static bool ScissorRectEnabled
+    {
+        get { return graphicsDevice.RasterizerState.ScissorTestEnable; }
+        set
+        {
+            if (graphicsDevice.RasterizerState.ScissorTestEnable != value)
             {
-                // Only set the buffer dimensions when the device was not created
-                gdipp.BackBufferWidth = pp.BackBufferWidth;
-                gdipp.BackBufferHeight = pp.BackBufferHeight;
+                graphicsDevice.RasterizerState = GetScissorRasterizerState(value);
             }
         }
+    }
 
-        static void GraphicsDeviceDeviceCreated(object sender, EventArgs e)
+    public static CCRect ViewPortRect
+    {
+        get { return m_obViewPortRect; }
+    }
+
+    public static float ScaleX
+    {
+        get { return m_fScaleX; }
+    }
+
+    public static float ScaleY
+    {
+        get { return m_fScaleY; }
+    }
+
+    /// <summary>
+    /// Converts screen coordinates (pixels from top-left) to game/design coordinates
+    /// using the current resolution policy and scale factors.
+    /// </summary>
+    public static CCPoint ConvertScreenToGameCoords(float screenX, float screenY)
+    {
+        float gameX = (screenX - m_obViewPortRect.Origin.X) / m_fScaleX;
+        float gameY = (m_obScreenSize.Height - screenY - m_obViewPortRect.Origin.Y) / m_fScaleY;
+        return new CCPoint(gameX, gameY);
+    }
+
+    private static IGraphicsDeviceService m_graphicsService;
+    private static PresentationParameters m_presentationParameters = new PresentationParameters();
+    private static GraphicsDeviceManager m_GraphicsDeviceMgr;
+
+    private static void UpdatePresentationParametrs(GraphicsDeviceManager manager)
+    {
+        var pp = m_presentationParameters;
+
+        pp.BackBufferWidth = manager.PreferredBackBufferWidth;
+        pp.BackBufferHeight = manager.PreferredBackBufferHeight;
+        pp.BackBufferFormat = manager.PreferredBackBufferFormat;
+        pp.DepthStencilFormat = manager.PreferredDepthStencilFormat;
+        pp.RenderTargetUsage = m_presentationParameters.RenderTargetUsage;
+        if (manager.PreferMultiSampling && pp.MultiSampleCount == 0)
         {
-            Init(m_graphicsService.GraphicsDevice);
+            pp.MultiSampleCount = 4;
         }
-
-        public static void Init(GraphicsDevice graphicsDevice)
+        else if (!manager.PreferMultiSampling)
         {
-            CCDrawManager.graphicsDevice = graphicsDevice;
+            pp.MultiSampleCount = 0;
+        }
+    }
 
-            spriteBatch = new SpriteBatch(graphicsDevice);
+    public static void InitializeDisplay(Game game, GraphicsDeviceManager graphics, DisplayOrientation supportedOrientations)
+    {
+        m_GraphicsDeviceMgr = graphics;
+        m_bHasStencilBuffer = (graphics.PreferredDepthStencilFormat == DepthFormat.Depth24Stencil8);
+        SetOrientation(supportedOrientations, false);
 
-            m_defaultEffect = new BasicEffect(graphicsDevice);
+        m_Game = game;
 
-            PrimitiveEffect = new BasicEffect(graphicsDevice)
-            {
-                TextureEnabled = false,
-                VertexColorEnabled = true
-            };
-
-            AlphaTestEffect = new AlphaTestEffect(graphicsDevice);
-
-            m_DepthEnableStencilState = new DepthStencilState
-            {
-                DepthBufferEnable = true,
-                DepthBufferWriteEnable = true,
-                TwoSidedStencilMode = true
-            };
-
-            m_DepthDisableStencilState = new DepthStencilState
-            {
-                DepthBufferEnable = false
-            };
-#if !WINDOWS
-            //List<string> extensions = CCUtils.GetGLExtensions();
-            //foreach(string s in extensions) 
-            //{
-            //    switch(s) 
-            //    {
-            //        case "GL_OES_depth24":
-            //            m_PlatformDepthFormat = DepthFormat.Depth24;
-            //            break;
-            //        case "GL_IMG_texture_npot":
-            //            m_AllowNonPower2Textures = true;
-            //            break;
-            //        case "GL_NV_depth_nonlinear": // nVidia Depth 16 non-linear
-            //            m_PlatformDepthFormat = DepthFormat.Depth16;
-            //            break;
-            //        case "GL_NV_texture_npot_2D_mipmap": // nVidia - nPot textures and mipmaps
-            //            m_AllowNonPower2Textures = true;
-            //            break;
-            //    }
-            //}
+#if ANDROID
+        graphics.IsFullScreen = true;
 #endif
-            PresentationParameters pp = graphicsDevice.PresentationParameters;
-            //pp.RenderTargetUsage = RenderTargetUsage.PreserveContents;
-            //m_renderTarget = new RenderTarget2D(graphicsDevice, pp.BackBufferWidth, (int)pp.BackBufferHeight, false, pp.BackBufferFormat, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.PreserveContents);
 
-            //m_eResolutionPolicy = CCResolutionPolicy.UnKnown;
+#if WINDOWS || WINDOWSGL || MACOS || LINUX
+        game.IsMouseVisible = true;
+        graphics.IsFullScreen = false;
+#endif
+    }
+
+    public static void Init(IGraphicsDeviceService service)
+    {
+        m_graphicsService = service;
+        m_presentationParameters = new PresentationParameters()
+        {
+            RenderTargetUsage = RenderTargetUsage.PreserveContents,
+            DepthStencilFormat = DepthFormat.Depth24Stencil8,
+            BackBufferFormat = SurfaceFormat.Color
+        };
+        
+        service.DeviceCreated += GraphicsDeviceDeviceCreated;
+
+        var manager = service as GraphicsDeviceManager;
+
+        if (manager != null)
+        {
+            UpdatePresentationParametrs(manager);
+
+            manager.PreparingDeviceSettings += GraphicsPreparingDeviceSettings;
+        }
+        else
+        {
+            if (service.GraphicsDevice != null)
+            {
+                Init(service.GraphicsDevice);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Called just before the graphics device for the presentation is created. This method callback is used to setup
+    /// the device settings. The WindowSetup is used to set the presentation parameters.
+    /// </summary>
+    static void GraphicsPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
+    {
+        var gdipp = e.GraphicsDeviceInformation.PresentationParameters;
+        var pp = m_presentationParameters;
+
+        gdipp.RenderTargetUsage = pp.RenderTargetUsage;
+        gdipp.DepthStencilFormat = pp.DepthStencilFormat;
+        gdipp.BackBufferFormat = pp.BackBufferFormat;
+        gdipp.MultiSampleCount = pp.MultiSampleCount;
+
+        //if (graphicsDevice == null)
+        {
+            // Only set the buffer dimensions when the device was not created
+            gdipp.BackBufferWidth = pp.BackBufferWidth;
+            gdipp.BackBufferHeight = pp.BackBufferHeight;
+        }
+    }
+
+    static void GraphicsDeviceDeviceCreated(object sender, EventArgs e)
+    {
+        Init(m_graphicsService.GraphicsDevice);
+    }
+
+    public static void Init(GraphicsDevice graphicsDevice)
+    {
+        CCDrawManager.graphicsDevice = graphicsDevice;
+
+        spriteBatch = new SpriteBatch(graphicsDevice);
+
+        m_defaultEffect = new BasicEffect(graphicsDevice);
+
+        PrimitiveEffect = new BasicEffect(graphicsDevice)
+        {
+            TextureEnabled = false,
+            VertexColorEnabled = true
+        };
+
+        AlphaTestEffect = new AlphaTestEffect(graphicsDevice);
+
+        m_DepthEnableStencilState = new DepthStencilState
+        {
+            DepthBufferEnable = true,
+            DepthBufferWriteEnable = true,
+            TwoSidedStencilMode = true
+        };
+
+        m_DepthDisableStencilState = new DepthStencilState
+        {
+            DepthBufferEnable = false
+        };
+        PresentationParameters pp = graphicsDevice.PresentationParameters;
+        //pp.RenderTargetUsage = RenderTargetUsage.PreserveContents;
+        //m_renderTarget = new RenderTarget2D(graphicsDevice, pp.BackBufferWidth, (int)pp.BackBufferHeight, false, pp.BackBufferFormat, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.PreserveContents);
+
+        //m_eResolutionPolicy = CCResolutionPolicy.UnKnown;
+        m_obViewPortRect = new CCRect(0, 0, pp.BackBufferWidth, pp.BackBufferHeight);
+        m_obScreenSize = m_obViewPortRect.Size;
+        m_lastWidth = 0;
+        m_lastHeight = 0;
+
+        if (m_eResolutionPolicy != CCResolutionPolicy.UnKnown)
+        {
+            SetDesignResolutionSize(m_obDesignResolutionSize.Width, m_obDesignResolutionSize.Height, m_eResolutionPolicy);
+        }
+        else
+        {
+            m_fScaleY = 1.0f;
+            m_fScaleX = 1.0f;
+
+            m_obDesignResolutionSize = m_obScreenSize;
+        }
+
+        m_projectionMatrix = Matrix.Identity;
+        m_viewMatrix = Matrix.Identity;
+        m_worldMatrix = Matrix.Identity;
+        m_Matrix = Matrix.Identity;
+
+        m_worldMatrixChanged = m_viewMatrixChanged = m_projectionMatrixChanged = true;
+
+        CCDrawingPrimitives.Init(graphicsDevice);
+
+        graphicsDevice.Disposing += GraphicsDeviceDisposing;
+        graphicsDevice.DeviceLost += GraphicsDeviceDeviceLost;
+        graphicsDevice.DeviceReset += GraphicsDeviceDeviceReset;
+        graphicsDevice.DeviceResetting += GraphicsDeviceDeviceResetting;
+        graphicsDevice.ResourceCreated += GraphicsDeviceResourceCreated;
+        graphicsDevice.ResourceDestroyed += GraphicsDeviceResourceDestroyed;
+    }
+
+    public static void PurgeDrawManager()
+    {
+        graphicsDevice = null;
+
+        PrimitiveEffect = null;
+        AlphaTestEffect = null;
+
+        m_defaultEffect = null;
+        m_currentEffect = null;
+        m_effectStack.Clear();
+
+        spriteBatch = null;
+
+        m_renderTarget = null;
+
+        m_currentTexture = null;
+
+        m_blendStates.Clear();
+
+        m_DepthEnableStencilState = null;
+        m_DepthDisableStencilState = null;
+
+        m_currRenderTarget = null;
+        m_quadsBuffer = null;
+        m_quadsIndexBuffer = null;
+
+        m_quadVertices = null;
+        _tmpVertices.Clear();
+    }
+    
+    static void GraphicsDeviceResourceDestroyed(object sender, ResourceDestroyedEventArgs e)
+    {
+    }
+
+    static void GraphicsDeviceResourceCreated(object sender, ResourceCreatedEventArgs e)
+    {
+    }
+
+    static void GraphicsDeviceDeviceResetting(object sender, EventArgs e)
+    {
+        CCGraphicsResource.DisposeAllResources();
+        CCSpriteFontCache.SharedInstance.Clear();
+#if XNA
+        CCContentManager.SharedContentManager.ReloadGraphicsAssets();
+#endif
+        m_bNeedReinitResources = true;
+    }
+
+    static void GraphicsDeviceDeviceReset(object sender, EventArgs e)
+    {
+    }
+
+    static void GraphicsDeviceDeviceLost(object sender, EventArgs e)
+    {
+    }
+
+    static void GraphicsDeviceDisposing(object sender, EventArgs e)
+    {
+    }
+
+    private static void ResetDevice()
+    {
+        m_defaultEffect.View = m_viewMatrix;
+        m_defaultEffect.World = m_worldMatrix;
+        m_defaultEffect.Projection = m_projectionMatrix;
+
+        m_Matrix = m_worldMatrix;
+
+        m_defaultEffect.Alpha = 1f;
+        m_defaultEffect.VertexColorEnabled = true;
+        m_defaultEffect.Texture = null;
+        m_defaultEffect.TextureEnabled = false;
+
+        m_effectStack.Clear();
+
+        m_currentEffect = m_defaultEffect;
+
+        m_currentTexture = null;
+        m_vertexColorEnabled = true;
+
+        m_worldMatrixChanged = false;
+        m_projectionMatrixChanged = false;
+        m_viewMatrixChanged = false;
+        m_textureChanged = false;
+        m_effectChanged = false;
+
+        graphicsDevice.SetVertexBuffer(null);
+        graphicsDevice.SetRenderTarget(m_renderTarget);
+        graphicsDevice.Indices = null;
+
+        graphicsDevice.SamplerStates[0] = DefaultSamplerState;
+        graphicsDevice.RasterizerState = RasterizerState.CullNone;
+        graphicsDevice.BlendState = BlendState.AlphaBlend;
+
+        DepthTest = m_depthTest;
+
+        if (graphicsDevice.Viewport.Width != m_lastWidth || graphicsDevice.Viewport.Height != m_lastHeight)
+        {
+            PresentationParameters pp = graphicsDevice.PresentationParameters;
             m_obViewPortRect = new CCRect(0, 0, pp.BackBufferWidth, pp.BackBufferHeight);
             m_obScreenSize = m_obViewPortRect.Size;
-            m_lastWidth = 0;
-            m_lastHeight = 0;
 
             if (m_eResolutionPolicy != CCResolutionPolicy.UnKnown)
             {
@@ -519,1693 +629,1561 @@ namespace Cocos2D
             }
             else
             {
-                m_fScaleY = 1.0f;
-                m_fScaleX = 1.0f;
-
-                m_obDesignResolutionSize = m_obScreenSize;
+                CCDirector director = CCDirector.SharedDirector;
+                director.Projection = director.Projection;
             }
 
-            m_projectionMatrix = Matrix.Identity;
-            m_viewMatrix = Matrix.Identity;
-            m_worldMatrix = Matrix.Identity;
-            m_Matrix = Matrix.Identity;
+            m_lastWidth = graphicsDevice.Viewport.Width;
+            m_lastHeight = graphicsDevice.Viewport.Height;
+        }
+    }
 
-            m_worldMatrixChanged = m_viewMatrixChanged = m_projectionMatrixChanged = true;
+    private static bool m_bHasStencilBuffer = true;
 
-            CCDrawingPrimitives.Init(graphicsDevice);
-
-            graphicsDevice.Disposing += GraphicsDeviceDisposing;
-            graphicsDevice.DeviceLost += GraphicsDeviceDeviceLost;
-            graphicsDevice.DeviceReset += GraphicsDeviceDeviceReset;
-            graphicsDevice.DeviceResetting += GraphicsDeviceDeviceResetting;
-            graphicsDevice.ResourceCreated += GraphicsDeviceResourceCreated;
-            graphicsDevice.ResourceDestroyed += GraphicsDeviceResourceDestroyed;
+    public static bool BeginDraw()
+    {
+        if (graphicsDevice == null || graphicsDevice.IsDisposed)
+        {
+            // We are existing the game
+            return(false);
         }
 
-        public static void PurgeDrawManager()
+        if (m_bNeedReinitResources)
         {
-            graphicsDevice = null;
-
-            PrimitiveEffect = null;
-            AlphaTestEffect = null;
-
-            m_defaultEffect = null;
-            m_currentEffect = null;
-            m_effectStack.Clear();
-
-            spriteBatch = null;
-
-            m_renderTarget = null;
-
-            m_currentTexture = null;
-
-            m_blendStates.Clear();
-
-            m_DepthEnableStencilState = null;
-            m_DepthDisableStencilState = null;
-
-            m_currRenderTarget = null;
-            m_quadsBuffer = null;
-            m_quadsIndexBuffer = null;
-
-            m_quadVertices = null;
-            _tmpVertices.Clear();
-        }
-        
-        static void GraphicsDeviceResourceDestroyed(object sender, ResourceDestroyedEventArgs e)
-        {
+            CCGraphicsResource.ReinitAllResources();
+            m_bNeedReinitResources = false;
         }
 
-        static void GraphicsDeviceResourceCreated(object sender, ResourceCreatedEventArgs e)
+        ResetDevice();
+        if (m_bHasStencilBuffer)
         {
-        }
-
-        static void GraphicsDeviceDeviceResetting(object sender, EventArgs e)
-        {
-            CCGraphicsResource.DisposeAllResources();
-            CCSpriteFontCache.SharedInstance.Clear();
-#if XNA
-            CCContentManager.SharedContentManager.ReloadGraphicsAssets();
-#endif
-            m_bNeedReinitResources = true;
-        }
-
-        static void GraphicsDeviceDeviceReset(object sender, EventArgs e)
-        {
-        }
-
-        static void GraphicsDeviceDeviceLost(object sender, EventArgs e)
-        {
-        }
-
-        static void GraphicsDeviceDisposing(object sender, EventArgs e)
-        {
-        }
-
-        private static void ResetDevice()
-        {
-            m_defaultEffect.View = m_viewMatrix;
-            m_defaultEffect.World = m_worldMatrix;
-            m_defaultEffect.Projection = m_projectionMatrix;
-
-            m_Matrix = m_worldMatrix;
-
-            m_defaultEffect.Alpha = 1f;
-            m_defaultEffect.VertexColorEnabled = true;
-            m_defaultEffect.Texture = null;
-            m_defaultEffect.TextureEnabled = false;
-
-            m_effectStack.Clear();
-
-            m_currentEffect = m_defaultEffect;
-
-            m_currentTexture = null;
-            m_vertexColorEnabled = true;
-
-            m_worldMatrixChanged = false;
-            m_projectionMatrixChanged = false;
-            m_viewMatrixChanged = false;
-            m_textureChanged = false;
-            m_effectChanged = false;
-
-            graphicsDevice.SetVertexBuffer(null);
-            graphicsDevice.SetRenderTarget(m_renderTarget);
-            graphicsDevice.Indices = null;
-
-            graphicsDevice.SamplerStates[0] = DefaultSamplerState;
-            graphicsDevice.RasterizerState = RasterizerState.CullNone;
-            graphicsDevice.BlendState = BlendState.AlphaBlend;
-
-            DepthTest = m_depthTest;
-
-            if (graphicsDevice.Viewport.Width != m_lastWidth || graphicsDevice.Viewport.Height != m_lastHeight)
+            try
             {
-                PresentationParameters pp = graphicsDevice.PresentationParameters;
-                m_obViewPortRect = new CCRect(0, 0, pp.BackBufferWidth, pp.BackBufferHeight);
-                m_obScreenSize = m_obViewPortRect.Size;
-
-                if (m_eResolutionPolicy != CCResolutionPolicy.UnKnown)
-                {
-                    SetDesignResolutionSize(m_obDesignResolutionSize.Width, m_obDesignResolutionSize.Height, m_eResolutionPolicy);
-                }
-                else
-                {
-                    CCDirector director = CCDirector.SharedDirector;
-                    director.Projection = director.Projection;
-                }
-
-                m_lastWidth = graphicsDevice.Viewport.Width;
-                m_lastHeight = graphicsDevice.Viewport.Height;
+                Clear(Color.Black, 0, 0);
             }
-        }
-
-        private static bool m_bHasStencilBuffer = true;
-
-        public static bool BeginDraw()
-        {
-            if (graphicsDevice == null || graphicsDevice.IsDisposed)
+            catch (InvalidOperationException)
             {
-                // We are existing the game
-                return(false);
-            }
-
-            if (m_bNeedReinitResources)
-            {
-                CCGraphicsResource.ReinitAllResources();
-                m_bNeedReinitResources = false;
-            }
-
-            ResetDevice();
-            if (m_bHasStencilBuffer)
-            {
-                try
-                {
-                    Clear(Color.Black, 0, 0);
-                }
-                catch (InvalidOperationException)
-                {
-                    // no stencil buffer
-                    m_bHasStencilBuffer = false;
-                    Clear(Color.Black);
-                }
-            }
-            else
-            {
+                // no stencil buffer
+                m_bHasStencilBuffer = false;
                 Clear(Color.Black);
             }
-            DrawCount = 0;
-            return (true);
+        }
+        else
+        {
+            Clear(Color.Black);
+        }
+        DrawCount = 0;
+        return (true);
+    }
+
+    public static void EndDraw()
+    {
+        if (graphicsDevice == null || graphicsDevice.IsDisposed)
+        {
+            // We are existing the game
+            return;
         }
 
-        public static void EndDraw()
+        Debug.Assert(m_stackIndex == 0);
+
+        if (m_renderTarget != null)
         {
-            if (graphicsDevice == null || graphicsDevice.IsDisposed)
-            {
-                // We are existing the game
-                return;
-            }
+            graphicsDevice.SetRenderTarget(null);
 
-            Debug.Assert(m_stackIndex == 0);
-
-            if (m_renderTarget != null)
-            {
-                graphicsDevice.SetRenderTarget(null);
-
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-                spriteBatch.Draw(m_renderTarget, new Vector2(0, 0), Color.White);
-                spriteBatch.End();
-            }
-
-            ResetDevice();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            spriteBatch.Draw(m_renderTarget, new Vector2(0, 0), Color.White);
+            spriteBatch.End();
         }
 
-        public static void PushEffect(Effect effect)
+        ResetDevice();
+    }
+
+    public static void PushEffect(Effect effect)
+    {
+        m_effectStack.Push(m_currentEffect);
+        m_currentEffect = effect;
+        m_effectChanged = true;
+    }
+
+    public static void PopEffect()
+    {
+        m_currentEffect = m_effectStack.Pop();
+        m_effectChanged = true;
+    }
+
+    private static void ApplyEffectTexture()
+    {
+        if (m_currentEffect is BasicEffect)
         {
-            m_effectStack.Push(m_currentEffect);
-            m_currentEffect = effect;
-            m_effectChanged = true;
+            var effect = (BasicEffect)m_currentEffect;
+
+            effect.TextureEnabled = m_textureEnabled;
+            effect.VertexColorEnabled = m_vertexColorEnabled;
+            effect.Texture = m_currentTexture;
         }
-
-        public static void PopEffect()
+        else if (m_currentEffect is AlphaTestEffect)
         {
-            m_currentEffect = m_effectStack.Pop();
-            m_effectChanged = true;
+            var effect = (AlphaTestEffect)m_currentEffect;
+            effect.VertexColorEnabled = m_vertexColorEnabled;
+            effect.Texture = m_currentTexture;
         }
-
-        private static void ApplyEffectTexture()
+        else
         {
-            if (m_currentEffect is BasicEffect)
-            {
-                var effect = (BasicEffect)m_currentEffect;
-
-                effect.TextureEnabled = m_textureEnabled;
-                effect.VertexColorEnabled = m_vertexColorEnabled;
-                effect.Texture = m_currentTexture;
-            }
-            else if (m_currentEffect is AlphaTestEffect)
-            {
-                var effect = (AlphaTestEffect)m_currentEffect;
-                effect.VertexColorEnabled = m_vertexColorEnabled;
-                effect.Texture = m_currentTexture;
-            }
-            else
-            {
-                throw new Exception(String.Format("Effect {0} not supported", m_currentEffect.GetType().Name));
-            }
+            throw new Exception(String.Format("Effect {0} not supported", m_currentEffect.GetType().Name));
         }
+    }
 
-        private static void ApplyEffectParams()
+    private static void ApplyEffectParams()
+    {
+        if (m_effectChanged)
         {
-            if (m_effectChanged)
+            var matrices = m_currentEffect as IEffectMatrices;
+
+            if (matrices != null)
+            {
+                matrices.Projection = m_projectionMatrix;
+                matrices.View = m_viewMatrix;
+                matrices.World = m_Matrix;
+            }
+
+            ApplyEffectTexture();
+        }
+        else
+        {
+            if (m_worldMatrixChanged || m_projectionMatrixChanged || m_viewMatrixChanged)
             {
                 var matrices = m_currentEffect as IEffectMatrices;
 
                 if (matrices != null)
                 {
-                    matrices.Projection = m_projectionMatrix;
-                    matrices.View = m_viewMatrix;
-                    matrices.World = m_Matrix;
+                    if (m_worldMatrixChanged)
+                    {
+                        matrices.World = m_Matrix;
+                    }
+                    if (m_projectionMatrixChanged)
+                    {
+                        matrices.Projection = m_projectionMatrix;
+                    }
+                    if (m_viewMatrixChanged)
+                    {
+                        matrices.View = m_viewMatrix;
+                    }
                 }
+            }
 
+            if (m_textureChanged)
+            {
                 ApplyEffectTexture();
             }
-            else
-            {
-                if (m_worldMatrixChanged || m_projectionMatrixChanged || m_viewMatrixChanged)
-                {
-                    var matrices = m_currentEffect as IEffectMatrices;
-
-                    if (matrices != null)
-                    {
-                        if (m_worldMatrixChanged)
-                        {
-                            matrices.World = m_Matrix;
-                        }
-                        if (m_projectionMatrixChanged)
-                        {
-                            matrices.Projection = m_projectionMatrix;
-                        }
-                        if (m_viewMatrixChanged)
-                        {
-                            matrices.View = m_viewMatrix;
-                        }
-                    }
-                }
-
-                if (m_textureChanged)
-                {
-                    ApplyEffectTexture();
-                }
-            }
-
-            m_effectChanged = false;
-            m_textureChanged = false;
-            m_worldMatrixChanged = false;
-            m_projectionMatrixChanged = false;
-            m_viewMatrixChanged = false;
         }
 
-        public static void DrawPrimitives<T>(PrimitiveType type, T[] vertices, int offset, int count) where T : struct, IVertexType
+        m_effectChanged = false;
+        m_textureChanged = false;
+        m_worldMatrixChanged = false;
+        m_projectionMatrixChanged = false;
+        m_viewMatrixChanged = false;
+    }
+
+    public static void DrawPrimitives<T>(PrimitiveType type, T[] vertices, int offset, int count) where T : struct, IVertexType
+    {
+        if (count <= 0)
         {
-            if (count <= 0)
-            {
-                return;
-            }
-
-            ApplyEffectParams();
-
-            EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
-            for (int i = 0; i < passes.Count; i++)
-            {
-                passes[i].Apply();
-                if (count > 65535)
-                {
-                    count = 65535; // Hard limit for XNA
-                }
-                graphicsDevice.DrawUserPrimitives(type, vertices, offset, count);
-            }
-
-            DrawCount++;
+            return;
         }
 
-        public static void DrawIndexedPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset, int numVertices, short[] indexData,
-                                                    int indexOffset, int primitiveCount) where T : struct, IVertexType
+        ApplyEffectParams();
+
+        EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
+        for (int i = 0; i < passes.Count; i++)
         {
-            if (primitiveCount <= 0)
+            passes[i].Apply();
+            if (count > 65535)
             {
-                return;
+                count = 65535; // Hard limit for XNA
             }
-
-            ApplyEffectParams();
-
-            EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
-            for (int i = 0; i < passes.Count; i++)
-            {
-                passes[i].Apply();
-                graphicsDevice.DrawUserIndexedPrimitives(primitiveType, vertexData, vertexOffset, numVertices, indexData, indexOffset,
-                                                         primitiveCount);
-            }
-
-            DrawCount++;
+            graphicsDevice.DrawUserPrimitives(type, vertices, offset, count);
         }
 
+        DrawCount++;
+    }
 
-        public static void BlendFunc(CCBlendFunc blendFunc)
+    public static void DrawIndexedPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset, int numVertices, short[] indexData,
+                                                int indexOffset, int primitiveCount) where T : struct, IVertexType
+    {
+        if (primitiveCount <= 0)
         {
-
-            // It looks like the blend state is being reset somewhere so this check of not setting
-            // the blend states is causing multiple problems.  Took this check out and setting the 
-            // blend state seems the correct modification for now.
-            //if (m_currBlend.Destination != blendFunc.Destination || m_currBlend.Source != blendFunc.Source)
-            //{
-            BlendState bs = null;
-            if (blendFunc == CCBlendFunc.AlphaBlend)
-            {
-                bs = BlendState.AlphaBlend;
-            }
-            else if (blendFunc == CCBlendFunc.Additive)
-            {
-                bs = BlendState.Additive;
-            }
-            else if (blendFunc == CCBlendFunc.NonPremultiplied)
-            {
-                bs = BlendState.NonPremultiplied;
-            }
-            else if (blendFunc == CCBlendFunc.Opaque)
-            {
-                bs = BlendState.Opaque;
-            }
-            else
-            {
-                if (!m_blendStates.TryGetValue(blendFunc, out bs))
-                {
-                    bs = new BlendState();
-
-                    bs.ColorSourceBlend = CCOGLES.GetXNABlend(blendFunc.Source);
-                    bs.AlphaSourceBlend = CCOGLES.GetXNABlend(blendFunc.Source);
-                    bs.ColorDestinationBlend = CCOGLES.GetXNABlend(blendFunc.Destination);
-                    bs.AlphaDestinationBlend = CCOGLES.GetXNABlend(blendFunc.Destination);
-
-                    m_blendStates.Add(blendFunc, bs);
-                }
-            }
-
-            if (graphicsDevice != null)
-            {
-                graphicsDevice.BlendState = bs;
-            }
-
-            m_currBlend.Source = blendFunc.Source;
-            m_currBlend.Destination = blendFunc.Destination;
-
-            //}
+            return;
         }
 
-        public static void BindTexture(CCTexture2D texture)
+        ApplyEffectParams();
+
+        EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
+        for (int i = 0; i < passes.Count; i++)
         {
-            Texture2D tex = texture == null ? null : texture.XNATexture;
+            passes[i].Apply();
+            graphicsDevice.DrawUserIndexedPrimitives(primitiveType, vertexData, vertexOffset, numVertices, indexData, indexOffset,
+                                                     primitiveCount);
+        }
 
-            if (!graphicsDevice.IsDisposed && graphicsDevice.GraphicsDeviceStatus == GraphicsDeviceStatus.Normal)
+        DrawCount++;
+    }
+
+
+    public static void BlendFunc(CCBlendFunc blendFunc)
+    {
+
+        // It looks like the blend state is being reset somewhere so this check of not setting
+        // the blend states is causing multiple problems.  Took this check out and setting the 
+        // blend state seems the correct modification for now.
+        //if (m_currBlend.Destination != blendFunc.Destination || m_currBlend.Source != blendFunc.Source)
+        //{
+        BlendState bs = null;
+        if (blendFunc == CCBlendFunc.AlphaBlend)
+        {
+            bs = BlendState.AlphaBlend;
+        }
+        else if (blendFunc == CCBlendFunc.Additive)
+        {
+            bs = BlendState.Additive;
+        }
+        else if (blendFunc == CCBlendFunc.NonPremultiplied)
+        {
+            bs = BlendState.NonPremultiplied;
+        }
+        else if (blendFunc == CCBlendFunc.Opaque)
+        {
+            bs = BlendState.Opaque;
+        }
+        else
+        {
+            if (!m_blendStates.TryGetValue(blendFunc, out bs))
             {
-                if (tex == null)
-                {
-                    graphicsDevice.SamplerStates[0] = DefaultSamplerState;
-                    TextureEnabled = false;
-                }
-                else
-                {
-                    graphicsDevice.SamplerStates[0] = texture.SamplerState;
-                    TextureEnabled = true;
-                }
+                bs = new BlendState();
 
-                if (m_currentTexture != tex)
-                {
-                    m_currentTexture = tex;
-                    m_textureChanged = true;
-                }
+                bs.ColorSourceBlend = CCOGLES.GetXNABlend(blendFunc.Source);
+                bs.AlphaSourceBlend = CCOGLES.GetXNABlend(blendFunc.Source);
+                bs.ColorDestinationBlend = CCOGLES.GetXNABlend(blendFunc.Destination);
+                bs.AlphaDestinationBlend = CCOGLES.GetXNABlend(blendFunc.Destination);
+
+                m_blendStates.Add(blendFunc, bs);
             }
         }
 
-        public static void CreateRenderTarget(CCTexture2D pTexture, RenderTargetUsage usage)
+        if (graphicsDevice != null)
         {
-            CCSize size = pTexture.ContentSizeInPixels;
-            var texture = CreateRenderTarget((int)size.Width, (int)size.Height, CCTexture2D.DefaultAlphaPixelFormat,
-                                             m_PlatformDepthFormat, usage);
-            pTexture.InitWithTexture(texture, CCTexture2D.DefaultAlphaPixelFormat, true, false);
+            graphicsDevice.BlendState = bs;
         }
 
-        public static RenderTarget2D CreateRenderTarget(int width, int height, RenderTargetUsage usage)
-        {
-            return CreateRenderTarget(width, height, CCTexture2D.DefaultAlphaPixelFormat, DepthFormat.None, usage);
-        }
+        m_currBlend.Source = blendFunc.Source;
+        m_currBlend.Destination = blendFunc.Destination;
 
-        public static RenderTarget2D CreateRenderTarget(int width, int height, SurfaceFormat colorFormat, RenderTargetUsage usage)
-        {
-            return CreateRenderTarget(width, height, colorFormat, DepthFormat.None, usage);
-        }
+        //}
+    }
 
-        public static RenderTarget2D CreateRenderTarget(int width, int height, SurfaceFormat colorFormat, DepthFormat depthFormat,
-                                                        RenderTargetUsage usage)
+    public static void BindTexture(CCTexture2D texture)
+    {
+        Texture2D tex = texture == null ? null : texture.XNATexture;
+
+        if (!graphicsDevice.IsDisposed && graphicsDevice.GraphicsDeviceStatus == GraphicsDeviceStatus.Normal)
         {
-            if (!m_AllowNonPower2Textures)
+            if (tex == null)
             {
-                width = CCUtils.CCNextPOT(width);
-                height = CCUtils.CCNextPOT(height);
-            }
-            return new RenderTarget2D(graphicsDevice, width, height, false, colorFormat, depthFormat, 0, usage);
-        }
-
-        public static Texture2D CreateTexture2D(int width, int height)
-        {
-            PresentationParameters pp = graphicsDevice.PresentationParameters;
-            if (!m_AllowNonPower2Textures)
-            {
-                width = CCUtils.CCNextPOT(width);
-                height = CCUtils.CCNextPOT(height);
-            }
-            return new Texture2D(graphicsDevice, width, height, false, SurfaceFormat.Color);
-        }
-
-        /// <summary>
-        /// Sets the render target for all drawing to the given texture's core texture. The texture
-        /// must be a RenderTarget2D or else you will get an assert/exception.
-        /// </summary>
-        /// <param name="pTexture">The target of future drawing, which must be a RenderTarget2D</param>
-        public static void SetRenderTarget(CCTexture2D pTexture)
-        {
-            if (pTexture == null)
-            {
-                SetRenderTarget((RenderTarget2D)null);
+                graphicsDevice.SamplerStates[0] = DefaultSamplerState;
+                TextureEnabled = false;
             }
             else
             {
-                Debug.Assert(pTexture.XNATexture is RenderTarget2D);
-                SetRenderTarget((RenderTarget2D)pTexture.XNATexture);
+                graphicsDevice.SamplerStates[0] = texture.SamplerState;
+                TextureEnabled = true;
+            }
+
+            if (m_currentTexture != tex)
+            {
+                m_currentTexture = tex;
+                m_textureChanged = true;
             }
         }
+    }
 
-        /// <summary>
-        /// Resets the default render target to be the display render target (null)
-        /// </summary>
-        public static void ResetToDisplayRenderTarget()
+    public static void CreateRenderTarget(CCTexture2D pTexture, RenderTargetUsage usage)
+    {
+        CCSize size = pTexture.ContentSizeInPixels;
+        var texture = CreateRenderTarget((int)size.Width, (int)size.Height, CCTexture2D.DefaultAlphaPixelFormat,
+                                         m_PlatformDepthFormat, usage);
+        pTexture.InitWithTexture(texture, CCTexture2D.DefaultAlphaPixelFormat, true, false);
+    }
+
+    public static RenderTarget2D CreateRenderTarget(int width, int height, RenderTargetUsage usage)
+    {
+        return CreateRenderTarget(width, height, CCTexture2D.DefaultAlphaPixelFormat, DepthFormat.None, usage);
+    }
+
+    public static RenderTarget2D CreateRenderTarget(int width, int height, SurfaceFormat colorFormat, RenderTargetUsage usage)
+    {
+        return CreateRenderTarget(width, height, colorFormat, DepthFormat.None, usage);
+    }
+
+    public static RenderTarget2D CreateRenderTarget(int width, int height, SurfaceFormat colorFormat, DepthFormat depthFormat,
+                                                    RenderTargetUsage usage)
+    {
+        if (!m_AllowNonPower2Textures)
         {
-            if (graphicsDevice.GraphicsDeviceStatus == GraphicsDeviceStatus.Normal)
+            width = CCUtils.CCNextPOT(width);
+            height = CCUtils.CCNextPOT(height);
+        }
+        return new RenderTarget2D(graphicsDevice, width, height, false, colorFormat, depthFormat, 0, usage);
+    }
+
+    public static Texture2D CreateTexture2D(int width, int height)
+    {
+        PresentationParameters pp = graphicsDevice.PresentationParameters;
+        if (!m_AllowNonPower2Textures)
+        {
+            width = CCUtils.CCNextPOT(width);
+            height = CCUtils.CCNextPOT(height);
+        }
+        return new Texture2D(graphicsDevice, width, height, false, SurfaceFormat.Color);
+    }
+
+    /// <summary>
+    /// Sets the render target for all drawing to the given texture's core texture. The texture
+    /// must be a RenderTarget2D or else you will get an assert/exception.
+    /// </summary>
+    /// <param name="pTexture">The target of future drawing, which must be a RenderTarget2D</param>
+    public static void SetRenderTarget(CCTexture2D pTexture)
+    {
+        if (pTexture == null)
+        {
+            SetRenderTarget((RenderTarget2D)null);
+        }
+        else
+        {
+            Debug.Assert(pTexture.XNATexture is RenderTarget2D);
+            SetRenderTarget((RenderTarget2D)pTexture.XNATexture);
+        }
+    }
+
+    /// <summary>
+    /// Resets the default render target to be the display render target (null)
+    /// </summary>
+    public static void ResetToDisplayRenderTarget()
+    {
+        if (graphicsDevice.GraphicsDeviceStatus == GraphicsDeviceStatus.Normal)
+        {
+            graphicsDevice.SetRenderTarget(null);
+            graphicsDevice.Viewport = m_savedViewport;
+        }
+        m_currRenderTarget = null;
+    }
+
+    /// <summary>
+    /// Sets the render target to the given target. This is where your drawing will happen 
+    /// if the given parameter is not null.
+    /// </summary>
+    /// <param name="renderTarget"></param>
+    public static void SetRenderTarget(RenderTarget2D renderTarget)
+    {
+        if (graphicsDevice.GraphicsDeviceStatus == GraphicsDeviceStatus.Normal)
+        {
+            if (renderTarget == null)
             {
-                graphicsDevice.SetRenderTarget(null);
+                graphicsDevice.SetRenderTarget(m_renderTarget);
                 graphicsDevice.Viewport = m_savedViewport;
             }
-            m_currRenderTarget = null;
-        }
-
-        /// <summary>
-        /// Sets the render target to the given target. This is where your drawing will happen 
-        /// if the given parameter is not null.
-        /// </summary>
-        /// <param name="renderTarget"></param>
-        public static void SetRenderTarget(RenderTarget2D renderTarget)
-        {
-            if (graphicsDevice.GraphicsDeviceStatus == GraphicsDeviceStatus.Normal)
-            {
-                if (renderTarget == null)
-                {
-                    graphicsDevice.SetRenderTarget(m_renderTarget);
-                    graphicsDevice.Viewport = m_savedViewport;
-                }
-                else
-                {
-                    m_savedViewport = graphicsDevice.Viewport;
-                    graphicsDevice.SetRenderTarget(renderTarget);
-                }
-            }
-            m_currRenderTarget = renderTarget;
-        }
-
-        /// <summary>
-        /// Returns the current render target. If this is null, then your drawing
-        /// is set to draw directly to the display frame buffer.
-        /// </summary>
-        /// <returns></returns>
-        public static RenderTarget2D GetRenderTarget()
-        {
-            return m_currRenderTarget;
-        }
-
-        #region Quad Buffer Integrity Checks
-
-        private static void CheckQuadsIndexBuffer(int capacity)
-        {
-            if (m_quadsIndexBuffer == null || m_quadsIndexBuffer.Capacity < capacity * 6)
-            {
-                capacity = Math.Max(capacity, DefaultQuadBufferSize);
-
-                if (m_quadsIndexBuffer == null)
-                {
-                    m_quadsIndexBuffer = new CCIndexBuffer<short>(capacity * 6, BufferUsage.WriteOnly);
-                    m_quadsIndexBuffer.Count = m_quadsIndexBuffer.Capacity;
-                }
-
-                if (m_quadsIndexBuffer.Capacity < capacity * 6)
-                {
-                    m_quadsIndexBuffer.Capacity = capacity * 6;
-                    m_quadsIndexBuffer.Count = m_quadsIndexBuffer.Capacity;
-                }
-
-                var indices = m_quadsIndexBuffer.Data.Elements;
-
-                int i6 = 0;
-                int i4 = 0;
-
-                for (int i = 0; i < capacity; ++i)
-                {
-                    indices[i6 + 0] = (short)(i4 + 0);
-                    indices[i6 + 1] = (short)(i4 + 2);
-                    indices[i6 + 2] = (short)(i4 + 1);
-
-                    indices[i6 + 3] = (short)(i4 + 1);
-                    indices[i6 + 4] = (short)(i4 + 2);
-                    indices[i6 + 5] = (short)(i4 + 3);
-
-                    i6 += 6;
-                    i4 += 4;
-                }
-
-                m_quadsIndexBuffer.UpdateBuffer();
-            }
-        }
-
-        private static void CheckQuadsVertexBuffer(int capacity)
-        {
-            if (m_quadsBuffer == null || m_quadsBuffer.Capacity < capacity)
-            {
-                capacity = Math.Max(capacity, DefaultQuadBufferSize);
-
-                if (m_quadsBuffer == null)
-                {
-                    m_quadsBuffer = new CCQuadVertexBuffer(capacity, BufferUsage.WriteOnly);
-                }
-                else
-                {
-                    m_quadsBuffer.Capacity = capacity;
-                }
-            }
-        }
-
-        #endregion
-
-        #region Drawing Vertices and Quads
-
-        public static void DrawQuad(ref CCV3F_C4B_T2F_Quad quad)
-        {
-            CCV3F_C4B_T2F[] vertices = m_quadVertices;
-
-            if (vertices == null)
-            {
-                vertices = m_quadVertices = new CCV3F_C4B_T2F[4];
-                CheckQuadsIndexBuffer(1);
-            }
-
-            vertices[0] = quad.TopLeft;
-            vertices[1] = quad.BottomLeft;
-            vertices[2] = quad.TopRight;
-            vertices[3] = quad.BottomRight;
-
-            DrawIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, 4, m_quadsIndexBuffer.Data.Elements, 0, 2);
-        }
-
-        public static void DrawQuads(CCRawList<CCV3F_C4B_T2F_Quad> quads, int start, int n)
-        {
-            if (n == 0)
-            {
-                return;
-            }
-
-            CheckQuadsIndexBuffer(start + n);
-            CheckQuadsVertexBuffer(start + n);
-
-            m_quadsBuffer.UpdateBuffer(quads, start, n);
-
-            graphicsDevice.SetVertexBuffer(m_quadsBuffer.VertexBuffer);
-            graphicsDevice.Indices = m_quadsIndexBuffer.IndexBuffer;
-
-            ApplyEffectParams();
-
-            EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
-            for (int i = 0; i < passes.Count; i++)
-            {
-                passes[i].Apply();
-                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, n * 4, start * 6, n * 2);
-            }
-
-            graphicsDevice.SetVertexBuffer(null);
-            graphicsDevice.Indices = null;
-
-            DrawCount++;
-        }
-
-        public static void DrawBuffer<T, T2>(CCVertexBuffer<T> vertexBuffer, CCIndexBuffer<T2> indexBuffer, int start, int count)
-            where T : struct, IVertexType
-            where T2 : struct
-        {
-            graphicsDevice.Indices = indexBuffer.IndexBuffer;
-            graphicsDevice.SetVertexBuffer(vertexBuffer.VertexBuffer);
-
-            ApplyEffectParams();
-
-            EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
-            for (int i = 0; i < passes.Count; i++)
-            {
-                passes[i].Apply();
-                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertexBuffer.VertexBuffer.VertexCount, start, count);
-            }
-
-            graphicsDevice.SetVertexBuffer(null);
-            graphicsDevice.Indices = null;
-
-            DrawCount++;
-        }
-
-        public static void DrawQuadsBuffer<T>(CCVertexBuffer<T> vertexBuffer, int start, int n) where T : struct, IVertexType
-        {
-            if (n == 0)         {
-                return;
-            }
-
-            CheckQuadsIndexBuffer(start + n);
-
-            graphicsDevice.Indices = m_quadsIndexBuffer.IndexBuffer;
-            graphicsDevice.SetVertexBuffer(vertexBuffer.VertexBuffer);
-
-            ApplyEffectParams();
-
-            EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
-            for (int i = 0; i < passes.Count; i++)
-            {
-                passes[i].Apply();
-                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertexBuffer.VertexBuffer.VertexCount, start * 6, n * 2);
-            }
-
-            graphicsDevice.SetVertexBuffer(null);
-            graphicsDevice.Indices = null;
-
-            DrawCount++;
-        }
-
-        #endregion
-
-        #region Blanking The Display
-
-        public static void Clear(ClearOptions options, Color color, float depth, int stencil)
-        {
-            graphicsDevice.Clear(options, color, depth, stencil);
-        }
-
-        public static void Clear(Color color, float depth, int stencil)
-        {
-            graphicsDevice.Clear(ClearOptions.Target | ClearOptions.Stencil | ClearOptions.DepthBuffer, color, depth, stencil);
-        }
-
-        public static void Clear(Color color, float depth)
-        {
-            graphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, color, depth, 0);
-        }
-
-        public static void Clear(Color color)
-        {
-            graphicsDevice.Clear(color);
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Set zoom factor for frame. This method is for debugging big resolution (e.g.new ipad) app on
-        /// desktop.
-        /// </summary>
-        public static void SetFrameZoom(float zoomFactor)
-        {
-            m_fFrameZoomFactor = zoomFactor;
-        }
-
-        public static void SetViewPort(int x, int y, int width, int height)
-        {
-            graphicsDevice.Viewport = new Viewport(x, y, width, height);
-        }
-
-        public static void SetViewPortInPoints(int x, int y, int width, int height)
-        {
-            graphicsDevice.Viewport = new Viewport(
-                (int)(x * m_fScaleX * m_fFrameZoomFactor + m_obViewPortRect.Origin.X * m_fFrameZoomFactor),
-                (int)(y * m_fScaleY * m_fFrameZoomFactor + m_obViewPortRect.Origin.Y * m_fFrameZoomFactor),
-                (int)(width * m_fScaleX * m_fFrameZoomFactor),
-                (int)(height * m_fScaleY * m_fFrameZoomFactor)
-                );
-        }
-
-        public static void SetScissorInPoints(float x, float y, float w, float h)
-        {
-            y = CCDirector.SharedDirector.WinSize.Height - y - h;
-
-            graphicsDevice.ScissorRectangle = new Rectangle(
-                (int)(x * m_fScaleX + m_obViewPortRect.Origin.X),
-                (int)(y * m_fScaleY + m_obViewPortRect.Origin.Y),
-                (int)(w * m_fScaleX),
-                (int)(h * m_fScaleY)
-                );
-        }
-
-        public static CCRect ScissorRect
-        {
-            get
-            {
-                var sr = graphicsDevice.ScissorRectangle;
-
-                float x = (sr.X - m_obViewPortRect.Origin.X) / m_fScaleX;
-                float y = (sr.Y - m_obViewPortRect.Origin.Y) / m_fScaleY;
-                float w = sr.Width / m_fScaleX;
-                float h = sr.Height / m_fScaleY;
-
-                y = CCDirector.SharedDirector.WinSize.Height - y - h;
-
-                return new CCRect(x, y, w, h);
-            }
-        }
-
-        public static void SetDesignResolutionSize(float width, float height, CCResolutionPolicy resolutionPolicy)
-        {
-            Debug.Assert(resolutionPolicy != CCResolutionPolicy.UnKnown, "should set resolutionPolicy");
-
-            if (width == 0.0f || height == 0.0f)
-            {
-                return;
-            }
-
-            m_obDesignResolutionSize.Width = width;
-            m_obDesignResolutionSize.Height = height;
-
-            m_fScaleX = m_obScreenSize.Width / m_obDesignResolutionSize.Width;
-            m_fScaleY = m_obScreenSize.Height / m_obDesignResolutionSize.Height;
-
-            if (resolutionPolicy == CCResolutionPolicy.NoBorder)
-            {
-                m_fScaleX = m_fScaleY = Math.Max(m_fScaleX, m_fScaleY);
-            }
-
-            if (resolutionPolicy == CCResolutionPolicy.ShowAll)
-            {
-                m_fScaleX = m_fScaleY = Math.Min(m_fScaleX, m_fScaleY);
-            }
-
-
-            if (resolutionPolicy == CCResolutionPolicy.FixedHeight)
-            {
-                m_fScaleX = m_fScaleY;
-                m_obDesignResolutionSize.Width = (float)Math.Ceiling(m_obScreenSize.Width / m_fScaleX);
-            }
-
-            if (resolutionPolicy == CCResolutionPolicy.FixedWidth)
-            {
-                m_fScaleY = m_fScaleX;
-                m_obDesignResolutionSize.Height = (float)Math.Ceiling(m_obScreenSize.Height / m_fScaleY);
-            }
-
-            // calculate the rect of viewport    
-            float viewPortW = m_obDesignResolutionSize.Width * m_fScaleX;
-            float viewPortH = m_obDesignResolutionSize.Height * m_fScaleY;
-
-            var clientBoundsX = 0;
-#if ANDROID
-            // When using CCGameView, m_Game may not be set
-            if (m_Game != null && m_Game.Window != null)
-            {
-                clientBoundsX = ((AndroidGameWindow)m_Game.Window).ClientBounds.X;
-            }
-#endif
-
-            m_obViewPortRect = new CCRect(clientBoundsX + (m_obScreenSize.Width - viewPortW) / 2, (m_obScreenSize.Height - viewPortH) / 2, viewPortW, viewPortH);
-
-            m_eResolutionPolicy = resolutionPolicy;
-
-            // reset director's member variables to fit visible rect
-            CCDirector.SharedDirector.m_obWinSizeInPoints = DesignResolutionSize;
-            if (CCConfiguration.SharedConfiguration.DisplayStats)
-            {
-                CCDirector.SharedDirector.CreateStatsLabel();
-            }
-            CCDirector.SharedDirector.SetRenderDefaultValues();
-        }
-
-        public static void SetOrientation(DisplayOrientation supportedOrientations)
-        {
-            SetOrientation(supportedOrientations, true);
-        }
-
-        private static void SetOrientation(DisplayOrientation supportedOrientations, bool bUpdateDimensions)
-        {
-            bool ll = (supportedOrientations & DisplayOrientation.LandscapeLeft) == DisplayOrientation.LandscapeLeft;
-            bool lr = (supportedOrientations & DisplayOrientation.LandscapeRight) == DisplayOrientation.LandscapeRight;
-            bool p = (supportedOrientations & DisplayOrientation.Portrait) == DisplayOrientation.Portrait;
-
-            bool onlyLandscape = (ll || lr) && !p;
-#if WINDOWS || WINDOWSGL || MACOS || LINUX
-            bool bSwapDims = bUpdateDimensions && ((m_GraphicsDeviceMgr.SupportedOrientations & supportedOrientations) == DisplayOrientation.Default);
-#else
-            bool bSwapDims = bUpdateDimensions && ((m_GraphicsDeviceMgr.SupportedOrientations & supportedOrientations) == 0);
-#endif
-            if (bSwapDims && (ll || lr))
-            {
-                // Check for landscape changes that do not need a swap
-#if WINDOWS || WINDOWSGL || MACOS || LINUX
-                if (((m_GraphicsDeviceMgr.SupportedOrientations & DisplayOrientation.LandscapeLeft) != DisplayOrientation.Default) ||
-                    ((m_GraphicsDeviceMgr.SupportedOrientations & DisplayOrientation.LandscapeRight) != DisplayOrientation.Default))
-#else
-                if (((m_GraphicsDeviceMgr.SupportedOrientations & DisplayOrientation.LandscapeLeft) != 0) ||
-                    ((m_GraphicsDeviceMgr.SupportedOrientations & DisplayOrientation.LandscapeRight) != 0))
-#endif
-                {
-                    bSwapDims = false;
-                }
-            }
-            int preferredBackBufferWidth = m_GraphicsDeviceMgr.PreferredBackBufferWidth;
-            int preferredBackBufferHeight = m_GraphicsDeviceMgr.PreferredBackBufferHeight;
-            if (bSwapDims)
-            {
-                CCSize newSize = m_obDesignResolutionSize.Inverted;
-                CCDrawManager.SetDesignResolutionSize(newSize.Width, newSize.Height, m_eResolutionPolicy);
-                /*
-                m_obViewPortRect = m_obViewPortRect.InvertedSize;
-                m_obDesignResolutionSize = m_obDesignResolutionSize.Inverted;
-                CCDirector.SharedDirector.m_obWinSizeInPoints = CCDirector.SharedDirector.m_obWinSizeInPoints.Inverted;
-                CCDirector.SharedDirector.m_obWinSizeInPixels = CCDirector.SharedDirector.m_obWinSizeInPixels.Inverted;
-                m_obScreenSize = m_obScreenSize.Inverted;
-                float f = m_fScaleX;
-                m_fScaleX = m_fScaleY;
-                m_fScaleY = f;
-                 */
-            }
-            preferredBackBufferWidth = m_GraphicsDeviceMgr.PreferredBackBufferWidth;
-            preferredBackBufferHeight = m_GraphicsDeviceMgr.PreferredBackBufferHeight;
-#if ANDROID
-            if (onlyLandscape && m_GraphicsDeviceMgr.PreferredBackBufferHeight > m_GraphicsDeviceMgr.PreferredBackBufferWidth)
-            {
-                m_GraphicsDeviceMgr.PreferredBackBufferWidth = preferredBackBufferHeight;
-                m_GraphicsDeviceMgr.PreferredBackBufferHeight = preferredBackBufferWidth;
-            }
-            m_GraphicsDeviceMgr.SupportedOrientations = supportedOrientations;
-#endif
-
-#if IOS || IPHONE
-            if (bSwapDims)
-            {
-                m_GraphicsDeviceMgr.PreferredBackBufferWidth = preferredBackBufferHeight;
-                m_GraphicsDeviceMgr.PreferredBackBufferHeight = preferredBackBufferWidth;
-            }
-            else if (onlyLandscape && m_GraphicsDeviceMgr.PreferredBackBufferHeight > m_GraphicsDeviceMgr.PreferredBackBufferWidth)
-            {
-                m_GraphicsDeviceMgr.PreferredBackBufferWidth = preferredBackBufferHeight;
-                m_GraphicsDeviceMgr.PreferredBackBufferHeight = preferredBackBufferWidth;
-            }
-            m_GraphicsDeviceMgr.SupportedOrientations = supportedOrientations;
-#endif
-#if WINDOWS || WINDOWSGL || MACOS || LINUX
-            if (bSwapDims)
-            {
-                m_GraphicsDeviceMgr.PreferredBackBufferWidth = preferredBackBufferHeight;
-                m_GraphicsDeviceMgr.PreferredBackBufferHeight = preferredBackBufferWidth;
-            }
             else
             {
-                /*
-                if (onlyPortrait)
-                {
-                    m_GraphicsDeviceMgr.PreferredBackBufferWidth = 480;
-                    m_GraphicsDeviceMgr.PreferredBackBufferHeight = 800;
-                }
-                else
-                {
-                    m_GraphicsDeviceMgr.PreferredBackBufferWidth = 800;
-                    m_GraphicsDeviceMgr.PreferredBackBufferHeight = 480;
-                }
-                */
-            }
-#endif
-            UpdatePresentationParametrs(m_GraphicsDeviceMgr);
-
-            m_GraphicsDeviceMgr.ApplyChanges();
-        }
-
-        public static CCPoint ScreenToWorld(float x, float y)
-        {
-            return new CCPoint(
-                (x - m_obViewPortRect.MinX) / m_fScaleX,
-                (y - m_obViewPortRect.MinY) / m_fScaleY
-                );
-        }
-
-        #region Matrix
-
-        private static Matrix m_pTransform = Matrix.Identity;
-
-        public static void SetIdentityMatrix()
-        {
-            m_Matrix = Matrix.Identity;
-            m_worldMatrixChanged = true;
-        }
-
-        public static void PushMatrix()
-        {
-            m_matrixStack[m_stackIndex++] = m_Matrix;
-        }
-
-        public static void PopMatrix()
-        {
-            m_Matrix = m_matrixStack[--m_stackIndex];
-            m_worldMatrixChanged = true;
-            Debug.Assert(m_stackIndex >= 0);
-        }
-
-        public static void Translate(float x, float y, int z)
-        {
-            m_TmpMatrix = Matrix.CreateTranslation(x, y, z);
-            Matrix.Multiply(ref m_TmpMatrix, ref m_Matrix, out m_Matrix);
-            m_worldMatrixChanged = true;
-        }
-
-        public static void MultMatrix(ref Matrix matrix)
-        {
-            Matrix.Multiply(ref matrix, ref m_Matrix, out m_Matrix);
-            m_worldMatrixChanged = true;
-        }
-
-        //protected Matrix m_tCCNodeTransform;
-
-        // | m[0] m[4] m[8]  m[12] |     | m11 m21 m31 m41 |     | a c 0 tx |
-        // | m[1] m[5] m[9]  m[13] |     | m12 m22 m32 m42 |     | b d 0 ty |
-        // | m[2] m[6] m[10] m[14] | <=> | m13 m23 m33 m43 | <=> | 0 0 1  0 |
-        // | m[3] m[7] m[11] m[15] |     | m14 m24 m34 m44 |     | 0 0 0  1 |        
-        public static void MultMatrix(CCAffineTransform transform, float z)
-        {
-            MultMatrix(ref transform, z);
-        }
-
-        public static void MultMatrix(ref CCAffineTransform transform, float z)
-        {
-            m_pTransform.M11 = transform.a;
-            m_pTransform.M21 = transform.c;
-            m_pTransform.M12 = transform.b;
-            m_pTransform.M22 = transform.d;
-            m_pTransform.M41 = transform.tx;
-            m_pTransform.M42 = transform.ty;
-            m_pTransform.M43 = z;
-
-            Matrix.Multiply(ref m_pTransform, ref m_Matrix, out m_Matrix);
-
-            m_worldMatrixChanged = true;
-        }
-
-        #endregion
-
-        #region Mask
-
-        private struct MaskState
-        {
-            public int Layer;
-            public bool Inverted;
-            public float AlphaTreshold;
-        }
-
-        private struct MaskDepthStencilStateCacheEntry
-        {
-            public DepthStencilState Clear;
-            public DepthStencilState ClearInvert;
-            public DepthStencilState DrawMask;
-            public DepthStencilState DrawMaskInvert;
-            public DepthStencilState DrawContent;
-            public DepthStencilState DrawContentDepth;
-
-            public DepthStencilState GetClearState(int layer, bool inverted)
-            {
-                DepthStencilState result = inverted ? ClearInvert : Clear;
-
-                if (result == null)
-                {
-                    int maskLayer = 1 << layer;
-
-                    result = new DepthStencilState()
-                    {
-                        DepthBufferEnable = false,
-
-                        StencilEnable = true,
-
-                        StencilFunction = CompareFunction.Never,
-
-                        StencilMask = maskLayer,
-                        StencilWriteMask = maskLayer,
-                        ReferenceStencil = maskLayer,
-
-                        StencilFail = !inverted ? StencilOperation.Zero : StencilOperation.Replace
-                    };
-
-                    if (inverted)
-                    {
-                        ClearInvert = result;
-                    }
-                    else
-                    {
-                        Clear = result;
-                    }
-                }
-
-                return result;
-            }
-
-            public DepthStencilState GetDrawMaskState(int layer, bool inverted)
-            {
-                DepthStencilState result = inverted ? DrawMaskInvert : DrawMask;
-
-                if (result == null)
-                {
-                    int maskLayer = 1 << layer;
-
-                    result = new DepthStencilState()
-                    {
-                        DepthBufferEnable = false,
-
-                        StencilEnable = true,
-
-                        StencilFunction = CompareFunction.Never,
-
-                        StencilMask = maskLayer,
-                        StencilWriteMask = maskLayer,
-                        ReferenceStencil = maskLayer,
-
-                        StencilFail = !inverted ? StencilOperation.Replace : StencilOperation.Zero,
-                    };
-
-                    if (inverted)
-                    {
-                        DrawMaskInvert = result;
-                    }
-                    else
-                    {
-                        DrawMask = result;
-                    }
-                }
-
-                return result;
-            }
-
-            public DepthStencilState GetDrawContentState(int layer, bool depth)
-            {
-                DepthStencilState result = depth ? DrawContentDepth : DrawContent;
-
-                if (result == null)
-                {
-                    int maskLayer = 1 << layer;
-                    int maskLayerL = maskLayer - 1;
-                    int maskLayerLe = maskLayer | maskLayerL;
-
-                    result = new DepthStencilState()
-                    {
-                        DepthBufferEnable = _maskSavedStencilStates[_maskLayer].DepthBufferEnable,
-
-                        StencilEnable = true,
-
-                        StencilMask = maskLayerLe,
-                        StencilWriteMask = 0,
-                        ReferenceStencil = maskLayerLe,
-
-                        StencilFunction = CompareFunction.Equal,
-
-                        StencilPass = StencilOperation.Keep,
-                        StencilFail = StencilOperation.Keep,
-                    };
-
-                    if (depth)
-                    {
-                        DrawContentDepth = result;
-                    }
-                    else
-                    {
-                        DrawContent = result;
-                    }
-                }
-
-                return result;
+                m_savedViewport = graphicsDevice.Viewport;
+                graphicsDevice.SetRenderTarget(renderTarget);
             }
         }
-
-        private static int _maskLayer = -1;
-        private static bool _maskOnceLog = false;
-        private static DepthStencilState[] _maskSavedStencilStates = new DepthStencilState[8];
-        private static MaskState[] _maskStates = new MaskState[8];
-        private static MaskDepthStencilStateCacheEntry[] _maskStatesCache = new MaskDepthStencilStateCacheEntry[8];
-
-        public static void SetClearMaskState(int layer, bool inverted)
-        {
-            DepthStencilState = _maskStatesCache[layer].GetClearState(layer, inverted);
-        }
-
-        public static void SetDrawMaskState(int layer, bool inverted)
-        {
-            DepthStencilState = _maskStatesCache[layer].GetDrawMaskState(layer, inverted);
-        }
-
-        public static void SetDrawMaskedState(int layer, bool depth)
-        {
-            DepthStencilState = _maskStatesCache[layer].GetDrawContentState(layer, depth);
-        }
-
-        public static bool BeginDrawMask()
-        {
-            return BeginDrawMask(false, 1f);
-        }
-
-        public static bool BeginDrawMask(bool inverted)
-        {
-            return BeginDrawMask(inverted, 1f);
-        }
-
-        public static bool BeginDrawMask(float alphaTreshold)
-        {
-            return BeginDrawMask(false, alphaTreshold);
-        }
-
-        public static bool BeginDrawMask(bool inverted, float alphaTreshold)
-        {
-            if (_maskLayer + 1 == 8) //DepthFormat.Depth24Stencil8
-            {
-                if (_maskOnceLog)
-                {
-                    CCLog.Log(
-                        @"Nesting more than 8 stencils is not supported. 
-                        Everything will be drawn without stencil for this node and its childs."
-                        );
-                    _maskOnceLog = false;
-                }
-                return false;
-            }
-
-            _maskLayer++;
-
-            var maskState = new MaskState() { Layer = _maskLayer, Inverted = inverted, AlphaTreshold = alphaTreshold };
-
-            _maskStates[_maskLayer] = maskState;
-            _maskSavedStencilStates[_maskLayer] = DepthStencilState;
-
-            int maskLayer = 1 << _maskLayer;
-
-            ///////////////////////////////////
-            // CLEAR STENCIL BUFFER
-
-            SetClearMaskState(_maskLayer, maskState.Inverted);
-
-            // draw a fullscreen solid rectangle to clear the stencil buffer
-            var size = CCDirector.SharedDirector.WinSize;
-
-            PushMatrix();
-            SetIdentityMatrix();
-
-            CCDrawingPrimitives.Begin();
-            CCDrawingPrimitives.DrawSolidRect(CCPoint.Zero, new CCPoint(size.Width, size.Height), new CCColor4B(255, 255, 255, 255));
-            CCDrawingPrimitives.End();
-
-            PopMatrix();
-            
-            ///////////////////////////////////
-            // PREPARE TO DRAW MASK
-
-            SetDrawMaskState(_maskLayer, maskState.Inverted);
-
-            if (maskState.AlphaTreshold < 1f)
-            {
-                AlphaTestEffect.AlphaFunction = CompareFunction.Greater;
-                AlphaTestEffect.ReferenceAlpha = (byte)(255 * maskState.AlphaTreshold);
-
-                PushEffect(AlphaTestEffect);
-            }
-
-            return true;
-        }
-
-        public static void EndDrawMask()
-        {
-            var maskState = _maskStates[_maskLayer];
-
-            ///////////////////////////////////
-            // PREPARE TO DRAW MASKED CONTENT
-
-            if (maskState.AlphaTreshold < 1)
-            {
-                PopEffect();
-            }
-
-            SetDrawMaskedState(_maskLayer, _maskSavedStencilStates[_maskLayer].DepthBufferEnable);
-        }
-
-        public static void EndMask()
-        {
-            ///////////////////////////////////
-            // RESTORE STATE
-
-            DepthStencilState = _maskSavedStencilStates[_maskLayer];
-
-            _maskLayer--;
-        }
-
-        #endregion
-
-        #region State Save/Restore for Multi-View Support
-
-        /// <summary>
-        /// Saves the current drawing state to a CCDrawManagerState object.
-        /// Used for multi-view support where each view maintains its own state.
-        /// </summary>
-        public static CCDrawManagerState SaveState()
-        {
-            var state = new CCDrawManagerState();
-
-            state.WorldMatrix = m_worldMatrix;
-            state.ViewMatrix = m_viewMatrix;
-            state.ProjectionMatrix = m_projectionMatrix;
-            state.CombinedMatrix = m_Matrix;
-            state.StackIndex = m_stackIndex;
-
-            // Copy matrix stack (valid entries are [0, m_stackIndex))
-            for (int i = 0; i < m_stackIndex && i < state.MatrixStack.Length; i++)
-            {
-                state.MatrixStack[i] = m_matrixStack[i];
-            }
-
-            state.DesignResolutionSize = m_obDesignResolutionSize;
-            state.ScreenSize = m_obScreenSize;
-            state.ViewPortRect = m_obViewPortRect;
-            state.ScaleX = m_fScaleX;
-            state.ScaleY = m_fScaleY;
-            state.ResolutionPolicy = m_eResolutionPolicy;
-            state.DepthTest = m_depthTest;
-
-            if (graphicsDevice != null)
-            {
-                state.Viewport = graphicsDevice.Viewport;
-            }
-
-            return state;
-        }
-
-        /// <summary>
-        /// Restores drawing state from a CCDrawManagerState object.
-        /// Used for multi-view support where each view maintains its own state.
-        /// </summary>
-        public static void RestoreState(CCDrawManagerState state)
-        {
-            if (state == null)
-                return;
-
-            m_worldMatrix = state.WorldMatrix;
-            m_viewMatrix = state.ViewMatrix;
-            m_projectionMatrix = state.ProjectionMatrix;
-            m_Matrix = state.CombinedMatrix;
-            m_stackIndex = state.StackIndex;
-
-            // Restore matrix stack (valid entries are [0, StackIndex))
-            for (int i = 0; i < state.StackIndex && i < m_matrixStack.Length; i++)
-            {
-                m_matrixStack[i] = state.MatrixStack[i];
-            }
-
-            m_obDesignResolutionSize = state.DesignResolutionSize;
-            m_obScreenSize = state.ScreenSize;
-            m_obViewPortRect = state.ViewPortRect;
-            m_fScaleX = state.ScaleX;
-            m_fScaleY = state.ScaleY;
-            m_eResolutionPolicy = state.ResolutionPolicy;
-            m_depthTest = state.DepthTest;
-
-            if (graphicsDevice != null && state.Viewport.Width > 0 && state.Viewport.Height > 0)
-            {
-                graphicsDevice.Viewport = state.Viewport;
-            }
-
-            // Mark matrices as changed so they get recalculated
-            m_worldMatrixChanged = true;
-            m_viewMatrixChanged = true;
-            m_projectionMatrixChanged = true;
-        }
-
-        /// <summary>
-        /// Creates a new state with default values for a view with the given size.
-        /// </summary>
-        public static CCDrawManagerState CreateStateForView(int width, int height, CCSize designResolution, CCResolutionPolicy policy)
-        {
-            var state = new CCDrawManagerState();
-
-            state.ScreenSize = new CCSize(width, height);
-            state.DesignResolutionSize = designResolution;
-            state.ResolutionPolicy = policy;
-            state.ViewPortRect = new CCRect(0, 0, width, height);
-            state.Viewport = new Viewport(0, 0, width, height);
-
-            // Guard against zero design resolution to avoid division by zero
-            if (designResolution.Width == 0 || designResolution.Height == 0)
-                return state;
-
-            // Calculate scale based on policy
-            float scaleX = width / designResolution.Width;
-            float scaleY = height / designResolution.Height;
-
-            switch (policy)
-            {
-                case CCResolutionPolicy.NoBorder:
-                    scaleX = scaleY = Math.Max(scaleX, scaleY);
-                    break;
-                case CCResolutionPolicy.ShowAll:
-                    scaleX = scaleY = Math.Min(scaleX, scaleY);
-                    break;
-                case CCResolutionPolicy.FixedHeight:
-                    scaleX = scaleY;
-                    state.DesignResolutionSize = new CCSize((float)Math.Ceiling(width / scaleX), designResolution.Height);
-                    break;
-                case CCResolutionPolicy.FixedWidth:
-                    scaleY = scaleX;
-                    state.DesignResolutionSize = new CCSize(designResolution.Width, (float)Math.Ceiling(height / scaleY));
-                    break;
-            }
-
-            state.ScaleX = scaleX;
-            state.ScaleY = scaleY;
-
-            return state;
-        }
-
-        #endregion
+        m_currRenderTarget = renderTarget;
     }
 
-    public enum CCResolutionPolicy
+    /// <summary>
+    /// Returns the current render target. If this is null, then your drawing
+    /// is set to draw directly to the display frame buffer.
+    /// </summary>
+    /// <returns></returns>
+    public static RenderTarget2D GetRenderTarget()
     {
-        UnKnown,
-
-        // The entire application is visible in the specified area without trying to preserve the original aspect ratio. 
-        // Distortion can occur, and the application may appear stretched or compressed.
-        ExactFit,
-        // The entire application fills the specified area, without distortion but possibly with some cropping, 
-        // while maintaining the original aspect ratio of the application.
-        NoBorder,
-        // The entire application is visible in the specified area without distortion while maintaining the original 
-        // aspect ratio of the application. Borders can appear on two sides of the application.
-        ShowAll,
-        // The application takes the height of the design resolution size and modifies the width of the internal
-        // canvas so that it fits the aspect ratio of the device
-        // no distortion will occur however you must make sure your application works on different
-        // aspect ratios
-        FixedHeight,
-        // The application takes the width of the design resolution size and modifies the height of the internal
-        // canvas so that it fits the aspect ratio of the device
-        // no distortion will occur however you must make sure your application works on different
-        // aspect ratios
-        FixedWidth
+        return m_currRenderTarget;
     }
 
+    #region Quad Buffer Integrity Checks
 
-    public class CCGraphicsResource : IDisposable
+    private static void CheckQuadsIndexBuffer(int capacity)
     {
-        private static CCRawList<WeakReference> _createdResources = new CCRawList<WeakReference>();
-
-        private bool _isDisposed;
-
-        private WeakReference _wr;
-
-        public bool IsDisposed
+        if (m_quadsIndexBuffer == null || m_quadsIndexBuffer.Capacity < capacity * 6)
         {
-            get { return _isDisposed; }
-        }
+            capacity = Math.Max(capacity, DefaultQuadBufferSize);
 
-        public CCGraphicsResource()
-        {
-            _wr = new WeakReference(this);
-
-            lock (_createdResources)
+            if (m_quadsIndexBuffer == null)
             {
-                _createdResources.Add(_wr);
-            }
-        }
-
-        ~CCGraphicsResource()
-        {
-            if (!IsDisposed)
-            {
-                Dispose();
+                m_quadsIndexBuffer = new CCIndexBuffer<short>(capacity * 6, BufferUsage.WriteOnly);
+                m_quadsIndexBuffer.Count = m_quadsIndexBuffer.Capacity;
             }
 
-            lock (_createdResources)
+            if (m_quadsIndexBuffer.Capacity < capacity * 6)
             {
-                _createdResources.Remove(_wr);
-            }
-        }
-
-        public virtual void Dispose()
-        {
-            _isDisposed = true;
-        }
-
-        public virtual void Reinit()
-        {
-        }
-
-        internal static void ReinitAllResources()
-        {
-            lock (_createdResources)
-            {
-                var resources = _createdResources.Elements;
-                for (int i = 0, count = _createdResources.Count; i < count; i++)
-                {
-                    if (resources[i].IsAlive)
-                    {
-                        ((CCGraphicsResource) resources[i].Target).Reinit();
-                    }
-                }
-            }
-        }
-
-        public static void DisposeAllResources()
-        {
-            lock (_createdResources)
-            {
-                var resources = _createdResources.Elements;
-                for (int i = 0, count = _createdResources.Count; i < count; i++)
-                {
-                    if (resources[i].IsAlive)
-                    {
-                        ((CCGraphicsResource) resources[i].Target).Dispose();
-                    }
-                }
-            }
-        }
-    }
-
-
-    public class CCVertexBuffer<T> : CCGraphicsResource where T : struct, IVertexType
-    {
-        protected VertexBuffer _vertexBuffer;
-        protected BufferUsage _usage;
-        protected CCRawList<T> _data;
-
-        internal VertexBuffer VertexBuffer
-        {
-            get { return _vertexBuffer; }
-        }
-
-        public CCRawList<T> Data
-        {
-            get { return _data; }
-        }
-
-        public int Count
-        {
-            get { return _data.Count; }
-            set
-            {
-                Debug.Assert(value <= _data.Capacity);
-                _data.count = value;
-            }
-        }
-
-        public int Capacity
-        {
-            get { return _data.Capacity; }
-            set
-            {
-                if (_data.Capacity != value)
-                {
-                    _data.Capacity = value;
-                    Reinit();
-                }
-            }
-        }
-
-        public CCVertexBuffer(int vertexCount, BufferUsage usage)
-        {
-            _data = new CCRawList<T>(vertexCount);
-            _usage = usage;
-            Reinit();
-        }
-        
-        public void UpdateBuffer()
-        {
-            UpdateBuffer(0, _data.Count);
-        }
-
-        public virtual void UpdateBuffer(int startIndex, int elementCount)
-        {
-            if (elementCount > 0)
-            {
-                _vertexBuffer.SetData(_data.Elements, startIndex, elementCount);
-            }
-        }
-
-        public override void Reinit()
-        {
-            if (_vertexBuffer != null && !_vertexBuffer.IsDisposed)
-            {
-                _vertexBuffer.Dispose();
-            }
-            _vertexBuffer = new VertexBuffer(CCDrawManager.GraphicsDevice, typeof(T), _data.Capacity, _usage);
-        }
-    }
-
-    public class CCQuadVertexBuffer : CCVertexBuffer<CCV3F_C4B_T2F_Quad>
-    {
-        public CCQuadVertexBuffer(int vertexCount, BufferUsage usage) : base(vertexCount, usage)
-        {
-        }
-
-        public void UpdateBuffer(CCRawList<CCV3F_C4B_T2F_Quad> data, int startIndex, int elementCount)
-        {
-            //TODO: 
-            var tmp = _data;
-            _data = data;
-            
-            UpdateBuffer(startIndex, elementCount);
-
-            _data = tmp;
-        }
-
-        public override void UpdateBuffer(int startIndex, int elementCount)
-        {
-            if (elementCount == 0)
-            {
-                return;
+                m_quadsIndexBuffer.Capacity = capacity * 6;
+                m_quadsIndexBuffer.Count = m_quadsIndexBuffer.Capacity;
             }
 
-            var quads = _data.Elements;
+            var indices = m_quadsIndexBuffer.Data.Elements;
 
-            var tmp = CCDrawManager._tmpVertices;
-
-            while (tmp.Capacity < elementCount)
-            {
-                tmp.Capacity = tmp.Capacity * 2;
-            }
-            tmp.Count = elementCount * 4;
-
-            var vertices = tmp.Elements;
-
+            int i6 = 0;
             int i4 = 0;
-            for (int i = startIndex; i < startIndex + elementCount; i++)
-            {
-                vertices[i4 + 0] = quads[i].TopLeft;
-                vertices[i4 + 1] = quads[i].BottomLeft;
-                vertices[i4 + 2] = quads[i].TopRight;
-                vertices[i4 + 3] = quads[i].BottomRight;
 
+            for (int i = 0; i < capacity; ++i)
+            {
+                indices[i6 + 0] = (short)(i4 + 0);
+                indices[i6 + 1] = (short)(i4 + 2);
+                indices[i6 + 2] = (short)(i4 + 1);
+
+                indices[i6 + 3] = (short)(i4 + 1);
+                indices[i6 + 4] = (short)(i4 + 2);
+                indices[i6 + 5] = (short)(i4 + 3);
+
+                i6 += 6;
                 i4 += 4;
             }
 
-            _vertexBuffer.SetData(vertices, startIndex * 4, elementCount * 4);
-        }
-
-        public override void Reinit()
-        {
-            if (_vertexBuffer != null && !_vertexBuffer.IsDisposed)
-            {
-                _vertexBuffer.Dispose();
-            }
-            _vertexBuffer = new VertexBuffer(CCDrawManager.GraphicsDevice, typeof(CCV3F_C4B_T2F), _data.Capacity * 4, _usage);
-
-            UpdateBuffer();
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            
-            if (_vertexBuffer != null && !_vertexBuffer.IsDisposed)
-            {
-                _vertexBuffer.Dispose();
-            }
-            
-            _vertexBuffer = null;
+            m_quadsIndexBuffer.UpdateBuffer();
         }
     }
 
-    public class CCIndexBuffer<T> : CCGraphicsResource where T : struct
+    private static void CheckQuadsVertexBuffer(int capacity)
     {
-        private IndexBuffer _indexBuffer;
-        private BufferUsage _usage;
-        private CCRawList<T> _data;
-
-        internal IndexBuffer IndexBuffer
+        if (m_quadsBuffer == null || m_quadsBuffer.Capacity < capacity)
         {
-            get { return _indexBuffer; }
-        }
+            capacity = Math.Max(capacity, DefaultQuadBufferSize);
 
-        public CCRawList<T> Data
-        {
-            get { return _data; }
-        }
-
-        public int Count
-        {
-            get { return _data.Count; }
-            set
+            if (m_quadsBuffer == null)
             {
-                Debug.Assert(value <= _data.Capacity);
-                _data.count = value;
+                m_quadsBuffer = new CCQuadVertexBuffer(capacity, BufferUsage.WriteOnly);
+            }
+            else
+            {
+                m_quadsBuffer.Capacity = capacity;
             }
         }
+    }
 
-        public int Capacity
+    #endregion
+
+    #region Drawing Vertices and Quads
+
+    public static void DrawQuad(ref CCV3F_C4B_T2F_Quad quad)
+    {
+        CCV3F_C4B_T2F[] vertices = m_quadVertices;
+
+        if (vertices == null)
         {
-            get { return _data.Capacity; }
-            set
+            vertices = m_quadVertices = new CCV3F_C4B_T2F[4];
+            CheckQuadsIndexBuffer(1);
+        }
+
+        vertices[0] = quad.TopLeft;
+        vertices[1] = quad.BottomLeft;
+        vertices[2] = quad.TopRight;
+        vertices[3] = quad.BottomRight;
+
+        DrawIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, 4, m_quadsIndexBuffer.Data.Elements, 0, 2);
+    }
+
+    public static void DrawQuads(CCRawList<CCV3F_C4B_T2F_Quad> quads, int start, int n)
+    {
+        if (n == 0)
+        {
+            return;
+        }
+
+        CheckQuadsIndexBuffer(start + n);
+        CheckQuadsVertexBuffer(start + n);
+
+        m_quadsBuffer.UpdateBuffer(quads, start, n);
+
+        graphicsDevice.SetVertexBuffer(m_quadsBuffer.VertexBuffer);
+        graphicsDevice.Indices = m_quadsIndexBuffer.IndexBuffer;
+
+        ApplyEffectParams();
+
+        EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
+        for (int i = 0; i < passes.Count; i++)
+        {
+            passes[i].Apply();
+            graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, n * 4, start * 6, n * 2);
+        }
+
+        graphicsDevice.SetVertexBuffer(null);
+        graphicsDevice.Indices = null;
+
+        DrawCount++;
+    }
+
+    public static void DrawBuffer<T, T2>(CCVertexBuffer<T> vertexBuffer, CCIndexBuffer<T2> indexBuffer, int start, int count)
+        where T : struct, IVertexType
+        where T2 : struct
+    {
+        graphicsDevice.Indices = indexBuffer.IndexBuffer;
+        graphicsDevice.SetVertexBuffer(vertexBuffer.VertexBuffer);
+
+        ApplyEffectParams();
+
+        EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
+        for (int i = 0; i < passes.Count; i++)
+        {
+            passes[i].Apply();
+            graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertexBuffer.VertexBuffer.VertexCount, start, count);
+        }
+
+        graphicsDevice.SetVertexBuffer(null);
+        graphicsDevice.Indices = null;
+
+        DrawCount++;
+    }
+
+    public static void DrawQuadsBuffer<T>(CCVertexBuffer<T> vertexBuffer, int start, int n) where T : struct, IVertexType
+    {
+        if (n == 0)         {
+            return;
+        }
+
+        CheckQuadsIndexBuffer(start + n);
+
+        graphicsDevice.Indices = m_quadsIndexBuffer.IndexBuffer;
+        graphicsDevice.SetVertexBuffer(vertexBuffer.VertexBuffer);
+
+        ApplyEffectParams();
+
+        EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
+        for (int i = 0; i < passes.Count; i++)
+        {
+            passes[i].Apply();
+            graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertexBuffer.VertexBuffer.VertexCount, start * 6, n * 2);
+        }
+
+        graphicsDevice.SetVertexBuffer(null);
+        graphicsDevice.Indices = null;
+
+        DrawCount++;
+    }
+
+    #endregion
+
+    #region Blanking The Display
+
+    public static void Clear(ClearOptions options, Color color, float depth, int stencil)
+    {
+        graphicsDevice.Clear(options, color, depth, stencil);
+    }
+
+    public static void Clear(Color color, float depth, int stencil)
+    {
+        graphicsDevice.Clear(ClearOptions.Target | ClearOptions.Stencil | ClearOptions.DepthBuffer, color, depth, stencil);
+    }
+
+    public static void Clear(Color color, float depth)
+    {
+        graphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, color, depth, 0);
+    }
+
+    public static void Clear(Color color)
+    {
+        graphicsDevice.Clear(color);
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Set zoom factor for frame. This method is for debugging big resolution (e.g.new ipad) app on
+    /// desktop.
+    /// </summary>
+    public static void SetFrameZoom(float zoomFactor)
+    {
+        m_fFrameZoomFactor = zoomFactor;
+    }
+
+    public static void SetViewPort(int x, int y, int width, int height)
+    {
+        graphicsDevice.Viewport = new Viewport(x, y, width, height);
+    }
+
+    public static void SetViewPortInPoints(int x, int y, int width, int height)
+    {
+        graphicsDevice.Viewport = new Viewport(
+            (int)(x * m_fScaleX * m_fFrameZoomFactor + m_obViewPortRect.Origin.X * m_fFrameZoomFactor),
+            (int)(y * m_fScaleY * m_fFrameZoomFactor + m_obViewPortRect.Origin.Y * m_fFrameZoomFactor),
+            (int)(width * m_fScaleX * m_fFrameZoomFactor),
+            (int)(height * m_fScaleY * m_fFrameZoomFactor)
+            );
+    }
+
+    public static void SetScissorInPoints(float x, float y, float w, float h)
+    {
+        y = CCDirector.SharedDirector.WinSize.Height - y - h;
+
+        graphicsDevice.ScissorRectangle = new Rectangle(
+            (int)(x * m_fScaleX + m_obViewPortRect.Origin.X),
+            (int)(y * m_fScaleY + m_obViewPortRect.Origin.Y),
+            (int)(w * m_fScaleX),
+            (int)(h * m_fScaleY)
+            );
+    }
+
+    public static CCRect ScissorRect
+    {
+        get
+        {
+            var sr = graphicsDevice.ScissorRectangle;
+
+            float x = (sr.X - m_obViewPortRect.Origin.X) / m_fScaleX;
+            float y = (sr.Y - m_obViewPortRect.Origin.Y) / m_fScaleY;
+            float w = sr.Width / m_fScaleX;
+            float h = sr.Height / m_fScaleY;
+
+            y = CCDirector.SharedDirector.WinSize.Height - y - h;
+
+            return new CCRect(x, y, w, h);
+        }
+    }
+
+    public static void SetDesignResolutionSize(float width, float height, CCResolutionPolicy resolutionPolicy)
+    {
+        Debug.Assert(resolutionPolicy != CCResolutionPolicy.UnKnown, "should set resolutionPolicy");
+
+        if (width == 0.0f || height == 0.0f)
+        {
+            return;
+        }
+
+        m_obDesignResolutionSize.Width = width;
+        m_obDesignResolutionSize.Height = height;
+
+        m_fScaleX = m_obScreenSize.Width / m_obDesignResolutionSize.Width;
+        m_fScaleY = m_obScreenSize.Height / m_obDesignResolutionSize.Height;
+
+        if (resolutionPolicy == CCResolutionPolicy.NoBorder)
+        {
+            m_fScaleX = m_fScaleY = Math.Max(m_fScaleX, m_fScaleY);
+        }
+
+        if (resolutionPolicy == CCResolutionPolicy.ShowAll)
+        {
+            m_fScaleX = m_fScaleY = Math.Min(m_fScaleX, m_fScaleY);
+        }
+
+
+        if (resolutionPolicy == CCResolutionPolicy.FixedHeight)
+        {
+            m_fScaleX = m_fScaleY;
+            m_obDesignResolutionSize.Width = (float)Math.Ceiling(m_obScreenSize.Width / m_fScaleX);
+        }
+
+        if (resolutionPolicy == CCResolutionPolicy.FixedWidth)
+        {
+            m_fScaleY = m_fScaleX;
+            m_obDesignResolutionSize.Height = (float)Math.Ceiling(m_obScreenSize.Height / m_fScaleY);
+        }
+
+        // calculate the rect of viewport    
+        float viewPortW = m_obDesignResolutionSize.Width * m_fScaleX;
+        float viewPortH = m_obDesignResolutionSize.Height * m_fScaleY;
+
+        var clientBoundsX = 0;
+#if ANDROID
+        // When using CCGameView, m_Game may not be set
+        if (m_Game != null && m_Game.Window != null)
+        {
+            clientBoundsX = ((AndroidGameWindow)m_Game.Window).ClientBounds.X;
+        }
+#endif
+
+        m_obViewPortRect = new CCRect(clientBoundsX + (m_obScreenSize.Width - viewPortW) / 2, (m_obScreenSize.Height - viewPortH) / 2, viewPortW, viewPortH);
+
+        m_eResolutionPolicy = resolutionPolicy;
+
+        // reset director's member variables to fit visible rect
+        CCDirector.SharedDirector.m_obWinSizeInPoints = DesignResolutionSize;
+        if (CCConfiguration.SharedConfiguration.DisplayStats)
+        {
+            CCDirector.SharedDirector.CreateStatsLabel();
+        }
+        CCDirector.SharedDirector.SetRenderDefaultValues();
+    }
+
+    public static void SetOrientation(DisplayOrientation supportedOrientations)
+    {
+        SetOrientation(supportedOrientations, true);
+    }
+
+    private static void SetOrientation(DisplayOrientation supportedOrientations, bool bUpdateDimensions)
+    {
+        bool ll = (supportedOrientations & DisplayOrientation.LandscapeLeft) == DisplayOrientation.LandscapeLeft;
+        bool lr = (supportedOrientations & DisplayOrientation.LandscapeRight) == DisplayOrientation.LandscapeRight;
+        bool p = (supportedOrientations & DisplayOrientation.Portrait) == DisplayOrientation.Portrait;
+
+        bool onlyLandscape = (ll || lr) && !p;
+#if WINDOWS || WINDOWSGL || MACOS || LINUX
+        bool bSwapDims = bUpdateDimensions && ((m_GraphicsDeviceMgr.SupportedOrientations & supportedOrientations) == DisplayOrientation.Default);
+#else
+        bool bSwapDims = bUpdateDimensions && ((m_GraphicsDeviceMgr.SupportedOrientations & supportedOrientations) == 0);
+#endif
+        if (bSwapDims && (ll || lr))
+        {
+            // Check for landscape changes that do not need a swap
+#if WINDOWS || WINDOWSGL || MACOS || LINUX
+            if (((m_GraphicsDeviceMgr.SupportedOrientations & DisplayOrientation.LandscapeLeft) != DisplayOrientation.Default) ||
+                ((m_GraphicsDeviceMgr.SupportedOrientations & DisplayOrientation.LandscapeRight) != DisplayOrientation.Default))
+#else
+            if (((m_GraphicsDeviceMgr.SupportedOrientations & DisplayOrientation.LandscapeLeft) != 0) ||
+                ((m_GraphicsDeviceMgr.SupportedOrientations & DisplayOrientation.LandscapeRight) != 0))
+#endif
             {
-                if (_data.Capacity != value)
+                bSwapDims = false;
+            }
+        }
+        int preferredBackBufferWidth = m_GraphicsDeviceMgr.PreferredBackBufferWidth;
+        int preferredBackBufferHeight = m_GraphicsDeviceMgr.PreferredBackBufferHeight;
+        if (bSwapDims)
+        {
+            CCSize newSize = m_obDesignResolutionSize.Inverted;
+            CCDrawManager.SetDesignResolutionSize(newSize.Width, newSize.Height, m_eResolutionPolicy);
+            /*
+            m_obViewPortRect = m_obViewPortRect.InvertedSize;
+            m_obDesignResolutionSize = m_obDesignResolutionSize.Inverted;
+            CCDirector.SharedDirector.m_obWinSizeInPoints = CCDirector.SharedDirector.m_obWinSizeInPoints.Inverted;
+            CCDirector.SharedDirector.m_obWinSizeInPixels = CCDirector.SharedDirector.m_obWinSizeInPixels.Inverted;
+            m_obScreenSize = m_obScreenSize.Inverted;
+            float f = m_fScaleX;
+            m_fScaleX = m_fScaleY;
+            m_fScaleY = f;
+             */
+        }
+        preferredBackBufferWidth = m_GraphicsDeviceMgr.PreferredBackBufferWidth;
+        preferredBackBufferHeight = m_GraphicsDeviceMgr.PreferredBackBufferHeight;
+#if ANDROID
+        if (onlyLandscape && m_GraphicsDeviceMgr.PreferredBackBufferHeight > m_GraphicsDeviceMgr.PreferredBackBufferWidth)
+        {
+            m_GraphicsDeviceMgr.PreferredBackBufferWidth = preferredBackBufferHeight;
+            m_GraphicsDeviceMgr.PreferredBackBufferHeight = preferredBackBufferWidth;
+        }
+        m_GraphicsDeviceMgr.SupportedOrientations = supportedOrientations;
+#endif
+
+#if IOS || IPHONE
+        if (bSwapDims)
+        {
+            m_GraphicsDeviceMgr.PreferredBackBufferWidth = preferredBackBufferHeight;
+            m_GraphicsDeviceMgr.PreferredBackBufferHeight = preferredBackBufferWidth;
+        }
+        else if (onlyLandscape && m_GraphicsDeviceMgr.PreferredBackBufferHeight > m_GraphicsDeviceMgr.PreferredBackBufferWidth)
+        {
+            m_GraphicsDeviceMgr.PreferredBackBufferWidth = preferredBackBufferHeight;
+            m_GraphicsDeviceMgr.PreferredBackBufferHeight = preferredBackBufferWidth;
+        }
+        m_GraphicsDeviceMgr.SupportedOrientations = supportedOrientations;
+#endif
+#if WINDOWS || WINDOWSGL || MACOS || LINUX
+        if (bSwapDims)
+        {
+            m_GraphicsDeviceMgr.PreferredBackBufferWidth = preferredBackBufferHeight;
+            m_GraphicsDeviceMgr.PreferredBackBufferHeight = preferredBackBufferWidth;
+        }
+        else
+        {
+            /*
+            if (onlyPortrait)
+            {
+                m_GraphicsDeviceMgr.PreferredBackBufferWidth = 480;
+                m_GraphicsDeviceMgr.PreferredBackBufferHeight = 800;
+            }
+            else
+            {
+                m_GraphicsDeviceMgr.PreferredBackBufferWidth = 800;
+                m_GraphicsDeviceMgr.PreferredBackBufferHeight = 480;
+            }
+            */
+        }
+#endif
+        UpdatePresentationParametrs(m_GraphicsDeviceMgr);
+
+        m_GraphicsDeviceMgr.ApplyChanges();
+    }
+
+    public static CCPoint ScreenToWorld(float x, float y)
+    {
+        return new CCPoint(
+            (x - m_obViewPortRect.MinX) / m_fScaleX,
+            (y - m_obViewPortRect.MinY) / m_fScaleY
+            );
+    }
+
+    #region Matrix
+
+    private static Matrix m_pTransform = Matrix.Identity;
+
+    public static void SetIdentityMatrix()
+    {
+        m_Matrix = Matrix.Identity;
+        m_worldMatrixChanged = true;
+    }
+
+    public static void PushMatrix()
+    {
+        m_matrixStack[m_stackIndex++] = m_Matrix;
+    }
+
+    public static void PopMatrix()
+    {
+        m_Matrix = m_matrixStack[--m_stackIndex];
+        m_worldMatrixChanged = true;
+        Debug.Assert(m_stackIndex >= 0);
+    }
+
+    public static void Translate(float x, float y, int z)
+    {
+        m_TmpMatrix = Matrix.CreateTranslation(x, y, z);
+        Matrix.Multiply(ref m_TmpMatrix, ref m_Matrix, out m_Matrix);
+        m_worldMatrixChanged = true;
+    }
+
+    public static void MultMatrix(ref Matrix matrix)
+    {
+        Matrix.Multiply(ref matrix, ref m_Matrix, out m_Matrix);
+        m_worldMatrixChanged = true;
+    }
+
+    //protected Matrix m_tCCNodeTransform;
+
+    // | m[0] m[4] m[8]  m[12] |     | m11 m21 m31 m41 |     | a c 0 tx |
+    // | m[1] m[5] m[9]  m[13] |     | m12 m22 m32 m42 |     | b d 0 ty |
+    // | m[2] m[6] m[10] m[14] | <=> | m13 m23 m33 m43 | <=> | 0 0 1  0 |
+    // | m[3] m[7] m[11] m[15] |     | m14 m24 m34 m44 |     | 0 0 0  1 |        
+    public static void MultMatrix(CCAffineTransform transform, float z)
+    {
+        MultMatrix(ref transform, z);
+    }
+
+    public static void MultMatrix(ref CCAffineTransform transform, float z)
+    {
+        m_pTransform.M11 = transform.a;
+        m_pTransform.M21 = transform.c;
+        m_pTransform.M12 = transform.b;
+        m_pTransform.M22 = transform.d;
+        m_pTransform.M41 = transform.tx;
+        m_pTransform.M42 = transform.ty;
+        m_pTransform.M43 = z;
+
+        Matrix.Multiply(ref m_pTransform, ref m_Matrix, out m_Matrix);
+
+        m_worldMatrixChanged = true;
+    }
+
+    #endregion
+
+    #region Mask
+
+    private struct MaskState
+    {
+        public int Layer;
+        public bool Inverted;
+        public float AlphaTreshold;
+    }
+
+    private struct MaskDepthStencilStateCacheEntry
+    {
+        public DepthStencilState Clear;
+        public DepthStencilState ClearInvert;
+        public DepthStencilState DrawMask;
+        public DepthStencilState DrawMaskInvert;
+        public DepthStencilState DrawContent;
+        public DepthStencilState DrawContentDepth;
+
+        public DepthStencilState GetClearState(int layer, bool inverted)
+        {
+            DepthStencilState result = inverted ? ClearInvert : Clear;
+
+            if (result == null)
+            {
+                int maskLayer = 1 << layer;
+
+                result = new DepthStencilState()
                 {
-                    _data.Capacity = value;
-                    Reinit();
+                    DepthBufferEnable = false,
+
+                    StencilEnable = true,
+
+                    StencilFunction = CompareFunction.Never,
+
+                    StencilMask = maskLayer,
+                    StencilWriteMask = maskLayer,
+                    ReferenceStencil = maskLayer,
+
+                    StencilFail = !inverted ? StencilOperation.Zero : StencilOperation.Replace
+                };
+
+                if (inverted)
+                {
+                    ClearInvert = result;
+                }
+                else
+                {
+                    Clear = result;
+                }
+            }
+
+            return result;
+        }
+
+        public DepthStencilState GetDrawMaskState(int layer, bool inverted)
+        {
+            DepthStencilState result = inverted ? DrawMaskInvert : DrawMask;
+
+            if (result == null)
+            {
+                int maskLayer = 1 << layer;
+
+                result = new DepthStencilState()
+                {
+                    DepthBufferEnable = false,
+
+                    StencilEnable = true,
+
+                    StencilFunction = CompareFunction.Never,
+
+                    StencilMask = maskLayer,
+                    StencilWriteMask = maskLayer,
+                    ReferenceStencil = maskLayer,
+
+                    StencilFail = !inverted ? StencilOperation.Replace : StencilOperation.Zero,
+                };
+
+                if (inverted)
+                {
+                    DrawMaskInvert = result;
+                }
+                else
+                {
+                    DrawMask = result;
+                }
+            }
+
+            return result;
+        }
+
+        public DepthStencilState GetDrawContentState(int layer, bool depth)
+        {
+            DepthStencilState result = depth ? DrawContentDepth : DrawContent;
+
+            if (result == null)
+            {
+                int maskLayer = 1 << layer;
+                int maskLayerL = maskLayer - 1;
+                int maskLayerLe = maskLayer | maskLayerL;
+
+                result = new DepthStencilState()
+                {
+                    DepthBufferEnable = _maskSavedStencilStates[_maskLayer].DepthBufferEnable,
+
+                    StencilEnable = true,
+
+                    StencilMask = maskLayerLe,
+                    StencilWriteMask = 0,
+                    ReferenceStencil = maskLayerLe,
+
+                    StencilFunction = CompareFunction.Equal,
+
+                    StencilPass = StencilOperation.Keep,
+                    StencilFail = StencilOperation.Keep,
+                };
+
+                if (depth)
+                {
+                    DrawContentDepth = result;
+                }
+                else
+                {
+                    DrawContent = result;
+                }
+            }
+
+            return result;
+        }
+    }
+
+    private static int _maskLayer = -1;
+    private static bool _maskOnceLog = false;
+    private static DepthStencilState[] _maskSavedStencilStates = new DepthStencilState[8];
+    private static MaskState[] _maskStates = new MaskState[8];
+    private static MaskDepthStencilStateCacheEntry[] _maskStatesCache = new MaskDepthStencilStateCacheEntry[8];
+
+    public static void SetClearMaskState(int layer, bool inverted)
+    {
+        DepthStencilState = _maskStatesCache[layer].GetClearState(layer, inverted);
+    }
+
+    public static void SetDrawMaskState(int layer, bool inverted)
+    {
+        DepthStencilState = _maskStatesCache[layer].GetDrawMaskState(layer, inverted);
+    }
+
+    public static void SetDrawMaskedState(int layer, bool depth)
+    {
+        DepthStencilState = _maskStatesCache[layer].GetDrawContentState(layer, depth);
+    }
+
+    public static bool BeginDrawMask()
+    {
+        return BeginDrawMask(false, 1f);
+    }
+
+    public static bool BeginDrawMask(bool inverted)
+    {
+        return BeginDrawMask(inverted, 1f);
+    }
+
+    public static bool BeginDrawMask(float alphaTreshold)
+    {
+        return BeginDrawMask(false, alphaTreshold);
+    }
+
+    public static bool BeginDrawMask(bool inverted, float alphaTreshold)
+    {
+        if (_maskLayer + 1 == 8) //DepthFormat.Depth24Stencil8
+        {
+            if (_maskOnceLog)
+            {
+                CCLog.Log(
+                    @"Nesting more than 8 stencils is not supported. 
+                        Everything will be drawn without stencil for this node and its childs."
+                    );
+                _maskOnceLog = false;
+            }
+            return false;
+        }
+
+        _maskLayer++;
+
+        var maskState = new MaskState() { Layer = _maskLayer, Inverted = inverted, AlphaTreshold = alphaTreshold };
+
+        _maskStates[_maskLayer] = maskState;
+        _maskSavedStencilStates[_maskLayer] = DepthStencilState;
+
+        int maskLayer = 1 << _maskLayer;
+
+        ///////////////////////////////////
+        // CLEAR STENCIL BUFFER
+
+        SetClearMaskState(_maskLayer, maskState.Inverted);
+
+        // draw a fullscreen solid rectangle to clear the stencil buffer
+        var size = CCDirector.SharedDirector.WinSize;
+
+        PushMatrix();
+        SetIdentityMatrix();
+
+        CCDrawingPrimitives.Begin();
+        CCDrawingPrimitives.DrawSolidRect(CCPoint.Zero, new CCPoint(size.Width, size.Height), new CCColor4B(255, 255, 255, 255));
+        CCDrawingPrimitives.End();
+
+        PopMatrix();
+        
+        ///////////////////////////////////
+        // PREPARE TO DRAW MASK
+
+        SetDrawMaskState(_maskLayer, maskState.Inverted);
+
+        if (maskState.AlphaTreshold < 1f)
+        {
+            AlphaTestEffect.AlphaFunction = CompareFunction.Greater;
+            AlphaTestEffect.ReferenceAlpha = (byte)(255 * maskState.AlphaTreshold);
+
+            PushEffect(AlphaTestEffect);
+        }
+
+        return true;
+    }
+
+    public static void EndDrawMask()
+    {
+        var maskState = _maskStates[_maskLayer];
+
+        ///////////////////////////////////
+        // PREPARE TO DRAW MASKED CONTENT
+
+        if (maskState.AlphaTreshold < 1)
+        {
+            PopEffect();
+        }
+
+        SetDrawMaskedState(_maskLayer, _maskSavedStencilStates[_maskLayer].DepthBufferEnable);
+    }
+
+    public static void EndMask()
+    {
+        ///////////////////////////////////
+        // RESTORE STATE
+
+        DepthStencilState = _maskSavedStencilStates[_maskLayer];
+
+        _maskLayer--;
+    }
+
+    #endregion
+
+    #region State Save/Restore for Multi-View Support
+
+    /// <summary>
+    /// Saves the current drawing state to a CCDrawManagerState object.
+    /// Used for multi-view support where each view maintains its own state.
+    /// </summary>
+    public static CCDrawManagerState SaveState()
+    {
+        var state = new CCDrawManagerState();
+
+        state.WorldMatrix = m_worldMatrix;
+        state.ViewMatrix = m_viewMatrix;
+        state.ProjectionMatrix = m_projectionMatrix;
+        state.CombinedMatrix = m_Matrix;
+        state.StackIndex = m_stackIndex;
+
+        // Copy matrix stack (valid entries are [0, m_stackIndex))
+        for (int i = 0; i < m_stackIndex && i < state.MatrixStack.Length; i++)
+        {
+            state.MatrixStack[i] = m_matrixStack[i];
+        }
+
+        state.DesignResolutionSize = m_obDesignResolutionSize;
+        state.ScreenSize = m_obScreenSize;
+        state.ViewPortRect = m_obViewPortRect;
+        state.ScaleX = m_fScaleX;
+        state.ScaleY = m_fScaleY;
+        state.ResolutionPolicy = m_eResolutionPolicy;
+        state.DepthTest = m_depthTest;
+
+        if (graphicsDevice != null)
+        {
+            state.Viewport = graphicsDevice.Viewport;
+        }
+
+        return state;
+    }
+
+    /// <summary>
+    /// Restores drawing state from a CCDrawManagerState object.
+    /// Used for multi-view support where each view maintains its own state.
+    /// </summary>
+    public static void RestoreState(CCDrawManagerState state)
+    {
+        if (state == null)
+            return;
+
+        m_worldMatrix = state.WorldMatrix;
+        m_viewMatrix = state.ViewMatrix;
+        m_projectionMatrix = state.ProjectionMatrix;
+        m_Matrix = state.CombinedMatrix;
+        m_stackIndex = state.StackIndex;
+
+        // Restore matrix stack (valid entries are [0, StackIndex))
+        for (int i = 0; i < state.StackIndex && i < m_matrixStack.Length; i++)
+        {
+            m_matrixStack[i] = state.MatrixStack[i];
+        }
+
+        m_obDesignResolutionSize = state.DesignResolutionSize;
+        m_obScreenSize = state.ScreenSize;
+        m_obViewPortRect = state.ViewPortRect;
+        m_fScaleX = state.ScaleX;
+        m_fScaleY = state.ScaleY;
+        m_eResolutionPolicy = state.ResolutionPolicy;
+        m_depthTest = state.DepthTest;
+
+        if (graphicsDevice != null && state.Viewport.Width > 0 && state.Viewport.Height > 0)
+        {
+            graphicsDevice.Viewport = state.Viewport;
+        }
+
+        // Mark matrices as changed so they get recalculated
+        m_worldMatrixChanged = true;
+        m_viewMatrixChanged = true;
+        m_projectionMatrixChanged = true;
+    }
+
+    /// <summary>
+    /// Creates a new state with default values for a view with the given size.
+    /// </summary>
+    public static CCDrawManagerState CreateStateForView(int width, int height, CCSize designResolution, CCResolutionPolicy policy)
+    {
+        var state = new CCDrawManagerState();
+
+        state.ScreenSize = new CCSize(width, height);
+        state.DesignResolutionSize = designResolution;
+        state.ResolutionPolicy = policy;
+        state.ViewPortRect = new CCRect(0, 0, width, height);
+        state.Viewport = new Viewport(0, 0, width, height);
+
+        // Guard against zero design resolution to avoid division by zero
+        if (designResolution.Width == 0 || designResolution.Height == 0)
+            return state;
+
+        // Calculate scale based on policy
+        float scaleX = width / designResolution.Width;
+        float scaleY = height / designResolution.Height;
+
+        switch (policy)
+        {
+            case CCResolutionPolicy.NoBorder:
+                scaleX = scaleY = Math.Max(scaleX, scaleY);
+                break;
+            case CCResolutionPolicy.ShowAll:
+                scaleX = scaleY = Math.Min(scaleX, scaleY);
+                break;
+            case CCResolutionPolicy.FixedHeight:
+                scaleX = scaleY;
+                state.DesignResolutionSize = new CCSize((float)Math.Ceiling(width / scaleX), designResolution.Height);
+                break;
+            case CCResolutionPolicy.FixedWidth:
+                scaleY = scaleX;
+                state.DesignResolutionSize = new CCSize(designResolution.Width, (float)Math.Ceiling(height / scaleY));
+                break;
+        }
+
+        state.ScaleX = scaleX;
+        state.ScaleY = scaleY;
+
+        return state;
+    }
+
+    #endregion
+}
+
+public enum CCResolutionPolicy
+{
+    UnKnown,
+
+    // The entire application is visible in the specified area without trying to preserve the original aspect ratio. 
+    // Distortion can occur, and the application may appear stretched or compressed.
+    ExactFit,
+    // The entire application fills the specified area, without distortion but possibly with some cropping, 
+    // while maintaining the original aspect ratio of the application.
+    NoBorder,
+    // The entire application is visible in the specified area without distortion while maintaining the original 
+    // aspect ratio of the application. Borders can appear on two sides of the application.
+    ShowAll,
+    // The application takes the height of the design resolution size and modifies the width of the internal
+    // canvas so that it fits the aspect ratio of the device
+    // no distortion will occur however you must make sure your application works on different
+    // aspect ratios
+    FixedHeight,
+    // The application takes the width of the design resolution size and modifies the height of the internal
+    // canvas so that it fits the aspect ratio of the device
+    // no distortion will occur however you must make sure your application works on different
+    // aspect ratios
+    FixedWidth
+}
+
+
+public class CCGraphicsResource : IDisposable
+{
+    private static CCRawList<WeakReference> _createdResources = new CCRawList<WeakReference>();
+
+    private bool _isDisposed;
+
+    private WeakReference _wr;
+
+    public bool IsDisposed
+    {
+        get { return _isDisposed; }
+    }
+
+    public CCGraphicsResource()
+    {
+        _wr = new WeakReference(this);
+
+        lock (_createdResources)
+        {
+            _createdResources.Add(_wr);
+        }
+    }
+
+    ~CCGraphicsResource()
+    {
+        if (!IsDisposed)
+        {
+            Dispose();
+        }
+
+        lock (_createdResources)
+        {
+            _createdResources.Remove(_wr);
+        }
+    }
+
+    public virtual void Dispose()
+    {
+        _isDisposed = true;
+    }
+
+    public virtual void Reinit()
+    {
+    }
+
+    internal static void ReinitAllResources()
+    {
+        lock (_createdResources)
+        {
+            var resources = _createdResources.Elements;
+            for (int i = 0, count = _createdResources.Count; i < count; i++)
+            {
+                if (resources[i].IsAlive)
+                {
+                    ((CCGraphicsResource) resources[i].Target).Reinit();
                 }
             }
         }
+    }
 
-        public CCIndexBuffer(int indexCount, BufferUsage usage)
+    public static void DisposeAllResources()
+    {
+        lock (_createdResources)
         {
-            _data = new CCRawList<T>(indexCount);
-            _usage = usage;
-            Reinit();
-        }
-
-        public override void Reinit()
-        {
-            if (_indexBuffer != null && !_indexBuffer.IsDisposed)
+            var resources = _createdResources.Elements;
+            for (int i = 0, count = _createdResources.Count; i < count; i++)
             {
-                _indexBuffer.Dispose();
-            }
-
-            _indexBuffer = new IndexBuffer(CCDrawManager.GraphicsDevice, typeof(T), _data.Capacity, _usage);
-
-            UpdateBuffer();
-        }
-
-        public void UpdateBuffer()
-        {
-            UpdateBuffer(0, _data.Count);
-        }
-
-        public void UpdateBuffer(int startIndex, int elementCount)
-        {
-            if (elementCount > 0)
-            {
-                _indexBuffer.SetData(_data.Elements, startIndex, elementCount);
+                if (resources[i].IsAlive)
+                {
+                    ((CCGraphicsResource) resources[i].Target).Dispose();
+                }
             }
         }
+    }
+}
 
-        public override void Dispose()
+
+public class CCVertexBuffer<T> : CCGraphicsResource where T : struct, IVertexType
+{
+    protected VertexBuffer _vertexBuffer;
+    protected BufferUsage _usage;
+    protected CCRawList<T> _data;
+
+    internal VertexBuffer VertexBuffer
+    {
+        get { return _vertexBuffer; }
+    }
+
+    public CCRawList<T> Data
+    {
+        get { return _data; }
+    }
+
+    public int Count
+    {
+        get { return _data.Count; }
+        set
         {
-            base.Dispose();
-
-            if (_indexBuffer != null && !_indexBuffer.IsDisposed)
-            {
-                _indexBuffer.Dispose();
-            }
-
-            _indexBuffer = null;
+            Debug.Assert(value <= _data.Capacity);
+            _data.count = value;
         }
+    }
+
+    public int Capacity
+    {
+        get { return _data.Capacity; }
+        set
+        {
+            if (_data.Capacity != value)
+            {
+                _data.Capacity = value;
+                Reinit();
+            }
+        }
+    }
+
+    public CCVertexBuffer(int vertexCount, BufferUsage usage)
+    {
+        _data = new CCRawList<T>(vertexCount);
+        _usage = usage;
+        Reinit();
+    }
+    
+    public void UpdateBuffer()
+    {
+        UpdateBuffer(0, _data.Count);
+    }
+
+    public virtual void UpdateBuffer(int startIndex, int elementCount)
+    {
+        if (elementCount > 0)
+        {
+            _vertexBuffer.SetData(_data.Elements, startIndex, elementCount);
+        }
+    }
+
+    public override void Reinit()
+    {
+        if (_vertexBuffer != null && !_vertexBuffer.IsDisposed)
+        {
+            _vertexBuffer.Dispose();
+        }
+        _vertexBuffer = new VertexBuffer(CCDrawManager.GraphicsDevice, typeof(T), _data.Capacity, _usage);
+    }
+}
+
+public class CCQuadVertexBuffer : CCVertexBuffer<CCV3F_C4B_T2F_Quad>
+{
+    public CCQuadVertexBuffer(int vertexCount, BufferUsage usage) : base(vertexCount, usage)
+    {
+    }
+
+    public void UpdateBuffer(CCRawList<CCV3F_C4B_T2F_Quad> data, int startIndex, int elementCount)
+    {
+        //TODO: 
+        var tmp = _data;
+        _data = data;
+        
+        UpdateBuffer(startIndex, elementCount);
+
+        _data = tmp;
+    }
+
+    public override void UpdateBuffer(int startIndex, int elementCount)
+    {
+        if (elementCount == 0)
+        {
+            return;
+        }
+
+        var quads = _data.Elements;
+
+        var tmp = CCDrawManager._tmpVertices;
+
+        while (tmp.Capacity < elementCount)
+        {
+            tmp.Capacity = tmp.Capacity * 2;
+        }
+        tmp.Count = elementCount * 4;
+
+        var vertices = tmp.Elements;
+
+        int i4 = 0;
+        for (int i = startIndex; i < startIndex + elementCount; i++)
+        {
+            vertices[i4 + 0] = quads[i].TopLeft;
+            vertices[i4 + 1] = quads[i].BottomLeft;
+            vertices[i4 + 2] = quads[i].TopRight;
+            vertices[i4 + 3] = quads[i].BottomRight;
+
+            i4 += 4;
+        }
+
+        _vertexBuffer.SetData(vertices, startIndex * 4, elementCount * 4);
+    }
+
+    public override void Reinit()
+    {
+        if (_vertexBuffer != null && !_vertexBuffer.IsDisposed)
+        {
+            _vertexBuffer.Dispose();
+        }
+        _vertexBuffer = new VertexBuffer(CCDrawManager.GraphicsDevice, typeof(CCV3F_C4B_T2F), _data.Capacity * 4, _usage);
+
+        UpdateBuffer();
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+        
+        if (_vertexBuffer != null && !_vertexBuffer.IsDisposed)
+        {
+            _vertexBuffer.Dispose();
+        }
+        
+        _vertexBuffer = null;
+    }
+}
+
+public class CCIndexBuffer<T> : CCGraphicsResource where T : struct
+{
+    private IndexBuffer _indexBuffer;
+    private BufferUsage _usage;
+    private CCRawList<T> _data;
+
+    internal IndexBuffer IndexBuffer
+    {
+        get { return _indexBuffer; }
+    }
+
+    public CCRawList<T> Data
+    {
+        get { return _data; }
+    }
+
+    public int Count
+    {
+        get { return _data.Count; }
+        set
+        {
+            Debug.Assert(value <= _data.Capacity);
+            _data.count = value;
+        }
+    }
+
+    public int Capacity
+    {
+        get { return _data.Capacity; }
+        set
+        {
+            if (_data.Capacity != value)
+            {
+                _data.Capacity = value;
+                Reinit();
+            }
+        }
+    }
+
+    public CCIndexBuffer(int indexCount, BufferUsage usage)
+    {
+        _data = new CCRawList<T>(indexCount);
+        _usage = usage;
+        Reinit();
+    }
+
+    public override void Reinit()
+    {
+        if (_indexBuffer != null && !_indexBuffer.IsDisposed)
+        {
+            _indexBuffer.Dispose();
+        }
+
+        _indexBuffer = new IndexBuffer(CCDrawManager.GraphicsDevice, typeof(T), _data.Capacity, _usage);
+
+        UpdateBuffer();
+    }
+
+    public void UpdateBuffer()
+    {
+        UpdateBuffer(0, _data.Count);
+    }
+
+    public void UpdateBuffer(int startIndex, int elementCount)
+    {
+        if (elementCount > 0)
+        {
+            _indexBuffer.SetData(_data.Elements, startIndex, elementCount);
+        }
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+
+        if (_indexBuffer != null && !_indexBuffer.IsDisposed)
+        {
+            _indexBuffer.Dispose();
+        }
+
+        _indexBuffer = null;
     }
 }

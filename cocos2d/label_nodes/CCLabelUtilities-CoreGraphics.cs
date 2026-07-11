@@ -1,14 +1,13 @@
 #if IOS
 using System;
-using System.Runtime.Serialization;
-using System.Runtime.InteropServices;
-using CoreGraphics;
 using System.IO;
-
-using UIKit;
-using Foundation;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using CoreGraphics;
 using CoreText;
+using Foundation;
 using ImageIO;
+using UIKit;
 
 
 namespace Cocos2D

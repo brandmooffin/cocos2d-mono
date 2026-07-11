@@ -18,30 +18,29 @@
 
 using System;
 using System.Diagnostics;
-using Box2D.Common;
-using Box2D.Collision.Shapes;
 using Box2D.Collision;
+using Box2D.Collision.Shapes;
+using Box2D.Common;
 
-namespace Box2D.Dynamics.Contacts
+namespace Box2D.Dynamics.Contacts;
+
+/*
+public class b2ChainAndPolygonContact : b2Contact
 {
-    /*
-    public class b2ChainAndPolygonContact : b2Contact
+    public b2ChainAndPolygonContact(b2Fixture fixtureA, int indexA, b2Fixture fixtureB, int indexB)
+        : base(fixtureA, indexA, fixtureB, indexB)
     {
-        public b2ChainAndPolygonContact(b2Fixture fixtureA, int indexA, b2Fixture fixtureB, int indexB)
-            : base(fixtureA, indexA, fixtureB, indexB)
-        {
-            Debug.Assert(m_fixtureA.ShapeType == b2ShapeType.e_chain);
-            Debug.Assert(m_fixtureB.ShapeType == b2ShapeType.e_polygon);
-        }
-
-        public override void Evaluate(ref b2Manifold manifold, ref b2Transform xfA, ref b2Transform xfB)
-        {
-            b2ChainShape chain = (b2ChainShape)m_fixtureA.Shape;
-            b2EdgeShape edge;
-            edge = chain.GetChildEdge(m_indexA);
-            b2Collision.b2CollideEdgeAndPolygon(ref manifold, edge, ref xfA,
-                                        (b2PolygonShape)m_fixtureB.Shape, ref xfB);
-        }
+        Debug.Assert(m_fixtureA.ShapeType == b2ShapeType.e_chain);
+        Debug.Assert(m_fixtureB.ShapeType == b2ShapeType.e_polygon);
     }
-*/
+
+    public override void Evaluate(ref b2Manifold manifold, ref b2Transform xfA, ref b2Transform xfB)
+    {
+        b2ChainShape chain = (b2ChainShape)m_fixtureA.Shape;
+        b2EdgeShape edge;
+        edge = chain.GetChildEdge(m_indexA);
+        b2Collision.b2CollideEdgeAndPolygon(ref manifold, edge, ref xfA,
+                                    (b2PolygonShape)m_fixtureB.Shape, ref xfB);
+    }
 }
+*/

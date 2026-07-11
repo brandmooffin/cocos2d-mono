@@ -29,96 +29,95 @@ using FarseerPhysics.Common;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class TimeOfImpactTest : Test
 {
-    public class TimeOfImpactTest : Test
+    private PolygonShape _shapeA = new PolygonShape(1);
+    private PolygonShape _shapeB = new PolygonShape(1);
+
+    private TimeOfImpactTest()
     {
-        private PolygonShape _shapeA = new PolygonShape(1);
-        private PolygonShape _shapeB = new PolygonShape(1);
+        _shapeA.SetAsBox(25.0f, 5.0f);
+        _shapeB.SetAsBox(2.5f, 2.5f);
+    }
 
-        private TimeOfImpactTest()
+    internal static Test Create()
+    {
+        return new TimeOfImpactTest();
+    }
+
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        base.Update(settings, gameTime);
+
+        Sweep sweepA = new Sweep();
+        sweepA.C0 = new Vector2(24.0f, -60.0f);
+        sweepA.A0 = 2.95f;
+        sweepA.C = sweepA.C0;
+        sweepA.A = sweepA.A0;
+        sweepA.LocalCenter = Vector2.Zero;
+
+        Sweep sweepB = new Sweep();
+        sweepB.C0 = new Vector2(53.474274f, -50.252514f);
+        sweepB.A0 = 513.36676f; // - 162.0f * b2_pi;
+        sweepB.C = new Vector2(54.595478f, -51.083473f);
+        sweepB.A = 513.62781f; //  - 162.0f * b2_pi;
+        sweepB.LocalCenter = Vector2.Zero;
+
+        //sweepB.a0 -= 300.0f * b2_pi;
+        //sweepB.a -= 300.0f * b2_pi;
+
+        TOIInput input = new TOIInput();
+        input.ProxyA.Set(_shapeA, 0);
+        input.ProxyB.Set(_shapeB, 0);
+        input.SweepA = sweepA;
+        input.SweepB = sweepB;
+        input.TMax = 1.0f;
+
+        TOIOutput output;
+        TimeOfImpact.CalculateTimeOfImpact(out output, input);
+
+        DebugView.DrawString(50, TextLine, "TOI = {0:n}", output.T);
+        TextLine += 15;
+
+        DebugView.DrawString(50, TextLine, "Max TOI iters = {0:n}, Max root iters = {1:n}", TimeOfImpact.TOIMaxIters,
+                             TimeOfImpact.TOIMaxRootIters);
+        TextLine += 15;
+
+        Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
+
+        DebugView.BeginCustomDraw();
+        Transform transformA;
+        sweepA.GetTransform(out transformA, 0.0f);
+        for (int i = 0; i < _shapeA.Vertices.Count; ++i)
         {
-            _shapeA.SetAsBox(25.0f, 5.0f);
-            _shapeB.SetAsBox(2.5f, 2.5f);
+            vertices[i] = MathUtils.Multiply(ref transformA, _shapeA.Vertices[i]);
         }
+        DebugView.DrawPolygon(vertices, _shapeA.Vertices.Count, new Color(0.9f, 0.9f, 0.9f));
 
-        internal static Test Create()
+        Transform transformB;
+        sweepB.GetTransform(out transformB, 0.0f);
+
+        for (int i = 0; i < _shapeB.Vertices.Count; ++i)
         {
-            return new TimeOfImpactTest();
+            vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
         }
+        DebugView.DrawPolygon(vertices, _shapeB.Vertices.Count, new Color(0.5f, 0.9f, 0.5f));
 
-        public override void Update(GameSettings settings, GameTime gameTime)
+        sweepB.GetTransform(out transformB, output.T);
+        for (int i = 0; i < _shapeB.Vertices.Count; ++i)
         {
-            base.Update(settings, gameTime);
-
-            Sweep sweepA = new Sweep();
-            sweepA.C0 = new Vector2(24.0f, -60.0f);
-            sweepA.A0 = 2.95f;
-            sweepA.C = sweepA.C0;
-            sweepA.A = sweepA.A0;
-            sweepA.LocalCenter = Vector2.Zero;
-
-            Sweep sweepB = new Sweep();
-            sweepB.C0 = new Vector2(53.474274f, -50.252514f);
-            sweepB.A0 = 513.36676f; // - 162.0f * b2_pi;
-            sweepB.C = new Vector2(54.595478f, -51.083473f);
-            sweepB.A = 513.62781f; //  - 162.0f * b2_pi;
-            sweepB.LocalCenter = Vector2.Zero;
-
-            //sweepB.a0 -= 300.0f * b2_pi;
-            //sweepB.a -= 300.0f * b2_pi;
-
-            TOIInput input = new TOIInput();
-            input.ProxyA.Set(_shapeA, 0);
-            input.ProxyB.Set(_shapeB, 0);
-            input.SweepA = sweepA;
-            input.SweepB = sweepB;
-            input.TMax = 1.0f;
-
-            TOIOutput output;
-            TimeOfImpact.CalculateTimeOfImpact(out output, input);
-
-            DebugView.DrawString(50, TextLine, "TOI = {0:n}", output.T);
-            TextLine += 15;
-
-            DebugView.DrawString(50, TextLine, "Max TOI iters = {0:n}, Max root iters = {1:n}", TimeOfImpact.TOIMaxIters,
-                                 TimeOfImpact.TOIMaxRootIters);
-            TextLine += 15;
-
-            Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
-
-            DebugView.BeginCustomDraw();
-            Transform transformA;
-            sweepA.GetTransform(out transformA, 0.0f);
-            for (int i = 0; i < _shapeA.Vertices.Count; ++i)
-            {
-                vertices[i] = MathUtils.Multiply(ref transformA, _shapeA.Vertices[i]);
-            }
-            DebugView.DrawPolygon(vertices, _shapeA.Vertices.Count, new Color(0.9f, 0.9f, 0.9f));
-
-            Transform transformB;
-            sweepB.GetTransform(out transformB, 0.0f);
-
-            for (int i = 0; i < _shapeB.Vertices.Count; ++i)
-            {
-                vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
-            }
-            DebugView.DrawPolygon(vertices, _shapeB.Vertices.Count, new Color(0.5f, 0.9f, 0.5f));
-
-            sweepB.GetTransform(out transformB, output.T);
-            for (int i = 0; i < _shapeB.Vertices.Count; ++i)
-            {
-                vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
-            }
-            DebugView.DrawPolygon(vertices, _shapeB.Vertices.Count, new Color(0.5f, 0.7f, 0.9f));
-
-            sweepB.GetTransform(out transformB, 1.0f);
-            for (int i = 0; i < _shapeB.Vertices.Count; ++i)
-            {
-                vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
-            }
-            DebugView.DrawPolygon(vertices, _shapeB.Vertices.Count, new Color(0.9f, 0.5f, 0.5f));
-            DebugView.EndCustomDraw();
+            vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
         }
+        DebugView.DrawPolygon(vertices, _shapeB.Vertices.Count, new Color(0.5f, 0.7f, 0.9f));
+
+        sweepB.GetTransform(out transformB, 1.0f);
+        for (int i = 0; i < _shapeB.Vertices.Count; ++i)
+        {
+            vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
+        }
+        DebugView.DrawPolygon(vertices, _shapeB.Vertices.Count, new Color(0.9f, 0.5f, 0.5f));
+        DebugView.EndCustomDraw();
     }
 }

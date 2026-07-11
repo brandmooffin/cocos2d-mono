@@ -27,8 +27,8 @@
 using System;
 using System.Collections;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public abstract class PlistObjectBase
 	{
 		public abstract void Write (System.Xml.XmlWriter writer);
@@ -77,13 +77,12 @@ namespace Cocos2D
 			return new PlistArray (value);
 		}
 
-        public abstract byte[] AsBinary { get; }
+    public abstract byte[] AsBinary { get; }
 	    public abstract int AsInt { get; }
-        public abstract float AsFloat { get; }
-        public abstract string AsString { get; }
-        public abstract DateTime AsDate { get; }
-        public abstract bool AsBool { get; }
-        public abstract PlistArray AsArray { get; }
-        public abstract PlistDictionary AsDictionary { get; }
+    public abstract float AsFloat { get; }
+    public abstract string AsString { get; }
+    public abstract DateTime AsDate { get; }
+    public abstract bool AsBool { get; }
+    public abstract PlistArray AsArray { get; }
+    public abstract PlistDictionary AsDictionary { get; }
 	}
-}

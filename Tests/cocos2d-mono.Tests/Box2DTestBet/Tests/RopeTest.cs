@@ -32,115 +32,114 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+/// <summary>
+/// This test shows how a rope joint can be used to stabilize a chain of
+/// bodies with a heavy payload. Notice that the rope joint just prevents
+/// excessive stretching and has no other effect.
+/// By disabling the rope joint you can see that the Box2D solver has trouble
+/// supporting heavy bodies with light bodies. Try playing around with the
+/// densities, time step, and iterations to see how they affect stability.
+/// This test also shows how to use contact filtering. Filtering is configured
+/// so that the payload does not collide with the chain.
+/// </summary>
+public class RopeTest : Test
 {
-    /// <summary>
-    /// This test shows how a rope joint can be used to stabilize a chain of
-    /// bodies with a heavy payload. Notice that the rope joint just prevents
-    /// excessive stretching and has no other effect.
-    /// By disabling the rope joint you can see that the Box2D solver has trouble
-    /// supporting heavy bodies with light bodies. Try playing around with the
-    /// densities, time step, and iterations to see how they affect stability.
-    /// This test also shows how to use contact filtering. Filtering is configured
-    /// so that the payload does not collide with the chain.
-    /// </summary>
-    public class RopeTest : Test
+    private const int Count = 10;
+    private RopeJoint _rj;
+    private bool _useRopeJoint = true;
+
+    private RopeTest()
     {
-        private const int Count = 10;
-        private RopeJoint _rj;
-        private bool _useRopeJoint = true;
-
-        private RopeTest()
+        Body ground;
         {
-            Body ground;
+            ground = new Body(World);
+
+            EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            ground.CreateFixture(shape);
+        }
+
+        {
+            const float y = 15;
+
+            Body prevBody = ground;
+            PolygonShape largeShape = new PolygonShape(PolygonTools.CreateRectangle(1.5f, 1.5f), 100);
+            PolygonShape smallShape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.125f), 20);
+
+            for (int i = 0; i < Count; ++i)
             {
-                ground = new Body(World);
+                Body body = BodyFactory.CreateBody(World);
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(0.5f + 1.0f * i, y);
 
-                EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
-            }
-
-            {
-                const float y = 15;
-
-                Body prevBody = ground;
-                PolygonShape largeShape = new PolygonShape(PolygonTools.CreateRectangle(1.5f, 1.5f), 100);
-                PolygonShape smallShape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.125f), 20);
-
-                for (int i = 0; i < Count; ++i)
+                if (i == Count - 1)
                 {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(0.5f + 1.0f * i, y);
-
-                    if (i == Count - 1)
-                    {
-                        Fixture fixture = body.CreateFixture(largeShape);
-                        fixture.Friction = 0.2f;
-                        fixture.CollisionCategories = Category.Cat2;
-                        fixture.CollidesWith = Category.All & ~Category.Cat2;
-                        body.Position = new Vector2(1.0f * i, y);
-                        body.AngularDamping = 0.4f;
-                    }
-                    else
-                    {
-                        Fixture fixture = body.CreateFixture(smallShape);
-                        fixture.Friction = 0.2f;
-                        fixture.CollisionCategories = Category.Cat1;
-                        fixture.CollidesWith = Category.All & ~Category.Cat2;
-                    }
-
-                    Vector2 anchor = new Vector2(i, y);
-                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(ref anchor),
-                                                         body.GetLocalPoint(ref anchor));
-                    jd.CollideConnected = false;
-
-                    World.AddJoint(jd);
-
-                    prevBody = body;
+                    Fixture fixture = body.CreateFixture(largeShape);
+                    fixture.Friction = 0.2f;
+                    fixture.CollisionCategories = Category.Cat2;
+                    fixture.CollidesWith = Category.All & ~Category.Cat2;
+                    body.Position = new Vector2(1.0f * i, y);
+                    body.AngularDamping = 0.4f;
+                }
+                else
+                {
+                    Fixture fixture = body.CreateFixture(smallShape);
+                    fixture.Friction = 0.2f;
+                    fixture.CollisionCategories = Category.Cat1;
+                    fixture.CollidesWith = Category.All & ~Category.Cat2;
                 }
 
-                _rj = new RopeJoint(ground, prevBody, new Vector2(0, y), Vector2.Zero);
-                const float extraLength = 0.01f;
-                _rj.MaxLength = Count - 1.0f + extraLength;
+                Vector2 anchor = new Vector2(i, y);
+                RevoluteJoint jd = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(ref anchor),
+                                                     body.GetLocalPoint(ref anchor));
+                jd.CollideConnected = false;
 
+                World.AddJoint(jd);
+
+                prevBody = body;
+            }
+
+            _rj = new RopeJoint(ground, prevBody, new Vector2(0, y), Vector2.Zero);
+            const float extraLength = 0.01f;
+            _rj.MaxLength = Count - 1.0f + extraLength;
+
+            World.AddJoint(_rj);
+        }
+    }
+
+    public override void Keyboard(KeyboardManager keyboardManager)
+    {
+        if (keyboardManager.IsNewKeyPress(Keys.J))
+        {
+            if (_useRopeJoint)
+            {
+                _useRopeJoint = false;
+                World.RemoveJoint(_rj);
+            }
+            else
+            {
+                _useRopeJoint = true;
                 World.AddJoint(_rj);
             }
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
-        {
-            if (keyboardManager.IsNewKeyPress(Keys.J))
-            {
-                if (_useRopeJoint)
-                {
-                    _useRopeJoint = false;
-                    World.RemoveJoint(_rj);
-                }
-                else
-                {
-                    _useRopeJoint = true;
-                    World.AddJoint(_rj);
-                }
-            }
+        base.Keyboard(keyboardManager);
+    }
 
-            base.Keyboard(keyboardManager);
-        }
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        DebugView.DrawString(50, TextLine, "Press (j) to toggle the rope joint.");
+        TextLine += 15;
 
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            DebugView.DrawString(50, TextLine, "Press (j) to toggle the rope joint.");
-            TextLine += 15;
+        DebugView.DrawString(50, TextLine, _useRopeJoint ? "Rope ON" : "Rope OFF");
+        TextLine += 15;
 
-            DebugView.DrawString(50, TextLine, _useRopeJoint ? "Rope ON" : "Rope OFF");
-            TextLine += 15;
+        base.Update(settings, gameTime);
+    }
 
-            base.Update(settings, gameTime);
-        }
-
-        internal static Test Create()
-        {
-            return new RopeTest();
-        }
+    internal static Test Create()
+    {
+        return new RopeTest();
     }
 }

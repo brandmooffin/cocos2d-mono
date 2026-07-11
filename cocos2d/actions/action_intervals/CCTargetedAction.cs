@@ -1,70 +1,69 @@
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCTargetedAction : CCActionInterval
 {
-    public class CCTargetedAction : CCActionInterval
+    protected CCFiniteTimeAction m_pAction;
+    protected CCNode m_pForcedTarget;
+
+    public CCFiniteTimeAction TargetedAction { get { return m_pAction; } }
+
+    public CCNode ForcedTarget
     {
-        protected CCFiniteTimeAction m_pAction;
-        protected CCNode m_pForcedTarget;
+        get { return m_pForcedTarget; }
+    }
 
-        public CCFiniteTimeAction TargetedAction { get { return m_pAction; } }
+    public CCTargetedAction(CCNode target, CCFiniteTimeAction pAction)
+    {
+        InitWithTarget(target, pAction);
+    }
 
-        public CCNode ForcedTarget
+    public CCTargetedAction(CCTargetedAction targetedAction) : base(targetedAction)
+    {
+        InitWithTarget(targetedAction.m_pForcedTarget, (CCFiniteTimeAction) targetedAction.m_pAction.Copy());
+    }
+
+    protected bool InitWithTarget(CCNode target, CCFiniteTimeAction pAction)
+    {
+        if (base.InitWithDuration(pAction.Duration))
         {
-            get { return m_pForcedTarget; }
+            m_pForcedTarget = target;
+            m_pAction = pAction;
+            return true;
         }
+        return false;
+    }
 
-        public CCTargetedAction(CCNode target, CCFiniteTimeAction pAction)
+    public override object Copy(ICCCopyable pZone)
+    {
+        if (pZone != null) //in case of being called at sub class
         {
-            InitWithTarget(target, pAction);
+            var pRet = (CCTargetedAction) (pZone);
+            base.Copy(pZone);
+            // win32 : use the m_pOther's copy object.
+            pRet.InitWithTarget(m_pForcedTarget, (CCFiniteTimeAction) m_pAction.Copy());
+            return pRet;
         }
+        return new CCTargetedAction(this);
+    }
 
-        public CCTargetedAction(CCTargetedAction targetedAction) : base(targetedAction)
-        {
-            InitWithTarget(targetedAction.m_pForcedTarget, (CCFiniteTimeAction) targetedAction.m_pAction.Copy());
-        }
+    protected internal override void StartWithTarget(CCNode target)
+    {
+        base.StartWithTarget(target);
+        m_pAction.StartWithTarget(m_pForcedTarget);
+    }
 
-        protected bool InitWithTarget(CCNode target, CCFiniteTimeAction pAction)
-        {
-            if (base.InitWithDuration(pAction.Duration))
-            {
-                m_pForcedTarget = target;
-                m_pAction = pAction;
-                return true;
-            }
-            return false;
-        }
+    public override void Stop()
+    {
+        m_pAction.Stop();
+    }
 
-        public override object Copy(ICCCopyable pZone)
-        {
-            if (pZone != null) //in case of being called at sub class
-            {
-                var pRet = (CCTargetedAction) (pZone);
-                base.Copy(pZone);
-                // win32 : use the m_pOther's copy object.
-                pRet.InitWithTarget(m_pForcedTarget, (CCFiniteTimeAction) m_pAction.Copy());
-                return pRet;
-            }
-            return new CCTargetedAction(this);
-        }
+    public override void Update(float time)
+    {
+        m_pAction.Update(time);
+    }
 
-        protected internal override void StartWithTarget(CCNode target)
-        {
-            base.StartWithTarget(target);
-            m_pAction.StartWithTarget(m_pForcedTarget);
-        }
-
-        public override void Stop()
-        {
-            m_pAction.Stop();
-        }
-
-        public override void Update(float time)
-        {
-            m_pAction.Update(time);
-        }
-
-        public override CCFiniteTimeAction Reverse()
-        {
-            return new CCTargetedAction(m_pForcedTarget, m_pAction.Reverse());
-        }
+    public override CCFiniteTimeAction Reverse()
+    {
+        return new CCTargetedAction(m_pForcedTarget, m_pAction.Reverse());
     }
 }

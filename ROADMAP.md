@@ -11,10 +11,10 @@ Cocos2D-Mono is an actively maintained 2D game framework for .NET, built on Mono
 ## Themes
 
 ### Build & packaging
-Simplify the project and packaging layout — fewer, clearer NuGet packages with centralized, consistent dependency versions — so the framework is easier to consume and maintain. Any package change will ship with migration notes.
+Simplify the project and packaging layout — fewer, clearer NuGet packages with centralized, consistent dependency versions — so the framework is easier to consume and maintain. This has landed: the build is consolidated into multi-targeted projects, and the next release ships as three packages (`Cocos2D-Mono`, `Cocos2D-Mono.Core`, `Cocos2D-Mono.Box2D`) replacing the per-platform package line (final per-platform release: 2.5.10). Migration notes live in the README.
 
 ### Quality & testing
-Grow automated test coverage (math primitives, actions, scheduling, serialization) and adopt code analyzers, so changes stay safe and regressions are caught early.
+Grow automated test coverage (math primitives, actions, scheduling, serialization) and adopt code analyzers, so changes stay safe and regressions are caught early. A unit-test suite now gates changes in CI and keeps growing alongside the work; a benchmark project supports performance decisions on demand.
 
 ### Modern C#
 Adopt current language features — nullable reference types for null-safety, up-to-date syntax, and value-type discipline for the math types — improving correctness and readability.
@@ -25,13 +25,15 @@ Evolve toward a more composable, testable design — composition over deep inher
 ### Platforms
 Continue supporting desktop (Windows, macOS, Linux / DesktopGL), Android, and iOS. UWP / Xbox-UWP support is maintained separately in the [Cocos2D-Mono.UWP](https://github.com/Cocos2D-Mono/Cocos2D-Mono.UWP) repository.
 
+Console support, starting with **PlayStation 5**, is in development in a private repository, following the same model MonoGame uses for its console frameworks: access is limited to registered console developers under NDA. Reach out to broberts@cocos2d-mono.dev if you are a registered PlayStation developer interested in early access.
+
 ## Status at a glance
 
 | Theme | Status |
 |---|---|
-| Quality & testing | Next up |
-| Build & packaging | Planned |
-| Modern C# | Planned |
+| Quality & testing | In place and growing |
+| Build & packaging | Landed — ships with the next release |
+| Modern C# | Next up |
 | API & architecture | Exploratory |
 | Platforms | Maintained |
 

@@ -32,17 +32,16 @@
 using System.Collections.Generic;
 using Poly2Tri.Triangulation.Delaunay;
 
-namespace Poly2Tri.Triangulation
-{
-    public interface Triangulatable
-    {
-        IList<TriangulationPoint> Points { get; } // MM: Neither of these are used via interface (yet?)
-        IList<DelaunayTriangle> Triangles { get; }
-        TriangulationMode TriangulationMode { get; }
-        void PrepareTriangulation(TriangulationContext tcx);
+namespace Poly2Tri.Triangulation;
 
-        void AddTriangle(DelaunayTriangle t);
-        void AddTriangles(IEnumerable<DelaunayTriangle> list);
-        void ClearTriangles();
-    }
+public interface Triangulatable
+{
+    IList<TriangulationPoint> Points { get; } // MM: Neither of these are used via interface (yet?)
+    IList<DelaunayTriangle> Triangles { get; }
+    TriangulationMode TriangulationMode { get; }
+    void PrepareTriangulation(TriangulationContext tcx);
+
+    void AddTriangle(DelaunayTriangle t);
+    void AddTriangles(IEnumerable<DelaunayTriangle> list);
+    void ClearTriangles();
 }

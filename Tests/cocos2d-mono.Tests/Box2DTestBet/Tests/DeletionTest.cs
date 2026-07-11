@@ -4,41 +4,40 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class DeletionTest : Test
 {
-    public class DeletionTest : Test
+    private DeletionTest()
     {
-        private DeletionTest()
-        {
-            //Ground body
-            Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-            ground.OnCollision += OnCollision;
-            ground.OnSeparation += OnSeparation;
-        }
+        //Ground body
+        Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+        ground.OnCollision += OnCollision;
+        ground.OnSeparation += OnSeparation;
+    }
 
-        private bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
-        {
-            return false;
-        }
+    private bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
+    {
+        return false;
+    }
 
-        private void OnSeparation(Fixture fixtureA, Fixture fixtureB)
-        {
-            fixtureB.Body.Dispose();
-        }
+    private void OnSeparation(Fixture fixtureA, Fixture fixtureB)
+    {
+        fixtureB.Body.Dispose();
+    }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            Body body = BodyFactory.CreateCircle(World, 0.4f, 1);
-            body.Position = new Vector2(Rand.RandomFloat(-35, 35), 10);
-            body.BodyType = BodyType.Dynamic;
-            body.Restitution = 1f;
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        Body body = BodyFactory.CreateCircle(World, 0.4f, 1);
+        body.Position = new Vector2(Rand.RandomFloat(-35, 35), 10);
+        body.BodyType = BodyType.Dynamic;
+        body.Restitution = 1f;
 
-            base.Update(settings, gameTime);
-        }
+        base.Update(settings, gameTime);
+    }
 
-        public static Test Create()
-        {
-            return new DeletionTest();
-        }
+    public static Test Create()
+    {
+        return new DeletionTest();
     }
 }

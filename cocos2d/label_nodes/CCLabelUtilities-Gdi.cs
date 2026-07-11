@@ -6,8 +6,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	internal static partial class CCLabelUtilities
 	{
 		private static Bitmap _bitmap;
@@ -18,13 +18,13 @@ namespace Cocos2D
 			CCVerticalTextAlignment vAlignment, string fontName,
 			float fontSize, CCColor4B textColor)
 		{
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-               || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return CreateNativeLabelSkia(text, dimensions, hAlignment, vAlignment, fontName, fontSize, textColor);
-            }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+           || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return CreateNativeLabelSkia(text, dimensions, hAlignment, vAlignment, fontName, fontSize, textColor);
+        }
 
-            if (string.IsNullOrEmpty(text))
+        if (string.IsNullOrEmpty(text))
 			{
 				return new CCTexture2D();
 			}
@@ -83,14 +83,14 @@ namespace Cocos2D
 
 		static void CreateBitmap(int width, int height)
 		{
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-               || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                CreateBitmapSkia(width, height);
-                return;
-            }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+           || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            CreateBitmapSkia(width, height);
+            return;
+        }
 
-            if (_brush == null)
+        if (_brush == null)
 			{
 				_brush = new SolidBrush(Color.White);
 			}
@@ -111,7 +111,7 @@ namespace Cocos2D
 
 		static Font CreateFont(string familyName, float emSize)
 		{
-            return CreateFont(familyName, emSize, FontStyle.Regular);
+        return CreateFont(familyName, emSize, FontStyle.Regular);
 		}
 
 		static Font CreateFont(string familyName, float emSize, FontStyle style)
@@ -129,6 +129,4 @@ namespace Cocos2D
 			return stream;
 		}
 	}
-
-}
 #endif

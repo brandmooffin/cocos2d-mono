@@ -1,101 +1,100 @@
 using System.Diagnostics;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCGridAction : CCActionInterval
 {
-    public class CCGridAction : CCActionInterval
+    protected CCGridSize m_sGridSize;
+
+    public CCGridAction()
     {
-        protected CCGridSize m_sGridSize;
+    }
 
-        public CCGridAction()
+    public CCGridAction(float duration)
+        : base(duration)
+    {
+    }
+
+    public CCGridAction(float duration, CCGridSize gridSize) : base(duration)
+    {
+        InitWithDuration(duration, gridSize);
+    }
+
+    protected virtual bool InitWithDuration(float duration, CCGridSize gridSize)
+    {
+        if (base.InitWithDuration(duration))
         {
+            m_sGridSize = gridSize;
+            return true;
         }
+        return false;
+    }
 
-        public CCGridAction(float duration)
-            : base(duration)
+    public CCGridAction(CCGridAction gridAction) : this(gridAction.m_fDuration, gridAction.m_sGridSize)
+    {
+    }
+
+    public override object Copy(ICCCopyable pZone)
+    {
+        if (pZone != null)
         {
+            //in case of being called at sub class
+            var pCopy = (CCGridAction) (pZone);
+            base.Copy(pZone);
+
+            pCopy.InitWithDuration(m_fDuration, m_sGridSize);
+
+            return pCopy;
         }
-
-        public CCGridAction(float duration, CCGridSize gridSize) : base(duration)
+        else
         {
-            InitWithDuration(duration, gridSize);
+            return new CCGridAction(this);
         }
+    }
 
-        protected virtual bool InitWithDuration(float duration, CCGridSize gridSize)
+    protected internal override void StartWithTarget(CCNode target)
+    {
+        base.StartWithTarget(target);
+
+        CCNode t = m_pTarget;
+        CCGridBase targetGrid = t.Grid;
+
+        if (targetGrid != null && targetGrid.ReuseGrid > 0)
         {
-            if (base.InitWithDuration(duration))
+            Grid = targetGrid;
+
+            if (targetGrid.Active && targetGrid.GridSize.X == m_sGridSize.X
+                && targetGrid.GridSize.Y == m_sGridSize.Y /*&& dynamic_cast<CCGridBase*>(targetGrid) != NULL*/)
             {
-                m_sGridSize = gridSize;
-                return true;
-            }
-            return false;
-        }
-
-        public CCGridAction(CCGridAction gridAction) : this(gridAction.m_fDuration, gridAction.m_sGridSize)
-        {
-        }
-
-        public override object Copy(ICCCopyable pZone)
-        {
-            if (pZone != null)
-            {
-                //in case of being called at sub class
-                var pCopy = (CCGridAction) (pZone);
-                base.Copy(pZone);
-
-                pCopy.InitWithDuration(m_fDuration, m_sGridSize);
-
-                return pCopy;
-            }
-            else
-            {
-                return new CCGridAction(this);
-            }
-        }
-
-        protected internal override void StartWithTarget(CCNode target)
-        {
-            base.StartWithTarget(target);
-
-            CCNode t = m_pTarget;
-            CCGridBase targetGrid = t.Grid;
-
-            if (targetGrid != null && targetGrid.ReuseGrid > 0)
-            {
-                Grid = targetGrid;
-
-                if (targetGrid.Active && targetGrid.GridSize.X == m_sGridSize.X
-                    && targetGrid.GridSize.Y == m_sGridSize.Y /*&& dynamic_cast<CCGridBase*>(targetGrid) != NULL*/)
-                {
-                    targetGrid.Reuse();
-                }
-                else
-                {
-                    Debug.Assert(false);
-                }
+                targetGrid.Reuse();
             }
             else
             {
-                if (targetGrid != null && targetGrid.Active)
-                {
-                    targetGrid.Active = false;
-                }
-
-                CCGridBase newgrid = Grid;
-
-                t.Grid = newgrid;
-                t.Grid.Active = true;
+                Debug.Assert(false);
             }
         }
-
-        public override CCFiniteTimeAction Reverse()
+        else
         {
-            return new CCReverseTime(this);
-        }
+            if (targetGrid != null && targetGrid.Active)
+            {
+                targetGrid.Active = false;
+            }
 
-        public virtual CCGridBase Grid
-        {
-            set { }
-            get { return null; }
+            CCGridBase newgrid = Grid;
+
+            t.Grid = newgrid;
+            t.Grid.Active = true;
         }
+    }
+
+    public override CCFiniteTimeAction Reverse()
+    {
+        return new CCReverseTime(this);
+    }
+
+    public virtual CCGridBase Grid
+    {
+        set { }
+        get { return null; }
     }
 }

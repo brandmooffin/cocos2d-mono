@@ -32,67 +32,66 @@
 using System;
 using Poly2Tri.Triangulation.Polygon;
 
-namespace Poly2Tri.Triangulation.Util
+namespace Poly2Tri.Triangulation.Util;
+
+public class PolygonGenerator
 {
-    public class PolygonGenerator
+    private static readonly Random RNG = new Random();
+
+    private static double PI_2 = 2.0*Math.PI;
+
+    public static Polygon.Polygon RandomCircleSweep(double scale, int vertexCount)
     {
-        private static readonly Random RNG = new Random();
+        PolygonPoint point;
+        PolygonPoint[] points;
+        double radius = scale/4;
 
-        private static double PI_2 = 2.0*Math.PI;
-
-        public static Polygon.Polygon RandomCircleSweep(double scale, int vertexCount)
+        points = new PolygonPoint[vertexCount];
+        for (int i = 0; i < vertexCount; i++)
         {
-            PolygonPoint point;
-            PolygonPoint[] points;
-            double radius = scale/4;
-
-            points = new PolygonPoint[vertexCount];
-            for (int i = 0; i < vertexCount; i++)
+            do
             {
-                do
+                if (i%250 == 0)
                 {
-                    if (i%250 == 0)
-                    {
-                        radius += scale/2*(0.5 - RNG.NextDouble());
-                    }
-                    else if (i%50 == 0)
-                    {
-                        radius += scale/5*(0.5 - RNG.NextDouble());
-                    }
-                    else
-                    {
-                        radius += 25*scale/vertexCount*(0.5 - RNG.NextDouble());
-                    }
-                    radius = radius > scale/2 ? scale/2 : radius;
-                    radius = radius < scale/10 ? scale/10 : radius;
-                } while (radius < scale/10 || radius > scale/2);
-                point = new PolygonPoint(radius*Math.Cos((PI_2*i)/vertexCount),
-                                         radius*Math.Sin((PI_2*i)/vertexCount));
-                points[i] = point;
-            }
-            return new Polygon.Polygon(points);
-        }
-
-        public static Polygon.Polygon RandomCircleSweep2(double scale, int vertexCount)
-        {
-            PolygonPoint point;
-            PolygonPoint[] points;
-            double radius = scale/4;
-
-            points = new PolygonPoint[vertexCount];
-            for (int i = 0; i < vertexCount; i++)
-            {
-                do
+                    radius += scale/2*(0.5 - RNG.NextDouble());
+                }
+                else if (i%50 == 0)
                 {
                     radius += scale/5*(0.5 - RNG.NextDouble());
-                    radius = radius > scale/2 ? scale/2 : radius;
-                    radius = radius < scale/10 ? scale/10 : radius;
-                } while (radius < scale/10 || radius > scale/2);
-                point = new PolygonPoint(radius*Math.Cos((PI_2*i)/vertexCount),
-                                         radius*Math.Sin((PI_2*i)/vertexCount));
-                points[i] = point;
-            }
-            return new Polygon.Polygon(points);
+                }
+                else
+                {
+                    radius += 25*scale/vertexCount*(0.5 - RNG.NextDouble());
+                }
+                radius = radius > scale/2 ? scale/2 : radius;
+                radius = radius < scale/10 ? scale/10 : radius;
+            } while (radius < scale/10 || radius > scale/2);
+            point = new PolygonPoint(radius*Math.Cos((PI_2*i)/vertexCount),
+                                     radius*Math.Sin((PI_2*i)/vertexCount));
+            points[i] = point;
         }
+        return new Polygon.Polygon(points);
+    }
+
+    public static Polygon.Polygon RandomCircleSweep2(double scale, int vertexCount)
+    {
+        PolygonPoint point;
+        PolygonPoint[] points;
+        double radius = scale/4;
+
+        points = new PolygonPoint[vertexCount];
+        for (int i = 0; i < vertexCount; i++)
+        {
+            do
+            {
+                radius += scale/5*(0.5 - RNG.NextDouble());
+                radius = radius > scale/2 ? scale/2 : radius;
+                radius = radius < scale/10 ? scale/10 : radius;
+            } while (radius < scale/10 || radius > scale/2);
+            point = new PolygonPoint(radius*Math.Cos((PI_2*i)/vertexCount),
+                                     radius*Math.Sin((PI_2*i)/vertexCount));
+            points[i] = point;
+        }
+        return new Polygon.Polygon(points);
     }
 }

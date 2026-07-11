@@ -25,49 +25,48 @@ THE SOFTWARE.
 
 using System;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+/// <summary>
+/// @brief CCFadeOutUpTiles action.
+/// Fades out the tiles in upwards direction
+/// </summary>
+public class CCFadeOutUpTiles : CCFadeOutTRTiles
 {
-    /// <summary>
-    /// @brief CCFadeOutUpTiles action.
-    /// Fades out the tiles in upwards direction
-    /// </summary>
-    public class CCFadeOutUpTiles : CCFadeOutTRTiles
+    public override float TestFunc(CCGridSize pos, float time)
     {
-        public override float TestFunc(CCGridSize pos, float time)
+        float fy = m_sGridSize.Y * time;
+        if (fy == 0f)
         {
-            float fy = m_sGridSize.Y * time;
-            if (fy == 0f)
-            {
-                return (1f);
-            }
-            return (float) Math.Pow(pos.Y / fy, 6);
+            return (1f);
         }
+        return (float) Math.Pow(pos.Y / fy, 6);
+    }
 
-        public override void TransformTile(CCGridSize pos, float distance)
-        {
-            CCQuad3 coords = OriginalTile(pos);
-            CCPoint step = m_pTarget.Grid.Step;
+    public override void TransformTile(CCGridSize pos, float distance)
+    {
+        CCQuad3 coords = OriginalTile(pos);
+        CCPoint step = m_pTarget.Grid.Step;
 
-            float dy = (step.Y / 2) * (1.0f - distance);
+        float dy = (step.Y / 2) * (1.0f - distance);
 
-            coords.BottomLeft.Y += dy; // (step.Y / 2) * (1.0f - distance);
-            coords.BottomRight.Y += dy; //  (step.Y / 2) * (1.0f - distance);
-            coords.TopLeft.Y -= dy; //  (step.Y / 2) * (1.0f - distance);
-            coords.TopRight.Y -= dy; // (step.Y / 2) * (1.0f - distance);
+        coords.BottomLeft.Y += dy; // (step.Y / 2) * (1.0f - distance);
+        coords.BottomRight.Y += dy; //  (step.Y / 2) * (1.0f - distance);
+        coords.TopLeft.Y -= dy; //  (step.Y / 2) * (1.0f - distance);
+        coords.TopRight.Y -= dy; // (step.Y / 2) * (1.0f - distance);
 
-            SetTile(pos, ref coords);
-        }
+        SetTile(pos, ref coords);
+    }
 
-        public CCFadeOutUpTiles()
-        {
-        }
+    public CCFadeOutUpTiles()
+    {
+    }
 
-        /// <summary>
-        /// creates the action with the grid size and the duration 
-        /// </summary>
-        public CCFadeOutUpTiles(float duration, CCGridSize gridSize) : base(duration)
-        {
-            InitWithDuration(duration, gridSize);
-        }
+    /// <summary>
+    /// creates the action with the grid size and the duration 
+    /// </summary>
+    public CCFadeOutUpTiles(float duration, CCGridSize gridSize) : base(duration)
+    {
+        InitWithDuration(duration, gridSize);
     }
 }

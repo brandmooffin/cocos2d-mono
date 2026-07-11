@@ -25,110 +25,109 @@ THE SOFTWARE.
 
 using System;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCJumpTiles3D : CCTiledGrid3DAction
 {
-    public class CCJumpTiles3D : CCTiledGrid3DAction
+    protected float m_fAmplitude;
+    protected float m_fAmplitudeRate;
+    protected int m_nJumps;
+
+    /// <summary>
+    /// amplitude of the sin
+    /// </summary>
+    public float Amplitude
     {
-        protected float m_fAmplitude;
-        protected float m_fAmplitudeRate;
-        protected int m_nJumps;
+        get { return m_fAmplitude; }
+        set { m_fAmplitude = value; }
+    }
 
-        /// <summary>
-        /// amplitude of the sin
-        /// </summary>
-        public float Amplitude
+    /// <summary>
+    ///  amplitude rate 
+    /// </summary>
+    public override float AmplitudeRate
+    {
+        get { return m_fAmplitudeRate; }
+        set { m_fAmplitudeRate = value; }
+    }
+
+    /// <summary>
+    /// initializes the action with the number of jumps, the sin amplitude, the grid size and the duration 
+    /// </summary>
+    protected virtual bool InitWithDuration(float duration, CCGridSize gridSize, int numberOfJumps, float amplitude)
+    {
+        if (base.InitWithDuration(duration, gridSize))
         {
-            get { return m_fAmplitude; }
-            set { m_fAmplitude = value; }
+            m_nJumps = numberOfJumps;
+            m_fAmplitude = amplitude;
+            m_fAmplitudeRate = 1.0f;
+
+            return true;
         }
 
-        /// <summary>
-        ///  amplitude rate 
-        /// </summary>
-        public override float AmplitudeRate
+        return false;
+    }
+
+    public override object Copy(ICCCopyable pZone)
+    {
+        CCJumpTiles3D pCopy;
+        if (pZone != null)
         {
-            get { return m_fAmplitudeRate; }
-            set { m_fAmplitudeRate = value; }
+            pCopy = (CCJumpTiles3D) (pZone);
+        }
+        else
+        {
+            pCopy = new CCJumpTiles3D();
+            pZone = (pCopy);
         }
 
-        /// <summary>
-        /// initializes the action with the number of jumps, the sin amplitude, the grid size and the duration 
-        /// </summary>
-        protected virtual bool InitWithDuration(float duration, CCGridSize gridSize, int numberOfJumps, float amplitude)
+        base.Copy(pZone);
+
+        pCopy.InitWithDuration(m_fDuration, m_sGridSize, m_nJumps, m_fAmplitude);
+
+        return pCopy;
+    }
+
+    public override void Update(float time)
+    {
+        int i, j;
+
+        float sinz = ((float) Math.Sin((float) Math.PI * time * m_nJumps * 2) * m_fAmplitude * m_fAmplitudeRate);
+        var sinz2 =
+            (float) (Math.Sin((float) Math.PI * (time * m_nJumps * 2 + 1)) * m_fAmplitude * m_fAmplitudeRate);
+
+        for (i = 0; i < m_sGridSize.X; i++)
         {
-            if (base.InitWithDuration(duration, gridSize))
+            for (j = 0; j < m_sGridSize.Y; j++)
             {
-                m_nJumps = numberOfJumps;
-                m_fAmplitude = amplitude;
-                m_fAmplitudeRate = 1.0f;
+                CCQuad3 coords = OriginalTile(new CCGridSize(i, j));
 
-                return true;
-            }
-
-            return false;
-        }
-
-        public override object Copy(ICCCopyable pZone)
-        {
-            CCJumpTiles3D pCopy;
-            if (pZone != null)
-            {
-                pCopy = (CCJumpTiles3D) (pZone);
-            }
-            else
-            {
-                pCopy = new CCJumpTiles3D();
-                pZone = (pCopy);
-            }
-
-            base.Copy(pZone);
-
-            pCopy.InitWithDuration(m_fDuration, m_sGridSize, m_nJumps, m_fAmplitude);
-
-            return pCopy;
-        }
-
-        public override void Update(float time)
-        {
-            int i, j;
-
-            float sinz = ((float) Math.Sin((float) Math.PI * time * m_nJumps * 2) * m_fAmplitude * m_fAmplitudeRate);
-            var sinz2 =
-                (float) (Math.Sin((float) Math.PI * (time * m_nJumps * 2 + 1)) * m_fAmplitude * m_fAmplitudeRate);
-
-            for (i = 0; i < m_sGridSize.X; i++)
-            {
-                for (j = 0; j < m_sGridSize.Y; j++)
+                if (((i + j) % 2) == 0)
                 {
-                    CCQuad3 coords = OriginalTile(new CCGridSize(i, j));
-
-                    if (((i + j) % 2) == 0)
-                    {
-                        coords.BottomLeft.Z += sinz;
-                        coords.BottomRight.Z += sinz;
-                        coords.TopLeft.Z += sinz;
-                        coords.TopRight.Z += sinz;
-                    }
-                    else
-                    {
-                        coords.BottomLeft.Z += sinz2;
-                        coords.BottomRight.Z += sinz2;
-                        coords.TopLeft.Z += sinz2;
-                        coords.TopRight.Z += sinz2;
-                    }
-
-                    SetTile(new CCGridSize(i, j), ref coords);
+                    coords.BottomLeft.Z += sinz;
+                    coords.BottomRight.Z += sinz;
+                    coords.TopLeft.Z += sinz;
+                    coords.TopRight.Z += sinz;
                 }
+                else
+                {
+                    coords.BottomLeft.Z += sinz2;
+                    coords.BottomRight.Z += sinz2;
+                    coords.TopLeft.Z += sinz2;
+                    coords.TopRight.Z += sinz2;
+                }
+
+                SetTile(new CCGridSize(i, j), ref coords);
             }
         }
+    }
 
-        public CCJumpTiles3D()
-        {
-        }
+    public CCJumpTiles3D()
+    {
+    }
 
-        public CCJumpTiles3D(float duration, CCGridSize gridSize, int numberOfJumps, float amplitude) : base(duration)
-        {
-            InitWithDuration(duration, gridSize, numberOfJumps, amplitude);
-        }
+    public CCJumpTiles3D(float duration, CCGridSize gridSize, int numberOfJumps, float amplitude) : base(duration)
+    {
+        InitWithDuration(duration, gridSize, numberOfJumps, amplitude);
     }
 }

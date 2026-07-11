@@ -23,54 +23,53 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace Cocos2D
+namespace Cocos2D;
+
+/// <summary>
+/// @brief CCTransitionSplitCols:
+/// The odd columns goes upwards while the even columns goes downwards.
+/// </summary>
+public class CCTransitionSplitCols : CCTransitionScene, ICCTransitionEaseScene
 {
-    /// <summary>
-    /// @brief CCTransitionSplitCols:
-    /// The odd columns goes upwards while the even columns goes downwards.
-    /// </summary>
-    public class CCTransitionSplitCols : CCTransitionScene, ICCTransitionEaseScene
+    #region ICCTransitionEaseScene Members
+
+    public virtual CCFiniteTimeAction EaseAction(CCActionInterval action)
     {
-        #region ICCTransitionEaseScene Members
+        return new CCEaseInOut(action, 3.0f);
+    }
 
-        public virtual CCFiniteTimeAction EaseAction(CCActionInterval action)
-        {
-            return new CCEaseInOut(action, 3.0f);
-        }
+    #endregion
 
-        #endregion
+    public virtual CCActionInterval Action()
+    {
+        return new CCSplitCols(m_fDuration / 2.0f, 3);
+    }
 
-        public virtual CCActionInterval Action()
-        {
-            return new CCSplitCols(m_fDuration / 2.0f, 3);
-        }
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        m_pInScene.Visible = false;
 
-        public override void OnEnter()
-        {
-            base.OnEnter();
-            m_pInScene.Visible = false;
+        CCActionInterval split = Action();
+        CCActionInterval seq = new CCSequence(
+            split,
+            new CCCallFunc((HideOutShowIn)),
+            split.Reverse()
+            );
 
-            CCActionInterval split = Action();
-            CCActionInterval seq = new CCSequence(
-                split,
-                new CCCallFunc((HideOutShowIn)),
-                split.Reverse()
-                );
+        RunAction(
+            new CCSequence(
+                EaseAction(seq),
+                new CCCallFunc(Finish),
+                new CCStopGrid()
+                )
+            );
+    }
 
-            RunAction(
-                new CCSequence(
-                    EaseAction(seq),
-                    new CCCallFunc(Finish),
-                    new CCStopGrid()
-                    )
-                );
-        }
+    public CCTransitionSplitCols() { }
 
-        public CCTransitionSplitCols() { }
-
-        public CCTransitionSplitCols(float t, CCScene scene) : base(t, scene)
-        {
-            InitWithDuration(t, scene);
-        }
+    public CCTransitionSplitCols(float t, CCScene scene) : base(t, scene)
+    {
+        InitWithDuration(t, scene);
     }
 }

@@ -4,35 +4,34 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class LogicTest : ActionManagerTest
 {
-    public class LogicTest : ActionManagerTest
+    string s_pPathGrossini = "Images/grossini";
+
+    public override string title()
     {
-        string s_pPathGrossini = "Images/grossini";
+        return "Logic test";
+    }
 
-        public override string title()
-        {
-            return "Logic test";
-        }
+    public override void OnEnter()
+    {
+        base.OnEnter();
 
-        public override void OnEnter()
-        {
-            base.OnEnter();
+        CCSprite grossini = new CCSprite(s_pPathGrossini);
+        AddChild(grossini, 0, 2);
+        grossini.Position = (new CCPoint(200, 200));
 
-            CCSprite grossini = new CCSprite(s_pPathGrossini);
-            AddChild(grossini, 0, 2);
-            grossini.Position = (new CCPoint(200, 200));
+        grossini.RunAction(new CCSequence(
+                                                    new CCMoveBy (1, new CCPoint(150, 0)),
+                                                    new CCCallFuncN(bugMe))
+                            );
+    }
 
-            grossini.RunAction(new CCSequence(
-                                                        new CCMoveBy (1, new CCPoint(150, 0)),
-                                                        new CCCallFuncN(bugMe))
-                                );
-        }
-
-        public void bugMe(CCNode node)
-        {
-            node.StopAllActions(); //After this stop next action not working, if remove this stop everything is working
-            node.RunAction(new CCScaleTo(2, 2));
-        }
+    public void bugMe(CCNode node)
+    {
+        node.StopAllActions(); //After this stop next action not working, if remove this stop everything is working
+        node.RunAction(new CCScaleTo(2, 2));
     }
 }

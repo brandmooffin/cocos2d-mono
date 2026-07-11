@@ -1,9 +1,9 @@
 using System;
 using Microsoft.Xna.Framework.Input;
 
-namespace Cocos2D
-{
-    [Flags]
+namespace Cocos2D;
+
+[Flags]
 	public enum CCKeyboardMode
 	{
 		KeyPressed = 0x1,
@@ -51,5 +51,4 @@ namespace Cocos2D
 		}
 
 	}
-}
 

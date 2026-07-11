@@ -1,402 +1,401 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-namespace Cocos2D
-{
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+namespace Cocos2D;
+
 	public delegate void CCTextFieldTTFDelegate(object sender, ref string text, ref bool canceled);
 
-    public class CCTextFieldTTF : CCLabelTTF, ICCTargetedTouchDelegate
+public class CCTextFieldTTF : CCLabelTTF, ICCTargetedTouchDelegate
+{
+    private IAsyncResult m_pGuideShowHandle;
+    private string m_sEditTitle = "Input";
+    private string m_sEditDescription = "Please provide input";
+    private bool m_bReadOnly = false;
+    private bool m_bAutoEdit;
+    private bool m_bTouchHandled;
+
+    public event CCTextFieldTTFDelegate BeginEditing;
+    public event CCTextFieldTTFDelegate EndEditing;
+
+    private bool beginKeyboardEditing = false;
+    private bool canEdit = false;
+
+    public bool ReadOnly
     {
-        private IAsyncResult m_pGuideShowHandle;
-        private string m_sEditTitle = "Input";
-        private string m_sEditDescription = "Please provide input";
-        private bool m_bReadOnly = false;
-        private bool m_bAutoEdit;
-        private bool m_bTouchHandled;
-
-        public event CCTextFieldTTFDelegate BeginEditing;
-        public event CCTextFieldTTFDelegate EndEditing;
-
-        private bool beginKeyboardEditing = false;
-        private bool canEdit = false;
-
-        public bool ReadOnly
+        get { return m_bReadOnly; }
+        set
         {
-            get { return m_bReadOnly; }
-            set
+            m_bReadOnly = value;
+            
+            if (!value)
             {
-                m_bReadOnly = value;
-                
-                if (!value)
-                {
-                    EndEdit();
-                }
-                
-                CheckTouchState();
+                EndEdit();
             }
+            
+            CheckTouchState();
         }
+    }
 
-        public string EditTitle
+    public string EditTitle
+    {
+        get { return m_sEditTitle; }
+        set { m_sEditTitle = value; }
+    }
+
+    public string EditDescription
+    {
+        get { return m_sEditDescription; }
+        set { m_sEditDescription = value; }
+    }
+
+    public bool AutoEdit
+    {
+        get { return m_bAutoEdit; }
+        set
         {
-            get { return m_sEditTitle; }
-            set { m_sEditTitle = value; }
+            m_bAutoEdit = value;
+            CheckTouchState();
         }
+    }
 
-        public string EditDescription
-        {
-            get { return m_sEditDescription; }
-            set { m_sEditDescription = value; }
-        }
+    public CCTextFieldTTF(string text, string fontName, float fontSize) :
+        this(text, fontName, fontSize, CCSize.Zero, CCTextAlignment.Center,
+             CCVerticalTextAlignment.Top)
+    {
+    }
 
-        public bool AutoEdit
-        {
-            get { return m_bAutoEdit; }
-            set
-            {
-                m_bAutoEdit = value;
-                CheckTouchState();
-            }
-        }
+    public CCTextFieldTTF(string text, string fontName, float fontSize, CCSize dimensions,
+                          CCTextAlignment hAlignment) :
+                              this(text, fontName, fontSize, dimensions, hAlignment, CCVerticalTextAlignment.Top)
+    {
+    }
 
-        public CCTextFieldTTF(string text, string fontName, float fontSize) :
-            this(text, fontName, fontSize, CCSize.Zero, CCTextAlignment.Center,
-                 CCVerticalTextAlignment.Top)
-        {
-        }
-
-        public CCTextFieldTTF(string text, string fontName, float fontSize, CCSize dimensions,
-                              CCTextAlignment hAlignment) :
-                                  this(text, fontName, fontSize, dimensions, hAlignment, CCVerticalTextAlignment.Top)
-        {
-        }
-
-        public CCTextFieldTTF(string text, string fontName, float fontSize, CCSize dimensions,
-                              CCTextAlignment hAlignment,
-                              CCVerticalTextAlignment vAlignment)
-        {
-            InitWithString(text, fontName, fontSize, dimensions, hAlignment, vAlignment);
+    public CCTextFieldTTF(string text, string fontName, float fontSize, CCSize dimensions,
+                          CCTextAlignment hAlignment,
+                          CCVerticalTextAlignment vAlignment)
+    {
+        InitWithString(text, fontName, fontSize, dimensions, hAlignment, vAlignment);
 
 #if DESKTOPGL
-            ScheduleUpdate();
+        ScheduleUpdate();
 #endif
-        }
+    }
 
-        public void Edit()
-        {
-            Edit(m_sEditTitle, m_sEditDescription);
-        }
+    public void Edit()
+    {
+        Edit(m_sEditTitle, m_sEditDescription);
+    }
 
-        public void Edit(string title, string defaultText)
+    public void Edit(string title, string defaultText)
+    {
+        if (!m_bReadOnly)
         {
-            if (!m_bReadOnly)
+            var canceled = false;
+            var text = Text;
+
+            DoBeginEditing(ref text, ref canceled);
+
+            if (!canceled)
             {
-                var canceled = false;
-                var text = Text;
-
-                DoBeginEditing(ref text, ref canceled);
-
-                if (!canceled)
-                {
 #if (ANDROID && ANDROID31_0_OR_GREATER) || __IOS__ || WINDOWS
 
-                    Task.Run(async () =>
+                Task.Run(async () =>
+                {
+                    var newText = await Microsoft.Xna.Framework.Input.KeyboardInput.Show(title, defaultText);
+
+                    if (newText != null && Text != newText)
                     {
-                        var newText = await Microsoft.Xna.Framework.Input.KeyboardInput.Show(title, defaultText);
+                        canceled = false;
 
-                        if (newText != null && Text != newText)
-                        {
-                            canceled = false;
+                        ScheduleOnce(
+                            time =>
+                            {
+                                DoEndEditing(ref newText, ref canceled);
 
-                            ScheduleOnce(
-                                time =>
+                                if (!canceled)
                                 {
-                                    DoEndEditing(ref newText, ref canceled);
-
-                                    if (!canceled)
-                                    {
-                                        Text = newText;
-                                    }
-                                }, 0);
-                        }
-                    });
+                                    Text = newText;
+                                }
+                            }, 0);
+                    }
+                });
 #else
-                    beginKeyboardEditing = true;
+                beginKeyboardEditing = true;
 #endif
-                }
-            }
-
-        }
-
-        protected virtual void DoBeginEditing(ref string newText, ref bool canceled)
-        {
-            if (BeginEditing != null)
-            {
-                BeginEditing(this, ref newText, ref canceled);
             }
         }
 
-        protected virtual void DoEndEditing(ref string newText, ref bool canceled)
-        {
-            if (EndEditing != null)
-            {
-                EndEditing(this, ref newText, ref canceled);
-            }
-        }
+    }
 
-        public void EndEdit()
+    protected virtual void DoBeginEditing(ref string newText, ref bool canceled)
+    {
+        if (BeginEditing != null)
         {
-            if (m_pGuideShowHandle != null)
+            BeginEditing(this, ref newText, ref canceled);
+        }
+    }
+
+    protected virtual void DoEndEditing(ref string newText, ref bool canceled)
+    {
+        if (EndEditing != null)
+        {
+            EndEditing(this, ref newText, ref canceled);
+        }
+    }
+
+    public void EndEdit()
+    {
+        if (m_pGuideShowHandle != null)
 			{
 				//Guide.EndShowKeyboardInput(m_pGuideShowHandle);
-                m_pGuideShowHandle = null;
-            }
+            m_pGuideShowHandle = null;
+        }
 
 #if DESKTOPGL
-            beginKeyboardEditing = false;
+        beginKeyboardEditing = false;
 
 #endif
-        }
+    }
 
-        private void CheckTouchState()
+    private void CheckTouchState()
+    {
+        if (m_bRunning)
         {
-            if (m_bRunning)
+            if (!m_bTouchHandled && !m_bReadOnly && m_bAutoEdit)
             {
-                if (!m_bTouchHandled && !m_bReadOnly && m_bAutoEdit)
-                {
-                    CCDirector.SharedDirector.TouchDispatcher.AddTargetedDelegate(this, 0, true);
-                    m_bTouchHandled = true;
-                }
-                else if (m_bTouchHandled && (m_bReadOnly || !m_bAutoEdit))
-                {
-                    CCDirector.SharedDirector.TouchDispatcher.RemoveDelegate(this);
-                    m_bTouchHandled = true;
-                }
+                CCDirector.SharedDirector.TouchDispatcher.AddTargetedDelegate(this, 0, true);
+                m_bTouchHandled = true;
             }
-            else
+            else if (m_bTouchHandled && (m_bReadOnly || !m_bAutoEdit))
             {
-                if (!m_bRunning && m_bTouchHandled)
-                {
-                    CCDirector.SharedDirector.TouchDispatcher.RemoveDelegate(this);
-                    m_bTouchHandled = false;
-                }
+                CCDirector.SharedDirector.TouchDispatcher.RemoveDelegate(this);
+                m_bTouchHandled = true;
             }
         }
-
-        public override void OnEnter()
+        else
         {
-            base.OnEnter();
-            CheckTouchState();
-        }
-
-        public override void OnExit()
-        {
-            base.OnExit();
-            CheckTouchState();
-        }
-
-        public override bool TouchBegan(CCTouch pTouch)
-        {
-            var pos = ConvertTouchToNodeSpace(pTouch);
-            if (pos.X >= 0 && pos.X < ContentSize.Width && pos.Y >= 0 && pos.Y <= ContentSize.Height)
+            if (!m_bRunning && m_bTouchHandled)
             {
-                return true;
+                CCDirector.SharedDirector.TouchDispatcher.RemoveDelegate(this);
+                m_bTouchHandled = false;
             }
+        }
+    }
+
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        CheckTouchState();
+    }
+
+    public override void OnExit()
+    {
+        base.OnExit();
+        CheckTouchState();
+    }
+
+    public override bool TouchBegan(CCTouch pTouch)
+    {
+        var pos = ConvertTouchToNodeSpace(pTouch);
+        if (pos.X >= 0 && pos.X < ContentSize.Width && pos.Y >= 0 && pos.Y <= ContentSize.Height)
+        {
+            return true;
+        }
 #if DESKTOPGL
-            EndEdit();
+        EndEdit();
 #endif
-            return false;
-        }
+        return false;
+    }
 
-        public override void TouchMoved(CCTouch pTouch)
-        {
-            //nothing
-        }
+    public override void TouchMoved(CCTouch pTouch)
+    {
+        //nothing
+    }
 
-        public override void TouchEnded(CCTouch pTouch)
+    public override void TouchEnded(CCTouch pTouch)
+    {
+        var pos = ConvertTouchToNodeSpace(pTouch);
+        if (pos.X >= 0 && pos.X < ContentSize.Width && pos.Y >= 0 && pos.Y <= ContentSize.Height)
         {
-            var pos = ConvertTouchToNodeSpace(pTouch);
-            if (pos.X >= 0 && pos.X < ContentSize.Width && pos.Y >= 0 && pos.Y <= ContentSize.Height)
+            Edit();
+        }
+    }
+
+    public override void TouchCancelled(CCTouch pTouch)
+    {
+        //nothing
+    }
+
+    public override void Update(float dt)
+    {
+        if (beginKeyboardEditing)
+        {
+            HandleKeyboardInput();
+        }
+        base.Update(dt);
+    }
+
+    private Keys[] IgnoredKeys = new Keys[] { 
+        Keys.RightShift, Keys.LeftShift, Keys.CapsLock, Keys.Enter, Keys.End, Keys.OemClear,
+        Keys.Attn, Keys.Left, Keys.Right, Keys.Apps, Keys.BrowserBack, Keys.BrowserFavorites, Keys.BrowserHome,
+        Keys.BrowserForward, Keys.BrowserRefresh, Keys.BrowserSearch, Keys.BrowserStop, Keys.ChatPadGreen,
+        Keys.ChatPadOrange, Keys.Crsel, Keys.D0, Keys.D1, Keys.D2, Keys.D5, Keys.D3, Keys.D4, Keys.D6,
+        Keys.D7, Keys.D8, Keys.D9, Keys.Down, Keys.EraseEof, Keys.Escape, Keys.Execute, Keys.F1, Keys.F2,
+        Keys.Exsel, Keys.F3, Keys.F10, Keys.F11, Keys.F12, Keys.F13, Keys.F14, Keys.F15, Keys.F16, Keys.F17,
+        Keys.F18, Keys.F19, Keys.F20, Keys.F21, Keys.F22, Keys.F23, Keys.F24, Keys.F4, Keys.F5, Keys.F6, Keys.F7, Keys.F8, Keys.F9,
+        Keys.Help, Keys.Home, Keys.ImeConvert, Keys.ImeNoConvert, Keys.Kana, Keys.Kanji, Keys.LaunchApplication1, Keys.LaunchApplication2,
+        Keys.LaunchMail, Keys.LeftAlt, Keys.LeftControl, Keys.LeftWindows, Keys.MediaNextTrack, Keys.MediaPlayPause, Keys.MediaStop,
+        Keys.MediaPreviousTrack, Keys.None, Keys.NumLock, Keys.OemCopy, Keys.OemEnlW, Keys.Pa1, Keys.PageDown, Keys.PageUp, Keys.Pause, Keys.Print,
+        Keys.Play, Keys.PrintScreen, Keys.RightAlt, Keys.RightControl, Keys.ProcessKey, Keys.RightWindows, Keys.Scroll, Keys.Select, Keys.SelectMedia,
+        Keys.Sleep, Keys.Tab, Keys.Up, Keys.VolumeDown, Keys.VolumeUp, Keys.VolumeMute, Keys.Zoom
+    };
+    private Keys[] AlteredKeys = new Keys[] { 
+        Keys.OemComma, Keys.OemSemicolon, Keys.OemQuestion, 
+        Keys.OemBackslash, Keys.OemCloseBrackets, Keys.OemPlus,
+        Keys.OemMinus, Keys.OemPeriod, Keys.OemOpenBrackets, Keys.OemPipe,
+        Keys.OemQuotes, Keys.OemTilde
+    };
+
+    public void HandleKeyboardInput()
+    {
+        var currentKeyboardState = CCInputState.Instance.CurrentKeyboardStates.FirstOrDefault();
+        if (currentKeyboardState != null)
+        {
+            var pressedKeyCount = currentKeyboardState.GetPressedKeyCount();
+            if (pressedKeyCount > 0 && canEdit)
             {
-                Edit();
-            }
-        }
+                var pressedKeys = currentKeyboardState.GetPressedKeys();
+                var isHoldingShift = pressedKeys.Any(p => p == Keys.LeftShift || p == Keys.RightShift);
 
-        public override void TouchCancelled(CCTouch pTouch)
-        {
-            //nothing
-        }
-
-        public override void Update(float dt)
-        {
-            if (beginKeyboardEditing)
-            {
-                HandleKeyboardInput();
-            }
-            base.Update(dt);
-        }
-
-        private Keys[] IgnoredKeys = new Keys[] { 
-            Keys.RightShift, Keys.LeftShift, Keys.CapsLock, Keys.Enter, Keys.End, Keys.OemClear,
-            Keys.Attn, Keys.Left, Keys.Right, Keys.Apps, Keys.BrowserBack, Keys.BrowserFavorites, Keys.BrowserHome,
-            Keys.BrowserForward, Keys.BrowserRefresh, Keys.BrowserSearch, Keys.BrowserStop, Keys.ChatPadGreen,
-            Keys.ChatPadOrange, Keys.Crsel, Keys.D0, Keys.D1, Keys.D2, Keys.D5, Keys.D3, Keys.D4, Keys.D6,
-            Keys.D7, Keys.D8, Keys.D9, Keys.Down, Keys.EraseEof, Keys.Escape, Keys.Execute, Keys.F1, Keys.F2,
-            Keys.Exsel, Keys.F3, Keys.F10, Keys.F11, Keys.F12, Keys.F13, Keys.F14, Keys.F15, Keys.F16, Keys.F17,
-            Keys.F18, Keys.F19, Keys.F20, Keys.F21, Keys.F22, Keys.F23, Keys.F24, Keys.F4, Keys.F5, Keys.F6, Keys.F7, Keys.F8, Keys.F9,
-            Keys.Help, Keys.Home, Keys.ImeConvert, Keys.ImeNoConvert, Keys.Kana, Keys.Kanji, Keys.LaunchApplication1, Keys.LaunchApplication2,
-            Keys.LaunchMail, Keys.LeftAlt, Keys.LeftControl, Keys.LeftWindows, Keys.MediaNextTrack, Keys.MediaPlayPause, Keys.MediaStop,
-            Keys.MediaPreviousTrack, Keys.None, Keys.NumLock, Keys.OemCopy, Keys.OemEnlW, Keys.Pa1, Keys.PageDown, Keys.PageUp, Keys.Pause, Keys.Print,
-            Keys.Play, Keys.PrintScreen, Keys.RightAlt, Keys.RightControl, Keys.ProcessKey, Keys.RightWindows, Keys.Scroll, Keys.Select, Keys.SelectMedia,
-            Keys.Sleep, Keys.Tab, Keys.Up, Keys.VolumeDown, Keys.VolumeUp, Keys.VolumeMute, Keys.Zoom
-        };
-        private Keys[] AlteredKeys = new Keys[] { 
-            Keys.OemComma, Keys.OemSemicolon, Keys.OemQuestion, 
-            Keys.OemBackslash, Keys.OemCloseBrackets, Keys.OemPlus,
-            Keys.OemMinus, Keys.OemPeriod, Keys.OemOpenBrackets, Keys.OemPipe,
-            Keys.OemQuotes, Keys.OemTilde
-        };
-
-        public void HandleKeyboardInput()
-        {
-            var currentKeyboardState = CCInputState.Instance.CurrentKeyboardStates.FirstOrDefault();
-            if (currentKeyboardState != null)
-            {
-                var pressedKeyCount = currentKeyboardState.GetPressedKeyCount();
-                if (pressedKeyCount > 0 && canEdit)
+                pressedKeys.ToList().ForEach(p =>
                 {
-                    var pressedKeys = currentKeyboardState.GetPressedKeys();
-                    var isHoldingShift = pressedKeys.Any(p => p == Keys.LeftShift || p == Keys.RightShift);
-
-                    pressedKeys.ToList().ForEach(p =>
+                    if (p == Keys.Back || p == Keys.Delete)
                     {
-                        if (p == Keys.Back || p == Keys.Delete)
-                        {
-                            Text = Text.Substring(0, Text.Length - 1);
-                            canEdit = false;
-                            return;
-                        }
-
-                        var keyChar = (char)p;
-
-                        if (IgnoredKeys.Any(ignoredKey => p == ignoredKey))
-                        {
-                            return;
-                        }
-
-                        if (AlteredKeys.Any(alteredKey => p == alteredKey))
-                        {
-                            var alteredKeyToAdd = "";
-                            switch(p)
-                            {
-                                case Keys.OemComma:
-                                    alteredKeyToAdd = ",";
-                                    if (isHoldingShift)
-                                    {
-                                        alteredKeyToAdd = "<";
-                                    }
-                                    break;
-                                case Keys.OemSemicolon:
-                                    alteredKeyToAdd = ";";
-                                    if (isHoldingShift)
-                                    {
-                                        alteredKeyToAdd = ":";
-                                    }
-                                    break;
-                                case Keys.OemQuestion:
-                                    alteredKeyToAdd = "/";
-                                    if (isHoldingShift)
-                                    {
-                                        alteredKeyToAdd = "?";
-                                    }
-                                    break;
-                                case Keys.OemBackslash:
-                                case Keys.OemPipe:
-                                    alteredKeyToAdd = "\\";
-                                    if (isHoldingShift)
-                                    {
-                                        alteredKeyToAdd = "|";
-                                    }
-                                    break;
-                                case Keys.OemCloseBrackets:
-                                    alteredKeyToAdd = "]";
-                                    if (isHoldingShift)
-                                    {
-                                        alteredKeyToAdd = "}";
-                                    }
-                                    break;
-                                case Keys.OemPlus:
-                                    alteredKeyToAdd = "=";
-                                    if (isHoldingShift)
-                                    {
-                                        alteredKeyToAdd = "+";
-                                    }
-                                    break;
-                                case Keys.OemMinus:
-                                    alteredKeyToAdd = "-";
-                                    if (isHoldingShift)
-                                    {
-                                        alteredKeyToAdd = "_";
-                                    }
-                                    break;
-                                case Keys.OemPeriod:
-                                    alteredKeyToAdd = ".";
-                                    if (isHoldingShift)
-                                    {
-                                        alteredKeyToAdd = ">";
-                                    }
-                                    break;
-                                case Keys.OemOpenBrackets:
-                                    alteredKeyToAdd = "[";
-                                    if (isHoldingShift)
-                                    {
-                                        alteredKeyToAdd = "{";
-                                    }
-                                    break;
-                                case Keys.OemQuotes:
-                                    alteredKeyToAdd = "'";
-                                    if (isHoldingShift)
-                                    {
-                                        alteredKeyToAdd = "\"";
-                                    }
-                                    break;
-                                case Keys.OemTilde:
-                                    alteredKeyToAdd = "`";
-                                    if (isHoldingShift)
-                                    {
-                                        alteredKeyToAdd = "~";
-                                    }
-                                    break;
-                            }
-
-                            Text += alteredKeyToAdd;
-                            canEdit = false;
-                            return;
-                        }
-
-                        var keyToAdd = keyChar.ToString().ToLower();
-                        if (currentKeyboardState.CapsLock)
-                        {
-                            keyToAdd = keyToAdd.ToUpper();
-                            if (isHoldingShift)
-                            {
-                                keyToAdd = keyToAdd.ToLower();
-                            }
-                        } else if (isHoldingShift)
-                        {
-                            keyToAdd = keyToAdd.ToUpper();
-                        }
-
-                        Text += keyToAdd;
+                        Text = Text.Substring(0, Text.Length - 1);
                         canEdit = false;
-                    });
+                        return;
+                    }
 
-                } 
-                else if (pressedKeyCount == 0 || (pressedKeyCount == 1 && (currentKeyboardState.IsKeyDown(Keys.LeftShift) || currentKeyboardState.IsKeyDown(Keys.RightShift))))
-                {
-                    canEdit = true;
-                }
+                    var keyChar = (char)p;
+
+                    if (IgnoredKeys.Any(ignoredKey => p == ignoredKey))
+                    {
+                        return;
+                    }
+
+                    if (AlteredKeys.Any(alteredKey => p == alteredKey))
+                    {
+                        var alteredKeyToAdd = "";
+                        switch(p)
+                        {
+                            case Keys.OemComma:
+                                alteredKeyToAdd = ",";
+                                if (isHoldingShift)
+                                {
+                                    alteredKeyToAdd = "<";
+                                }
+                                break;
+                            case Keys.OemSemicolon:
+                                alteredKeyToAdd = ";";
+                                if (isHoldingShift)
+                                {
+                                    alteredKeyToAdd = ":";
+                                }
+                                break;
+                            case Keys.OemQuestion:
+                                alteredKeyToAdd = "/";
+                                if (isHoldingShift)
+                                {
+                                    alteredKeyToAdd = "?";
+                                }
+                                break;
+                            case Keys.OemBackslash:
+                            case Keys.OemPipe:
+                                alteredKeyToAdd = "\\";
+                                if (isHoldingShift)
+                                {
+                                    alteredKeyToAdd = "|";
+                                }
+                                break;
+                            case Keys.OemCloseBrackets:
+                                alteredKeyToAdd = "]";
+                                if (isHoldingShift)
+                                {
+                                    alteredKeyToAdd = "}";
+                                }
+                                break;
+                            case Keys.OemPlus:
+                                alteredKeyToAdd = "=";
+                                if (isHoldingShift)
+                                {
+                                    alteredKeyToAdd = "+";
+                                }
+                                break;
+                            case Keys.OemMinus:
+                                alteredKeyToAdd = "-";
+                                if (isHoldingShift)
+                                {
+                                    alteredKeyToAdd = "_";
+                                }
+                                break;
+                            case Keys.OemPeriod:
+                                alteredKeyToAdd = ".";
+                                if (isHoldingShift)
+                                {
+                                    alteredKeyToAdd = ">";
+                                }
+                                break;
+                            case Keys.OemOpenBrackets:
+                                alteredKeyToAdd = "[";
+                                if (isHoldingShift)
+                                {
+                                    alteredKeyToAdd = "{";
+                                }
+                                break;
+                            case Keys.OemQuotes:
+                                alteredKeyToAdd = "'";
+                                if (isHoldingShift)
+                                {
+                                    alteredKeyToAdd = "\"";
+                                }
+                                break;
+                            case Keys.OemTilde:
+                                alteredKeyToAdd = "`";
+                                if (isHoldingShift)
+                                {
+                                    alteredKeyToAdd = "~";
+                                }
+                                break;
+                        }
+
+                        Text += alteredKeyToAdd;
+                        canEdit = false;
+                        return;
+                    }
+
+                    var keyToAdd = keyChar.ToString().ToLower();
+                    if (currentKeyboardState.CapsLock)
+                    {
+                        keyToAdd = keyToAdd.ToUpper();
+                        if (isHoldingShift)
+                        {
+                            keyToAdd = keyToAdd.ToLower();
+                        }
+                    } else if (isHoldingShift)
+                    {
+                        keyToAdd = keyToAdd.ToUpper();
+                    }
+
+                    Text += keyToAdd;
+                    canEdit = false;
+                });
+
+            } 
+            else if (pressedKeyCount == 0 || (pressedKeyCount == 1 && (currentKeyboardState.IsKeyDown(Keys.LeftShift) || currentKeyboardState.IsKeyDown(Keys.RightShift))))
+            {
+                canEdit = true;
             }
         }
     }

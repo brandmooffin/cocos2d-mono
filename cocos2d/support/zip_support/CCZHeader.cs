@@ -27,14 +27,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCZHeader
 {
-    public class CCZHeader
-    {
-        public byte[] sig=new byte[4];				// signature. Should be 'CCZ!' 4 bytes
+    public byte[] sig=new byte[4];				// signature. Should be 'CCZ!' 4 bytes
 		public ushort compression_type;	// should 0
 		public ushort version;			// should be 2 (although version type==1 is also supported)
 		public uint  reserved;			// Reserverd for users.
-        public uint len;				// size of the uncompressed file
-    }
+    public uint len;				// size of the uncompressed file
 }

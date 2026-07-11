@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using Box2D.Collision;
 
-namespace Box2D.Dynamics
+namespace Box2D.Dynamics;
+
+public interface Ib2RayCastCallback
 {
-    public interface Ib2RayCastCallback
-    {
-        float RayCastCallback(ref b2RayCastInput input, int proxyId);
-    }
+    float RayCastCallback(ref b2RayCastInput input, int proxyId);
 }

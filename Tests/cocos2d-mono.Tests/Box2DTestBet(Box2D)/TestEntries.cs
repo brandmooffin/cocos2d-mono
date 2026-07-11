@@ -26,65 +26,64 @@
 
 using Box2D.TestBed.Tests;
 
-namespace Box2D.TestBed
-{
-    public static class TestEntries
-    {
-        public static TestEntry[] TestList =
-            {
-                //Original tests
-                new TestEntry {Name = "Tumbler", CreateFcn = () => new Tumbler()},
-                new TestEntry {Name = "Tiles", CreateFcn = () => new Tiles()},
-                new TestEntry {Name = "Dump Shell", CreateFcn = () => new DumpShell()},
-                new TestEntry {Name = "Gears", CreateFcn = () => new Gears()},
-                new TestEntry {Name = "Cantilever", CreateFcn = () => new Cantilever()},
-                new TestEntry {Name = "Varying Restitution", CreateFcn = () => new VaryingRestitution()},
-                new TestEntry {Name = "Character Collision", CreateFcn = () => new CharacterCollision()},
-                new TestEntry {Name = "Edge Test", CreateFcn = () => new EdgeTest()},
-                new TestEntry {Name = "Body Types", CreateFcn = () => new BodyTypes()},
-                new TestEntry {Name = "Shape Editing", CreateFcn = () => new ShapeEditing()},
-                new TestEntry {Name = "Car", CreateFcn = () => new Car()},
-                new TestEntry {Name = "Apply Force", CreateFcn = () => new ApplyForce()},
-                new TestEntry {Name = "Prismatic", CreateFcn = () => new Prismatic()},
-                new TestEntry {Name = "Vertical Stack", CreateFcn = () => new VerticalStack()},
-                new TestEntry {Name = "Sphere Stack", CreateFcn = () => new SphereStack()},
-                new TestEntry {Name = "Revolute", CreateFcn = () => new Revolute()},
-                new TestEntry {Name = "Pulleys", CreateFcn = () => new Pulleys()},
-                new TestEntry {Name = "Poly Shapes", CreateFcn = () => new PolyShapes()},
-                new TestEntry {Name = "Rope", CreateFcn = () => new Tests.Rope()},
-                new TestEntry {Name = "Web", CreateFcn = () => new Web()},
-                new TestEntry {Name = "Rope Joint", CreateFcn = () => new RopeJoint()},
-                new TestEntry {Name = "OneSided Platform", CreateFcn = () => new OneSidedPlatform()},
-                new TestEntry {Name = "Pinball", CreateFcn = () => new Pinball()},
-                new TestEntry {Name = "Bullet Test", CreateFcn = () => new BulletTest()},
-                new TestEntry {Name = "Continuous Test", CreateFcn = () => new ContinuousTest()},
-                new TestEntry {Name = "Time Of Impact", CreateFcn = () => new TimeOfImpact()},
-                new TestEntry {Name = "Ray Cast", CreateFcn = () => new RayCast()},
-                new TestEntry {Name = "Confined", CreateFcn = () => new Confined()},
-                new TestEntry {Name = "Pyramid", CreateFcn = () => new Pyramid()},
-                new TestEntry {Name = "Theo Jansen's Walker", CreateFcn = () => new TheoJansen()},
-                new TestEntry {Name = "Edge Shapes", CreateFcn = () => new EdgeShapes()},
-                new TestEntry {Name = "Poly Collision", CreateFcn = () => new PolyCollision()},
-                new TestEntry {Name = "Bridge", CreateFcn = () => new Bridge()},
-                new TestEntry {Name = "Breakable", CreateFcn = () => new Breakable()},
-                new TestEntry {Name = "Chain", CreateFcn = () => new Chain()},
-                new TestEntry {Name = "Collision Filtering", CreateFcn = () => new CollisionFiltering()},
-                new TestEntry {Name = "Collision Processing", CreateFcn = () => new CollisionProcessing()},
-                new TestEntry {Name = "Compound Shapes", CreateFcn = () => new CompoundShapes()},
-                new TestEntry {Name = "Distance Test", CreateFcn = () => new DistanceTest()},
-                new TestEntry {Name = "Dominos", CreateFcn = () => new Dominos()},
-                new TestEntry {Name = "DynamicTree Test", CreateFcn = () => new DynamicTreeTest()},
-                new TestEntry {Name = "Sensor Test", CreateFcn = () => new SensorTest()},
-                new TestEntry {Name = "Slider Crank", CreateFcn = () => new SliderCrank()},
-                new TestEntry {Name = "Varying Friction", CreateFcn = () => new VaryingFriction()},
-                new TestEntry {Name = "AddPair", CreateFcn = () => new AddPair()},
-                
+namespace Box2D.TestBed;
 
-                //new TestEntry {Name = "Circle Benchmark", CreateFcn = () => new CircleBenchmarkTest()},
-                new TestEntry {Name = "Liquid", CreateFcn = () => new LiquidTest()},
-                new TestEntry {Name = "Circle Stress", CreateFcn = () => new CircleStress()},
-                
-                new TestEntry {Name = null, CreateFcn = null}
-            };
-    }
+public static class TestEntries
+{
+    public static TestEntry[] TestList =
+        {
+            //Original tests
+            new TestEntry {Name = "Tumbler", CreateFcn = () => new Tumbler()},
+            new TestEntry {Name = "Tiles", CreateFcn = () => new Tiles()},
+            new TestEntry {Name = "Dump Shell", CreateFcn = () => new DumpShell()},
+            new TestEntry {Name = "Gears", CreateFcn = () => new Gears()},
+            new TestEntry {Name = "Cantilever", CreateFcn = () => new Cantilever()},
+            new TestEntry {Name = "Varying Restitution", CreateFcn = () => new VaryingRestitution()},
+            new TestEntry {Name = "Character Collision", CreateFcn = () => new CharacterCollision()},
+            new TestEntry {Name = "Edge Test", CreateFcn = () => new EdgeTest()},
+            new TestEntry {Name = "Body Types", CreateFcn = () => new BodyTypes()},
+            new TestEntry {Name = "Shape Editing", CreateFcn = () => new ShapeEditing()},
+            new TestEntry {Name = "Car", CreateFcn = () => new Car()},
+            new TestEntry {Name = "Apply Force", CreateFcn = () => new ApplyForce()},
+            new TestEntry {Name = "Prismatic", CreateFcn = () => new Prismatic()},
+            new TestEntry {Name = "Vertical Stack", CreateFcn = () => new VerticalStack()},
+            new TestEntry {Name = "Sphere Stack", CreateFcn = () => new SphereStack()},
+            new TestEntry {Name = "Revolute", CreateFcn = () => new Revolute()},
+            new TestEntry {Name = "Pulleys", CreateFcn = () => new Pulleys()},
+            new TestEntry {Name = "Poly Shapes", CreateFcn = () => new PolyShapes()},
+            new TestEntry {Name = "Rope", CreateFcn = () => new Tests.Rope()},
+            new TestEntry {Name = "Web", CreateFcn = () => new Web()},
+            new TestEntry {Name = "Rope Joint", CreateFcn = () => new RopeJoint()},
+            new TestEntry {Name = "OneSided Platform", CreateFcn = () => new OneSidedPlatform()},
+            new TestEntry {Name = "Pinball", CreateFcn = () => new Pinball()},
+            new TestEntry {Name = "Bullet Test", CreateFcn = () => new BulletTest()},
+            new TestEntry {Name = "Continuous Test", CreateFcn = () => new ContinuousTest()},
+            new TestEntry {Name = "Time Of Impact", CreateFcn = () => new TimeOfImpact()},
+            new TestEntry {Name = "Ray Cast", CreateFcn = () => new RayCast()},
+            new TestEntry {Name = "Confined", CreateFcn = () => new Confined()},
+            new TestEntry {Name = "Pyramid", CreateFcn = () => new Pyramid()},
+            new TestEntry {Name = "Theo Jansen's Walker", CreateFcn = () => new TheoJansen()},
+            new TestEntry {Name = "Edge Shapes", CreateFcn = () => new EdgeShapes()},
+            new TestEntry {Name = "Poly Collision", CreateFcn = () => new PolyCollision()},
+            new TestEntry {Name = "Bridge", CreateFcn = () => new Bridge()},
+            new TestEntry {Name = "Breakable", CreateFcn = () => new Breakable()},
+            new TestEntry {Name = "Chain", CreateFcn = () => new Chain()},
+            new TestEntry {Name = "Collision Filtering", CreateFcn = () => new CollisionFiltering()},
+            new TestEntry {Name = "Collision Processing", CreateFcn = () => new CollisionProcessing()},
+            new TestEntry {Name = "Compound Shapes", CreateFcn = () => new CompoundShapes()},
+            new TestEntry {Name = "Distance Test", CreateFcn = () => new DistanceTest()},
+            new TestEntry {Name = "Dominos", CreateFcn = () => new Dominos()},
+            new TestEntry {Name = "DynamicTree Test", CreateFcn = () => new DynamicTreeTest()},
+            new TestEntry {Name = "Sensor Test", CreateFcn = () => new SensorTest()},
+            new TestEntry {Name = "Slider Crank", CreateFcn = () => new SliderCrank()},
+            new TestEntry {Name = "Varying Friction", CreateFcn = () => new VaryingFriction()},
+            new TestEntry {Name = "AddPair", CreateFcn = () => new AddPair()},
+            
+
+            //new TestEntry {Name = "Circle Benchmark", CreateFcn = () => new CircleBenchmarkTest()},
+            new TestEntry {Name = "Liquid", CreateFcn = () => new LiquidTest()},
+            new TestEntry {Name = "Circle Stress", CreateFcn = () => new CircleStress()},
+            
+            new TestEntry {Name = null, CreateFcn = null}
+        };
 }

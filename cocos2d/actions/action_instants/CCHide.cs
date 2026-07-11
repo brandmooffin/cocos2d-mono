@@ -1,35 +1,34 @@
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCHide : CCActionInstant
 {
-    public class CCHide : CCActionInstant
+    public CCHide()
     {
-        public CCHide()
-        {
-        }
+    }
 
-        protected CCHide(CCHide hide) : base(hide)
-        {
-        }
+    protected CCHide(CCHide hide) : base(hide)
+    {
+    }
 
-        protected internal override void StartWithTarget(CCNode target)
-        {
-            base.StartWithTarget(target);
-            target.Visible = false;
-        }
+    protected internal override void StartWithTarget(CCNode target)
+    {
+        base.StartWithTarget(target);
+        target.Visible = false;
+    }
 
-        public override CCFiniteTimeAction Reverse()
-        {
-            return (new CCShow());
-        }
+    public override CCFiniteTimeAction Reverse()
+    {
+        return (new CCShow());
+    }
 
-        public override object Copy(ICCCopyable pZone)
+    public override object Copy(ICCCopyable pZone)
+    {
+        if (pZone != null)
         {
-            if (pZone != null)
-            {
-                var pRet = (CCHide) (pZone);
-                base.Copy(pZone);
-                return pRet;
-            }
-            return new CCHide(this);
+            var pRet = (CCHide) (pZone);
+            base.Copy(pZone);
+            return pRet;
         }
+        return new CCHide(this);
     }
 }

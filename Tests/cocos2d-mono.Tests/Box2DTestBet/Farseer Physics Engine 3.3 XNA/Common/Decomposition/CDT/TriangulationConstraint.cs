@@ -36,11 +36,10 @@
  * 
  * @author Thomas Åhlén, thahlen@gmail.com
  */
-namespace Poly2Tri.Triangulation
+namespace Poly2Tri.Triangulation;
+
+public class TriangulationConstraint
 {
-    public class TriangulationConstraint
-    {
-        public TriangulationPoint P;
-        public TriangulationPoint Q;
-    }
+    public TriangulationPoint P;
+    public TriangulationPoint Q;
 }

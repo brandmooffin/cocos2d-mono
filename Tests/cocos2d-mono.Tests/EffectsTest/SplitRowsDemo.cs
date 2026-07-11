@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class SplitRowsDemo : CCSplitRows
 {
-    public class SplitRowsDemo : CCSplitRows
+    public new static CCActionInterval actionWithDuration(float t)
     {
-        public new static CCActionInterval actionWithDuration(float t)
-        {
-            return new CCSplitRows(t, 9);
-        }
+        return new CCSplitRows(t, 9);
     }
 }

@@ -21,12 +21,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
+using System;
 using System.Diagnostics;
 using System.IO;
-using System;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	public static class CCSerialization
 	{
 		#region Raw Serializers
@@ -120,5 +120,4 @@ namespace Cocos2D
 		}
 		#endregion	
 	}
-}
 

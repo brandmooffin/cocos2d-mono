@@ -25,35 +25,34 @@ THE SOFTWARE.
 
 using System;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+/// <summary>
+/// @brief CCFadeOutDownTiles action.
+/// Fades out the tiles in downwards direction
+/// </summary>
+public class CCFadeOutDownTiles : CCFadeOutUpTiles
 {
-    /// <summary>
-    /// @brief CCFadeOutDownTiles action.
-    /// Fades out the tiles in downwards direction
-    /// </summary>
-    public class CCFadeOutDownTiles : CCFadeOutUpTiles
+    public override float TestFunc(CCGridSize pos, float time)
     {
-        public override float TestFunc(CCGridSize pos, float time)
+        var n = new CCPoint((m_sGridSize.X * (1.0f - time)), (m_sGridSize.Y * (1.0f - time)));
+        if (pos.Y == 0)
         {
-            var n = new CCPoint((m_sGridSize.X * (1.0f - time)), (m_sGridSize.Y * (1.0f - time)));
-            if (pos.Y == 0)
-            {
-                return 1.0f;
-            }
-
-            return (float) Math.Pow(n.Y / pos.Y, 6);
+            return 1.0f;
         }
 
-        public CCFadeOutDownTiles()
-        {
-        }
+        return (float) Math.Pow(n.Y / pos.Y, 6);
+    }
 
-        /// <summary>
-        ///  creates the action with the grid size and the duration 
-        /// </summary>
-        public CCFadeOutDownTiles(float duration, CCGridSize gridSize) : base(duration, gridSize)
-        {
-            InitWithDuration(duration, gridSize);
-        }
+    public CCFadeOutDownTiles()
+    {
+    }
+
+    /// <summary>
+    ///  creates the action with the grid size and the duration 
+    /// </summary>
+    public CCFadeOutDownTiles(float duration, CCGridSize gridSize) : base(duration, gridSize)
+    {
+        InitWithDuration(duration, gridSize);
     }
 }

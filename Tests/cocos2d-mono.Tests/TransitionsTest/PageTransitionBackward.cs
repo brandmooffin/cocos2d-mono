@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class PageTransitionBackward : CCTransitionPageTurn
 {
-    public class PageTransitionBackward : CCTransitionPageTurn
+    public PageTransitionBackward (float t, CCScene s) : base (t, s, true)
     {
-        public PageTransitionBackward (float t, CCScene s) : base (t, s, true)
-        {
-            CCDirector.SharedDirector.SetDepthTest(false);
-        }
+        CCDirector.SharedDirector.SetDepthTest(false);
     }
 }

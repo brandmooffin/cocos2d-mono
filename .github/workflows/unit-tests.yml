@@ -14,11 +14,19 @@ jobs:
     name: Unit tests (DesktopGL / net9.0)
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
         with:
           global-json-file: global.json
       - name: Test
-        run: dotnet test Tests/Cocos2DMono.UnitTests/Cocos2DMono.UnitTests.csproj -c Release
+        # Overriding the Cocos2DTargetFrameworks dial narrows the referenced
+        # multi-target src/Cocos2DMono to the tested TFM so restore does not
+        # require the android/ios workloads on this runner. (A global
+        # TargetFrameworks property would also poison the single-TFM test
+        # project itself and break test discovery - the dial is scoped to the
+        # src/ projects that consume it.)
+        run: dotnet test Tests/Cocos2DMono.UnitTests/Cocos2DMono.UnitTests.csproj -c Release -p:Cocos2DTargetFrameworks=net9.0

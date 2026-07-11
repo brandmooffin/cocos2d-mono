@@ -1,53 +1,52 @@
 using Microsoft.Xna.Framework;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCDisplayLinkDirector : CCDirector
 {
-    public class CCDisplayLinkDirector : CCDirector
+    private bool m_bInvalid;
+
+    public override double AnimationInterval
     {
-        private bool m_bInvalid;
-
-        public override double AnimationInterval
+        get { return base.AnimationInterval; }
+        set
         {
-            get { return base.AnimationInterval; }
-            set
-            {
-                m_dAnimationInterval = value;
+            m_dAnimationInterval = value;
 
-                if (!m_bInvalid)
-                {
-                    StopAnimation();
-                    StartAnimation();
-                }
+            if (!m_bInvalid)
+            {
+                StopAnimation();
+                StartAnimation();
             }
         }
+    }
 
-        public override void StopAnimation()
+    public override void StopAnimation()
+    {
+        m_bInvalid = true;
+    }
+
+    public override void StartAnimation()
+    {
+        m_bInvalid = false;
+        // When using CCGameView, CCApplication.SharedApplication may not exist
+        // Animation interval is managed by the game loop in that case
+        if (CCApplication.SharedApplication != null)
         {
-            m_bInvalid = true;
+            CCApplication.SharedApplication.AnimationInterval = m_dAnimationInterval;
         }
+    }
 
-        public override void StartAnimation()
+    public override void MainLoop(GameTime gameTime)
+    {
+        if (m_bPurgeDirectorInNextLoop)
         {
-            m_bInvalid = false;
-            // When using CCGameView, CCApplication.SharedApplication may not exist
-            // Animation interval is managed by the game loop in that case
-            if (CCApplication.SharedApplication != null)
-            {
-                CCApplication.SharedApplication.AnimationInterval = m_dAnimationInterval;
-            }
+            PurgeDirector();
+            m_bPurgeDirectorInNextLoop = false;
         }
-
-        public override void MainLoop(GameTime gameTime)
+        else if (!m_bInvalid)
         {
-            if (m_bPurgeDirectorInNextLoop)
-            {
-                PurgeDirector();
-                m_bPurgeDirectorInNextLoop = false;
-            }
-            else if (!m_bInvalid)
-            {
-                DrawScene(gameTime);
-            }
+            DrawScene(gameTime);
         }
     }
 }

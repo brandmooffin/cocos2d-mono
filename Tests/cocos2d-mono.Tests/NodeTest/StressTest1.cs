@@ -1,53 +1,52 @@
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class StressTest1 : TestCocosNodeDemo
 {
-    public class StressTest1 : TestCocosNodeDemo
+    public StressTest1()
     {
-        public StressTest1()
-        {
-            CCSize s = CCDirector.SharedDirector.WinSize;
+        CCSize s = CCDirector.SharedDirector.WinSize;
 
-            CCSprite sp1 = new CCSprite(TestResource.s_pPathSister1);
-            AddChild(sp1, 0, CocosNodeTestStaticLibrary.kTagSprite1);
+        CCSprite sp1 = new CCSprite(TestResource.s_pPathSister1);
+        AddChild(sp1, 0, CocosNodeTestStaticLibrary.kTagSprite1);
 
-            sp1.Position = (new CCPoint(s.Width / 2, s.Height / 2));
+        sp1.Position = (new CCPoint(s.Width / 2, s.Height / 2));
 
-            Schedule((shouldNotCrash), 1.0f);
-        }
+        Schedule((shouldNotCrash), 1.0f);
+    }
 
-        private void shouldNotCrash(float dt)
-        {
-            Unschedule((shouldNotCrash));
+    private void shouldNotCrash(float dt)
+    {
+        Unschedule((shouldNotCrash));
 
-            CCSize s = CCDirector.SharedDirector.WinSize;
+        CCSize s = CCDirector.SharedDirector.WinSize;
 
-            // if the node has timers, it crashes
-            CCParticleSun explosion = new CCParticleSun();
-            explosion.Texture = CCTextureCache.SharedTextureCache.AddImage("Images/fire");
+        // if the node has timers, it crashes
+        CCParticleSun explosion = new CCParticleSun();
+        explosion.Texture = CCTextureCache.SharedTextureCache.AddImage("Images/fire");
 
-            // if it doesn't, it works Ok.
-            //	CocosNode *explosion = [Sprite create:@"grossinis_sister2.png");
+        // if it doesn't, it works Ok.
+        //	CocosNode *explosion = [Sprite create:@"grossinis_sister2.png");
 
-            explosion.Position = new CCPoint(s.Width / 2, s.Height / 2);
+        explosion.Position = new CCPoint(s.Width / 2, s.Height / 2);
 
-            RunAction(new CCSequence(
-                new CCRotateBy (2, 360),
-                new CCCallFuncN((removeMe))
-                          ));
+        RunAction(new CCSequence(
+            new CCRotateBy (2, 360),
+            new CCCallFuncN((removeMe))
+                      ));
 
-            AddChild(explosion);
-        }
+        AddChild(explosion);
+    }
 
-        private void removeMe(CCNode node)
-        {
-            m_pParent.RemoveChild(node, true);
-            nextCallback(this);
-        }
+    private void removeMe(CCNode node)
+    {
+        m_pParent.RemoveChild(node, true);
+        nextCallback(this);
+    }
 
-        public override string title()
-        {
-            return "stress test #1: no crashes";
-        }
+    public override string title()
+    {
+        return "stress test #1: no crashes";
     }
 }

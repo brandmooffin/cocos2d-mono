@@ -30,60 +30,59 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class PulleysTest : Test
 {
-    public class PulleysTest : Test
+    private PulleyJoint _joint1;
+
+    private PulleysTest()
     {
-        private PulleyJoint _joint1;
+        //Ground
+        BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-        private PulleysTest()
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            const float a = 2.0f;
+            const float b = 4.0f;
+            const float y = 16.0f;
+            const float l = 12.0f;
 
-            {
-                const float a = 2.0f;
-                const float b = 4.0f;
-                const float y = 16.0f;
-                const float l = 12.0f;
+            PolygonShape shape = new PolygonShape(5);
+            shape.SetAsBox(a, b);
 
-                PolygonShape shape = new PolygonShape(5);
-                shape.SetAsBox(a, b);
+            Body body1 = BodyFactory.CreateBody(World);
+            body1.BodyType = BodyType.Dynamic;
+            body1.Position = new Vector2(-10.0f, y);
+            body1.CreateFixture(shape);
 
-                Body body1 = BodyFactory.CreateBody(World);
-                body1.BodyType = BodyType.Dynamic;
-                body1.Position = new Vector2(-10.0f, y);
-                body1.CreateFixture(shape);
+            Body body2 = BodyFactory.CreateBody(World);
+            body2.BodyType = BodyType.Dynamic;
+            body2.Position = new Vector2(10.0f, y);
 
-                Body body2 = BodyFactory.CreateBody(World);
-                body2.BodyType = BodyType.Dynamic;
-                body2.Position = new Vector2(10.0f, y);
+            body2.CreateFixture(shape);
 
-                body2.CreateFixture(shape);
-
-                Vector2 anchor1 = new Vector2(-10.0f, y + b);
-                Vector2 anchor2 = new Vector2(10.0f, y + b);
-                Vector2 groundAnchor1 = new Vector2(-10.0f, y + b + l);
-                Vector2 groundAnchor2 = new Vector2(10.0f, y + b + l);
-                _joint1 = new PulleyJoint(body1, body2, groundAnchor1, groundAnchor2, body1.GetLocalPoint(anchor1),
-                                          body2.GetLocalPoint(anchor2), 2.0f);
-                World.AddJoint(_joint1);
-            }
+            Vector2 anchor1 = new Vector2(-10.0f, y + b);
+            Vector2 anchor2 = new Vector2(10.0f, y + b);
+            Vector2 groundAnchor1 = new Vector2(-10.0f, y + b + l);
+            Vector2 groundAnchor2 = new Vector2(10.0f, y + b + l);
+            _joint1 = new PulleyJoint(body1, body2, groundAnchor1, groundAnchor2, body1.GetLocalPoint(anchor1),
+                                      body2.GetLocalPoint(anchor2), 2.0f);
+            World.AddJoint(_joint1);
         }
+    }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            base.Update(settings, gameTime);
+    public override void Update(GameSettings settings, GameTime gameTime)
+    {
+        base.Update(settings, gameTime);
 
-            float ratio = _joint1.Ratio;
-            float l = _joint1.LengthA + ratio * _joint1.LengthB;
-            DebugView.DrawString(50, TextLine, "L1 + {0:n} * L2 = {1:n}", ratio, l);
-            TextLine += 15;
-        }
+        float ratio = _joint1.Ratio;
+        float l = _joint1.LengthA + ratio * _joint1.LengthB;
+        DebugView.DrawString(50, TextLine, "L1 + {0:n} * L2 = {1:n}", ratio, l);
+        TextLine += 15;
+    }
 
-        internal static Test Create()
-        {
-            return new PulleysTest();
-        }
+    internal static Test Create()
+    {
+        return new PulleysTest();
     }
 }

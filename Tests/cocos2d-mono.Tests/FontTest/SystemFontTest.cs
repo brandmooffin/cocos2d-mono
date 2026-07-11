@@ -1,7 +1,7 @@
 using Cocos2D;
 
-namespace tests.FontTest
-{
+namespace tests.FontTest;
+
 	public class SystemFontTestScene : TestScene
 	{
 		private static int fontIdx;
@@ -37,41 +37,41 @@ namespace tests.FontTest
 			"Courier New",
 			"Georgia",
 			"Symbol",
-            "Wingdings",
+        "Wingdings",
 			"Arial",
 
-            "fonts/A Damn Mess.ttf",
-            "fonts/Abberancy.ttf",
-            "fonts/Abduction.ttf",
-            "fonts/American Typewriter.ttf",
-            "fonts/arial.ttf",
-            "fonts/Courier New.ttf",
-            "fonts/arial.ttf",
-            "fonts/Paint Boy.ttf",
-            "fonts/Schwarzwald Regular.ttf",
-            "fonts/Scissor Cuts.ttf",
-            "fonts/tahoma.ttf",
-            "fonts/Thonburi.ttf",
-            "fonts/ThonburiBold.ttf"
+        "fonts/A Damn Mess.ttf",
+        "fonts/Abberancy.ttf",
+        "fonts/Abduction.ttf",
+        "fonts/American Typewriter.ttf",
+        "fonts/arial.ttf",
+        "fonts/Courier New.ttf",
+        "fonts/arial.ttf",
+        "fonts/Paint Boy.ttf",
+        "fonts/Schwarzwald Regular.ttf",
+        "fonts/Scissor Cuts.ttf",
+        "fonts/tahoma.ttf",
+        "fonts/Thonburi.ttf",
+        "fonts/ThonburiBold.ttf"
 #endif
 #if ANDROID
 			"Arial",
 			"Courier New",
 			"Georgia",
 
-            "fonts/A Damn Mess.ttf",
-            "fonts/Abberancy.ttf",
-            "fonts/Abduction.ttf",
-            "fonts/American Typewriter.ttf",
-            "fonts/arial.ttf",
-            "fonts/Courier New.ttf",
-            "fonts/arial.ttf",
-            "fonts/Paint Boy.ttf",
-            "fonts/Schwarzwald Regular.ttf",
-            "fonts/Scissor Cuts.ttf",
-            "fonts/tahoma.ttf",
-            "fonts/Thonburi.ttf",
-            "fonts/ThonburiBold.ttf"
+        "fonts/A Damn Mess.ttf",
+        "fonts/Abberancy.ttf",
+        "fonts/Abduction.ttf",
+        "fonts/American Typewriter.ttf",
+        "fonts/arial.ttf",
+        "fonts/Courier New.ttf",
+        "fonts/arial.ttf",
+        "fonts/Paint Boy.ttf",
+        "fonts/Schwarzwald Regular.ttf",
+        "fonts/Scissor Cuts.ttf",
+        "fonts/tahoma.ttf",
+        "fonts/Thonburi.ttf",
+        "fonts/ThonburiBold.ttf"
 #endif
 		};
 
@@ -162,30 +162,30 @@ namespace tests.FontTest
 
 			AddChild(menu, 11);
 
-            var blockSize = new CCSize(s.Width / 3, 200);
+        var blockSize = new CCSize(s.Width / 3, 200);
 
-            CCLayerColor leftColor = new CCLayerColor(new CCColor4B(100, 100, 100, 255), blockSize.Width,
-                                                      blockSize.Height);
-            CCLayerColor centerColor = new CCLayerColor(new CCColor4B(200, 100, 100, 255), blockSize.Width,
-                                                        blockSize.Height);
-            CCLayerColor rightColor = new CCLayerColor(new CCColor4B(100, 100, 200, 255), blockSize.Width,
-                                                       blockSize.Height);
+        CCLayerColor leftColor = new CCLayerColor(new CCColor4B(100, 100, 100, 255), blockSize.Width,
+                                                  blockSize.Height);
+        CCLayerColor centerColor = new CCLayerColor(new CCColor4B(200, 100, 100, 255), blockSize.Width,
+                                                    blockSize.Height);
+        CCLayerColor rightColor = new CCLayerColor(new CCColor4B(100, 100, 200, 255), blockSize.Width,
+                                                   blockSize.Height);
 
-            leftColor.IgnoreAnchorPointForPosition = false;
-            centerColor.IgnoreAnchorPointForPosition = false;
-            rightColor.IgnoreAnchorPointForPosition = false;
+        leftColor.IgnoreAnchorPointForPosition = false;
+        centerColor.IgnoreAnchorPointForPosition = false;
+        rightColor.IgnoreAnchorPointForPosition = false;
 
-            leftColor.AnchorPoint = new CCPoint(0, 0.5f);
-            centerColor.AnchorPoint = new CCPoint(0, 0.5f);
-            rightColor.AnchorPoint = new CCPoint(0, 0.5f);
+        leftColor.AnchorPoint = new CCPoint(0, 0.5f);
+        centerColor.AnchorPoint = new CCPoint(0, 0.5f);
+        rightColor.AnchorPoint = new CCPoint(0, 0.5f);
 
-            leftColor.Position = new CCPoint(0, s.Height / 2);
-            centerColor.Position = new CCPoint(blockSize.Width, s.Height / 2);
-            rightColor.Position = new CCPoint(blockSize.Width * 2, s.Height / 2);
+        leftColor.Position = new CCPoint(0, s.Height / 2);
+        centerColor.Position = new CCPoint(blockSize.Width, s.Height / 2);
+        rightColor.Position = new CCPoint(blockSize.Width * 2, s.Height / 2);
 
-            AddChild(leftColor, -1);
-            AddChild(rightColor, -1);
-            AddChild(centerColor, -1);
+        AddChild(leftColor, -1);
+        AddChild(rightColor, -1);
+        AddChild(centerColor, -1);
 
 			showFont(SystemFontTestScene.restartAction());
 		}
@@ -203,19 +203,19 @@ namespace tests.FontTest
 			RemoveChildByTag(kTagLabel4, true);
 
 #if WINDOWS_UWP
-            var top = new CCLabelTTF(pFont, "Arial", 24);
+        var top = new CCLabelTTF(pFont, "Arial", 24);
 
-            var left = new CCLabelTTF("alignment left", pFont, fontSize,
-                                             blockSize, CCTextAlignment.Left,
-                                             SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
-            var center = new CCLabelTTF("alignment center", pFont, fontSize,
-                                               blockSize, CCTextAlignment.Center,
-                                               SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
-            var right = new CCLabelTTF("alignment right", pFont, fontSize,
-                                              blockSize, CCTextAlignment.Right,
-                                              SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
+        var left = new CCLabelTTF("alignment left", pFont, fontSize,
+                                         blockSize, CCTextAlignment.Left,
+                                         SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
+        var center = new CCLabelTTF("alignment center", pFont, fontSize,
+                                           blockSize, CCTextAlignment.Center,
+                                           SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
+        var right = new CCLabelTTF("alignment right", pFont, fontSize,
+                                          blockSize, CCTextAlignment.Right,
+                                          SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
 #else
-            var top = new CCLabel(pFont,"Arial-BOLDMT", 40);
+        var top = new CCLabel(pFont,"Arial-BOLDMT", 40);
 
 			var left = new CCLabel("alignment left", pFont, fontSize,
 			                                 blockSize, CCTextAlignment.Left,
@@ -228,12 +228,12 @@ namespace tests.FontTest
 			                                  SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
 #endif
 
-            top.AnchorPoint = CCPoint.AnchorMiddleBottom;
-            left.AnchorPoint = CCPoint.AnchorMiddle;// new CCPoint(0, 0.5f);
+        top.AnchorPoint = CCPoint.AnchorMiddleBottom;
+        left.AnchorPoint = CCPoint.AnchorMiddle;// new CCPoint(0, 0.5f);
 			center.AnchorPoint = CCPoint.AnchorMiddle;
-            right.AnchorPoint = CCPoint.AnchorMiddle;
+        right.AnchorPoint = CCPoint.AnchorMiddle;
 
-            float yMax = s.Height / 2f + 50f;
+        float yMax = s.Height / 2f + 50f;
 			top.Position = new CCPoint(s.Width / 2f, s.Height - 80f);
 			left.Position = new CCPoint(s.Width/3f, yMax - 50);
 			center.Position = new CCPoint(s.Width/2f, yMax - 50);
@@ -265,4 +265,3 @@ namespace tests.FontTest
 			return "System Font test";
 		}
 	}
-}

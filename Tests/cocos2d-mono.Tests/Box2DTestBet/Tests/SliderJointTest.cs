@@ -29,27 +29,26 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.TestBed.Tests;
+
+public class SliderJointTest : Test
 {
-    public class SliderJointTest : Test
+    private SliderJointTest()
     {
-        private SliderJointTest()
-        {
-            BodyFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0));
+        BodyFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0));
 
-            Body fA = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(-5, 4));
-            fA.BodyType = BodyType.Dynamic;
+        Body fA = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(-5, 4));
+        fA.BodyType = BodyType.Dynamic;
 
-            Body fB = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(5, 4));
-            fB.BodyType = BodyType.Dynamic;
+        Body fB = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(5, 4));
+        fB.BodyType = BodyType.Dynamic;
 
-            SliderJoint joint = new SliderJoint(fA, fB, Vector2.Zero, Vector2.Zero, 5, 10);
-            World.AddJoint(joint);
-        }
+        SliderJoint joint = new SliderJoint(fA, fB, Vector2.Zero, Vector2.Zero, 5, 10);
+        World.AddJoint(joint);
+    }
 
-        internal static Test Create()
-        {
-            return new SliderJointTest();
-        }
+    internal static Test Create()
+    {
+        return new SliderJointTest();
     }
 }

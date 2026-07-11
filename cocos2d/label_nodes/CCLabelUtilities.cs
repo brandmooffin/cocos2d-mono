@@ -1,7 +1,7 @@
 using System;
 
-namespace Cocos2D
-{
+namespace Cocos2D;
+
 	internal static partial class CCLabelUtilities
 	{
 
@@ -12,6 +12,5 @@ namespace Cocos2D
 //			//return CreateNativeLabel (text, dimensions, hAlignment, vAlignment, fontName, fontSize, textColor);
 //		}
 	}
-}
 
 

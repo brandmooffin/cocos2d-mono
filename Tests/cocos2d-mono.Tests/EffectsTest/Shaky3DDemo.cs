@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using Cocos2D;
 
-namespace tests
+namespace tests;
+
+public class Shaky3DDemo : CCShaky3D
 {
-    public class Shaky3DDemo : CCShaky3D
+    public static CCActionInterval actionWithDuration(float t)
     {
-        public static CCActionInterval actionWithDuration(float t)
-        {
-            return new CCShaky3D(t, new CCGridSize(15, 10), 5, true);
-        }
+        return new CCShaky3D(t, new CCGridSize(15, 10), 5, true);
     }
 }

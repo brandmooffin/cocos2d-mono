@@ -25,31 +25,30 @@ THE SOFTWARE.
 
 using System;
 
-namespace Cocos2D
+namespace Cocos2D;
+
+public class CCFadeOutBLTiles : CCFadeOutTRTiles
 {
-    public class CCFadeOutBLTiles : CCFadeOutTRTiles
+    public override float TestFunc(CCGridSize pos, float time)
     {
-        public override float TestFunc(CCGridSize pos, float time)
+        var n = new CCPoint((m_sGridSize.X * (1.0f - time)), (m_sGridSize.Y * (1.0f - time)));
+        if ((pos.X + pos.Y) == 0)
         {
-            var n = new CCPoint((m_sGridSize.X * (1.0f - time)), (m_sGridSize.Y * (1.0f - time)));
-            if ((pos.X + pos.Y) == 0)
-            {
-                return 1.0f;
-            }
-
-            return (float) Math.Pow((n.X + n.Y) / (pos.X + pos.Y), 6);
+            return 1.0f;
         }
 
-        public CCFadeOutBLTiles()
-        {
-        }
+        return (float) Math.Pow((n.X + n.Y) / (pos.X + pos.Y), 6);
+    }
 
-        /// <summary>
-        /// creates the action with the grid size and the duration
-        /// </summary>
-        public CCFadeOutBLTiles(float duration, CCGridSize gridSize) : base(duration)
-        {
-            InitWithDuration(duration, gridSize);
-        }
+    public CCFadeOutBLTiles()
+    {
+    }
+
+    /// <summary>
+    /// creates the action with the grid size and the duration
+    /// </summary>
+    public CCFadeOutBLTiles(float duration, CCGridSize gridSize) : base(duration)
+    {
+        InitWithDuration(duration, gridSize);
     }
 }

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      Stage C3 consolidation: one csproj replaces 12 platform variants
+      (cocos2d.{DesktopGL,Linux,macOS,Windows,Android,iOS} plus the .Core.* duplicates).
+
+        net9.0              DesktopGL host (Windows-GL, Linux, macOS via DesktopGL).
+                            macOS is served by net9.0 + DesktopGL today; Mac Catalyst is
+                            NOT shipped because MonoGame 3.8.4.1 has no maccatalyst asset.
+        net9.0-windows7.0   WindowsDX (UseWindowsForms; replaces cocos2d.Windows).
+        net9.0-android35.0  Android  (replaces cocos2d.Android).
+        net9.0-ios18.0      iOS      (replaces cocos2d.iOS).
+
+      Source physically remains under ../../cocos2d/ during the side-by-side
+      transition; the new csproj globs it and applies platform-specific
+      exclusions for the small set of -Platform.cs files. The legacy
+      cocos2d/cocos2d.* and cocos2d/cocos2d.Core.* csproj folders are excluded.
+    -->
+    <!-- TFMs come from the repo-root Directory.Build.props ($(Cocos2DBaseTfm) etc.)
+         so a .NET / MonoGame bump (e.g., the release/2.6.0-preview branch's move to
+         net10.0 + MonoGame 3.8.5) is a four-property change in one file. -->
+    <TargetFrameworks>$(Cocos2DTargetFrameworks)</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Cocos2D</RootNamespace>
+    <!-- Assembly is Cocos2DMono (the product name); the source NAMESPACE remains Cocos2D
+         so code migrating from the legacy per-platform packages compiles unchanged. -->
+    <AssemblyName>Cocos2DMono</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+    <PackageId>Cocos2D-Mono</PackageId>
+    <Title>Cocos2D-Mono</Title>
+    <Product>Cocos2D-Mono</Product>
+    <Description>Cocos2D-Mono is a managed C# port of cocos2d-x built on MonoGame. This single package multi-targets DesktopGL (Windows-GL, Linux, macOS), WindowsDX, Android, and iOS.</Description>
+    <PackageReleaseNotes>
+2.5.11 - Debut of the consolidated package line. This single multi-targeted package (DesktopGL, WindowsDX, Android, iOS) replaces the per-platform Cocos2D-Mono.{DesktopGL,Windows,Linux,macOS,Android,iOS} packages; 2.5.10 was their final release.
+Migration: replace your per-platform PackageReference with Cocos2D-Mono - the correct target framework is selected automatically. The namespace is unchanged (Cocos2D), but the assembly is now Cocos2DMono.dll (was Cocos2D.dll) - this only affects by-name/reflection assembly references. OpenTK is no longer a dependency.
+- See https://github.com/Cocos2D-Mono/cocos2d-mono for the full changelog.
+    </PackageReleaseNotes>
+    <PackageTags>mono monogame cocos2d game gamedev 2d mgcb content-pipeline</PackageTags>
+    <PackageIcon>logo-small.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Per-TFM platform defines
+       ============================================================ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)'">
+    <!-- DesktopGL covers Linux, macOS, and Windows-GL hosts. OS-specific constants
+         are added below via MSBuild::IsOSPlatform so a single net9.0 build is portable. -->
+    <DefineConstants>$(DefineConstants);OPENGL;MONOGAME;DESKTOPGL</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`Windows`))' == 'true'">
+    <DefineConstants>$(DefineConstants);WINDOWSGL</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`OSX`))' == 'true'">
+    <DefineConstants>$(DefineConstants);MACOS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`Linux`))' == 'true'">
+    <DefineConstants>$(DefineConstants);LINUX</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DWindowsTfm)'">
+    <!-- Matches legacy cocos2d.Windows.csproj exactly: XNA path, no MONOGAME.
+         MonoGame's MonoGame.Framework.WindowsDX runtime still loads - the constant
+         only gates source-level branches. CCContentManager.ReloadGraphicsAssets is
+         public under #else (legacy XNA) and protected under #if MONOGAME; defining
+         MONOGAME here would break the call in CCDrawManager.cs. A later stage can
+         reconcile this divergence properly. -->
+    <DefineConstants>$(DefineConstants);WINDOWS;XNA</DefineConstants>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
+    <DefineConstants>$(DefineConstants);ANDROID;OPENGL;GLES;MONOGAME</DefineConstants>
+    <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
+    <DefineConstants>$(DefineConstants);__IOS__;__MOBILE__;__UNIFIED__;IPHONE;IOS;GLES;OPENGL;MONOGAME</DefineConstants>
+    <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+  </PropertyGroup>
+
+  <!-- Mobile TFMs: drop .snupkg generation. Apple/Android workloads emit
+       platform-specific symbol formats and would trip NU5119 on pack. -->
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)' or '$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
+    <IncludeSymbols>false</IncludeSymbols>
+    <NoWarn>$(NoWarn);NU5119</NoWarn>
+  </PropertyGroup>
+
+  <!-- ============================================================
+       Source globbing (replaces cocos2d.projitems)
+       ============================================================ -->
+  <PropertyGroup>
+    <Cocos2DSourceRoot>..\..\cocos2d\</Cocos2DSourceRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Glob the entire shared tree. Exclusions:
+        bin/ obj/                    - build artifacts
+        cocos2d.* / cocos2d.Core.*   - legacy per-platform csproj folders (deleted at the
+                                       C4 cutover; exclude kept defensively)
+        external lib/**              - vendored ICSharpCode SharpZLib (never built by legacy
+                                       either; the SharpZipLib NuGet provides the runtime types)
+        Properties/AssemblyInfo*.cs  - SDK auto-generates assembly info from MSBuild props
+        *.Designer.cs                - generated files (none today, glob is defensive)
+    -->
+    <Compile Include="$(Cocos2DSourceRoot)**\*.cs"
+             Exclude="$(Cocos2DSourceRoot)bin\**;$(Cocos2DSourceRoot)obj\**;$(Cocos2DSourceRoot)cocos2d.*\**;$(Cocos2DSourceRoot)cocos2d.Core.*\**;$(Cocos2DSourceRoot)external lib\**;$(Cocos2DSourceRoot)Properties\AssemblyInfo*.cs;$(Cocos2DSourceRoot)**\*.Designer.cs" />
+  </ItemGroup>
+
+  <!-- Android-only files. -->
+  <ItemGroup Condition="!$(TargetFramework.Contains('-android'))">
+    <Compile Remove="$(Cocos2DSourceRoot)EmbeddableView\CCGameView.Android.cs" />
+    <Compile Remove="$(Cocos2DSourceRoot)label_nodes\CCLabel-Android.cs" />
+  </ItemGroup>
+
+  <!-- iOS-only files. -->
+  <ItemGroup Condition="!$(TargetFramework.Contains('-ios'))">
+    <Compile Remove="$(Cocos2DSourceRoot)EmbeddableView\CCGameView.iOS.cs" />
+    <Compile Remove="$(Cocos2DSourceRoot)label_nodes\CCLabel-CoreGraphics.cs" />
+    <Compile Remove="$(Cocos2DSourceRoot)label_nodes\CCLabelUtilities-CoreGraphics.cs" />
+  </ItemGroup>
+
+  <!-- WindowsDX-only (GDI label backend). -->
+  <ItemGroup Condition="'$(TargetFramework)' != '$(Cocos2DWindowsTfm)'">
+    <Compile Remove="$(Cocos2DSourceRoot)label_nodes\CCLabel-Windows.cs" />
+  </ItemGroup>
+
+  <!-- DesktopGL-only (Skia/GDI label backends used by the base TFM). -->
+  <ItemGroup Condition="'$(TargetFramework)' != '$(Cocos2DBaseTfm)'">
+    <Compile Remove="$(Cocos2DSourceRoot)label_nodes\CCLabel-Gdi.cs" />
+    <Compile Remove="$(Cocos2DSourceRoot)label_nodes\CCLabel-Skia.cs" />
+    <Compile Remove="$(Cocos2DSourceRoot)label_nodes\CCLabelUtilities-Gdi.cs" />
+    <Compile Remove="$(Cocos2DSourceRoot)label_nodes\CCLabelUtilities-Skia.cs" />
+  </ItemGroup>
+
+  <!-- Mobile vs Desktop EmbeddableView split. Each file is empty when its `#if`
+       doesn't match, but excluding outright keeps build output clean. -->
+  <ItemGroup Condition="$(TargetFramework.Contains('-android')) or $(TargetFramework.Contains('-ios'))">
+    <Compile Remove="$(Cocos2DSourceRoot)EmbeddableView\CCGameView.Desktop.cs"
+             Condition="Exists('$(Cocos2DSourceRoot)EmbeddableView\CCGameView.Desktop.cs')" />
+  </ItemGroup>
+  <ItemGroup Condition="!$(TargetFramework.Contains('-android')) and !$(TargetFramework.Contains('-ios'))">
+    <Compile Remove="$(Cocos2DSourceRoot)EmbeddableView\CCGameView.Mobile.cs"
+             Condition="Exists('$(Cocos2DSourceRoot)EmbeddableView\CCGameView.Mobile.cs')" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       Package references (versions centralized in the repo-root
+       Directory.Packages.props)
+       ============================================================ -->
+  <ItemGroup>
+    <!-- MGCB MSBuild content-pipeline task. Ships as a package dependency for
+         parity with the legacy package line. NOTE (verified against 3.8.4.1):
+         the MGCB package provides build/ targets only - no buildTransitive/ -
+         so SDK-style consumers of this package do NOT import the MGCB targets
+         transitively; game projects that use the content pipeline reference
+         MonoGame.Content.Builder.Task directly (standard MonoGame practice).
+         The Cocos2D-Mono.Core metapackage additionally excludes build assets
+         on its dependency edge as future-proofing. -->
+    <PackageReference Include="MonoGame.Content.Builder.Task" />
+    <!-- ICSharpCode.SharpZipLib types are imported by CCParticleSystem.cs.
+         Required on every TFM. -->
+    <PackageReference Include="SharpZipLib" />
+  </ItemGroup>
+
+  <!-- DesktopGL (base TFM) -->
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)'">
+    <PackageReference Include="MonoGame.Framework.DesktopGL" />
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" />
+    <PackageReference Include="System.Drawing.Common" />
+  </ItemGroup>
+
+  <!-- WindowsDX -->
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DWindowsTfm)'">
+    <PackageReference Include="MonoGame.Framework.WindowsDX" />
+    <PackageReference Include="BitMiracle.LibTiff.NET" />
+    <PackageReference Include="System.Drawing.Common" />
+  </ItemGroup>
+
+  <!-- Android -->
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
+    <PackageReference Include="MonoGame.Framework.Android" />
+  </ItemGroup>
+
+  <!-- iOS -->
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
+    <PackageReference Include="MonoGame.Framework.iOS" />
+  </ItemGroup>
+
+  <!-- Source Link (all TFMs) -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       Project references
+       ============================================================ -->
+  <ItemGroup>
+    <ProjectReference Include="..\Box2D\Box2D.csproj" />
+  </ItemGroup>
+
+  <!-- ============================================================
+       NuGet pack content
+       ============================================================ -->
+  <ItemGroup>
+    <None Include="..\..\Logos\logo-small.png" Pack="True" PackagePath="" Visible="false" />
+    <None Include="..\..\README.md"           Pack="True" PackagePath="" Visible="false" Condition="Exists('..\..\README.md')" />
+  </ItemGroup>
+
+</Project>
