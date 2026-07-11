@@ -24,6 +24,7 @@
 - See https://github.com/Cocos2D-Mono/cocos2d-mono for the full changelog.
     </PackageReleaseNotes>
     <PackageIcon>logo-small.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <!-- ============================================================
@@ -99,6 +100,7 @@
   <!-- Pack content -->
   <ItemGroup>
     <None Include="..\..\Logos\logo-small.png" Pack="True" PackagePath="" Visible="false" />
+    <None Include="README.md" Pack="True" PackagePath="" />
   </ItemGroup>
 
 </Project>
