@@ -1082,7 +1082,12 @@ public class CCTexture2D : CCGraphicsResource
     #endregion
 }
 
-public static class GraphicsExtensions
+// Renamed from GraphicsExtensions to avoid a BRUTE C++ name collision with MonoGame's own
+// Microsoft.Xna.Framework.Graphics.GraphicsExtensions.GetSize(SurfaceFormat): BRUTE mangles
+// static calls by class+method only (namespace-blind), so two "GraphicsExtensions.GetSize"
+// classes produce the same C++ symbol and every call site becomes ambiguous. Callers use the
+// .GetSize() extension syntax, so the class name is irrelevant to C# resolution.
+public static class CCGraphicsExtensions
 {
     public static int GetSize(this SurfaceFormat surfaceFormat)
     {
