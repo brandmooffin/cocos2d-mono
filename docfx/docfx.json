@@ -3,8 +3,11 @@
     {
       "src": [
         {
-          "src": "../cocos2d/",
-          "files": ["**/bin/**/Release/**/**.dll"]
+          "src": "../src/",
+          "files": [
+            "Cocos2DMono/bin/Release/net9.0/Cocos2DMono.dll",
+            "Box2D/bin/Release/net9.0/Box2D.dll"
+          ]
         }
       ],
       "dest": "api",
