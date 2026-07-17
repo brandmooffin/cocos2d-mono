@@ -444,12 +444,17 @@ public class CCSprite : CCNode, ICCTextureProtocol
 
     public bool IsAntialiased
     {
-        // A sprite whose texture failed to load (or that was constructed without one) has no
-        // antialias state to read or write. Guarding is not just defensive: under AOT there is
-        // no managed null check, so an unguarded deref is a hard SIGSEGV rather than an NRE.
+#if NETFRAMEWORK
+        // On the AOT console fork a sprite whose texture failed to load (or was constructed
+        // without one) has no antialias state to read or write, and there is no managed null
+        // check under AOT -- an unguarded deref is a hard SIGSEGV, not a catchable NRE. Guard it.
+        // Other targets keep the original throw-on-null so missing-content bugs still surface.
         get { return Texture != null && Texture.IsAntialiased; }
-
         set { if (Texture != null) Texture.IsAntialiased = value; }
+#else
+        get { return Texture.IsAntialiased; }
+        set { Texture.IsAntialiased = value; }
+#endif
     }
 
     #region RGBA protocol

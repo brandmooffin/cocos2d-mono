@@ -1,5 +1,7 @@
 using System;
+#if !NETFRAMEWORK
 using System.Buffers;
+#endif
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -201,12 +203,8 @@ public class CCRawList<T> : IList<T>
             Array.Copy(Elements, index + amount, Elements, index, count - index);
         }
 
-        amount--;
-        while (amount >= 0)
-        {
-            Array.Clear(Elements, count + amount, 1);
-            amount--;
-        }
+        // Clear the vacated tail in one call (was a per-element Array.Clear loop).
+        Array.Clear(Elements, count, amount);
     }
 
     /// <summary>
@@ -648,19 +646,14 @@ public class CCRawList<T> : IList<T>
         }
         if (this.count > 0)
         {
-            int i = this.count;
             this.count -= rangeCount;
-            if (this.count > 0)
+            if (this.count > 0 && (index + rangeCount) < this.count)
             {
-                if ((index + rangeCount) < this.count)
-                {
-                    Array.Copy(this.Elements, index + rangeCount, this.Elements, index, this.count - index);
-                }
-                while (i > this.count)
-                {
-                    Array.Clear(this.Elements, --i, 1);
-                }
+                Array.Copy(this.Elements, index + rangeCount, this.Elements, index, this.count - index);
             }
+            // Clear the vacated tail unconditionally: removing every element (new count == 0)
+            // previously skipped this and left stale references pinned in the backing array.
+            Array.Clear(this.Elements, this.count, rangeCount);
         }
     }
 
