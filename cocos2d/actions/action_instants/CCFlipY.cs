@@ -21,7 +21,7 @@ public class CCFlipY : CCActionInstant
 
     protected CCFlipY(CCFlipY flipY) : base(flipY)
     {
-        InitWithFlipY(_flipY);
+        InitWithFlipY(flipY._flipY);
     }
 
     protected internal override void StartWithTarget(CCNode target)

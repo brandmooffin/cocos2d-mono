@@ -25,7 +25,7 @@ public class CCCallFuncN : CCCallFunc
     public bool InitWithTarget(Action<CCNode> selector)
     {
         _callFuncN = selector;
-        return false;
+        return true;
     }
 
     public override object Copy(ICCCopyable zone)

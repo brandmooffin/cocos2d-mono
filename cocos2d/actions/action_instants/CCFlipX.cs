@@ -19,7 +19,7 @@ public class CCFlipX : CCActionInstant
 
     protected CCFlipX(CCFlipX flipX) : base(flipX)
     {
-        InitWithFlipX(_flipX);
+        InitWithFlipX(flipX._flipX);
     }
 
     protected virtual bool InitWithFlipX(bool x)
