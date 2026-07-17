@@ -1,5 +1,7 @@
 using System;
+#if !NETFRAMEWORK
 using System.Buffers;
+#endif
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,13 +29,9 @@ public class CCRawList<T> : IList<T>
     // When pooling is enabled, buffers are rented from the shared System.Buffers pool.
     // They must be cleared on return when T holds references, so a returned buffer does
     // not keep objects alive until it is rented again (matches List<T>'s own behavior).
-#if NETFRAMEWORK
-    // .NET Framework-era targets (e.g. the PS5 fork's net452) lack
-    // RuntimeHelpers.IsReferenceOrContainsReferences. Clearing unconditionally is the
-    // conservative equivalent: a returned buffer can never keep objects alive through
-    // stale references, at the cost of clearing buffers of pure value types too.
-    private static readonly bool ClearOnReturn = true;
-#else
+    // NETFRAMEWORK (the PS5 fork) never pools — see RentBuffer/ReturnBuffer below — so this
+    // field and the whole System.Buffers dependency are compiled out of that build.
+#if !NETFRAMEWORK
     private static readonly bool ClearOnReturn = RuntimeHelpers.IsReferenceOrContainsReferences<T>();
 #endif
 
@@ -42,6 +40,30 @@ public class CCRawList<T> : IList<T>
     // are keyed off this (not UseArrayPool), so toggling UseArrayPool after construction
     // can never leak a rented buffer or hand a non-rented one back to the shared pool.
     private bool m_ownsPooledBuffer;
+
+    // The PS5 fork transpiles to native C++ via BRUTE, which cannot generate
+    // System.Buffers.ArrayPool<T> (its DefaultArrayPool<T> internals fail codegen, which in
+    // turn breaks CCRawList<T> and every renderer type that includes it). Route all buffer
+    // alloc/free through these helpers so the NETFRAMEWORK build never references ArrayPool<T>:
+    // it always allocates plain arrays. Every other target keeps the pooled fast path.
+    // UseArrayPool is still honored as a flag; on NETFRAMEWORK it simply maps to non-pooled
+    // backing (ReturnBuffer is a no-op there), which is always safe — count stays the
+    // authoritative logical length regardless of the backing array's exact size.
+    private static T[] RentBuffer(int minimumLength)
+    {
+#if NETFRAMEWORK
+        return new T[minimumLength];
+#else
+        return ArrayPool<T>.Shared.Rent(minimumLength);
+#endif
+    }
+
+    private static void ReturnBuffer(T[] buffer)
+    {
+#if !NETFRAMEWORK
+        ArrayPool<T>.Shared.Return(buffer, ClearOnReturn);
+#endif
+    }
 
     ///<summary>
     /// Constructs an empty list.
@@ -52,7 +74,7 @@ public class CCRawList<T> : IList<T>
 
         if (useArrayPool)
         {
-            Elements = ArrayPool<T>.Shared.Rent(4);
+            Elements = RentBuffer(4);
             m_ownsPooledBuffer = true;
         }
         else
@@ -104,7 +126,7 @@ public class CCRawList<T> : IList<T>
             {
                 // Rent rounds the request up to a pooled bucket size; count (not
                 // Elements.Length) remains the authoritative logical length.
-                newArray = ArrayPool<T>.Shared.Rent(value);
+                newArray = RentBuffer(value);
             }
             else
             {
@@ -119,7 +141,7 @@ public class CCRawList<T> : IList<T>
             // Return the OLD buffer based on its real provenance, not the current flag.
             if (m_ownsPooledBuffer && Elements != null)
             {
-                ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
+                ReturnBuffer(Elements);
             }
 
             Elements = newArray;
@@ -166,7 +188,7 @@ public class CCRawList<T> : IList<T>
             Array.Copy(Elements, index + 1, Elements, index, count - index);
         }
 
-        Elements[count] = default(T);
+        Array.Clear(Elements, count, 1);
     }
 
     public void RemoveAt(int index, int amount)
@@ -181,12 +203,8 @@ public class CCRawList<T> : IList<T>
             Array.Copy(Elements, index + amount, Elements, index, count - index);
         }
 
-        amount--;
-        while (amount >= 0)
-        {
-            Elements[count + amount] = default(T);
-            amount--;
-        }
+        // Clear the vacated tail in one call (was a per-element Array.Clear loop).
+        Array.Clear(Elements, count, amount);
     }
 
     /// <summary>
@@ -234,7 +252,7 @@ public class CCRawList<T> : IList<T>
     {
         if (Elements != null && m_ownsPooledBuffer)
         {
-            ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
+            ReturnBuffer(Elements);
             Elements = null;
             m_ownsPooledBuffer = false;
         }
@@ -364,7 +382,7 @@ public class CCRawList<T> : IList<T>
         {
             Elements[index] = Elements[count];
         }
-        Elements[count] = default(T);
+        Array.Clear(Elements, count, 1);
     }
 
     ///<summary>
@@ -628,19 +646,14 @@ public class CCRawList<T> : IList<T>
         }
         if (this.count > 0)
         {
-            int i = this.count;
             this.count -= rangeCount;
-            if (this.count > 0)
+            if (this.count > 0 && (index + rangeCount) < this.count)
             {
-                if ((index + rangeCount) < this.count)
-                {
-                    Array.Copy(this.Elements, index + rangeCount, this.Elements, index, this.count - index);
-                }
-                while (i > this.count)
-                {
-                    this.Elements[--i] = default(T);
-                }
+                Array.Copy(this.Elements, index + rangeCount, this.Elements, index, this.count - index);
             }
+            // Clear the vacated tail unconditionally: removing every element (new count == 0)
+            // previously skipped this and left stale references pinned in the backing array.
+            Array.Clear(this.Elements, this.count, rangeCount);
         }
     }
 
@@ -664,16 +677,16 @@ public class CCRawList<T> : IList<T>
             // smallest pooled bucket that fits count; if that bucket isn't actually
             // smaller than the current buffer, packing would only churn same-sized
             // buffers, so keep the existing one. (count stays authoritative for length.)
-            var packed = ArrayPool<T>.Shared.Rent(minLength);
+            var packed = RentBuffer(minLength);
             if (packed.Length >= Elements.Length)
             {
-                ArrayPool<T>.Shared.Return(packed, ClearOnReturn);
+                ReturnBuffer(packed);
                 return;
             }
             Array.Copy(Elements, packed, count);
             if (m_ownsPooledBuffer)
             {
-                ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
+                ReturnBuffer(Elements);
             }
             Elements = packed;
             m_ownsPooledBuffer = true;
@@ -684,7 +697,7 @@ public class CCRawList<T> : IList<T>
             Array.Copy(Elements, packed, count);
             if (m_ownsPooledBuffer)
             {
-                ArrayPool<T>.Shared.Return(Elements, ClearOnReturn);
+                ReturnBuffer(Elements);
             }
             Elements = packed;
             m_ownsPooledBuffer = false;

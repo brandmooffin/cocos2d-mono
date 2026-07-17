@@ -1082,7 +1082,18 @@ public class CCTexture2D : CCGraphicsResource
     #endregion
 }
 
+// On the AOT console fork (NETFRAMEWORK) this is renamed from GraphicsExtensions to avoid a
+// BRUTE C++ name collision with MonoGame's own
+// Microsoft.Xna.Framework.Graphics.GraphicsExtensions.GetSize(SurfaceFormat): BRUTE mangles
+// static calls by class+method only (namespace-blind), so two "GraphicsExtensions.GetSize"
+// classes produce the same C++ symbol and every call site becomes ambiguous. Callers use the
+// .GetSize() extension syntax, so the class name is irrelevant to C# resolution. Other targets
+// keep the original name so this stays a non-breaking, inert change off the console fork.
+#if NETFRAMEWORK
+public static class CCGraphicsExtensions
+#else
 public static class GraphicsExtensions
+#endif
 {
     public static int GetSize(this SurfaceFormat surfaceFormat)
     {
