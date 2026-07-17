@@ -96,9 +96,9 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
     protected float m_fSkewY;
     protected float m_fVertexZ;
     internal protected uint m_uOrderOfArrival;
-    private int m_nTag;
-    private uint m_collisionCategory = 0xFFFFFFFF;
-    private uint m_collisionCategoryMask = 0xFFFFFFFF;
+    private int _tag;
+    private uint _collisionCategory = 0xFFFFFFFF;
+    private uint _collisionCategoryMask = 0xFFFFFFFF;
     internal int m_nZOrder;
     protected CCActionManager m_pActionManager;
     protected CCCamera m_pCamera;
@@ -113,26 +113,26 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
     protected CCPoint m_obAnchorPoint;
     protected CCPoint m_obAnchorPointInPoints;
     protected CCSize m_obContentSize;
-    private CCAffineTransform m_sInverse;
+    private CCAffineTransform _inverse;
     protected CCPoint m_obPosition;
-    private bool m_bHasFocus = false;
+    private bool _hasFocus = false;
 
-    private bool m_bAdditionalTransformDirty;
-    private CCAffineTransform m_sAdditionalTransform;
+    private bool _additionalTransformDirty;
+    private CCAffineTransform _additionalTransform;
 
-    private string m_sName;
+    private string _name;
 
     // input variables
-    private bool m_bKeypadEnabled;
-		private bool m_bKeyboardEnabled;
-    private bool m_bGamePadEnabled;
-    private bool m_bTouchEnabled;
-    private CCTouchMode m_eTouchMode = CCTouchMode.OneByOne;
-		private CCKeyboardMode m_eKeyboardMode = CCKeyboardMode.All;
-    private int m_nTouchPriority;
-    private bool m_bGamePadDelegatesInited;
+    private bool _keypadEnabled;
+		private bool _keyboardEnabled;
+    private bool _gamePadEnabled;
+    private bool _touchEnabled;
+    private CCTouchMode _touchMode = CCTouchMode.OneByOne;
+		private CCKeyboardMode _keyboardMode = CCKeyboardMode.All;
+    private int _touchPriority;
+    private bool _gamePadDelegatesInited;
 
-    private bool m_initialized = false;
+    private bool _initialized = false;
 
     #region Color & Opacity
     protected byte _displayedOpacity;
@@ -228,7 +228,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
         m_fScaleX = 1.0f;
         m_fScaleY = 1.0f;
         m_bVisible = true;
-        m_nTag = kCCNodeTagInvalid;
+        _tag = kCCNodeTagInvalid;
 
         m_sTransform = CCAffineTransform.Identity;
         m_bInverseDirty = true;
@@ -266,11 +266,11 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
     /// </summary>
     public virtual bool IsSerializable
     {
-        get { return m_isSerializable; }
-        protected set { m_isSerializable = value; }
+        get { return _isSerializable; }
+        protected set { _isSerializable = value; }
     }
 
-    private bool m_isSerializable = true;
+    private bool _isSerializable = true;
 
     /// <summary>
     /// Tells the screen to serialize its state into the given stream.
@@ -292,7 +292,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
         CCSerialization.SerializeData(m_bTransformDirty, sw);
         CCSerialization.SerializeData(m_bReorderChildDirty, sw);
         CCSerialization.SerializeData(m_uOrderOfArrival, sw);
-        CCSerialization.SerializeData(m_nTag, sw);
+        CCSerialization.SerializeData(_tag, sw);
         CCSerialization.SerializeData(m_nZOrder, sw);
         CCSerialization.SerializeData(m_obAnchorPoint, sw);
         CCSerialization.SerializeData(m_obContentSize, sw);
@@ -315,8 +315,8 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
         }
         // Appended after the children block so older saves (which end with
         // children) still deserialize cleanly via the EndOfStream guard.
-        CCSerialization.SerializeData(unchecked((int)m_collisionCategory), sw);
-        CCSerialization.SerializeData(unchecked((int)m_collisionCategoryMask), sw);
+        CCSerialization.SerializeData(unchecked((int)_collisionCategory), sw);
+        CCSerialization.SerializeData(unchecked((int)_collisionCategoryMask), sw);
     }
 
     /// <summary>
@@ -339,7 +339,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
         m_bTransformDirty = CCSerialization.DeSerializeBool(sr);
         m_bReorderChildDirty = CCSerialization.DeSerializeBool(sr);
         m_uOrderOfArrival = (uint)CCSerialization.DeSerializeInt(sr);
-        m_nTag = CCSerialization.DeSerializeInt(sr);
+        _tag = CCSerialization.DeSerializeInt(sr);
         m_nZOrder = CCSerialization.DeSerializeInt(sr);
         AnchorPoint = CCSerialization.DeSerializePoint(sr);
         ContentSize = CCSerialization.DeSerializeSize(sr);
@@ -360,10 +360,10 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
         }
         // Collision fields appended after the children block; older saves
         // end here and fall back to the all-categories default.
-        m_collisionCategory = sr.EndOfStream
+        _collisionCategory = sr.EndOfStream
             ? uint.MaxValue
             : unchecked((uint)CCSerialization.DeSerializeInt(sr));
-        m_collisionCategoryMask = sr.EndOfStream
+        _collisionCategoryMask = sr.EndOfStream
             ? uint.MaxValue
             : unchecked((uint)CCSerialization.DeSerializeInt(sr));
     }
@@ -374,8 +374,8 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
     #region CCIFocusable
     public virtual bool HasFocus
     {
-        get { return (m_bHasFocus); }
-        set { m_bHasFocus = value; }
+        get { return (_hasFocus); }
+        set { _hasFocus = value; }
     }
     public virtual bool CanReceiveFocus
     {
@@ -388,16 +388,16 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
     public int Tag
     {
-        get { return m_nTag; }
+        get { return _tag; }
         set
         {
-            if (m_nTag != value)
+            if (_tag != value)
             {
                 if (Parent != null)
                 {
-                    Parent.ChangedChildTag(this, m_nTag, value);
+                    Parent.ChangedChildTag(this, _tag, value);
                 }
-                m_nTag = value;
+                _tag = value;
             }
         }
     }
@@ -408,8 +408,8 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
     /// </summary>
     public uint CollisionCategory
     {
-        get { return m_collisionCategory; }
-        set { m_collisionCategory = value; }
+        get { return _collisionCategory; }
+        set { _collisionCategory = value; }
     }
 
     /// <summary>
@@ -418,8 +418,8 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
     /// </summary>
     public uint CollisionCategoryMask
     {
-        get { return m_collisionCategoryMask; }
-        set { m_collisionCategoryMask = value; }
+        get { return _collisionCategoryMask; }
+        set { _collisionCategoryMask = value; }
     }
 
     public object UserData
@@ -453,11 +453,11 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
     /// <summary>
     /// The range of the zorder space local to this node.
     /// </summary>
-    private int m_LocalMaxZOrder = int.MinValue;
-    private int m_LocalMinZOrder = int.MaxValue;
+    private int _localMaxZOrder = int.MinValue;
+    private int _localMinZOrder = int.MaxValue;
 
-    public int LocalMaxZForChildren { get { return (m_LocalMaxZOrder); } }
-    public int LocalMInZForChildren { get { return (m_LocalMinZOrder); } }
+    public int LocalMaxZForChildren { get { return (_localMaxZOrder); } }
+    public int LocalMInZForChildren { get { return (_localMinZOrder); } }
 
     public int ZOrder
     {
@@ -870,25 +870,25 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
     {
         m_bTransformDirty = true;
         m_bWorldTransformIsDirty = true;
-        m_bAdditionalTransformDirty = true;
+        _additionalTransformDirty = true;
         m_bInverseDirty = true;
     }
 
     public CCAffineTransform AdditionalTransform
     {
-        get { return m_sAdditionalTransform; }
+        get { return _additionalTransform; }
         set
         {
-            m_sAdditionalTransform = value;
+            _additionalTransform = value;
             m_bTransformDirty = true;
-            m_bAdditionalTransformDirty = true;
+            _additionalTransformDirty = true;
         }
     }
 
     public string Name 
     {
-        get { return m_sName; }
-        set { m_sName = value; }
+        get { return _name; }
+        set { _name = value; }
     }
 
     #region SelectorProtocol Members
@@ -910,7 +910,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
     #endregion
 
-    private bool m_bCleaned = false;
+    private bool _cleaned = false;
 
     ~CCNode()
     {
@@ -937,7 +937,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
     protected virtual void ResetCleanState()
     {
-        m_bCleaned = false;
+        _cleaned = false;
         if (m_pChildren != null && m_pChildren.count > 0)
         {
             CCNode[] elements = m_pChildren.Elements;
@@ -950,7 +950,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
     public virtual void Cleanup()
     {
-        if (m_bCleaned == true)
+        if (_cleaned == true)
         {
             return;
         }
@@ -968,7 +968,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
                 elements[i].Cleanup();
             }
         }
-        m_bCleaned = true;
+        _cleaned = true;
     }
 
     public CCNode GetChildByTag(int tag)
@@ -1019,9 +1019,9 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
         InsertChild(child, zOrder, tag);
 
         child.Parent = this;
-        child.m_nTag = tag;
+        child._tag = tag;
         child.m_uOrderOfArrival = s_globalOrderOfArrival++;
-        if (child.m_bCleaned)
+        if (child._cleaned)
         {
             child.ResetCleanState();
         }
@@ -1031,13 +1031,13 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
             child.OnEnter();
             child.OnEnterTransitionDidFinish();
         }
-        if (zOrder < m_LocalMinZOrder)
+        if (zOrder < _localMinZOrder)
         {
-            m_LocalMinZOrder = zOrder;
+            _localMinZOrder = zOrder;
         }
-        if (zOrder > m_LocalMaxZOrder)
+        if (zOrder > _localMaxZOrder)
         {
-            m_LocalMaxZOrder = zOrder;
+            _localMaxZOrder = zOrder;
         }
         if (CCConfiguration.SharedConfiguration.UseGraphPriority)
         {
@@ -1056,13 +1056,13 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
         ChangedChildTag(child, kCCNodeTagInvalid, tag);
 
         child.m_nZOrder = zOrder;
-        if (zOrder < m_LocalMinZOrder)
+        if (zOrder < _localMinZOrder)
         {
-            m_LocalMinZOrder = zOrder;
+            _localMinZOrder = zOrder;
         }
-        if (zOrder > m_LocalMaxZOrder)
+        if (zOrder > _localMaxZOrder)
         {
-            m_LocalMaxZOrder = zOrder;
+            _localMaxZOrder = zOrder;
         }
     }
     #endregion
@@ -1194,7 +1194,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
         m_pChildren.Remove(child);
 
         // Adjust the zorder range if this removed child sat on the bounds of the range.
-        if (child.ZOrder == m_LocalMaxZOrder || child.ZOrder == m_LocalMinZOrder)
+        if (child.ZOrder == _localMaxZOrder || child.ZOrder == _localMinZOrder)
         {
             UpdateZOrderRange();
         }
@@ -1211,18 +1211,18 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
     protected virtual void UpdateZOrderRange()
     {
-        m_LocalMinZOrder = int.MaxValue;
-        m_LocalMaxZOrder = int.MinValue;
+        _localMinZOrder = int.MaxValue;
+        _localMaxZOrder = int.MinValue;
         for (int i = 0; i < m_pChildren.Count; i++)
         {
             int z = m_pChildren[i].ZOrder;
-            if (z < m_LocalMinZOrder)
+            if (z < _localMinZOrder)
             {
-                m_LocalMinZOrder = z;
+                _localMinZOrder = z;
             }
-            if (z > m_LocalMaxZOrder)
+            if (z > _localMaxZOrder)
             {
-                m_LocalMaxZOrder = z;
+                _localMaxZOrder = z;
             }
         }
     }
@@ -1304,7 +1304,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
     protected void UpdateGraphIndex()
     {
-        m_MyGraphIndex = CCDirector.SharedDirector.GraphIndex++;
+        _myGraphIndex = CCDirector.SharedDirector.GraphIndex++;
         if (TouchEnabled && CCConfiguration.SharedConfiguration.UseGraphPriority)
         {
             CCDirector.SharedDirector.TouchDispatcher.UpdateGraphPriority(this);
@@ -1503,7 +1503,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
         // register 'parent' nodes first
         // since events are propagated in reverse order
-        if (m_bTouchEnabled)
+        if (_touchEnabled)
         {
             RegisterWithTouchDispatcher();
         }
@@ -1524,13 +1524,13 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
         CCDirector director = CCDirector.SharedDirector;
 
         // add this node to concern the kaypad msg
-        if (m_bKeypadEnabled)
+        if (_keypadEnabled)
         {
             director.KeypadDispatcher.AddDelegate(this);
         }
 
 			// tell the director that this node is interested in Keyboard message
-			if (m_bKeyboardEnabled)
+			if (_keyboardEnabled)
 			{
 				director.KeyboardDispatcher.AddDelegate(this);
 			}
@@ -1538,31 +1538,31 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
         if (GamePadEnabled && director.GamePadEnabled)
         {
-            if (!m_bGamePadDelegatesInited)
+            if (!_gamePadDelegatesInited)
             {
-                m_OnGamePadButtonUpdateDelegate = new CCGamePadButtonDelegate(OnGamePadButtonUpdate);
-                m_OnGamePadConnectionUpdateDelegate = new CCGamePadConnectionDelegate(OnGamePadConnectionUpdate);
-                m_OnGamePadDPadUpdateDelegate = new CCGamePadDPadDelegate(OnGamePadDPadUpdate);
-                m_OnGamePadStickUpdateDelegate = new CCGamePadStickUpdateDelegate(OnGamePadStickUpdate);
-                m_OnGamePadTriggerUpdateDelegate = new CCGamePadTriggerDelegate(OnGamePadTriggerUpdate);
-                m_bGamePadDelegatesInited = true;
+                _onGamePadButtonUpdateDelegate = new CCGamePadButtonDelegate(OnGamePadButtonUpdate);
+                _onGamePadConnectionUpdateDelegate = new CCGamePadConnectionDelegate(OnGamePadConnectionUpdate);
+                _onGamePadDPadUpdateDelegate = new CCGamePadDPadDelegate(OnGamePadDPadUpdate);
+                _onGamePadStickUpdateDelegate = new CCGamePadStickUpdateDelegate(OnGamePadStickUpdate);
+                _onGamePadTriggerUpdateDelegate = new CCGamePadTriggerDelegate(OnGamePadTriggerUpdate);
+                _gamePadDelegatesInited = true;
             }
 
             CCApplication application = CCApplication.SharedApplication;
 
-            application.GamePadButtonUpdate += m_OnGamePadButtonUpdateDelegate;
-            application.GamePadConnectionUpdate += m_OnGamePadConnectionUpdateDelegate;
-            application.GamePadDPadUpdate += m_OnGamePadDPadUpdateDelegate;
-            application.GamePadStickUpdate += m_OnGamePadStickUpdateDelegate;
-            application.GamePadTriggerUpdate += m_OnGamePadTriggerUpdateDelegate;
+            application.GamePadButtonUpdate += _onGamePadButtonUpdateDelegate;
+            application.GamePadConnectionUpdate += _onGamePadConnectionUpdateDelegate;
+            application.GamePadDPadUpdate += _onGamePadDPadUpdateDelegate;
+            application.GamePadStickUpdate += _onGamePadStickUpdateDelegate;
+            application.GamePadTriggerUpdate += _onGamePadTriggerUpdateDelegate;
         }
 
-        if (!m_initialized)
+        if (!_initialized)
         {
             AddedToScene();
         }
 
-        m_initialized = true;
+        _initialized = true;
         /*
         if (m_nScriptHandler)
         {
@@ -1604,18 +1604,18 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
         CCDirector director = CCDirector.SharedDirector;
 
-        if (m_bTouchEnabled)
+        if (_touchEnabled)
         {
             director.TouchDispatcher.RemoveDelegate(this);
             //unregisterScriptTouchHandler();
         }
 
-        if (m_bKeypadEnabled)
+        if (_keypadEnabled)
         {
             director.KeypadDispatcher.RemoveDelegate(this);
         }
 
-			if (m_bKeyboardEnabled)
+			if (_keyboardEnabled)
 			{
 				director.KeyboardDispatcher.RemoveDelegate(this);
 			}
@@ -1623,11 +1623,11 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
         if (GamePadEnabled && director.GamePadEnabled)
         {
             CCApplication application = CCApplication.SharedApplication;
-            application.GamePadButtonUpdate -= m_OnGamePadButtonUpdateDelegate;
-            application.GamePadConnectionUpdate -= m_OnGamePadConnectionUpdateDelegate;
-            application.GamePadDPadUpdate -= m_OnGamePadDPadUpdateDelegate;
-            application.GamePadStickUpdate -= m_OnGamePadStickUpdateDelegate;
-            application.GamePadTriggerUpdate -= m_OnGamePadTriggerUpdateDelegate;
+            application.GamePadButtonUpdate -= _onGamePadButtonUpdateDelegate;
+            application.GamePadConnectionUpdate -= _onGamePadConnectionUpdateDelegate;
+            application.GamePadDPadUpdate -= _onGamePadDPadUpdateDelegate;
+            application.GamePadStickUpdate -= _onGamePadStickUpdateDelegate;
+            application.GamePadTriggerUpdate -= _onGamePadTriggerUpdateDelegate;
         }
 
         PauseSchedulerAndActions();
@@ -1820,7 +1820,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
     public void Resume()
     {
         ResumeSchedulerAndActions();
-        if (m_bTouchEnabled)
+        if (_touchEnabled)
         {
             RegisterWithTouchDispatcher();
         }
@@ -1922,10 +1922,10 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
                 }
             }
 
-            if (m_bAdditionalTransformDirty)
+            if (_additionalTransformDirty)
             {
-                m_sTransform.Concat(ref m_sAdditionalTransform);
-                m_bAdditionalTransformDirty = false;
+                m_sTransform.Concat(ref _additionalTransform);
+                _additionalTransformDirty = false;
             }
 
             m_bTransformDirty = false;
@@ -1975,10 +1975,10 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
     {
         if (m_bInverseDirty)
         {
-            m_sInverse = CCAffineTransform.Invert(NodeToParentTransform());
+            _inverse = CCAffineTransform.Invert(NodeToParentTransform());
             m_bInverseDirty = false;
         }
-        return m_sInverse;
+        return _inverse;
     }
 
     public CCAffineTransform NodeToWorldTransform()
@@ -2093,7 +2093,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
             return;
         }
         */
-        if (m_eTouchMode == CCTouchMode.AllAtOnce)
+        if (_touchMode == CCTouchMode.AllAtOnce)
         {
             pDispatcher.AddStandardDelegate(this, TouchPriority);
         }
@@ -2105,14 +2105,14 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
     public CCTouchMode TouchMode
     {
-        get { return m_eTouchMode; }
+        get { return _touchMode; }
         set
         {
-            if (m_eTouchMode != value)
+            if (_touchMode != value)
             {
-                m_eTouchMode = value;
+                _touchMode = value;
 
-                if (m_bTouchEnabled)
+                if (_touchEnabled)
                 {
                     TouchEnabled = false;
                     TouchEnabled = true;
@@ -2123,12 +2123,12 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
     public virtual bool TouchEnabled
     {
-        get { return m_bTouchEnabled; }
+        get { return _touchEnabled; }
         set
         {
-            if (m_bTouchEnabled != value)
+            if (_touchEnabled != value)
             {
-                m_bTouchEnabled = value;
+                _touchEnabled = value;
 
                 if (m_bRunning)
                 {
@@ -2145,21 +2145,21 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
         }
     }
 
-    private bool m_bVisibleToTouches = true;
+    private bool _visibleToTouches = true;
 
     public virtual bool VisibleForTouches
     {
         get
         {
-            return (Visible && m_bVisibleToTouches);
+            return (Visible && _visibleToTouches);
         }
         set
         {
-            m_bVisibleToTouches = value;
+            _visibleToTouches = value;
         }
     }
 
-    private int m_MyGraphIndex = 0;
+    private int _myGraphIndex = 0;
 
     /// <summary>
     /// Get or set the priority at which touches are sent to this node. When CCConfiguration.UseGraphPriority is true,
@@ -2169,18 +2169,18 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
     public virtual int TouchPriority
     {
         get {
-            int p = m_nTouchPriority;
+            int p = _touchPriority;
             if (CCConfiguration.SharedConfiguration.UseGraphPriority)
             {
-                return (m_MyGraphIndex);
+                return (_myGraphIndex);
             }
             return p;
         }
         set
         {
-            if (m_nTouchPriority != value)
+            if (_touchPriority != value)
             {
-                m_nTouchPriority = value;
+                _touchPriority = value;
 
                 if (m_bRunning)
                 {
@@ -2193,12 +2193,12 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
     public virtual bool KeypadEnabled
     {
-        get { return m_bKeypadEnabled; }
+        get { return _keypadEnabled; }
         set
         {
-            if (value != m_bKeypadEnabled)
+            if (value != _keypadEnabled)
             {
-                m_bKeypadEnabled = value;
+                _keypadEnabled = value;
 
                 if (m_bRunning)
                 {
@@ -2217,12 +2217,12 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
 		public virtual bool KeyboardEnabled
 		{
-			get { return m_bKeyboardEnabled; }
+			get { return _keyboardEnabled; }
 			set
 			{
-				if (value != m_bKeyboardEnabled)
+				if (value != _keyboardEnabled)
 				{
-					m_bKeyboardEnabled = value;
+					_keyboardEnabled = value;
 
 					if (m_bRunning)
 					{
@@ -2241,24 +2241,24 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
 		public virtual CCKeyboardMode KeyboardMode
 		{
-			get { return m_eKeyboardMode; }
+			get { return _keyboardMode; }
 			set
 			{
-				if (m_eKeyboardMode != value)
+				if (_keyboardMode != value)
 				{
-					m_eKeyboardMode = value;
+					_keyboardMode = value;
 				}
 			}
 		}
 
     public virtual bool GamePadEnabled
     {
-        get { return (m_bGamePadEnabled); }
+        get { return (_gamePadEnabled); }
         set
         {
-            if (value != m_bGamePadEnabled)
+            if (value != _gamePadEnabled)
             {
-                m_bGamePadEnabled = value;
+                _gamePadEnabled = value;
             }
             if (value && !CCDirector.SharedDirector.GamePadEnabled)
             {
@@ -2340,11 +2340,11 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 		#endregion
 
     #region GamePad Support
-    private CCGamePadButtonDelegate m_OnGamePadButtonUpdateDelegate;
-    private CCGamePadConnectionDelegate m_OnGamePadConnectionUpdateDelegate;
-    private CCGamePadDPadDelegate m_OnGamePadDPadUpdateDelegate;
-    private CCGamePadStickUpdateDelegate m_OnGamePadStickUpdateDelegate;
-    private CCGamePadTriggerDelegate m_OnGamePadTriggerUpdateDelegate;
+    private CCGamePadButtonDelegate _onGamePadButtonUpdateDelegate;
+    private CCGamePadConnectionDelegate _onGamePadConnectionUpdateDelegate;
+    private CCGamePadDPadDelegate _onGamePadDPadUpdateDelegate;
+    private CCGamePadStickUpdateDelegate _onGamePadStickUpdateDelegate;
+    private CCGamePadTriggerDelegate _onGamePadTriggerUpdateDelegate;
 
     protected virtual void OnGamePadTriggerUpdate(float leftTriggerStrength, float rightTriggerStrength, Microsoft.Xna.Framework.PlayerIndex player)
     {
@@ -2408,7 +2408,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
                 var child = Children.Elements[index];
                 if (child != null)
                 {
-                    if (!child.m_bCleaned)
+                    if (!child._cleaned)
                     {
                         child.OnExit();
                     }
