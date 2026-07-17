@@ -10,7 +10,7 @@ public class CCPlace : CCActionInstant
 
     protected CCPlace(CCPlace place) : base(place)
     {
-        InitWithPosition(_position);
+        InitWithPosition(place._position);
     }
 
     public CCPlace(CCPoint pos)
