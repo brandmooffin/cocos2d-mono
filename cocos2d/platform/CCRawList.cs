@@ -39,7 +39,7 @@ public class CCRawList<T> : IList<T>
     // ArrayPool<T>.Shared, independent of the public, mutable UseArrayPool flag. Returns
     // are keyed off this (not UseArrayPool), so toggling UseArrayPool after construction
     // can never leak a rented buffer or hand a non-rented one back to the shared pool.
-    private bool m_ownsPooledBuffer;
+    private bool _ownsPooledBuffer;
 
     // The PS5 fork transpiles to native C++ via BRUTE, which cannot generate
     // System.Buffers.ArrayPool<T> (its DefaultArrayPool<T> internals fail codegen, which in
@@ -75,7 +75,7 @@ public class CCRawList<T> : IList<T>
         if (useArrayPool)
         {
             Elements = RentBuffer(4);
-            m_ownsPooledBuffer = true;
+            _ownsPooledBuffer = true;
         }
         else
         {
@@ -139,13 +139,13 @@ public class CCRawList<T> : IList<T>
             }
 
             // Return the OLD buffer based on its real provenance, not the current flag.
-            if (m_ownsPooledBuffer && Elements != null)
+            if (_ownsPooledBuffer && Elements != null)
             {
                 ReturnBuffer(Elements);
             }
 
             Elements = newArray;
-            m_ownsPooledBuffer = newArrayIsPooled;
+            _ownsPooledBuffer = newArrayIsPooled;
 
             Debug.Assert(Elements != null);
         }
@@ -250,11 +250,11 @@ public class CCRawList<T> : IList<T>
 
     public void Free()
     {
-        if (Elements != null && m_ownsPooledBuffer)
+        if (Elements != null && _ownsPooledBuffer)
         {
             ReturnBuffer(Elements);
             Elements = null;
-            m_ownsPooledBuffer = false;
+            _ownsPooledBuffer = false;
         }
     }
 
@@ -684,23 +684,23 @@ public class CCRawList<T> : IList<T>
                 return;
             }
             Array.Copy(Elements, packed, count);
-            if (m_ownsPooledBuffer)
+            if (_ownsPooledBuffer)
             {
                 ReturnBuffer(Elements);
             }
             Elements = packed;
-            m_ownsPooledBuffer = true;
+            _ownsPooledBuffer = true;
         }
         else
         {
             var packed = new T[minLength];
             Array.Copy(Elements, packed, count);
-            if (m_ownsPooledBuffer)
+            if (_ownsPooledBuffer)
             {
                 ReturnBuffer(Elements);
             }
             Elements = packed;
-            m_ownsPooledBuffer = false;
+            _ownsPooledBuffer = false;
         }
     }
 
