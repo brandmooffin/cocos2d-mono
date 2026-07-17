@@ -9,7 +9,7 @@ public class CCAnimate : CCActionInterval
     protected List<float> m_pSplitTimes = new List<float>();
     protected int m_nNextFrame;
     protected CCSpriteFrame m_pOrigFrame;
-    private uint m_uExecutedLoops;
+    private uint _executedLoops;
 
     public CCAnimate(CCAnimation pAnimation)
     {
@@ -32,7 +32,7 @@ public class CCAnimate : CCActionInterval
             m_nNextFrame = 0;
             m_pAnimation = pAnimation;
             m_pOrigFrame = null;
-            m_uExecutedLoops = 0;
+            _executedLoops = 0;
 
             m_pSplitTimes.Capacity = pAnimation.Frames.Count;
 
@@ -83,7 +83,7 @@ public class CCAnimate : CCActionInterval
         }
 
         m_nNextFrame = 0;
-        m_uExecutedLoops = 0;
+        _executedLoops = 0;
     }
 
     public override void Stop()
@@ -105,10 +105,10 @@ public class CCAnimate : CCActionInterval
 
             // new loop?  If so, reset frame counter
             var loopNumber = (uint) t;
-            if (loopNumber > m_uExecutedLoops)
+            if (loopNumber > _executedLoops)
             {
                 m_nNextFrame = 0;
-                m_uExecutedLoops++;
+                _executedLoops++;
             }
 
             // new t for animations

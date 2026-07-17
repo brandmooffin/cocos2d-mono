@@ -5,82 +5,82 @@ namespace Cocos2D;
 
 public class CCActionManager : ICCSelectorProtocol
 {
-    private static CCNode[] m_pTmpKeysArray = new CCNode[128];
-    private bool m_bCurrentTargetSalvaged;
-    private HashElement m_pCurrentTarget;
-    private readonly Dictionary<object, HashElement> m_pTargets = new Dictionary<object, HashElement>();
+    private static CCNode[] _tmpKeysArray = new CCNode[128];
+    private bool _currentTargetSalvaged;
+    private HashElement _currentTarget;
+    private readonly Dictionary<object, HashElement> _targets = new Dictionary<object, HashElement>();
 
     #region SelectorProtocol Members
 
     public void Update(float dt)
     {
-        int count = m_pTargets.Keys.Count;
-        while (m_pTmpKeysArray.Length < count)
+        int count = _targets.Keys.Count;
+        while (_tmpKeysArray.Length < count)
         {
-            m_pTmpKeysArray = new CCNode[m_pTmpKeysArray.Length * 2];
+            _tmpKeysArray = new CCNode[_tmpKeysArray.Length * 2];
         }
 
-        m_pTargets.Keys.CopyTo(m_pTmpKeysArray, 0);
+        _targets.Keys.CopyTo(_tmpKeysArray, 0);
 
         for (int i = 0; i < count; i++)
         {
             HashElement elt;
-            if (!m_pTargets.TryGetValue(m_pTmpKeysArray[i], out elt))
+            if (!_targets.TryGetValue(_tmpKeysArray[i], out elt))
             {
                 continue;
             }
 
-            m_pCurrentTarget = elt;
-            m_bCurrentTargetSalvaged = false;
+            _currentTarget = elt;
+            _currentTargetSalvaged = false;
 
-            if (!m_pCurrentTarget.Paused)
+            if (!_currentTarget.Paused)
             {
                 // The 'actions' may change while inside this loop.
-                for (m_pCurrentTarget.ActionIndex = 0;
-                     m_pCurrentTarget.ActionIndex < m_pCurrentTarget.Actions.Count;
-                     m_pCurrentTarget.ActionIndex++)
+                for (_currentTarget.ActionIndex = 0;
+                     _currentTarget.ActionIndex < _currentTarget.Actions.Count;
+                     _currentTarget.ActionIndex++)
                 {
-                    m_pCurrentTarget.CurrentAction = m_pCurrentTarget.Actions[m_pCurrentTarget.ActionIndex];
-                    if (m_pCurrentTarget.CurrentAction == null)
+                    _currentTarget.CurrentAction = _currentTarget.Actions[_currentTarget.ActionIndex];
+                    if (_currentTarget.CurrentAction == null)
                     {
                         continue;
                     }
 
-                    m_pCurrentTarget.CurrentActionSalvaged = false;
+                    _currentTarget.CurrentActionSalvaged = false;
 
-                    m_pCurrentTarget.CurrentAction.Step(dt);
+                    _currentTarget.CurrentAction.Step(dt);
 
-                    if (m_pCurrentTarget.CurrentActionSalvaged)
+                    if (_currentTarget.CurrentActionSalvaged)
                     {
                         // The currentAction told the node to remove it. To prevent the action from
                         // accidentally deallocating itself before finishing its step, we retained
                         // it. Now that step is done, it's safe to release it.
 
-                        //m_pCurrentTarget->currentAction->release();
+                        //_currentTarget->currentAction->release();
                     }
-                    else if (m_pCurrentTarget.CurrentAction.IsDone)
+                    else if (_currentTarget.CurrentAction.IsDone)
                     {
-                        m_pCurrentTarget.CurrentAction.Stop();
+                        _currentTarget.CurrentAction.Stop();
 
-                        CCAction action = m_pCurrentTarget.CurrentAction;
+                        CCAction action = _currentTarget.CurrentAction;
                         // Make currentAction nil to prevent removeAction from salvaging it.
-                        m_pCurrentTarget.CurrentAction = null;
+                        _currentTarget.CurrentAction = null;
                         RemoveAction(action);
                     }
 
-                    m_pCurrentTarget.CurrentAction = null;
+                    _currentTarget.CurrentAction = null;
                 }
             }
 
             // only delete currentTarget if no actions were scheduled during the cycle (issue #481)
-            if (m_bCurrentTargetSalvaged && m_pCurrentTarget.Actions.Count == 0)
+            if (_currentTargetSalvaged && _currentTarget.Actions.Count == 0)
             {
-                DeleteHashElement(m_pCurrentTarget);
+                DeleteHashElement(_currentTarget);
             }
         }
 
         // issue #635
-        m_pCurrentTarget = null;
+        _currentTarget = null;
     }
 
     #endregion
@@ -93,7 +93,7 @@ public class CCActionManager : ICCSelectorProtocol
     protected void DeleteHashElement(HashElement element)
     {
         element.Actions.Clear();
-        m_pTargets.Remove(element.Target);
+        _targets.Remove(element.Target);
         element.Target = null;
     }
 
@@ -124,9 +124,9 @@ public class CCActionManager : ICCSelectorProtocol
 
         if (element.Actions.Count == 0)
         {
-            if (m_pCurrentTarget == element)
+            if (_currentTarget == element)
             {
-                m_bCurrentTargetSalvaged = true;
+                _currentTargetSalvaged = true;
             }
             else
             {
@@ -138,7 +138,7 @@ public class CCActionManager : ICCSelectorProtocol
     public void PauseTarget(object target)
     {
         HashElement element;
-        if (m_pTargets.TryGetValue(target, out element))
+        if (_targets.TryGetValue(target, out element))
         {
             element.Paused = true;
         }
@@ -147,7 +147,7 @@ public class CCActionManager : ICCSelectorProtocol
     public void ResumeTarget(object target)
     {
         HashElement element;
-        if (m_pTargets.TryGetValue(target, out element))
+        if (_targets.TryGetValue(target, out element))
         {
             element.Paused = false;
         }
@@ -157,7 +157,7 @@ public class CCActionManager : ICCSelectorProtocol
     {
         var idsWithActions = new List<object>();
 
-        foreach (var element in m_pTargets.Values)
+        foreach (var element in _targets.Values)
         {
             if (!element.Paused)
             {
@@ -183,12 +183,12 @@ public class CCActionManager : ICCSelectorProtocol
         Debug.Assert(target != null);
 
         HashElement element;
-        if (!m_pTargets.TryGetValue(target, out element))
+        if (!_targets.TryGetValue(target, out element))
         {
             element = new HashElement();
             element.Paused = paused;
             element.Target = target;
-            m_pTargets.Add(target, element);
+            _targets.Add(target, element);
         }
 
         ActionAllocWithHashElement(element);
@@ -201,17 +201,17 @@ public class CCActionManager : ICCSelectorProtocol
 
     public void RemoveAllActions()
     {
-        int count = m_pTargets.Keys.Count;
-        if (m_pTmpKeysArray.Length < count)
+        int count = _targets.Keys.Count;
+        if (_tmpKeysArray.Length < count)
         {
-            m_pTmpKeysArray = new CCNode[m_pTmpKeysArray.Length * 2];
+            _tmpKeysArray = new CCNode[_tmpKeysArray.Length * 2];
         }
 
-        m_pTargets.Keys.CopyTo(m_pTmpKeysArray, 0);
+        _targets.Keys.CopyTo(_tmpKeysArray, 0);
 
         for (int i = 0; i < count; i++)
         {
-            RemoveAllActionsFromTarget(m_pTmpKeysArray[i]);
+            RemoveAllActionsFromTarget(_tmpKeysArray[i]);
         }
     }
 
@@ -223,7 +223,7 @@ public class CCActionManager : ICCSelectorProtocol
         }
 
         HashElement element;
-        if (m_pTargets.TryGetValue(target, out element))
+        if (_targets.TryGetValue(target, out element))
         {
             if (element.Actions.Contains(element.CurrentAction) && (!element.CurrentActionSalvaged))
             {
@@ -232,9 +232,9 @@ public class CCActionManager : ICCSelectorProtocol
 
             element.Actions.Clear();
 
-            if (m_pCurrentTarget == element)
+            if (_currentTarget == element)
             {
-                m_bCurrentTargetSalvaged = true;
+                _currentTargetSalvaged = true;
             }
             else
             {
@@ -252,7 +252,7 @@ public class CCActionManager : ICCSelectorProtocol
 
         object target = action.OriginalTarget;
         HashElement element;
-        if (m_pTargets.TryGetValue(target, out element))
+        if (_targets.TryGetValue(target, out element))
         {
             int i = element.Actions.IndexOf(action);
 
@@ -277,7 +277,7 @@ public class CCActionManager : ICCSelectorProtocol
         Debug.Assert(target != null);
 
         HashElement element;
-        if (m_pTargets.TryGetValue(target, out element))
+        if (_targets.TryGetValue(target, out element))
         {
             int limit = element.Actions.Count;
             for (int i = 0; i < limit; i++)
@@ -303,7 +303,7 @@ public class CCActionManager : ICCSelectorProtocol
         Debug.Assert(tag != CCAction.kInvalidTag);
 
         HashElement element;
-        if (m_pTargets.TryGetValue(target, out element))
+        if (_targets.TryGetValue(target, out element))
         {
             if (element.Actions != null)
             {
@@ -330,7 +330,7 @@ public class CCActionManager : ICCSelectorProtocol
     public int NumberOfRunningActionsInTarget(CCNode target)
     {
         HashElement element;
-        if (m_pTargets.TryGetValue(target, out element))
+        if (_targets.TryGetValue(target, out element))
         {
             return (element.Actions != null) ? element.Actions.Count : 0;
         }
