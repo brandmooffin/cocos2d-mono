@@ -9,7 +9,7 @@ namespace Cocos2DMono.UnitTests;
 // protected copy constructor - `return new CCFlipX(this)` - which is the only way to
 // reach that constructor from outside. The copied action's state is private, so these
 // tests observe it the way a consumer would: run the copy and assert on the target.
-public class CCActionCopyTests
+public class CCActionCopyTests : System.IDisposable
 {
     [Fact]
     public void CCPlace_Copy_PreservesPosition()
@@ -71,5 +71,11 @@ public class CCActionCopyTests
         node.RunAction(copy);
         copy.Update(1f);
         Assert.True(invoked);
+    }
+
+    public void Dispose()
+    {
+        // CCNode.RunAction registers actions with the shared ActionManager; clean it up to keep tests isolated.
+        CCDirector.SharedDirector.ActionManager.RemoveAllActions();
     }
 }
