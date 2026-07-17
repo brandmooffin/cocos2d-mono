@@ -2,7 +2,7 @@ namespace Cocos2D;
 
 public class CCPlace : CCActionInstant
 {
-    private CCPoint m_tPosition;
+    private CCPoint _position;
 
     protected CCPlace()
     {
@@ -10,7 +10,7 @@ public class CCPlace : CCActionInstant
 
     protected CCPlace(CCPlace place) : base(place)
     {
-        InitWithPosition(m_tPosition);
+        InitWithPosition(_position);
     }
 
     public CCPlace(CCPoint pos)
@@ -20,7 +20,7 @@ public class CCPlace : CCActionInstant
 
     protected virtual bool InitWithPosition(CCPoint pos)
     {
-        m_tPosition = pos;
+        _position = pos;
         return true;
     }
 
@@ -30,7 +30,7 @@ public class CCPlace : CCActionInstant
         {
             var pRet = (CCPlace) (pZone);
             base.Copy(pZone);
-            pRet.InitWithPosition(m_tPosition);
+            pRet.InitWithPosition(_position);
             return pRet;
         }
         return new CCPlace(this);
@@ -39,6 +39,6 @@ public class CCPlace : CCActionInstant
     protected internal override void StartWithTarget(CCNode target)
     {
         base.StartWithTarget(target);
-        m_pTarget.Position = m_tPosition;
+        m_pTarget.Position = _position;
     }
 }

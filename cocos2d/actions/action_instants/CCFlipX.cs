@@ -2,7 +2,7 @@ namespace Cocos2D;
 
 public class CCFlipX : CCActionInstant
 {
-    private bool m_bFlipX;
+    private bool _flipX;
 
     protected CCFlipX()
     {
@@ -19,12 +19,12 @@ public class CCFlipX : CCActionInstant
 
     protected CCFlipX(CCFlipX flipX) : base(flipX)
     {
-        InitWithFlipX(m_bFlipX);
+        InitWithFlipX(_flipX);
     }
 
     protected virtual bool InitWithFlipX(bool x)
     {
-        m_bFlipX = x;
+        _flipX = x;
         return true;
     }
 
@@ -39,12 +39,12 @@ public class CCFlipX : CCActionInstant
         {
             throw (new System.NotSupportedException("FlipX and FlipY actions only work on CCSprite instances."));
         }
-        ((CCSprite) (target)).FlipX = m_bFlipX;
+        ((CCSprite) (target)).FlipX = _flipX;
     }
 
     public override CCFiniteTimeAction Reverse()
     {
-        return new CCFlipX(!m_bFlipX);
+        return new CCFlipX(!_flipX);
     }
 
     public override object Copy(ICCCopyable pZone)
@@ -53,7 +53,7 @@ public class CCFlipX : CCActionInstant
         {
             var pRet = (CCFlipX) (pZone);
             base.Copy(pZone);
-            pRet.InitWithFlipX(m_bFlipX);
+            pRet.InitWithFlipX(_flipX);
             return pRet;
         }
         return new CCFlipX(this);
