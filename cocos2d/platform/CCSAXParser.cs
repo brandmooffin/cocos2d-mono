@@ -33,7 +33,7 @@ namespace Cocos2D;
 
 public class CCSAXParser
 {
-    private ICCSAXDelegator m_pDelegator;
+    private ICCSAXDelegator _delegator;
 
     public bool Init(string pszEncoding)
     {
@@ -159,21 +159,21 @@ public class CCSAXParser
 
     public void SetDelegator(ICCSAXDelegator pDelegator)
     {
-        m_pDelegator = pDelegator;
+        _delegator = pDelegator;
     }
 
     public static void StartElement(object ctx, string name, string[] atts)
     {
-        ((CCSAXParser) (ctx)).m_pDelegator.StartElement(ctx, name, atts);
+        ((CCSAXParser) (ctx))._delegator.StartElement(ctx, name, atts);
     }
 
     public static void EndElement(object ctx, string name)
     {
-        ((CCSAXParser) (ctx)).m_pDelegator.EndElement(ctx, name);
+        ((CCSAXParser) (ctx))._delegator.EndElement(ctx, name);
     }
 
     public static void TextHandler(object ctx, byte[] ch, int len)
     {
-        ((CCSAXParser) (ctx)).m_pDelegator.TextHandler(ctx, ch, len);
+        ((CCSAXParser) (ctx))._delegator.TextHandler(ctx, ch, len);
     }
 }

@@ -166,9 +166,9 @@ public class CCFocusManager
     }
 
 
-    private long m_lTimeOfLastFocus = 0L;
-    private bool m_bScrollingPrevious = false;
-    private bool m_bScrollingNext = false;
+    private long _timeOfLastFocus = 0L;
+    private bool _scrollingPrevious = false;
+    private bool _scrollingNext = false;
     /// <summary>
     /// Scrolling focus delay used to slow down automatic focus changes when the dpad is held.
     /// </summary>
@@ -194,15 +194,15 @@ public class CCFocusManager
         }
         if (leftButton == CCGamePadButtonStatus.Released || upButton == CCGamePadButtonStatus.Released || rightButton == CCGamePadButtonStatus.Released || downButton == CCGamePadButtonStatus.Released)
         {
-            m_bScrollingPrevious = false;
-            m_lTimeOfLastFocus = 0L;
+            _scrollingPrevious = false;
+            _timeOfLastFocus = 0L;
         }
         // Left and right d-pad shuffle through the menus
         else if (leftButton == CCGamePadButtonStatus.Pressed || upButton == CCGamePadButtonStatus.Pressed)
         {
-            if (m_bScrollingPrevious)
+            if (_scrollingPrevious)
             {
-                TimeSpan ts = new TimeSpan(DateTime.Now.Ticks - m_lTimeOfLastFocus);
+                TimeSpan ts = new TimeSpan(DateTime.Now.Ticks - _timeOfLastFocus);
                 if (ts.TotalMilliseconds > MenuScrollDelay)
                 {
                     FocusPreviousItem();
@@ -210,15 +210,15 @@ public class CCFocusManager
             }
             else
             {
-                m_bScrollingPrevious = true;
-                m_lTimeOfLastFocus = DateTime.Now.Ticks;
+                _scrollingPrevious = true;
+                _timeOfLastFocus = DateTime.Now.Ticks;
             }
         }
         else if (rightButton == CCGamePadButtonStatus.Pressed || downButton == CCGamePadButtonStatus.Pressed)
         {
-            if (m_bScrollingNext)
+            if (_scrollingNext)
             {
-                TimeSpan ts = new TimeSpan(DateTime.Now.Ticks - m_lTimeOfLastFocus);
+                TimeSpan ts = new TimeSpan(DateTime.Now.Ticks - _timeOfLastFocus);
                 if (ts.TotalMilliseconds > MenuScrollDelay)
                 {
                     FocusNextItem();
@@ -226,8 +226,8 @@ public class CCFocusManager
             }
             else
             {
-                m_bScrollingNext = true;
-                m_lTimeOfLastFocus = DateTime.Now.Ticks;
+                _scrollingNext = true;
+                _timeOfLastFocus = DateTime.Now.Ticks;
             }
         }
     }
