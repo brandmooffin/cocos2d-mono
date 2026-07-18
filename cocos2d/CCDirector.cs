@@ -50,55 +50,55 @@ public abstract class CCDirector
     });
 
     private readonly float kDefaultFPS = 60f;
-    private readonly List<CCScene> m_pobScenesStack = new List<CCScene>();
-    private bool m_bNextDeltaTimeZero;
-    private bool m_bPaused;
+    private readonly List<CCScene> _scenesStack = new List<CCScene>();
+    private bool _nextDeltaTimeZero;
+    private bool _paused;
     protected bool m_bPurgeDirectorInNextLoop; // this flag will be set to true in end()
-    private bool m_bSendCleanupToScene;
+    private bool _sendCleanupToScene;
     protected double m_dAnimationInterval;
     protected double m_dOldAnimationInterval;
-    private CCDirectorProjection m_eProjection;
-    private float m_fContentScaleFactor = 1.0f;
-    private float m_fDeltaTime;
-    private bool m_NeedsInit = true;
+    private CCDirectorProjection _projection;
+    private float _contentScaleFactor = 1.0f;
+    private float _deltaTime;
+    private bool _needsInit = true;
     internal CCSize m_obWinSizeInPoints;
 		
-    private CCAccelerometer m_pAccelerometer;
-		private CCActionManager m_pActionManager;
-    private CCKeypadDispatcher m_pKeypadDispatcher;
-		private CCKeyboardDispatcher m_pKeyboardDispatcher;
-    private CCScene m_pNextScene;
-    private CCNode m_pNotificationNode;
+    private CCAccelerometer _accelerometer;
+		private CCActionManager _actionManager;
+    private CCKeypadDispatcher _keypadDispatcher;
+		private CCKeyboardDispatcher _keyboardDispatcher;
+    private CCScene _nextScene;
+    private CCNode _notificationNode;
 
-    private ICCDirectorDelegate m_pProjectionDelegate;
-    private CCScene m_pRunningScene;
-    private CCScheduler m_pScheduler;
-    private CCTouchDispatcher m_pTouchDispatcher;
+    private ICCDirectorDelegate _projectionDelegate;
+    private CCScene _runningScene;
+    private CCScheduler _scheduler;
+    private CCTouchDispatcher _touchDispatcher;
 
-    private bool m_bDisplayStats;
+    private bool _displayStats;
     
-    private uint m_uTotalFrames;
-    private float m_fAccumDt;
-    private uint m_uUpdateCount;
-    private float m_fAccumDraw;
-    private uint m_uDrawCount;
-    private float m_fAccumUpdate;
+    private uint _totalFrames;
+    private float _accumDt;
+    private uint _updateCount;
+    private float _accumDraw;
+    private uint _drawCount;
+    private float _accumUpdate;
     
-    private CCLabel m_pFPSLabel;
-    private CCLabel m_pUpdateTimeLabel;
-    private CCLabel m_pDrawTimeLabel;
-    private CCLabel m_pDrawsLabel;
-    private CCLabel m_pMemoryLabel;
-    private CCLabel m_pGCLabel;
+    private CCLabel _fpsLabel;
+    private CCLabel _updateTimeLabel;
+    private CCLabel _drawTimeLabel;
+    private CCLabel _drawsLabel;
+    private CCLabel _memoryLabel;
+    private CCLabel _gcLabel;
 
     // Stopwatch for measure the time.
-    Stopwatch m_pStopwatch;
+    Stopwatch _stopwatch;
     
     #region State Management
 		
-    private string m_sStorageDirName = "cocos2dDirector";
-    private string m_sSaveFileName = "SceneList.dat";
-    private string m_sSceneSaveFileName = "Scene{0}.dat";
+    private string _storageDirName = "cocos2dDirector";
+    private string _saveFileName = "SceneList.dat";
+    private string _sceneSaveFileName = "Scene{0}.dat";
 
     /// <summary>
     /// Write out the current state of the director and all of its scenes.
@@ -109,7 +109,7 @@ public abstract class CCDirector
         using (IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication())
         {
             // if our screen manager directory already exists, delete the contents
-            if (storage.DirectoryExists(m_sStorageDirName))
+            if (storage.DirectoryExists(_storageDirName))
             {
                 DeleteState(storage);
             }
@@ -117,22 +117,22 @@ public abstract class CCDirector
             // otherwise just create the directory
             else
             {
-                storage.CreateDirectory(m_sStorageDirName);
+                storage.CreateDirectory(_storageDirName);
             }
 
             // create a file we'll use to store the list of screens in the stack
 
-            CCLog.Log("Saving CCDirector state to file: " + Path.Combine(m_sStorageDirName, m_sSaveFileName));
+            CCLog.Log("Saving CCDirector state to file: " + Path.Combine(_storageDirName, _saveFileName));
 
             try
             {
-                using (IsolatedStorageFileStream stream = storage.OpenFile(Path.Combine(m_sStorageDirName, m_sSaveFileName), FileMode.OpenOrCreate))
+                using (IsolatedStorageFileStream stream = storage.OpenFile(Path.Combine(_storageDirName, _saveFileName), FileMode.OpenOrCreate))
                 {
                     using (StreamWriter writer = new StreamWriter(stream))
                 {
                     // write out the full name of all the types in our stack so we can
                     // recreate them if needed.
-                    foreach (CCScene scene in m_pobScenesStack)
+                    foreach (CCScene scene in _scenesStack)
                     {
                         if (scene.IsSerializable)
                         {
@@ -144,10 +144,10 @@ public abstract class CCDirector
                         }
                     }
                     // Write out our local state
-                    if (m_pRunningScene != null && m_pRunningScene.IsSerializable)
+                    if (_runningScene != null && _runningScene.IsSerializable)
                     {
-                            writer.WriteLine("m_pRunningScene");
-                            writer.WriteLine(m_pRunningScene.GetType().AssemblyQualifiedName);
+                            writer.WriteLine("_runningScene");
+                            writer.WriteLine(_runningScene.GetType().AssemblyQualifiedName);
                     }
                     // Add my own state 
                     // [*]name=value
@@ -161,11 +161,11 @@ public abstract class CCDirector
             // the screen in the stack, to ensure the files are uniquely named
             int screenIndex = 0;
             string fileName = null;
-            foreach (CCScene scene in m_pobScenesStack)
+            foreach (CCScene scene in _scenesStack)
             {
                 if (scene.IsSerializable)
                 {
-                    fileName = string.Format(Path.Combine(m_sStorageDirName, m_sSceneSaveFileName), screenIndex);
+                    fileName = string.Format(Path.Combine(_storageDirName, _sceneSaveFileName), screenIndex);
 
                     // open up the stream and let the screen serialize whatever state it wants
                     using (IsolatedStorageFileStream stream = storage.CreateFile(fileName))
@@ -177,13 +177,13 @@ public abstract class CCDirector
                 }
             }
             // Write the current running scene
-            if (m_pRunningScene != null && m_pRunningScene.IsSerializable)
+            if (_runningScene != null && _runningScene.IsSerializable)
             {
-                fileName = string.Format(Path.Combine(m_sStorageDirName, m_sSceneSaveFileName), "XX");
+                fileName = string.Format(Path.Combine(_storageDirName, _sceneSaveFileName), "XX");
                 // open up the stream and let the screen serialize whatever state it wants
                 using (IsolatedStorageFileStream stream = storage.CreateFile(fileName))
                 {
-                    m_pRunningScene.Serialize(stream);
+                    _runningScene.Serialize(stream);
                 }
             }
         }
@@ -209,9 +209,9 @@ public abstract class CCDirector
         using (IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication())
         {
             // see if our saved state directory exists
-            if (storage.DirectoryExists(m_sStorageDirName))
+            if (storage.DirectoryExists(_storageDirName))
             {
-                string saveFile = System.IO.Path.Combine(m_sStorageDirName, m_sSaveFileName);
+                string saveFile = System.IO.Path.Combine(_storageDirName, _saveFileName);
                 try
                 {
                         CCLog.Log("Loading director data file: {0}", saveFile);
@@ -257,7 +257,7 @@ public abstract class CCDirector
                                             Type screenType = Type.GetType(line);
                                             CCScene scene = Activator.CreateInstance(screenType) as CCScene;
                                                     PushScene(scene);
-                                                    //                                                    m_pobScenesStack.Add(scene);
+                                                    //                                                    _scenesStack.Add(scene);
                                                 }
                                             }
                                         }
@@ -277,25 +277,25 @@ public abstract class CCDirector
                         }
 
                     // next we give each screen a chance to deserialize from the disk
-                    for (int i = 0; i < m_pobScenesStack.Count; i++)
+                    for (int i = 0; i < _scenesStack.Count; i++)
                     {
-                            string filename = System.IO.Path.Combine(m_sStorageDirName, string.Format(m_sSceneSaveFileName, i));
+                            string filename = System.IO.Path.Combine(_storageDirName, string.Format(_sceneSaveFileName, i));
                             if (storage.FileExists(filename))
                             {
                         using (IsolatedStorageFileStream stream = storage.OpenFile(filename, FileMode.Open, FileAccess.Read))
                         {
                                     CCLog.Log("Restoring state for scene {0}", filename);
-                            m_pobScenesStack[i].Deserialize(stream);
+                            _scenesStack[i].Deserialize(stream);
                         }
                     }
                         }
-                    if (m_pobScenesStack.Count > 0)
+                    if (_scenesStack.Count > 0)
                     {
                             CCLog.Log("Director is running with scene..");
 
-                        RunWithScene(m_pobScenesStack[m_pobScenesStack.Count - 1]); // always at the top of the stack
+                        RunWithScene(_scenesStack[_scenesStack.Count - 1]); // always at the top of the stack
                     }
-                    return (m_pobScenesStack.Count > 0 && m_pRunningScene != null);
+                    return (_scenesStack.Count > 0 && _runningScene != null);
                 }
                     catch (Exception ex)
                 {
@@ -324,18 +324,18 @@ public abstract class CCDirector
     private void DeleteState(IsolatedStorageFile storage)
     {
         // glob on all of the files in the directory and delete them
-        string[] files = storage.GetFileNames(System.IO.Path.Combine(m_sStorageDirName, "*"));
+        string[] files = storage.GetFileNames(System.IO.Path.Combine(_storageDirName, "*"));
         foreach (string file in files)
         {
-            storage.DeleteFile(Path.Combine(m_sStorageDirName, file));
+            storage.DeleteFile(Path.Combine(_storageDirName, file));
         }
                     }
     #endregion
 
     public ICCDirectorDelegate Delegate
     {
-        get { return m_pProjectionDelegate; }
-        set { m_pProjectionDelegate = value; }
+        get { return _projectionDelegate; }
+        set { _projectionDelegate = value; }
     }
 
     /// <summary>
@@ -348,7 +348,7 @@ public abstract class CCDirector
 
     public CCDirectorProjection Projection
     {
-        get { return m_eProjection; }
+        get { return _projection; }
         set
         {
             SetViewport();
@@ -388,9 +388,9 @@ public abstract class CCDirector
                     break;
 
                 case CCDirectorProjection.Custom:
-                    if (m_pProjectionDelegate != null)
+                    if (_projectionDelegate != null)
                     {
-                        m_pProjectionDelegate.UpdateProjection();
+                        _projectionDelegate.UpdateProjection();
                     }
                     break;
 
@@ -399,7 +399,7 @@ public abstract class CCDirector
                     break;
             }
 
-            m_eProjection = value;
+            _projection = value;
         }
     }
 
@@ -420,42 +420,42 @@ public abstract class CCDirector
 
     public CCScheduler Scheduler
     {
-        get { return m_pScheduler; }
-        set { m_pScheduler = value; }
+        get { return _scheduler; }
+        set { _scheduler = value; }
     }
 
     public CCActionManager ActionManager
     {
-        get { return m_pActionManager; }
-        set { m_pActionManager = value; }
+        get { return _actionManager; }
+        set { _actionManager = value; }
     }
 
     public CCTouchDispatcher TouchDispatcher
     {
-        get { return m_pTouchDispatcher; }
-        set { m_pTouchDispatcher = value; }
+        get { return _touchDispatcher; }
+        set { _touchDispatcher = value; }
     }
 
     public CCKeypadDispatcher KeypadDispatcher
     {
-        get { return m_pKeypadDispatcher; }
-        set { m_pKeypadDispatcher = value; }
+        get { return _keypadDispatcher; }
+        set { _keypadDispatcher = value; }
     }
 
 		public CCKeyboardDispatcher KeyboardDispatcher
 		{
-			get { return m_pKeyboardDispatcher; }
-			set { m_pKeyboardDispatcher = value; }
+			get { return _keyboardDispatcher; }
+			set { _keyboardDispatcher = value; }
 		}
 
 		public CCAccelerometer Accelerometer
     {
-        get { return m_pAccelerometer; }
-        set { m_pAccelerometer = value; }
+        get { return _accelerometer; }
+        set { _accelerometer = value; }
     }
     public CCScene RunningScene
     {
-        get { return m_pRunningScene; }
+        get { return _runningScene; }
     }
 
     public virtual double AnimationInterval
@@ -466,35 +466,35 @@ public abstract class CCDirector
 
     public bool DisplayStats
     {
-        get { return m_bDisplayStats; }
+        get { return _displayStats; }
         set
         {
-            if (value != m_bDisplayStats)
+            if (value != _displayStats)
             {
-                m_pStopwatch.Reset();
-                m_pStopwatch.Start();
+                _stopwatch.Reset();
+                _stopwatch.Start();
             }
-            m_bDisplayStats = value;
+            _displayStats = value;
         }
     }
 
     public void ResetStats()
     {
-        m_pStopwatch.Reset();
-        m_pStopwatch.Start();
-        m_fAccumDt = 0.0f;
-        m_uTotalFrames = 0;
+        _stopwatch.Reset();
+        _stopwatch.Start();
+        _accumDt = 0.0f;
+        _totalFrames = 0;
     }
 
     public bool IsPaused
     {
-        get { return m_bPaused; }
+        get { return _paused; }
     }
 
     public CCNode NotificationNode
     {
-        get { return m_pNotificationNode; }
-        set { m_pNotificationNode = value; }
+        get { return _notificationNode; }
+        set { _notificationNode = value; }
     }
 
 
@@ -509,8 +509,8 @@ public abstract class CCDirector
 
     public virtual bool NeedsInit
     {
-        get { return m_NeedsInit; }
-        set { m_NeedsInit = value; }
+        get { return _needsInit; }
+        set { _needsInit = value; }
     }
 
     public virtual bool Init()
@@ -518,32 +518,32 @@ public abstract class CCDirector
         SetDefaultValues();
 
         // scenes
-        m_pRunningScene = null;
-        m_pNextScene = null;
+        _runningScene = null;
+        _nextScene = null;
 
-        m_pNotificationNode = null;
+        _notificationNode = null;
 
         m_dOldAnimationInterval = m_dAnimationInterval = 1.0 / kDefaultFPS;
 
         // Set default projection (3D)
-        m_eProjection = CCDirectorProjection.Default;
+        _projection = CCDirectorProjection.Default;
 
         // projection delegate if "Custom" projection is used
-        m_pProjectionDelegate = null;
+        _projectionDelegate = null;
 
         // FPS
-        m_fAccumDt = 0.0f;
-        m_pFPSLabel = null;
-        m_pUpdateTimeLabel = null;
-        m_pDrawTimeLabel = null;
-        m_pDrawsLabel = null;
-        m_bDisplayStats = false;
-        m_uTotalFrames = 0;
+        _accumDt = 0.0f;
+        _fpsLabel = null;
+        _updateTimeLabel = null;
+        _drawTimeLabel = null;
+        _drawsLabel = null;
+        _displayStats = false;
+        _totalFrames = 0;
 
-        m_pStopwatch = new Stopwatch();
+        _stopwatch = new Stopwatch();
 
         // paused ?
-        m_bPaused = false;
+        _paused = false;
 
         // purge ?
         m_bPurgeDirectorInNextLoop = false;
@@ -552,31 +552,31 @@ public abstract class CCDirector
 
         //m_pobOpenGLView = null;
 
-        m_fContentScaleFactor = 1.0f;
+        _contentScaleFactor = 1.0f;
 
         // scheduler
-        m_pScheduler = new CCScheduler();
+        _scheduler = new CCScheduler();
         // action manager
-        m_pActionManager = new CCActionManager();
-        m_pScheduler.ScheduleUpdateForTarget(m_pActionManager, CCScheduler.kCCPrioritySystem, false);
+        _actionManager = new CCActionManager();
+        _scheduler.ScheduleUpdateForTarget(_actionManager, CCScheduler.kCCPrioritySystem, false);
         // touchDispatcher
-        m_pTouchDispatcher = new CCTouchDispatcher();
-        m_pTouchDispatcher.Init();
+        _touchDispatcher = new CCTouchDispatcher();
+        _touchDispatcher.Init();
 
         // KeypadDispatcher
-        m_pKeypadDispatcher = new CCKeypadDispatcher();
+        _keypadDispatcher = new CCKeypadDispatcher();
 
 			// KeyboardDispatcher
-			m_pKeyboardDispatcher = new CCKeyboardDispatcher();
+			_keyboardDispatcher = new CCKeyboardDispatcher();
 
 			// Accelerometer
-        m_pAccelerometer = new CCAccelerometer();
+        _accelerometer = new CCAccelerometer();
 
-        m_NeedsInit = false;
+        _needsInit = false;
         return true;
     }
 
-    private bool m_GamePadEnabled = false;
+    private bool _gamePadEnabled = false;
 
     /// <summary>
     /// Set to true if this platform has a game pad connected.
@@ -584,10 +584,10 @@ public abstract class CCDirector
     public bool GamePadEnabled
     {
         get { 
-            return (m_GamePadEnabled); 
+            return (_gamePadEnabled); 
         }
         set {
-            m_GamePadEnabled = value;
+            _gamePadEnabled = value;
         }
     }
 
@@ -598,7 +598,7 @@ public abstract class CCDirector
     {
         SetAlphaBlending(true);
         SetDepthTest(false);
-        Projection = m_eProjection;
+        Projection = _projection;
     }
 
     protected void SetDefaultValues()
@@ -609,40 +609,40 @@ public abstract class CCDirector
     {
         float startTime = 0;
         
-        if (m_bDisplayStats)
+        if (_displayStats)
         {
-            startTime = (float)m_pStopwatch.Elapsed.TotalMilliseconds;
+            startTime = (float)_stopwatch.Elapsed.TotalMilliseconds;
         }
 
-        if (!m_bPaused)
+        if (!_paused)
         {
-            if (m_bNextDeltaTimeZero)
+            if (_nextDeltaTimeZero)
             {
-                m_fDeltaTime = 0;
-                m_bNextDeltaTimeZero = false;
+                _deltaTime = 0;
+                _nextDeltaTimeZero = false;
             }
             else
             {
-                m_fDeltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
+                _deltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
             }
 
             // In Seconds
-            m_pScheduler.update(m_fDeltaTime);
+            _scheduler.update(_deltaTime);
         }
 
         /* to avoid flickr, nextScene MUST be here: after tick and before draw.
          XXX: Which bug is this one. It seems that it can't be reproduced with v0.9 */
-        if (m_pNextScene != null)
+        if (_nextScene != null)
         {
             SetNextScene();
         }
 
-        m_fAccumDt += m_fDeltaTime;
+        _accumDt += _deltaTime;
 
-        if (m_bDisplayStats)
+        if (_displayStats)
         {
-            m_uUpdateCount++;
-            m_fAccumUpdate += (float)m_pStopwatch.Elapsed.TotalMilliseconds - startTime;
+            _updateCount++;
+            _accumUpdate += (float)_stopwatch.Elapsed.TotalMilliseconds - startTime;
         }
     }
 
@@ -654,46 +654,46 @@ public abstract class CCDirector
     /// </summary>
     protected void DrawScene(GameTime gameTime)
     {
-        if (m_NeedsInit)
+        if (_needsInit)
         {
             return;
         }
 
         float startTime = 0;
         
-        if (m_bDisplayStats)
+        if (_displayStats)
         {
-            startTime = (float)m_pStopwatch.Elapsed.TotalMilliseconds;
+            startTime = (float)_stopwatch.Elapsed.TotalMilliseconds;
         }
 
         CCDrawManager.PushMatrix();
 
         // draw the scene
-        if (m_pRunningScene != null)
+        if (_runningScene != null)
         {
             GraphIndex = 0;
-            m_pRunningScene.Visit();
+            _runningScene.Visit();
         }
 
         // draw the notifications node
-        if (m_pNotificationNode != null)
+        if (_notificationNode != null)
         {
             NotificationNode.Visit();
         }
 
-        if (m_bDisplayStats)
+        if (_displayStats)
         {
             ShowStats();
         }
 
         CCDrawManager.PopMatrix();
 
-        m_uTotalFrames++;
+        _totalFrames++;
 
-        if (m_bDisplayStats)
+        if (_displayStats)
         {
-            m_uDrawCount++;
-            m_fAccumDraw += (float)m_pStopwatch.Elapsed.TotalMilliseconds - startTime;
+            _drawCount++;
+            _accumDraw += (float)_stopwatch.Elapsed.TotalMilliseconds - startTime;
         }
     }
 
@@ -715,14 +715,14 @@ public abstract class CCDirector
         // Touch events are handled by CCGameView in that case
         if (CCApplication.SharedApplication != null)
         {
-            CCApplication.SharedApplication.TouchDelegate = m_pTouchDispatcher;
+            CCApplication.SharedApplication.TouchDelegate = _touchDispatcher;
         }
-        m_pTouchDispatcher.IsDispatchEvents = true;
+        _touchDispatcher.IsDispatchEvents = true;
     }
 
     public void SetNextDeltaTimeZero(bool bNextDeltaTimeZero)
     {
-        m_bNextDeltaTimeZero = bNextDeltaTimeZero;
+        _nextDeltaTimeZero = bNextDeltaTimeZero;
     }
 
     public void PurgeCachedData()
@@ -775,7 +775,7 @@ public abstract class CCDirector
 
     public CCSize WinSizeInPixels
     {
-        get { return m_obWinSizeInPoints * m_fContentScaleFactor; }
+        get { return m_obWinSizeInPoints * _contentScaleFactor; }
     }
 
     public void End()
@@ -790,21 +790,21 @@ public abstract class CCDirector
 
         // don't release the event handlers
         // They are needed in case the director is run again
-        m_pTouchDispatcher.RemoveAllDelegates();
+        _touchDispatcher.RemoveAllDelegates();
 
-        if (m_pRunningScene != null)
+        if (_runningScene != null)
         {
-            m_pRunningScene.OnExitTransitionDidStart();
-            m_pRunningScene.OnExit();
-            m_pRunningScene.Cleanup();
+            _runningScene.OnExitTransitionDidStart();
+            _runningScene.OnExit();
+            _runningScene.Cleanup();
         }
 
-        m_pRunningScene = null;
-        m_pNextScene = null;
+        _runningScene = null;
+        _nextScene = null;
 
         // remove all objects, but don't release it.
         // runWithScene might be executed after 'end'.
-        m_pobScenesStack.Clear();
+        _scenesStack.Clear();
 
         StopAnimation();
 
@@ -825,12 +825,12 @@ public abstract class CCDirector
 
         CCDrawManager.PurgeDrawManager();
 
-        m_NeedsInit = true;
+        _needsInit = true;
     }
 
     public void Pause()
     {
-        if (m_bPaused)
+        if (_paused)
         {
             return;
         }
@@ -839,47 +839,47 @@ public abstract class CCDirector
 
         // when paused, don't consume CPU
         AnimationInterval = 1 / 4.0;
-        m_bPaused = true;
+        _paused = true;
     }
 
     public void ResumeFromBackground()
     {
         Resume();
         
-        if (m_pRunningScene != null)
+        if (_runningScene != null)
         {
-            bool runningIsTransition = m_pRunningScene is CCTransitionScene;
+            bool runningIsTransition = _runningScene is CCTransitionScene;
             if (!runningIsTransition)
             {
-                m_pRunningScene.OnEnter();
-                m_pRunningScene.OnEnterTransitionDidFinish();
+                _runningScene.OnEnter();
+                _runningScene.OnEnterTransitionDidFinish();
             }
         }
     }
 
     public void Resume()
     {
-        if (m_NeedsInit)
+        if (_needsInit)
         {
             CCLog.Log("CCDirector(): Resume needs Init(). The director will re-initialize.");
             Init();
         }
-        if (!m_bPaused)
+        if (!_paused)
         {
             return;
         }
 
-        CCLog.Log("CCDirector(): Resume called with {0} scenes", m_pobScenesStack.Count);
+        CCLog.Log("CCDirector(): Resume called with {0} scenes", _scenesStack.Count);
 
         AnimationInterval = m_dOldAnimationInterval;
 
-        m_bPaused = false;
-        m_fDeltaTime = 0;
+        _paused = false;
+        _deltaTime = 0;
     }
 
     public bool IsSendCleanupToScene()
     {
-        return m_bSendCleanupToScene;
+        return _sendCleanupToScene;
     }
 
     public abstract void StopAnimation();
@@ -890,12 +890,12 @@ public abstract class CCDirector
 
     public float ContentScaleFactor
     {
-        get { return m_fContentScaleFactor; }
+        get { return _contentScaleFactor; }
         set
         {
-            if (value != m_fContentScaleFactor)
+            if (value != _contentScaleFactor)
             {
-                m_fContentScaleFactor = value;
+                _contentScaleFactor = value;
             }
         }
     }
@@ -906,17 +906,17 @@ public abstract class CCDirector
 
     public void ResetSceneStack()
     {
-        CCLog.Log("CCDirector(): ResetSceneStack, clearing out {0} scenes.", m_pobScenesStack.Count);
+        CCLog.Log("CCDirector(): ResetSceneStack, clearing out {0} scenes.", _scenesStack.Count);
 
-        m_pRunningScene = null;
-        m_pobScenesStack.Clear();
-        m_pNextScene = null;
+        _runningScene = null;
+        _scenesStack.Clear();
+        _nextScene = null;
     }
 
     public void RunWithScene(CCScene pScene)
     {
         Debug.Assert(pScene != null, "the scene should not be null");
-        Debug.Assert(m_pRunningScene == null, "Use runWithScene: instead to start the director");
+        Debug.Assert(_runningScene == null, "Use runWithScene: instead to start the director");
 
         PushScene(pScene);
         StartAnimation();
@@ -928,21 +928,21 @@ public abstract class CCDirector
     /// <param name="pScene"></param>
     public void ReplaceScene(CCScene pScene)
     {
-        Debug.Assert(m_pRunningScene != null, "Use runWithScene: instead to start the director");
+        Debug.Assert(_runningScene != null, "Use runWithScene: instead to start the director");
         Debug.Assert(pScene != null, "the scene should not be null");
 
-        int index = m_pobScenesStack.Count;
+        int index = _scenesStack.Count;
 
-        m_bSendCleanupToScene = true;
+        _sendCleanupToScene = true;
         if (index == 0)
         {
-            m_pobScenesStack.Add(pScene);
+            _scenesStack.Add(pScene);
         }
         else
         {
-        m_pobScenesStack[index - 1] = pScene;
+        _scenesStack[index - 1] = pScene;
         }
-        m_pNextScene = pScene;
+        _nextScene = pScene;
     }
 
     /** Give the number of scenes present in the scene stack.
@@ -950,7 +950,7 @@ public abstract class CCDirector
      */
     public int SceneCount
     {
-        get { return m_pobScenesStack.Count; }
+        get { return _scenesStack.Count; }
     }
 
     /// <summary>
@@ -961,10 +961,10 @@ public abstract class CCDirector
     {
         Debug.Assert(pScene != null, "the scene should not null");
 
-        m_bSendCleanupToScene = false;
+        _sendCleanupToScene = false;
 
-        m_pobScenesStack.Add(pScene);
-        m_pNextScene = pScene;
+        _scenesStack.Add(pScene);
+        _nextScene = pScene;
     }
 
     /// <summary>
@@ -975,21 +975,21 @@ public abstract class CCDirector
     {
         get
         {
-            int c = m_pobScenesStack.Count;
+            int c = _scenesStack.Count;
             return (c > 1);
         }
     }
 
     public void PopScene(float t, CCTransitionScene s)
     {
-        Debug.Assert(m_pRunningScene != null, "m_pRunningScene cannot be null");
+        Debug.Assert(_runningScene != null, "_runningScene cannot be null");
 
-        if (m_pobScenesStack.Count > 0)
+        if (_scenesStack.Count > 0)
         {
-            // CCScene s = m_pobScenesStack[m_pobScenesStack.Count - 1];
-            m_pobScenesStack.RemoveAt(m_pobScenesStack.Count - 1);
+            // CCScene s = _scenesStack[_scenesStack.Count - 1];
+            _scenesStack.RemoveAt(_scenesStack.Count - 1);
         }
-        int c = m_pobScenesStack.Count;
+        int c = _scenesStack.Count;
 
         if (c == 0)
         {
@@ -997,14 +997,14 @@ public abstract class CCDirector
         }
         else
         {
-            m_bSendCleanupToScene = true;
-            m_pNextScene = m_pobScenesStack[c - 1];
+            _sendCleanupToScene = true;
+            _nextScene = _scenesStack[c - 1];
             if (s != null)
             {
-                m_pNextScene.Visible = true;
-                s.Reset(t, m_pNextScene);
-                m_pobScenesStack.Add(s);
-                m_pNextScene = s;
+                _nextScene.Visible = true;
+                s.Reset(t, _nextScene);
+                _scenesStack.Add(s);
+                _nextScene = s;
             }
         }
     }
@@ -1030,8 +1030,8 @@ public abstract class CCDirector
      */
     public void PopToSceneStackLevel(int level)
     {
-        Debug.Assert(m_pRunningScene != null, "A running Scene is needed");
-        int c = m_pobScenesStack.Count;
+        Debug.Assert(_runningScene != null, "A running Scene is needed");
+        int c = _scenesStack.Count;
 
         // level 0? -> end
         if (level == 0)
@@ -1047,7 +1047,7 @@ public abstract class CCDirector
         // pop stack until reaching desired level
         while (c > level)
         {
-            var current = m_pobScenesStack[m_pobScenesStack.Count - 1];
+            var current = _scenesStack[_scenesStack.Count - 1];
             
             if (current.IsRunning)
             {
@@ -1056,44 +1056,44 @@ public abstract class CCDirector
             }
             
             current.Cleanup();
-            m_pobScenesStack.RemoveAt(m_pobScenesStack.Count - 1);
+            _scenesStack.RemoveAt(_scenesStack.Count - 1);
             c--;
         }
         
-        m_pNextScene = m_pobScenesStack[m_pobScenesStack.Count - 1];
-        m_bSendCleanupToScene = false;
+        _nextScene = _scenesStack[_scenesStack.Count - 1];
+        _sendCleanupToScene = false;
     }
 
     protected void SetNextScene()
     {
-        bool runningIsTransition = m_pRunningScene != null && m_pRunningScene.IsTransition;// is CCTransitionScene;
+        bool runningIsTransition = _runningScene != null && _runningScene.IsTransition;// is CCTransitionScene;
 
         // If it is not a transition, call onExit/cleanup
-        if (!m_pNextScene.IsTransition)
+        if (!_nextScene.IsTransition)
         {
-            if (m_pRunningScene != null)
+            if (_runningScene != null)
             {
-                m_pRunningScene.OnExitTransitionDidStart(); 
-                m_pRunningScene.OnExit();
+                _runningScene.OnExitTransitionDidStart(); 
+                _runningScene.OnExit();
 
                 // issue #709. the root node (scene) should receive the cleanup message too
                 // otherwise it might be leaked.
-                if (m_bSendCleanupToScene)
+                if (_sendCleanupToScene)
                 {
-                    m_pRunningScene.Cleanup();
+                    _runningScene.Cleanup();
 
                     GC.Collect();
                 }
             }
         }
 
-        m_pRunningScene = m_pNextScene;
-        m_pNextScene = null;
+        _runningScene = _nextScene;
+        _nextScene = null;
 
-        if (!runningIsTransition && m_pRunningScene != null)
+        if (!runningIsTransition && _runningScene != null)
         {
-            m_pRunningScene.OnEnter();
-            m_pRunningScene.OnEnterTransitionDidFinish();
+            _runningScene.OnEnter();
+            _runningScene.OnEnterTransitionDidFinish();
         }
     }
 
@@ -1101,7 +1101,7 @@ public abstract class CCDirector
 
     public void CreateStatsLabel()
     {
-        if (m_pFPSLabel == null)
+        if (_fpsLabel == null)
         {
             CCTexture2D texture;
             CCTextureCache textureCache = CCTextureCache.SharedTextureCache;
@@ -1119,7 +1119,7 @@ public abstract class CCDirector
 
                 if (texture == null || (texture.ContentSize.Width == 0 && texture.ContentSize.Height == 0))
                 {
-                    m_bDisplayStats = false;
+                    _displayStats = false;
                     return;
                 }
             }
@@ -1127,36 +1127,36 @@ public abstract class CCDirector
             {
                 // MonoGame may not allow texture.fromstream, so catch this exception here
                 // and disable the stats
-                m_bDisplayStats = false;
+                _displayStats = false;
                 return;
             }
 
             try
             {
-                m_pFPSLabel = new CCLabel("00.0", "arial", 12);
-                m_pFPSLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
+                _fpsLabel = new CCLabel("00.0", "arial", 12);
+                _fpsLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
 
-                m_pUpdateTimeLabel = new CCLabel("00.0", "arial", 12);
-                m_pUpdateTimeLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
+                _updateTimeLabel = new CCLabel("00.0", "arial", 12);
+                _updateTimeLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
 
-                m_pDrawTimeLabel = new CCLabel("00.0", "arial", 12);
-                m_pDrawTimeLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
+                _drawTimeLabel = new CCLabel("00.0", "arial", 12);
+                _drawTimeLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
 
-                m_pDrawsLabel = new CCLabel("00.0", "arial", 12);
-                m_pDrawsLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
+                _drawsLabel = new CCLabel("00.0", "arial", 12);
+                _drawsLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
 
-                m_pMemoryLabel = new CCLabel("00.0", "arial", 12);
-                m_pMemoryLabel.Color = new CCColor3B(0, 0, 255);
-                m_pMemoryLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
+                _memoryLabel = new CCLabel("00.0", "arial", 12);
+                _memoryLabel.Color = new CCColor3B(0, 0, 255);
+                _memoryLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
 
-                m_pGCLabel = new CCLabel("00.0", "arial", 12);
-                m_pGCLabel.Color = new CCColor3B(255, 0, 0);
-                m_pGCLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
+                _gcLabel = new CCLabel("00.0", "arial", 12);
+                _gcLabel.Color = new CCColor3B(255, 0, 0);
+                _gcLabel.AnchorPoint = CCPoint.AnchorMiddleLeft;
             }
             catch (Exception ex)
             {
-                m_pFPSLabel = null;
-                m_bDisplayStats = false;
+                _fpsLabel = null;
+                _displayStats = false;
                 CCLog.Log("Failed to create the stats labels.");
                 CCLog.Log(ex.ToString());
                 return;
@@ -1166,19 +1166,19 @@ public abstract class CCDirector
         float factor = CCDrawManager.DesignResolutionSize.Height / 320.0f;
         var pos = CCDirector.SharedDirector.VisibleOrigin;
 
-        m_pFPSLabel.Scale = factor;
-        m_pUpdateTimeLabel.Scale = factor;
-        m_pDrawTimeLabel.Scale = factor;
-        m_pDrawsLabel.Scale = factor;
-        m_pMemoryLabel.Scale = factor;
-        m_pGCLabel.Scale = factor;
+        _fpsLabel.Scale = factor;
+        _updateTimeLabel.Scale = factor;
+        _drawTimeLabel.Scale = factor;
+        _drawsLabel.Scale = factor;
+        _memoryLabel.Scale = factor;
+        _gcLabel.Scale = factor;
 
-        m_pMemoryLabel.Position = new CCPoint(0, 97 * factor) + pos;
-        m_pGCLabel.Position = new CCPoint(0, 80 * factor) + pos;
-        m_pDrawsLabel.Position = new CCPoint(0, 63 * factor) + pos;
-        m_pUpdateTimeLabel.Position = new CCPoint(0, 46 * factor) + pos;
-        m_pDrawTimeLabel.Position = new CCPoint(0, 29 * factor) + pos;
-        m_pFPSLabel.Position = new CCPoint(0, 12 * factor) + pos;
+        _memoryLabel.Position = new CCPoint(0, 97 * factor) + pos;
+        _gcLabel.Position = new CCPoint(0, 80 * factor) + pos;
+        _drawsLabel.Position = new CCPoint(0, 63 * factor) + pos;
+        _updateTimeLabel.Position = new CCPoint(0, 46 * factor) + pos;
+        _drawTimeLabel.Position = new CCPoint(0, 29 * factor) + pos;
+        _fpsLabel.Position = new CCPoint(0, 12 * factor) + pos;
     }
 
     private WeakReference _wk = new WeakReference(new object());
@@ -1188,7 +1188,7 @@ public abstract class CCDirector
     // updates the FPS every frame
     private void ShowStats()
     {
-        if (m_bDisplayStats)
+        if (_displayStats)
         {
             if (!_wk.IsAlive)
             {
@@ -1196,33 +1196,33 @@ public abstract class CCDirector
                 _wk = new WeakReference(new object());
             }
 
-            if (m_pFPSLabel == null)
+            if (_fpsLabel == null)
                 CreateStatsLabel();
 
-            if (m_pFPSLabel != null && m_pUpdateTimeLabel != null && m_pDrawsLabel != null)
+            if (_fpsLabel != null && _updateTimeLabel != null && _drawsLabel != null)
             {
-                if (m_fAccumDt > CCMacros.CCDirectorStatsUpdateIntervalInSeconds)
+                if (_accumDt > CCMacros.CCDirectorStatsUpdateIntervalInSeconds)
                 {
-                    m_pFPSLabel.Text = (String.Format("FPS: {0:00.0}", m_uDrawCount / m_fAccumDt));
+                    _fpsLabel.Text = (String.Format("FPS: {0:00.0}", _drawCount / _accumDt));
 
-                    m_pUpdateTimeLabel.Text = (String.Format("Update: {0:0.000}", m_fAccumUpdate / m_uUpdateCount));
-                    m_pDrawTimeLabel.Text = (String.Format("Draw: {0:0.000}", m_fAccumDraw / m_uDrawCount));
-                    m_pDrawsLabel.Text = (String.Format("Draws: {0:000}", CCDrawManager.DrawCount));
+                    _updateTimeLabel.Text = (String.Format("Update: {0:0.000}", _accumUpdate / _updateCount));
+                    _drawTimeLabel.Text = (String.Format("Draw: {0:0.000}", _accumDraw / _drawCount));
+                    _drawsLabel.Text = (String.Format("Draws: {0:000}", CCDrawManager.DrawCount));
 
-                    m_fAccumDt = m_fAccumDraw = m_fAccumUpdate = 0;
-                    m_uDrawCount = m_uUpdateCount = 0;
+                    _accumDt = _accumDraw = _accumUpdate = 0;
+                    _drawCount = _updateCount = 0;
 
 
-                    m_pMemoryLabel.Text = String.Format("Memory: {0}", GC.GetTotalMemory(false) / 1024);
-                    m_pGCLabel.Text = String.Format("GC: {0}", _GCCount);
+                    _memoryLabel.Text = String.Format("Memory: {0}", GC.GetTotalMemory(false) / 1024);
+                    _gcLabel.Text = String.Format("GC: {0}", _GCCount);
                 }
 
-                m_pDrawsLabel.Visit();
-                m_pFPSLabel.Visit();
-                m_pUpdateTimeLabel.Visit();
-                m_pDrawTimeLabel.Visit();
-                m_pMemoryLabel.Visit();
-                m_pGCLabel.Visit();
+                _drawsLabel.Visit();
+                _fpsLabel.Visit();
+                _updateTimeLabel.Visit();
+                _drawTimeLabel.Visit();
+                _memoryLabel.Visit();
+                _gcLabel.Visit();
             }
         }    
     }
