@@ -92,7 +92,7 @@ public abstract class CCDirector
     private CCLabel _gcLabel;
 
     // Stopwatch for measure the time.
-    Stopwatch _stopwatch;
+    private Stopwatch _stopwatch;
     
     #region State Management
 		
@@ -146,7 +146,7 @@ public abstract class CCDirector
                     // Write out our local state
                     if (_runningScene != null && _runningScene.IsSerializable)
                     {
-                            writer.WriteLine("_runningScene");
+                            writer.WriteLine("m_pRunningScene"); // stable on-disk marker - intentionally decoupled from the field name; do not rename
                             writer.WriteLine(_runningScene.GetType().AssemblyQualifiedName);
                     }
                     // Add my own state 
