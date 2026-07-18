@@ -52,18 +52,18 @@ If ' compressedInterpolation' is enabled (default mode) you will see both the st
 
 public class CCLayerGradient : CCLayerColor
 {
-    private CCPoint m_AlongVector;
+    private CCPoint _alongVector;
 
     /// <summary>
     /// Whether or not the interpolation will be compressed in order to display all the colors of the gradient both in canonical and non canonical vectors
     /// Default: YES
     /// </summary>
-    private bool m_bCompressedInterpolation;
+    private bool _compressedInterpolation;
 
-    private byte m_cEndOpacity;
-    private byte m_cStartOpacity;
+    private byte _endOpacity;
+    private byte _startOpacity;
 
-    private CCColor3B m_endColor;
+    private CCColor3B _endColor;
 
 
     public CCLayerGradient ()
@@ -72,8 +72,8 @@ public class CCLayerGradient : CCLayerColor
 
     public CCLayerGradient(byte startOpacity, byte endOpacity)
     {
-        m_cStartOpacity = startOpacity;
-        m_cEndOpacity = endOpacity;
+        _startOpacity = startOpacity;
+        _endOpacity = endOpacity;
     }
     
     /// <summary>
@@ -104,40 +104,40 @@ public class CCLayerGradient : CCLayerColor
 
     public CCColor3B EndColor
     {
-        get { return m_endColor; }
+        get { return _endColor; }
         set
         {
-            m_endColor = value;
+            _endColor = value;
             UpdateColor();
         }
     }
 
     public byte StartOpacity
     {
-        get { return m_cStartOpacity; }
+        get { return _startOpacity; }
         set
         {
-            m_cStartOpacity = value;
+            _startOpacity = value;
             UpdateColor();
         }
     }
 
     public byte EndOpacity
     {
-        get { return m_cEndOpacity; }
+        get { return _endOpacity; }
         set
         {
-            m_cEndOpacity = value;
+            _endOpacity = value;
             UpdateColor();
         }
     }
 
     public CCPoint Vector
     {
-        get { return m_AlongVector; }
+        get { return _alongVector; }
         set
         {
-            m_AlongVector = value;
+            _alongVector = value;
             UpdateColor();
         }
     }
@@ -145,10 +145,10 @@ public class CCLayerGradient : CCLayerColor
 
     public bool IsCompressedInterpolation
     {
-        get { return m_bCompressedInterpolation; }
+        get { return _compressedInterpolation; }
         set
         {
-            m_bCompressedInterpolation = value;
+            _compressedInterpolation = value;
             UpdateColor();
         }
     }
@@ -171,16 +171,16 @@ public class CCLayerGradient : CCLayerColor
     /// </summary>
     protected virtual bool InitWithColor(CCColor4B start, CCColor4B end, CCPoint v)
     {
-        m_endColor = new CCColor3B();
-        m_endColor.R = end.R;
-        m_endColor.G = end.G;
-        m_endColor.B = end.B;
+        _endColor = new CCColor3B();
+        _endColor.R = end.R;
+        _endColor.G = end.G;
+        _endColor.B = end.B;
 
-        m_cEndOpacity = end.A;
-        m_cStartOpacity = start.A;
-        m_AlongVector = v;
+        _endOpacity = end.A;
+        _startOpacity = start.A;
+        _alongVector = v;
 
-        m_bCompressedInterpolation = true;
+        _compressedInterpolation = true;
 
         return base.InitWithColor(new CCColor4B(start.R, start.G, start.B, 255));
     }
@@ -190,15 +190,15 @@ public class CCLayerGradient : CCLayerColor
     {
         base.UpdateColor();
 
-        float h = m_AlongVector.Length;
+        float h = _alongVector.Length;
         if (h == 0)
             return;
 
         double c = Math.Sqrt(2.0);
-        var u = new CCPoint(m_AlongVector.X / h, m_AlongVector.Y / h);
+        var u = new CCPoint(_alongVector.X / h, _alongVector.Y / h);
 
         // Compressed Interpolation mode
-        if (m_bCompressedInterpolation)
+        if (_compressedInterpolation)
         {
             float h2 = 1 / (Math.Abs(u.X) + Math.Abs(u.Y));
             u = u * (h2 * (float) c);
@@ -211,15 +211,15 @@ public class CCLayerGradient : CCLayerColor
                 R = _displayedColor.R,
                 G = _displayedColor.G,
                 B = _displayedColor.B,
-                A = (byte) (m_cStartOpacity * opacityf)
+                A = (byte) (_startOpacity * opacityf)
             };
 
         var E = new CCColor4B
             {
-                R = m_endColor.R,
-                G = m_endColor.G,
-                B = m_endColor.B,
-                A = (byte) (m_cEndOpacity * opacityf)
+                R = _endColor.R,
+                G = _endColor.G,
+                B = _endColor.B,
+                A = (byte) (_endOpacity * opacityf)
             };
 
         // (-1, -1)

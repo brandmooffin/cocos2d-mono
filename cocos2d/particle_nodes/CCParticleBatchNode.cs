@@ -16,7 +16,7 @@ public class CCParticleBatchNode : CCNode, ICCTextureProtocol
     private const int kLinearSearchTrigger = 10;
 
     public readonly CCTextureAtlas TextureAtlas = new CCTextureAtlas();
-    private CCBlendFunc m_tBlendFunc;
+    private CCBlendFunc _blendFunc;
 
     #region ICCTextureProtocol Members
 
@@ -28,17 +28,17 @@ public class CCParticleBatchNode : CCNode, ICCTextureProtocol
             TextureAtlas.Texture = value;
 
             // If the new texture has No premultiplied alpha, AND the blendFunc hasn't been changed, then update it
-            if (value != null && !value.HasPremultipliedAlpha && m_tBlendFunc == CCBlendFunc.AlphaBlend)
+            if (value != null && !value.HasPremultipliedAlpha && _blendFunc == CCBlendFunc.AlphaBlend)
             {
-                m_tBlendFunc = CCBlendFunc.NonPremultiplied;
+                _blendFunc = CCBlendFunc.NonPremultiplied;
             }
         }
     }
 
     public CCBlendFunc BlendFunc
     {
-        get { return m_tBlendFunc; }
-        set { m_tBlendFunc = value; }
+        get { return _blendFunc; }
+        set { _blendFunc = value; }
     }
 
     #endregion
@@ -75,7 +75,7 @@ public class CCParticleBatchNode : CCNode, ICCTextureProtocol
         // no lazy alloc in this node
         m_pChildren = new CCRawList<CCNode>(capacity);
 
-        m_tBlendFunc = CCBlendFunc.AlphaBlend;
+        _blendFunc = CCBlendFunc.AlphaBlend;
 
         return true;
     }
@@ -145,7 +145,7 @@ public class CCParticleBatchNode : CCNode, ICCTextureProtocol
             BlendFunc = pChild.BlendFunc;
         }
 
-        Debug.Assert(m_tBlendFunc.Source == pChild.BlendFunc.Source && m_tBlendFunc.Destination == pChild.BlendFunc.Destination,
+        Debug.Assert(_blendFunc.Source == pChild.BlendFunc.Source && _blendFunc.Destination == pChild.BlendFunc.Destination,
                      "Can't add a PaticleSystem that uses a differnt blending function");
 
         //no lazy sorting, so don't call super addChild, call helper instead
@@ -415,7 +415,7 @@ public class CCParticleBatchNode : CCNode, ICCTextureProtocol
             return;
         }
 
-        CCDrawManager.BlendFunc(m_tBlendFunc);
+        CCDrawManager.BlendFunc(_blendFunc);
 
         TextureAtlas.DrawQuads();
     }
@@ -494,7 +494,7 @@ public class CCParticleBatchNode : CCNode, ICCTextureProtocol
     {
         if (!TextureAtlas.Texture.HasPremultipliedAlpha)
         {
-            m_tBlendFunc = CCBlendFunc.NonPremultiplied;
+            _blendFunc = CCBlendFunc.NonPremultiplied;
         }
     }
 }

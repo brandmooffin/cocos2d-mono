@@ -6,7 +6,7 @@ namespace Cocos2D;
 public class CCMenuItemToggle : CCMenuItem
 {
     public List<CCMenuItem> m_pSubItems;
-    private int m_uSelectedIndex=-1;
+    private int _selectedIndex=-1;
 
     public CCMenuItemToggle()
     {
@@ -20,19 +20,19 @@ public class CCMenuItemToggle : CCMenuItem
 
     public int SelectedIndex
     {
-        get { return m_uSelectedIndex; }
+        get { return _selectedIndex; }
         set
         {
-            if (value != m_uSelectedIndex && m_pSubItems.Count > 0)
+            if (value != _selectedIndex && m_pSubItems.Count > 0)
             {
-                m_uSelectedIndex = value;
+                _selectedIndex = value;
                 var currentItem = (CCMenuItem) GetChildByTag(kCurrentItem);
                 if (currentItem != null)
                 {
                     currentItem.Visible = false;
                     currentItem.Tag = CCNode.kCCNodeTagInvalid;
                 }
-                CCMenuItem item = m_pSubItems[m_uSelectedIndex];
+                CCMenuItem item = m_pSubItems[_selectedIndex];
                 item.Visible = true;
                 item.Tag = kCurrentItem;
             }
@@ -86,7 +86,7 @@ public class CCMenuItemToggle : CCMenuItem
         {
             item.Position = ContentSize.Center;
         }
-        m_uSelectedIndex = int.MaxValue;
+        _selectedIndex = int.MaxValue;
         SelectedIndex = 0;
         return true;
     }
@@ -103,7 +103,7 @@ public class CCMenuItemToggle : CCMenuItem
         base.InitWithTarget(null);
         m_pSubItems = new List<CCMenuItem>();
         m_pSubItems.Add(item);
-        m_uSelectedIndex = int.MaxValue;
+        _selectedIndex = int.MaxValue;
         ContentSize = item.ContentSize;
         AddChild(item, 0);
         item.Visible = true;
@@ -122,7 +122,7 @@ public class CCMenuItemToggle : CCMenuItem
 
     public CCMenuItem SelectedItem
     {
-        get { return m_pSubItems[m_uSelectedIndex]; }
+        get { return m_pSubItems[_selectedIndex]; }
     }
 
     public override void Activate()
@@ -130,7 +130,7 @@ public class CCMenuItemToggle : CCMenuItem
         // update index
         if (m_bIsEnabled)
         {
-            int newIndex = (m_uSelectedIndex + 1) % m_pSubItems.Count;
+            int newIndex = (_selectedIndex + 1) % m_pSubItems.Count;
             SelectedIndex = newIndex;
         }
         base.Activate();
@@ -140,40 +140,40 @@ public class CCMenuItemToggle : CCMenuItem
     /// Set this to true if you want to zoom-in/out on the button image like the CCMenuItemLabel works.
     /// </summary>
     public bool ZoomBehaviorOnTouch { get; set; }
-    private float m_fOriginalScale = 0f;
+    private float _originalScale = 0f;
 
     public override void Selected()
     {
         base.Selected();
-        m_pSubItems[m_uSelectedIndex].Selected();
+        m_pSubItems[_selectedIndex].Selected();
         if (ZoomBehaviorOnTouch)
         {
-            CCAction action = m_pSubItems[m_uSelectedIndex].GetAction(unchecked((int)kZoomActionTag));
+            CCAction action = m_pSubItems[_selectedIndex].GetAction(unchecked((int)kZoomActionTag));
             if (action != null)
             {
                 StopAction(action);
             }
             else
             {
-                m_fOriginalScale = Scale;
+                _originalScale = Scale;
             }
 
-            CCAction zoomAction = new CCScaleTo(0.1f, m_fOriginalScale * 1.2f);
+            CCAction zoomAction = new CCScaleTo(0.1f, _originalScale * 1.2f);
             zoomAction.Tag = unchecked((int)kZoomActionTag);
-            m_pSubItems[m_uSelectedIndex].RunAction(zoomAction);
+            m_pSubItems[_selectedIndex].RunAction(zoomAction);
         }
     }
 
     public override void Unselected()
     {
         base.Unselected();
-        m_pSubItems[m_uSelectedIndex].Unselected();
+        m_pSubItems[_selectedIndex].Unselected();
         if (ZoomBehaviorOnTouch)
         {
-            m_pSubItems[m_uSelectedIndex].StopAction(unchecked((int)kZoomActionTag));
-            CCAction zoomAction = new CCScaleTo(0.1f, m_fOriginalScale);
+            m_pSubItems[_selectedIndex].StopAction(unchecked((int)kZoomActionTag));
+            CCAction zoomAction = new CCScaleTo(0.1f, _originalScale);
             zoomAction.Tag = unchecked((int)kZoomActionTag);
-            m_pSubItems[m_uSelectedIndex].RunAction(zoomAction);
+            m_pSubItems[_selectedIndex].RunAction(zoomAction);
         }
     }
 }
