@@ -385,7 +385,7 @@ public class CCParticleBatchNode : CCNode, ICCTextureProtocol
         // after memmove of data, empty the quads at the end of array
         TextureAtlas.FillWithEmptyQuadsFromIndex(TextureAtlas.TotalQuads, pChild.TotalParticles);
 
-        // paticle could be reused for self rendering
+        // particle could be reused for self rendering
         pChild.BatchNode = null;
 
         UpdateAllAtlasIndexes();
