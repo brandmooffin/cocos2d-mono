@@ -334,8 +334,8 @@ public class CCParticleSystemQuad : CCParticleSystem
 
     private bool AllocMemory()
     {
-        Debug.Assert(m_pBatchNode == null, "Memory should not be alloced when not using batchNode");
-        Debug.Assert((_quads == null), "Memory already alloced");
+        Debug.Assert(m_pBatchNode == null, "Memory should not be allocated when not using batchNode");
+        Debug.Assert((_quads == null), "Memory already allocated");
         _quads = new CCRawList<CCV3F_C4B_T2F_Quad>(m_uTotalParticles);
         return true;
     }

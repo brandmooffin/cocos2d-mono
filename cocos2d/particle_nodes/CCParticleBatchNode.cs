@@ -146,7 +146,7 @@ public class CCParticleBatchNode : CCNode, ICCTextureProtocol
         }
 
         Debug.Assert(_blendFunc.Source == pChild.BlendFunc.Source && _blendFunc.Destination == pChild.BlendFunc.Destination,
-                     "Can't add a PaticleSystem that uses a differnt blending function");
+                     "Can't add a ParticleSystem that uses a different blending function");
 
         //no lazy sorting, so don't call super addChild, call helper instead
         int pos = AddChildHelper(pChild, zOrder, tag);
@@ -385,7 +385,7 @@ public class CCParticleBatchNode : CCNode, ICCTextureProtocol
         // after memmove of data, empty the quads at the end of array
         TextureAtlas.FillWithEmptyQuadsFromIndex(TextureAtlas.TotalQuads, pChild.TotalParticles);
 
-        // paticle could be reused for self rendering
+        // particle could be reused for self rendering
         pChild.BatchNode = null;
 
         UpdateAllAtlasIndexes();
