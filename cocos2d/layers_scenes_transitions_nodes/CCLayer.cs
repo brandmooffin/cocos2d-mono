@@ -33,12 +33,12 @@ namespace Cocos2D;
 
 public class CCLayer : CCNode, ICCAccelerometerDelegate
 {
-    private bool m_bIsAccelerometerEnabled;
+    private bool _isAccelerometerEnabled;
 
-    private CCRenderTexture m_pRenderTexture;
-    private bool m_bRestoreScissor;
-    private CCRect m_tSaveScissorRect;
-    private bool m_bNoDrawChildren;
+    private CCRenderTexture _renderTexture;
+    private bool _restoreScissor;
+    private CCRect _saveScissorRect;
+    private bool _noDrawChildren;
 
     /// <summary>
     /// Set to true if the child drawing should be isolated in their own render target
@@ -89,7 +89,7 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
         }
     }
 
-    private bool m_bDidInit = false;
+    private bool _didInit = false;
 
     public override void Visit()
     {
@@ -117,7 +117,7 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
 
         BeforeDraw();
 
-        if (!m_bNoDrawChildren && m_pChildren != null)
+        if (!_noDrawChildren && m_pChildren != null)
         {
             SortAllChildren();
 
@@ -167,22 +167,22 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
     {
         if (m_childClippingMode == CCClipMode.BoundsWithRenderTarget)
         {
-            if (m_pRenderTexture == null || m_pRenderTexture.ContentSize.Width < ContentSize.Width || m_pRenderTexture.ContentSize.Height < ContentSize.Height)
+            if (_renderTexture == null || _renderTexture.ContentSize.Width < ContentSize.Width || _renderTexture.ContentSize.Height < ContentSize.Height)
             {
-                m_pRenderTexture = new CCRenderTexture((int)ContentSize.Width, (int)ContentSize.Height);
-                m_pRenderTexture.Sprite.AnchorPoint = new CCPoint(0, 0);
+                _renderTexture = new CCRenderTexture((int)ContentSize.Width, (int)ContentSize.Height);
+                _renderTexture.Sprite.AnchorPoint = new CCPoint(0, 0);
             }
-            m_pRenderTexture.Sprite.TextureRect = new CCRect(0, 0, ContentSize.Width, ContentSize.Height);
+            _renderTexture.Sprite.TextureRect = new CCRect(0, 0, ContentSize.Width, ContentSize.Height);
         }
         else
         {
-            m_pRenderTexture = null;
+            _renderTexture = null;
         }
     }
 
     private void BeforeDraw()
     {
-        m_bNoDrawChildren = false;
+        _noDrawChildren = false;
 
         if (m_childClippingMode == CCClipMode.Bounds)
         {
@@ -204,7 +204,7 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
 
             if (!bounds.IntersectsRect(prevScissorRect))
             {
-                m_bNoDrawChildren = true;
+                _noDrawChildren = true;
                 return;
             }
 
@@ -215,28 +215,28 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
           
             if (CCDrawManager.ScissorRectEnabled)
             {
-                m_bRestoreScissor = true;
+                _restoreScissor = true;
             }
             else
             {
                 CCDrawManager.ScissorRectEnabled = true;
             }
 
-            m_tSaveScissorRect = prevScissorRect;
+            _saveScissorRect = prevScissorRect;
 
             CCDrawManager.SetScissorInPoints(minX, minY, maxX - minX, maxY - minY);
         }
         else if (m_childClippingMode == CCClipMode.BoundsWithRenderTarget)
         {
-            m_tSaveScissorRect = CCDrawManager.ScissorRect;
-            m_bRestoreScissor = CCDrawManager.ScissorRectEnabled;
+            _saveScissorRect = CCDrawManager.ScissorRect;
+            _restoreScissor = CCDrawManager.ScissorRectEnabled;
 
             CCDrawManager.ScissorRectEnabled = false;
 
             CCDrawManager.PushMatrix();
             CCDrawManager.SetIdentityMatrix();
 
-            m_pRenderTexture.BeginWithClear(0, 0, 0, 0);
+            _renderTexture.BeginWithClear(0, 0, 0, 0);
         }
     }
 
@@ -250,20 +250,20 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
         {
             if (m_childClippingMode == CCClipMode.BoundsWithRenderTarget)
             {
-                m_pRenderTexture.End();
+                _renderTexture.End();
 
                 CCDrawManager.PopMatrix();
             }
 
-            if (m_bRestoreScissor)
+            if (_restoreScissor)
             {
                 CCDrawManager.SetScissorInPoints(
-                    m_tSaveScissorRect.Origin.X, m_tSaveScissorRect.Origin.Y,
-                    m_tSaveScissorRect.Size.Width, m_tSaveScissorRect.Size.Height);
+                    _saveScissorRect.Origin.X, _saveScissorRect.Origin.Y,
+                    _saveScissorRect.Size.Width, _saveScissorRect.Size.Height);
 
                 CCDrawManager.ScissorRectEnabled = true;
 
-                m_bRestoreScissor = false;
+                _restoreScissor = false;
             }
             else
             {
@@ -272,14 +272,14 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
 
             if (m_childClippingMode == CCClipMode.BoundsWithRenderTarget)
             {
-                m_pRenderTexture.Sprite.Visit();
+                _renderTexture.Sprite.Visit();
             }
         }
     }
 
     public override bool Init()
     {
-        if (m_bDidInit)
+        if (_didInit)
         {
             return (true);
         }
@@ -291,9 +291,9 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
         if (director != null)
         {
             //                ContentSize = director.WinSize;
-            m_bIsAccelerometerEnabled = false;
+            _isAccelerometerEnabled = false;
             bRet = true;
-            m_bDidInit = true;
+            _didInit = true;
         }
         return bRet;
     }
@@ -305,7 +305,7 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
 
     public override void OnEnter()
     {
-        if(!m_bDidInit) {
+        if(!_didInit) {
             Init();
         }
 
@@ -316,7 +316,7 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
         CCApplication application = CCApplication.SharedApplication;
 
         // add this layer to concern the Accelerometer Sensor
-        if (m_bIsAccelerometerEnabled)
+        if (_isAccelerometerEnabled)
         {
             director.Accelerometer.SetDelegate(this);
 			}
@@ -326,7 +326,7 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
     {
 
         // remove this layer from the delegates who concern Accelerometer Sensor
-        if (m_bIsAccelerometerEnabled)
+        if (_isAccelerometerEnabled)
         {
             //CCDirector director = CCDirector.SharedDirector;
             //director.Accelerometer.setDelegate(null);
@@ -337,7 +337,7 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
 
     public override void OnEnterTransitionDidFinish()
     {
-        //if (m_bIsAccelerometerEnabled)
+        //if (_isAccelerometerEnabled)
         //{
         //    CCDirector.SharedDirector.Accelerometer.SetDelegate(this);
         //}
@@ -348,12 +348,12 @@ public class CCLayer : CCNode, ICCAccelerometerDelegate
     public bool AccelerometerEnabled
     {
         get { 
-				return m_bIsAccelerometerEnabled;
+				return _isAccelerometerEnabled;
 			}
         set {
-            if (value != m_bIsAccelerometerEnabled)
+            if (value != _isAccelerometerEnabled)
             {
-                m_bIsAccelerometerEnabled = value;
+                _isAccelerometerEnabled = value;
 
                 if (m_bRunning)
                 {

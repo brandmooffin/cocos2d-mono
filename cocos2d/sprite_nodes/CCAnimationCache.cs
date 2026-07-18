@@ -6,7 +6,7 @@ namespace Cocos2D;
 public class CCAnimationCache 
 {
     private static CCAnimationCache s_pSharedAnimationCache;
-    private Dictionary<string, CCAnimation> m_pAnimations;
+    private Dictionary<string, CCAnimation> _animations;
 
     public static CCAnimationCache SharedAnimationCache
     {
@@ -29,9 +29,9 @@ public class CCAnimationCache
 
     public void AddAnimation(CCAnimation animation, string name)
     {
-        if (!m_pAnimations.ContainsKey(name))
+        if (!_animations.ContainsKey(name))
         {
-            m_pAnimations.Add(name, animation);
+            _animations.Add(name, animation);
         }
     }
 
@@ -41,7 +41,7 @@ public class CCAnimationCache
         {
             return;
         }
-        m_pAnimations.Remove(name);
+        _animations.Remove(name);
     }
 
     public CCAnimation this[string index]
@@ -52,14 +52,14 @@ public class CCAnimationCache
         }
         set
         {
-            m_pAnimations[index] = value;
+            _animations[index] = value;
         }
     }
 
     public CCAnimation AnimationByName(string name)
     {
         CCAnimation retValue;
-        m_pAnimations.TryGetValue(name, out retValue);
+        _animations.TryGetValue(name, out retValue);
         return retValue;
     }
 
@@ -117,7 +117,7 @@ public class CCAnimationCache
 
     public bool Init()
     {
-        m_pAnimations = new Dictionary<string, CCAnimation>();
+        _animations = new Dictionary<string, CCAnimation>();
         return true;
     }
 

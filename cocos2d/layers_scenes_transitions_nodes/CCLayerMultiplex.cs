@@ -25,7 +25,7 @@ public class CCLayerMultiplex : CCLayerRGBA
     /// </summary>
     protected int m_nEnabledLayer=NoLayer;
     protected Dictionary<int, CCLayer> m_pLayers = new Dictionary<int,CCLayer>();
-    private CCAction m_InAction, m_OutAction;
+    private CCAction _inAction, _outAction;
     public bool ShowFirstLayerOnEnter { get; set; }
 
     #region Constructors
@@ -48,22 +48,22 @@ public class CCLayerMultiplex : CCLayerRGBA
     public CCLayerMultiplex(CCAction inAction, CCAction outAction, params CCLayer[] layer)
     {
         InitWithLayers(layer);
-        m_InAction = inAction;
-        m_OutAction = outAction;
+        _inAction = inAction;
+        _outAction = outAction;
         ShowFirstLayerOnEnter = true;
     }
 
     public CCLayerMultiplex(CCAction inAction, CCAction outAction)
     {
-        m_InAction = inAction;
-        m_OutAction = outAction;
+        _inAction = inAction;
+        _outAction = outAction;
     }
 
     public CCLayerMultiplex(CCAction inAction, CCAction outAction, CCLayer layer)
     {
         InitWithLayer(layer);
-        m_InAction = inAction;
-        m_OutAction = outAction;
+        _inAction = inAction;
+        _outAction = outAction;
     }
     #endregion
 
@@ -103,8 +103,8 @@ public class CCLayerMultiplex : CCLayerRGBA
     /// </summary>
     public CCAction InAction
     {
-        get { return (m_InAction); }
-        set { m_InAction = value; }
+        get { return (_inAction); }
+        set { _inAction = value; }
     }
 
     /// <summary>
@@ -112,8 +112,8 @@ public class CCLayerMultiplex : CCLayerRGBA
     /// </summary>
     public CCAction OutAction
     {
-        get { return (m_OutAction); }
-        set { m_OutAction = value; }
+        get { return (_outAction); }
+        set { _outAction = value; }
     }
 
     /// <summary>
@@ -308,11 +308,11 @@ public class CCLayerMultiplex : CCLayerRGBA
             if (m_pLayers.ContainsKey(m_nEnabledLayer))
             {
                 outLayer = m_pLayers[m_nEnabledLayer];
-                if (m_OutAction != null)
+                if (_outAction != null)
                 {
                     outLayer.RunAction(
                         new CCSequence(
-                            (CCFiniteTimeAction)m_OutAction.Copy(),
+                            (CCFiniteTimeAction)_outAction.Copy(),
                             new CCCallFunc(() => RemoveChild(outLayer, true))
                             )
                         );
@@ -348,9 +348,9 @@ public class CCLayerMultiplex : CCLayerRGBA
         AddChild(m_pLayers[n]);
         m_nEnabledLayer = n;
         // Run the in-action on the new layer
-        if (m_InAction != null)
+        if (_inAction != null)
         {
-            m_pLayers[n].RunAction(m_InAction.Copy());
+            m_pLayers[n].RunAction(_inAction.Copy());
         }
         return (m_pLayers[m_nEnabledLayer]);
     }
