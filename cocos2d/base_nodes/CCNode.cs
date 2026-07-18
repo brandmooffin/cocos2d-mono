@@ -124,11 +124,11 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
     // input variables
     private bool _keypadEnabled;
-		private bool _keyboardEnabled;
+    private bool _keyboardEnabled;
     private bool _gamePadEnabled;
     private bool _touchEnabled;
     private CCTouchMode _touchMode = CCTouchMode.OneByOne;
-		private CCKeyboardMode _keyboardMode = CCKeyboardMode.All;
+    private CCKeyboardMode _keyboardMode = CCKeyboardMode.All;
     private int _touchPriority;
     private bool _gamePadDelegatesInited;
 
@@ -1523,7 +1523,7 @@ public class CCNode : ICCSelectorProtocol, ICCFocusable, ICCTargetedTouchDelegat
 
         CCDirector director = CCDirector.SharedDirector;
 
-        // add this node to concern the kaypad msg
+        // add this node to concern the keypad msg
         if (_keypadEnabled)
         {
             director.KeypadDispatcher.AddDelegate(this);
