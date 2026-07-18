@@ -24,7 +24,10 @@ public class CCMenuItemSprite : CCMenuItem
 
             if (_normalImage != null)
             {
-                value.Position = _normalImage.Position;
+                if (value != null)
+                {
+                    value.Position = _normalImage.Position;
+                }
                 RemoveChild(_normalImage, true);
             }
 
@@ -46,7 +49,10 @@ public class CCMenuItemSprite : CCMenuItem
 
             if (_selectedImage != null)
             {
-                value.Position = _selectedImage.Position;
+                if (value != null)
+                {
+                    value.Position = _selectedImage.Position;
+                }
                 RemoveChild(_selectedImage, true);
             }
 
@@ -68,7 +74,10 @@ public class CCMenuItemSprite : CCMenuItem
 
             if (_disabledImage != null)
             {
-                value.Position = _disabledImage.Position;
+                if (value != null)
+                {
+                    value.Position = _disabledImage.Position;
+                }
                 RemoveChild(_disabledImage, true);
             }
 
