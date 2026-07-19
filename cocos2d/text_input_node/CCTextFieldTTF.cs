@@ -171,7 +171,7 @@ public class CCTextFieldTTF : CCLabelTTF, ICCTargetedTouchDelegate
             else if (_touchHandled && (_readOnly || !_autoEdit))
             {
                 CCDirector.SharedDirector.TouchDispatcher.RemoveDelegate(this);
-                _touchHandled = true;
+                _touchHandled = false;
             }
         }
         else
