@@ -31,7 +31,7 @@ public partial class CCLabel : CCLabelBMFont
     }
 
     public static CCTexture2D m_pTexture;
-    private static CCSize m_pAtlasTextureSize = new CCSize(0, 0);
+    private static CCSize _atlasTextureSize = new CCSize(0, 0);
     
     protected static bool m_bTextureDirty = true;
 
@@ -99,24 +99,24 @@ public partial class CCLabel : CCLabelBMFont
     {
         if (width > 0 && height > 0)
         {
-            m_pAtlasTextureSize = new CCSize(width, height);
+            _atlasTextureSize = new CCSize(width, height);
         }
     }
 
     public static void InitializeTTFAtlas(int width, int height)
     {
-        m_nWidth = width;
-        m_nHeight = height;
-        m_nDepth = 4;
+        _width = width;
+        _height = height;
+        _depth = 4;
 
         m_pTexture?.Dispose();
         m_pTexture = new CCTexture2D();
         m_pData = new int[width * height];
 
-        m_pNodes.Clear();
-        m_pNodes.Add(new ivec3() { x = 1, y = 1, z = m_nWidth - 2 });
+        _nodes.Clear();
+        _nodes.Add(new ivec3() { x = 1, y = 1, z = _width - 2 });
 
-        m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, m_nWidth, m_nHeight, true);
+        m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, _width, _height, true);
     }
 
     public CCLabel()
@@ -192,9 +192,9 @@ public partial class CCLabel : CCLabelBMFont
 
         if (m_pData == null || s_pConfigurations.Count == 0)
         {
-            if (m_pAtlasTextureSize.Width > 0 && m_pAtlasTextureSize.Height > 0)
+            if (_atlasTextureSize.Width > 0 && _atlasTextureSize.Height > 0)
             {
-                InitializeTTFAtlas((int)m_pAtlasTextureSize.Width, (int)m_pAtlasTextureSize.Height);
+                InitializeTTFAtlas((int)_atlasTextureSize.Width, (int)_atlasTextureSize.Height);
             }
             else if (fontSize >= 105)
             {
@@ -378,7 +378,7 @@ public partial class CCLabel : CCLabelBMFont
 
         if (m_bTextureDirty)
         {
-                m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, m_nWidth, m_nHeight, true);
+            m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, _width, _height, true);
 
             m_bTextureDirty = false;
         }
@@ -409,37 +409,37 @@ public partial class CCLabel : CCLabelBMFont
         public int height;
     }
 
-    private static CCRawList<ivec3> m_pNodes = new CCRawList<ivec3>();
-    private static int m_nUsed;
-    private static int m_nWidth;
-    private static int m_nHeight;
-    private static int m_nDepth;
+    private static CCRawList<ivec3> _nodes = new CCRawList<ivec3>();
+    private static int _used;
+    private static int _width;
+    private static int _height;
+    private static int _depth;
     public static int[] m_pData;
 
     private int Fit(int index, int width, int height)
     {
-        var node = m_pNodes[index];
+        var node = _nodes[index];
 
         var x = node.x;
         var y = node.y;
         var widthLeft = width;
         var i = index;
 
-        if ((x + width) > (m_nWidth - 1))
+        if ((x + width) > (_width - 1))
         {
             return -1;
         }
 
         while (widthLeft > 0)
         {
-            node = m_pNodes[i];
+            node = _nodes[i];
 
             if (node.y > y)
             {
                 y = node.y;
             }
 
-            if ((y + height) > (m_nHeight - 1))
+            if ((y + height) > (_height - 1))
             {
                 return -1;
             }
@@ -454,13 +454,13 @@ public partial class CCLabel : CCLabelBMFont
 
     private void Merge()
     {
-        var nodes = m_pNodes.Elements;
-        for (int i = 0, count = m_pNodes.Count; i < count - 1; ++i)
+        var nodes = _nodes.Elements;
+        for (int i = 0, count = _nodes.Count; i < count - 1; ++i)
         {
             if (nodes[i].y == nodes[i + 1].y)
             {
                 nodes[i].z += nodes[i + 1].z;
-                m_pNodes.RemoveAt(i + 1);
+                _nodes.RemoveAt(i + 1);
                 --count;
                 --i;
             }
@@ -477,13 +477,13 @@ public partial class CCLabel : CCLabelBMFont
         int bestIndex = -1;
         int bestWidth = int.MaxValue;
 
-        for (i = 0; i < m_pNodes.Count; ++i)
+        for (i = 0; i < _nodes.Count; ++i)
         {
             int y = Fit(i, width, height);
 
             if (y >= 0)
             {
-                node = m_pNodes[i];
+                node = _nodes[i];
                 if (((y + height) < bestHeight) || (((y + height) == bestHeight) && (node.z < bestWidth)))
                 {
                     bestHeight = y + height;
@@ -508,12 +508,12 @@ public partial class CCLabel : CCLabelBMFont
         node.x = region.x;
         node.y = region.y + height;
         node.z = width;
-        m_pNodes.Insert(bestIndex, node);
+        _nodes.Insert(bestIndex, node);
 
-        for (i = bestIndex + 1; i < m_pNodes.Count; ++i)
+        for (i = bestIndex + 1; i < _nodes.Count; ++i)
         {
-            node = m_pNodes[i];
-            prev = m_pNodes[i - 1];
+            node = _nodes[i];
+            prev = _nodes[i - 1];
 
             if (node.x < (prev.x + prev.z))
             {
@@ -522,12 +522,12 @@ public partial class CCLabel : CCLabelBMFont
                 node.z -= shrink;
                 if (node.z <= 0)
                 {
-                    m_pNodes.RemoveAt(i);
+                    _nodes.RemoveAt(i);
                     --i;
                 }
                 else
                 {
-                    m_pNodes[i] = node;
+                    _nodes[i] = node;
                     break;
                 }
             }
@@ -539,7 +539,7 @@ public partial class CCLabel : CCLabelBMFont
 
         Merge();
 
-        m_nUsed += width * height;
+        _used += width * height;
 
         return region;
     }
@@ -553,21 +553,20 @@ public partial class CCLabel : CCLabelBMFont
 
         Debug.Assert(x > 0);
         Debug.Assert(y > 0);
-        Debug.Assert(x < (m_nWidth - 1));
-        Debug.Assert((x + width) <= (m_nWidth - 1));
-        Debug.Assert(y < (m_nHeight - 1));
-        Debug.Assert((y + height) <= (m_nHeight - 1));
+        Debug.Assert(x < (_width - 1));
+        Debug.Assert((x + width) <= (_width - 1));
+        Debug.Assert(y < (_height - 1));
+        Debug.Assert((y + height) <= (_height - 1));
 
-        var depth = m_nDepth;
         for (int i = 0; i < height; ++i)
         {
             for (int j = 0; j < width; j++)
             {
                 var b = (byte)((data[i * stride + j] & 0xFF0000) >> 16);
-                m_pData[((y + i) * m_nWidth + x) + j] = b << 24 | b << 16 | b << 8 | b;
+                m_pData[((y + i) * _width + x) + j] = b << 24 | b << 16 | b << 8 | b;
             }
-            //    Array.Copy(data, (i * stride), m_pData, ((y + i) * m_nWidth + x), width);
-            //                Buffer.BlockCopy(data, (i * stride), m_pData, ((y + i) * m_nWidth + x) * depth, width * depth);
+            //    Array.Copy(data, (i * stride), m_pData, ((y + i) * _width + x), width);
+            //                Buffer.BlockCopy(data, (i * stride), m_pData, ((y + i) * _width + x) * _depth, width * _depth);
         }
     }
 

@@ -5,19 +5,19 @@ namespace Cocos2D;
 
 public class CCLabelTTF : CCSprite, ICCLabelProtocol
 {
-    private float m_fFontSize;
-    private CCTextAlignment m_hAlignment;
-    private string m_pFontName;
+    private float _fontSize;
+    private CCTextAlignment _hAlignment;
+    private string _fontName;
     protected string m_pString = String.Empty;
-    private CCSize m_tDimensions;
-    private CCVerticalTextAlignment m_vAlignment;
+    private CCSize _dimensions;
+    private CCVerticalTextAlignment _vAlignment;
 
     public CCLabelTTF ()
     {
-        m_hAlignment = CCTextAlignment.Center;
-        m_vAlignment = CCVerticalTextAlignment.Top;
-        m_pFontName = string.Empty;
-        m_fFontSize = 0.0f;
+        _hAlignment = CCTextAlignment.Center;
+        _vAlignment = CCVerticalTextAlignment.Top;
+        _fontName = string.Empty;
+        _fontSize = 0.0f;
 
         Init();
     }
@@ -39,12 +39,12 @@ public class CCLabelTTF : CCSprite, ICCLabelProtocol
 
     public string FontName
     {
-        get { return m_pFontName; }
+        get { return _fontName; }
         set
         {
-            if (m_pFontName != value)
+            if (_fontName != value)
             {
-                m_pFontName = value;
+                _fontName = value;
                 if (m_pString.Length > 0)
                 {
                     Refresh();
@@ -55,12 +55,12 @@ public class CCLabelTTF : CCSprite, ICCLabelProtocol
 
     public float FontSize
     {
-        get { return m_fFontSize; }
+        get { return _fontSize; }
         set
         {
-            if (m_fFontSize != value)
+            if (_fontSize != value)
             {
-                m_fFontSize = value;
+                _fontSize = value;
                 if (m_pString.Length > 0)
                 {
                     Refresh();
@@ -71,12 +71,12 @@ public class CCLabelTTF : CCSprite, ICCLabelProtocol
 
     public CCSize Dimensions
     {
-        get { return m_tDimensions; }
+        get { return _dimensions; }
         set
         {
-            if (!m_tDimensions.Equals(value))
+            if (!_dimensions.Equals(value))
             {
-                m_tDimensions = value;
+                _dimensions = value;
                 if (m_pString.Length > 0)
                 {
                     Refresh();
@@ -87,12 +87,12 @@ public class CCLabelTTF : CCSprite, ICCLabelProtocol
 
     public CCVerticalTextAlignment VerticalAlignment
     {
-        get { return m_vAlignment; }
+        get { return _vAlignment; }
         set
         {
-            if (m_vAlignment != value)
+            if (_vAlignment != value)
             {
-                m_vAlignment = value;
+                _vAlignment = value;
                 if (m_pString.Length > 0)
                 {
                     Refresh();
@@ -103,12 +103,12 @@ public class CCLabelTTF : CCSprite, ICCLabelProtocol
 
     public CCTextAlignment HorizontalAlignment
     {
-        get { return m_hAlignment; }
+        get { return _hAlignment; }
         set
         {
-            if (m_hAlignment != value)
+            if (_hAlignment != value)
             {
-                m_hAlignment = value;
+                _hAlignment = value;
                 if (m_pString.Length > 0)
                 {
                     Refresh();
@@ -168,7 +168,7 @@ public class CCLabelTTF : CCSprite, ICCLabelProtocol
 
     public override string ToString()
     {
-        return string.Format("FontName:{0}, FontSize:{1}", m_pFontName, m_fFontSize);
+        return string.Format("FontName:{0}, FontSize:{1}", _fontName, _fontSize);
     }
 
     public override bool Init()
@@ -197,11 +197,11 @@ public class CCLabelTTF : CCSprite, ICCLabelProtocol
             // shader program
             //this->setShaderProgram(CCShaderCache::sharedShaderCache()->programForKey(SHADER_PROGRAM));
 
-            m_tDimensions = new CCSize(dimensions.Width, dimensions.Height);
-            m_hAlignment = hAlignment;
-            m_vAlignment = vAlignment;
-            m_pFontName = fontName;
-            m_fFontSize = fontSize;
+            _dimensions = new CCSize(dimensions.Width, dimensions.Height);
+            _hAlignment = hAlignment;
+            _vAlignment = vAlignment;
+            _fontName = fontName;
+            _fontSize = fontSize;
 
             Text = (text);
 
@@ -216,16 +216,16 @@ public class CCLabelTTF : CCSprite, ICCLabelProtocol
         CCTexture2D tex = new CCTexture2D();
 #if DEBUG
         CCLog.Log("CCLabelTTF: updating texture with string '{0}'", m_pString);
-        CCLog.Log("Font: {0}, Size: {1}", m_pFontName, m_fFontSize);
-        CCLog.Log("Dimensions: {0}, HAlignment: {1}, VAlignment: {2}", m_tDimensions, m_hAlignment, m_vAlignment);
+        CCLog.Log("Font: {0}, Size: {1}", _fontName, _fontSize);
+        CCLog.Log("Dimensions: {0}, HAlignment: {1}, VAlignment: {2}", _dimensions, _hAlignment, _vAlignment);
         CCLog.Log("Content Scale Factor: {0}", CCMacros.CCContentScaleFactor());
 #endif
         var result = tex.InitWithString(m_pString,
-                           m_tDimensions.PointsToPixels(),
-                           m_hAlignment,
-                           m_vAlignment,
-                           m_pFontName,
-                           m_fFontSize);
+                           _dimensions.PointsToPixels(),
+                           _hAlignment,
+                           _vAlignment,
+                           _fontName,
+                           _fontSize);
 
         if (result)
         {
