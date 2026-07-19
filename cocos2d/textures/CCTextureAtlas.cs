@@ -48,7 +48,7 @@ public class CCTextureAtlas
 {
     internal bool Dirty = true; //indicates whether or not the array buffer of the VBO needs to be updated
 
-    private CCQuadVertexBuffer m_pVertexBuffer;
+    private CCQuadVertexBuffer _vertexBuffer;
     public CCRawList<CCV3F_C4B_T2F_Quad> m_pQuads;
     protected CCTexture2D m_pTexture;
 
@@ -129,11 +129,11 @@ public class CCTextureAtlas
 
         if (Dirty)
         {
-            m_pVertexBuffer.UpdateBuffer();
+            _vertexBuffer.UpdateBuffer();
             Dirty = false;
         }
 
-        CCDrawManager.DrawQuadsBuffer(m_pVertexBuffer, start, n);
+        CCDrawManager.DrawQuadsBuffer(_vertexBuffer, start, n);
     }
 
     /// <summary>
@@ -149,9 +149,9 @@ public class CCTextureAtlas
             return true;
         }
 
-        m_pVertexBuffer.Capacity = newCapacity;
+        _vertexBuffer.Capacity = newCapacity;
 
-        m_pQuads = m_pVertexBuffer.Data;
+        m_pQuads = _vertexBuffer.Data;
 
         Dirty = true;
 
@@ -160,7 +160,7 @@ public class CCTextureAtlas
 
     public void IncreaseTotalQuadsWith(int amount)
     {
-        m_pVertexBuffer.Count += amount;
+        _vertexBuffer.Count += amount;
     }
 
     public void MoveQuadsFromIndex(int oldIndex, int amount, int newIndex)
@@ -283,8 +283,8 @@ public class CCTextureAtlas
             capacity = 4;
         }
 
-        m_pVertexBuffer = new CCQuadVertexBuffer(capacity, BufferUsage.WriteOnly);
-        m_pQuads = m_pVertexBuffer.Data;
+        _vertexBuffer = new CCQuadVertexBuffer(capacity, BufferUsage.WriteOnly);
+        m_pQuads = _vertexBuffer.Data;
 
         Dirty = true;
 

@@ -35,7 +35,7 @@ public class CCTMXMapInfo : ICCSAXDelegator
     protected Dictionary<uint, Dictionary<string, string>> m_pTileProperties;
     protected List<CCTMXTilesetInfo> m_pTilesets;
     protected byte[] m_sCurrentString;
-    private string m_sResources;
+    private string _resources;
     protected string m_sTMXFileName;
 
     protected CCSize m_tMapSize;
@@ -628,7 +628,7 @@ public class CCTMXMapInfo : ICCSAXDelegator
 
         if (resourcePath != null)
         {
-            m_sResources = resourcePath;
+            _resources = resourcePath;
         }
 
         m_pObjectGroups = new List<CCTMXObjectGroup>(4);

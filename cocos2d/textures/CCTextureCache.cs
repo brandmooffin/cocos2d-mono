@@ -21,7 +21,7 @@ public partial class CCTextureCache : IDisposable, ICCSelectorProtocol
 
     private static CCTextureCache s_sharedTextureCache;
 
-    private readonly object m_pDictLock = new object();
+    private readonly object _dictLock = new object();
     protected Dictionary<string, CCTexture2D> m_pTextures = new Dictionary<string, CCTexture2D>();
 
     ~CCTextureCache() 
@@ -143,14 +143,14 @@ public partial class CCTextureCache : IDisposable, ICCSelectorProtocol
 
         var assetName = CreateAssetKey(fileimage);
 
-			lock (m_pDictLock) {
+			lock (_dictLock) {
 				m_pTextures.TryGetValue (assetName, out texture);
 			}
 			if (texture == null) {
 				texture = new CCTexture2D ();
 
 				if (texture.InitWithFile (fileimage)) {
-					lock (m_pDictLock) {
+					lock (_dictLock) {
 						m_pTextures [assetName] = texture;
 					}
 				} else {
@@ -164,7 +164,7 @@ public partial class CCTextureCache : IDisposable, ICCSelectorProtocol
 
     public CCTexture2D AddImage(byte[] data, string assetName, SurfaceFormat format)
     {
-        lock (m_pDictLock)
+        lock (_dictLock)
         {
             CCTexture2D texture;
 
@@ -202,7 +202,7 @@ public partial class CCTextureCache : IDisposable, ICCSelectorProtocol
     {
         CCTexture2D texture;
 
-        lock (m_pDictLock)
+        lock (_dictLock)
         {
             if (!m_pTextures.TryGetValue(assetName, out texture))
             {
