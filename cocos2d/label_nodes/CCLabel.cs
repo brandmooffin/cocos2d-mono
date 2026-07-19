@@ -378,7 +378,7 @@ public partial class CCLabel : CCLabelBMFont
 
         if (m_bTextureDirty)
         {
-                m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, _width, _height, true);
+            m_pTexture.InitWithRawData(m_pData, SurfaceFormat.Color, _width, _height, true);
 
             m_bTextureDirty = false;
         }
@@ -558,7 +558,6 @@ public partial class CCLabel : CCLabelBMFont
         Debug.Assert(y < (_height - 1));
         Debug.Assert((y + height) <= (_height - 1));
 
-        var depth = _depth;
         for (int i = 0; i < height; ++i)
         {
             for (int j = 0; j < width; j++)
@@ -567,7 +566,7 @@ public partial class CCLabel : CCLabelBMFont
                 m_pData[((y + i) * _width + x) + j] = b << 24 | b << 16 | b << 8 | b;
             }
             //    Array.Copy(data, (i * stride), m_pData, ((y + i) * _width + x), width);
-            //                Buffer.BlockCopy(data, (i * stride), m_pData, ((y + i) * _width + x) * depth, width * depth);
+            //                Buffer.BlockCopy(data, (i * stride), m_pData, ((y + i) * _width + x) * _depth, width * _depth);
         }
     }
 
