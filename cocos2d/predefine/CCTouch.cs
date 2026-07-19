@@ -8,20 +8,20 @@ namespace Cocos2D;
 
 public class CCTouch
 {
-    private int m_nId;
+    private int _id;
 
     /// <summary>
     /// Point of action
     /// </summary>
-    private CCPoint m_point;
+    private CCPoint _point;
 
     /// <summary>
     /// Previous point in the action
     /// </summary>
-    private CCPoint m_prevPoint;
+    private CCPoint _prevPoint;
 
-    private CCPoint m_startPoint;
-    private bool m_startPointCaptured;
+    private CCPoint _startPoint;
+    private bool _startPointCaptured;
 
     public CCTouch()
         : this(0, 0, 0)
@@ -30,31 +30,31 @@ public class CCTouch
 
     public CCTouch(int id, float x, float y)
     {
-        m_nId = id;
-        m_point = new CCPoint(x, y);
-        m_prevPoint = new CCPoint(x, y);
+        _id = id;
+        _point = new CCPoint(x, y);
+        _prevPoint = new CCPoint(x, y);
     }
 
     /** returns the start touch location in OpenGL coordinates */
     public CCPoint StartLocation
     {
-        get { return CCDirector.SharedDirector.ConvertToGl(m_startPoint); }
+        get { return CCDirector.SharedDirector.ConvertToGl(_startPoint); }
     }
 
     public CCPoint LocationInView
     {
-        get { return m_point; }
+        get { return _point; }
     }
 
     /** returns the start touch location in screen coordinates */
     public CCPoint StartLocationInView
     {
-        get { return m_startPoint; }
+        get { return _startPoint; }
     }
 
     public CCPoint PreviousLocationInView
     {
-        get { return m_prevPoint; }
+        get { return _prevPoint; }
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public class CCTouch
     /// </summary>
     public CCPoint Location
     {
-        get { return CCDirector.SharedDirector.ConvertToGl(m_point); }
+        get { return CCDirector.SharedDirector.ConvertToGl(_point); }
     }
 
     /// <summary>
@@ -70,13 +70,13 @@ public class CCTouch
     /// </summary>
     public CCPoint PreviousLocation
     {
-        get { return CCDirector.SharedDirector.ConvertToGl(m_prevPoint); }
+        get { return CCDirector.SharedDirector.ConvertToGl(_prevPoint); }
     }
 
 
     public int Id
     {
-        get { return m_nId; }
+        get { return _id; }
     }
 
     /// <summary>
@@ -99,14 +99,14 @@ public class CCTouch
 
     public void SetTouchInfo(int id, float x, float y)
     {
-        m_nId = id;
-        m_prevPoint = m_point;
-        m_point.X = x;
-        m_point.Y = y;
-        if (!m_startPointCaptured)
+        _id = id;
+        _prevPoint = _point;
+        _point.X = x;
+        _point.Y = y;
+        if (!_startPointCaptured)
         {
-            m_startPoint = m_point;
-            m_startPointCaptured = true;
+            _startPoint = _point;
+            _startPointCaptured = true;
         }
     }
 }
