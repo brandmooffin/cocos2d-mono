@@ -10,12 +10,12 @@ public class CCTileMapAtlas : CCAtlasNode
     //! numbers of tiles to render
     protected int m_nItemsToRender;
     protected Dictionary<CCGridSize, int> m_pPosToAtlasIndex;
-    private CCImageTGA m_pTGAInfo;
+    private CCImageTGA _tgaInfo;
 
     public CCImageTGA TGAInfo
     {
-        get { return m_pTGAInfo; }
-        set { m_pTGAInfo = value; }
+        get { return _tgaInfo; }
+        set { _tgaInfo = value; }
     }
 
     public static CCTileMapAtlas Create(string tile, string mapFile, int tileWidth, int tileHeight)
@@ -34,7 +34,7 @@ public class CCTileMapAtlas : CCAtlasNode
         {
             m_pPosToAtlasIndex = new Dictionary<CCGridSize, int>();
             UpdateAtlasValues();
-            ContentSize = new CCSize(m_pTGAInfo.width * m_uItemWidth, m_pTGAInfo.height * m_uItemHeight);
+            ContentSize = new CCSize(_tgaInfo.width * m_uItemWidth, _tgaInfo.height * m_uItemHeight);
             return true;
         }
         return false;
@@ -42,29 +42,29 @@ public class CCTileMapAtlas : CCAtlasNode
 
     public Color TileAt(CCGridSize position)
     {
-        Debug.Assert(m_pTGAInfo != null, "tgaInfo must not be nil");
-        Debug.Assert(position.X < m_pTGAInfo.width, "Invalid position.x");
-        Debug.Assert(position.Y < m_pTGAInfo.height, "Invalid position.y");
+        Debug.Assert(_tgaInfo != null, "tgaInfo must not be nil");
+        Debug.Assert(position.X < _tgaInfo.width, "Invalid position.x");
+        Debug.Assert(position.Y < _tgaInfo.height, "Invalid position.y");
 
-        return m_pTGAInfo.imageData[position.X + position.Y * m_pTGAInfo.width];
+        return _tgaInfo.imageData[position.X + position.Y * _tgaInfo.width];
     }
 
     public void SetTile(Color tile, CCGridSize position)
     {
-        Debug.Assert(m_pTGAInfo != null, "tgaInfo must not be nil");
+        Debug.Assert(_tgaInfo != null, "tgaInfo must not be nil");
         Debug.Assert(m_pPosToAtlasIndex != null, "posToAtlasIndex must not be nil");
-        Debug.Assert(position.X < m_pTGAInfo.width, "Invalid position.x");
-        Debug.Assert(position.Y < m_pTGAInfo.height, "Invalid position.x");
+        Debug.Assert(position.X < _tgaInfo.width, "Invalid position.x");
+        Debug.Assert(position.Y < _tgaInfo.height, "Invalid position.x");
         Debug.Assert(tile.R != 0, "R component must be non 0");
 
-        Color value = m_pTGAInfo.imageData[position.X + position.Y * m_pTGAInfo.width];
+        Color value = _tgaInfo.imageData[position.X + position.Y * _tgaInfo.width];
         if (value.R == 0)
         {
             CCLog.Log("cocos2d: Value.r must be non 0.");
         }
         else
         {
-            m_pTGAInfo.imageData[position.X + position.Y * m_pTGAInfo.width] = tile;
+            _tgaInfo.imageData[position.X + position.Y * _tgaInfo.width] = tile;
 
             // XXX: this method consumes a lot of memory
             // XXX: a tree of something like that shall be impolemented
@@ -75,7 +75,7 @@ public class CCTileMapAtlas : CCAtlasNode
 
     public void ReleaseMap()
     {
-        m_pTGAInfo = null;
+        _tgaInfo = null;
         m_pPosToAtlasIndex = null;
     }
 
@@ -83,16 +83,16 @@ public class CCTileMapAtlas : CCAtlasNode
     {
         Debug.Assert(!string.IsNullOrEmpty(file), "file must be non-nil");
 
-        m_pTGAInfo = new CCImageTGA(CCFileUtils.FullPathFromRelativePath(file));
+        _tgaInfo = new CCImageTGA(CCFileUtils.FullPathFromRelativePath(file));
     }
 
     private void CalculateItemsToRender()
     {
-        Debug.Assert(m_pTGAInfo != null, "tgaInfo must be non-nil");
+        Debug.Assert(_tgaInfo != null, "tgaInfo must be non-nil");
 
         m_nItemsToRender = 0;
-        var data = m_pTGAInfo.imageData;
-        for (int i = 0, count = m_pTGAInfo.width * m_pTGAInfo.height; i < count;  i++)
+        var data = _tgaInfo.imageData;
+        for (int i = 0, count = _tgaInfo.width * _tgaInfo.height; i < count;  i++)
         {
             if (data[i].R != 0)
             {
@@ -162,17 +162,17 @@ public class CCTileMapAtlas : CCAtlasNode
 
     public override void UpdateAtlasValues()
     {
-        Debug.Assert(m_pTGAInfo != null, "tgaInfo must be non-nil");
+        Debug.Assert(_tgaInfo != null, "tgaInfo must be non-nil");
 
         int total = 0;
 
-        for (int x = 0; x < m_pTGAInfo.width; x++)
+        for (int x = 0; x < _tgaInfo.width; x++)
         {
-            for (int y = 0; y < m_pTGAInfo.height; y++)
+            for (int y = 0; y < _tgaInfo.height; y++)
             {
                 if (total < m_nItemsToRender)
                 {
-                    Color value = m_pTGAInfo.imageData[x + y * m_pTGAInfo.width];
+                    Color value = _tgaInfo.imageData[x + y * _tgaInfo.width];
 
                     if (value.R != 0)
                     {
