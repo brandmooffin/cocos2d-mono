@@ -7,32 +7,32 @@ namespace Cocos2D;
 public class CCTouchDispatcher : ICCEGLTouchDelegate
 {
     private static List<CCTouch> pMutableTouches;
-    private bool m_bDispatchEvents;
-    private bool m_bLocked;
-    private bool m_bToAdd;
-    private bool m_bToQuit;
-    private bool m_bToRemove;
-    private List<CCTouchHandler> m_pHandlersToAdd;
-    private List<object> m_pHandlersToRemove;
+    private bool _dispatchEvents;
+    private bool _locked;
+    private bool _toAdd;
+    private bool _toQuit;
+    private bool _toRemove;
+    private List<CCTouchHandler> _handlersToAdd;
+    private List<object> _handlersToRemove;
     protected List<CCTouchHandler> m_pStandardHandlers;
     protected List<CCTouchHandler> m_pTargetedHandlers;
-    private bool m_bRearrangeTargetedHandlersUponTouch = false;
-    private bool m_bRearrangeStandardHandlersUponTouch = false;
+    private bool _rearrangeTargetedHandlersUponTouch = false;
+    private bool _rearrangeStandardHandlersUponTouch = false;
 
     /// <summary>
     /// Whether or not the events are going to be dispatched. Default: true
     /// </summary>
     public bool IsDispatchEvents
     {
-        get { return m_bDispatchEvents; }
-        set { m_bDispatchEvents = value; }
+        get { return _dispatchEvents; }
+        set { _dispatchEvents = value; }
     }
 
     #region IEGLTouchDelegate Members
 
     public virtual void TouchesBegan(List<CCTouch> touches)
     {
-        if (m_bDispatchEvents)
+        if (_dispatchEvents)
         {
             Touches(touches, (int) CCTouchType.Began);
         }
@@ -40,7 +40,7 @@ public class CCTouchDispatcher : ICCEGLTouchDelegate
 
     public virtual void TouchesMoved(List<CCTouch> touches)
     {
-        if (m_bDispatchEvents)
+        if (_dispatchEvents)
         {
             Touches(touches, CCTouchType.Moved);
         }
@@ -48,7 +48,7 @@ public class CCTouchDispatcher : ICCEGLTouchDelegate
 
     public virtual void TouchesEnded(List<CCTouch> touches)
     {
-        if (m_bDispatchEvents)
+        if (_dispatchEvents)
         {
             Touches(touches, CCTouchType.Ended);
         }
@@ -56,7 +56,7 @@ public class CCTouchDispatcher : ICCEGLTouchDelegate
 
     public virtual void TouchesCancelled(List<CCTouch> touches)
     {
-        if (m_bDispatchEvents)
+        if (_dispatchEvents)
         {
             Touches(touches, CCTouchType.Cancelled);
         }
@@ -66,17 +66,17 @@ public class CCTouchDispatcher : ICCEGLTouchDelegate
 
     public bool Init()
     {
-        m_bDispatchEvents = true;
+        _dispatchEvents = true;
         m_pTargetedHandlers = new List<CCTouchHandler>();
         m_pStandardHandlers = new List<CCTouchHandler>();
 
-        m_pHandlersToAdd = new List<CCTouchHandler>();
-        m_pHandlersToRemove = new List<object>();
+        _handlersToAdd = new List<CCTouchHandler>();
+        _handlersToRemove = new List<object>();
 
-        m_bToRemove = false;
-        m_bToAdd = false;
-        m_bToQuit = false;
-        m_bLocked = false;
+        _toRemove = false;
+        _toAdd = false;
+        _toQuit = false;
+        _locked = false;
 
         return true;
     }
@@ -104,27 +104,27 @@ public class CCTouchDispatcher : ICCEGLTouchDelegate
     public void AddStandardDelegate(ICCStandardTouchDelegate pDelegate, int nPriority)
     {
         CCTouchHandler pHandler = CCStandardTouchHandler.HandlerWithDelegate(pDelegate, nPriority);
-        if (!m_bLocked)
+        if (!_locked)
         {
             ForceAddHandler(pHandler, m_pStandardHandlers);
         }
         else
         {
-            m_pHandlersToAdd.Add(pHandler);
-            m_bToAdd = true;
+            _handlersToAdd.Add(pHandler);
+            _toAdd = true;
         }
     }
 
     public void RearrangeAllHandlersUponTouch()
     {
-        m_bRearrangeStandardHandlersUponTouch = true;
-        m_bRearrangeTargetedHandlersUponTouch = true;
+        _rearrangeStandardHandlersUponTouch = true;
+        _rearrangeTargetedHandlersUponTouch = true;
     }
 
     public void AddStandardDelegate(ICCStandardTouchDelegate pDelegate)
     {
         AddStandardDelegate(pDelegate, pDelegate.TouchPriority);
-        m_bRearrangeStandardHandlersUponTouch = true;
+        _rearrangeStandardHandlersUponTouch = true;
     }
 
     /// <summary>
@@ -135,27 +135,27 @@ public class CCTouchDispatcher : ICCEGLTouchDelegate
     public void AddTargetedDelegate(ICCTargetedTouchDelegate pDelegate, int nPriority, bool bConsumesTouches)
     {
         CCTouchHandler pHandler = CCTargetedTouchHandler.HandlerWithDelegate(pDelegate, nPriority, bConsumesTouches);
-        if (!m_bLocked)
+        if (!_locked)
         {
             ForceAddHandler(pHandler, m_pTargetedHandlers);
         }
         else
         {
-            m_pHandlersToAdd.Add(pHandler);
-            m_bToAdd = true;
+            _handlersToAdd.Add(pHandler);
+            _toAdd = true;
         }
     }
 
     public void AddTargetedDelegate(ICCTargetedTouchDelegate pDelegate, bool bConsumesTouches)
     {
         AddTargetedDelegate(pDelegate, pDelegate.TouchPriority, bConsumesTouches);
-        m_bRearrangeTargetedHandlersUponTouch = true;
+        _rearrangeTargetedHandlersUponTouch = true;
     }
 
     public void AddTargetedDelegate(ICCTargetedTouchDelegate pDelegate)
     {
         AddTargetedDelegate(pDelegate, pDelegate.TouchPriority, true);
-        m_bRearrangeTargetedHandlersUponTouch = true;
+        _rearrangeTargetedHandlersUponTouch = true;
     }
 
     /// <summary>
@@ -169,14 +169,14 @@ public class CCTouchDispatcher : ICCEGLTouchDelegate
             return;
         }
 
-        if (!m_bLocked)
+        if (!_locked)
         {
             ForceRemoveDelegate(pDelegate);
         }
         else
         {
-            m_pHandlersToRemove.Add(pDelegate);
-            m_bToRemove = true;
+            _handlersToRemove.Add(pDelegate);
+            _toRemove = true;
         }
     }
 
@@ -185,13 +185,13 @@ public class CCTouchDispatcher : ICCEGLTouchDelegate
     /// </summary>
     public void RemoveAllDelegates()
     {
-        if (!m_bLocked)
+        if (!_locked)
         {
             ForceRemoveAllDelegates();
         }
         else
         {
-            m_bToQuit = true;
+            _toQuit = true;
         }
     }
 
@@ -210,16 +210,16 @@ public class CCTouchDispatcher : ICCEGLTouchDelegate
 
     public void Touches(List<CCTouch> pTouches, CCTouchType touchType)
     {
-        m_bLocked = true;
-        if (m_bRearrangeTargetedHandlersUponTouch)
+        _locked = true;
+        if (_rearrangeTargetedHandlersUponTouch)
         {
             RearrangeHandlers(m_pTargetedHandlers);
-            m_bRearrangeTargetedHandlersUponTouch = false;
+            _rearrangeTargetedHandlersUponTouch = false;
         }
-        if (m_bRearrangeStandardHandlersUponTouch)
+        if (_rearrangeStandardHandlersUponTouch)
         {
             RearrangeHandlers(m_pStandardHandlers);
-            m_bRearrangeStandardHandlersUponTouch = false;
+            _rearrangeStandardHandlersUponTouch = false;
         }
 
         // optimization to prevent a mutable copy when it is not necessary
@@ -418,21 +418,21 @@ public class CCTouchDispatcher : ICCEGLTouchDelegate
         // Optimization. To prevent a [handlers copy] which is expensive
         // the add/removes/quit is done after the iterations
         //
-        m_bLocked = false;
-        if (m_bToRemove)
+        _locked = false;
+        if (_toRemove)
         {
-            m_bToRemove = false;
-            for (int i = 0; i < m_pHandlersToRemove.Count; ++i)
+            _toRemove = false;
+            for (int i = 0; i < _handlersToRemove.Count; ++i)
             {
-                ForceRemoveDelegate((ICCTouchDelegate) m_pHandlersToRemove[i]);
+                ForceRemoveDelegate((ICCTouchDelegate) _handlersToRemove[i]);
             }
-            m_pHandlersToRemove.Clear();
+            _handlersToRemove.Clear();
         }
 
-        if (m_bToAdd)
+        if (_toAdd)
         {
-            m_bToAdd = false;
-            foreach (CCTouchHandler pHandler in m_pHandlersToAdd)
+            _toAdd = false;
+            foreach (CCTouchHandler pHandler in _handlersToAdd)
             {
                 if (pHandler is CCTargetedTouchHandler && pHandler.Delegate is ICCTargetedTouchDelegate)
                 {
@@ -444,16 +444,16 @@ public class CCTouchDispatcher : ICCEGLTouchDelegate
                 }
                 else
                 {
-                    CCLog.Log("ERROR: inconsistent touch handler and delegate found in m_pHandlersToAdd of CCTouchDispatcher");
+                    CCLog.Log("ERROR: inconsistent touch handler and delegate found in _handlersToAdd of CCTouchDispatcher");
                 }
             }
 
-            m_pHandlersToAdd.Clear();
+            _handlersToAdd.Clear();
         }
 
-        if (m_bToQuit)
+        if (_toQuit)
         {
-            m_bToQuit = false;
+            _toQuit = false;
             ForceRemoveAllDelegates();
         }
     }
