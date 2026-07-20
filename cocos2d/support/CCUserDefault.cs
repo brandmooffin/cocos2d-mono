@@ -37,7 +37,7 @@ namespace Cocos2D;
 public class CCUserDefault 
 {
 
-	private static CCUserDefault m_spUserDefault = null;
+	private static CCUserDefault _userDefault = null;
 	private static string USERDEFAULT_ROOT_NAME = "userDefaultRoot";
 	private static string XML_FILE_NAME = "UserDefault.xml";
 
@@ -130,7 +130,7 @@ public class CCUserDefault
 
 	public static void PurgeSharedUserDefault()
 	{
-		m_spUserDefault = null;
+		_userDefault = null;
 	}
 
     public bool GetBoolForKey(string pKey)
@@ -257,12 +257,12 @@ public class CCUserDefault
 	public static CCUserDefault SharedUserDefault
 	{
         get {
-    		if (m_spUserDefault == null)
+    		if (_userDefault == null)
     		{
-    			m_spUserDefault = new CCUserDefault();
+    			_userDefault = new CCUserDefault();
     		}
 
-    		return m_spUserDefault;
+    		return _userDefault;
         }
 	}
 

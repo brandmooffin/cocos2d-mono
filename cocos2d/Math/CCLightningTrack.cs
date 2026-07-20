@@ -7,8 +7,8 @@ namespace Cocos2D;
 
 public class CCLightningTrack
 {
-    private float m_Sway = 65f;
-    private float m_Jaggedness = 1f / 65f;
+    private float _sway = 65f;
+    private float _jaggedness = 1f / 65f;
     private CCPoint _Start;
     private CCPoint _End;
     private List<CCPoint> _Track;
@@ -44,19 +44,19 @@ public class CCLightningTrack
     {
         get
         {
-            return (m_Sway);
+            return (_sway);
         }
         set
         {
             if (value < 1f)
             {
-                m_Sway = 1f;
+                _sway = 1f;
             }
             else
             {
-                m_Sway = value;
+                _sway = value;
             }
-            m_Jaggedness = 1.0f / m_Sway;
+            _jaggedness = 1.0f / _sway;
             if (_Track != null)
             {
                 _Track = CreateBolt(_Start, _End);
@@ -95,12 +95,12 @@ public class CCLightningTrack
             float pos = positions[i];
 
             // used to prevent sharp angles by ensuring very close positions also have small perpendicular variation.
-            float scale = (length * m_Jaggedness) * (pos - positions[i - 1]);
+            float scale = (length * _jaggedness) * (pos - positions[i - 1]);
 
             // defines an envelope. Points near the middle of the bolt can be farther from the central line.
             float envelope = pos > 0.95f ? 20f * (1f - pos) : 1f;
 
-            float displacement = -m_Sway + 2f * m_Sway * CCMacros.CCRandomBetween0And1();
+            float displacement = -_sway + 2f * _sway * CCMacros.CCRandomBetween0And1();
             displacement -= (displacement - prevDisplacement) * (1 - scale);
             displacement *= envelope;
 

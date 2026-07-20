@@ -29,11 +29,11 @@ namespace Cocos2D;
 
 public class CCTiledGrid3D : CCGridBase
 {
-    private bool m_bDirty;
-    private CCIndexBuffer<short> m_pIndexBuffer;
+    private bool _dirty;
+    private CCIndexBuffer<short> _indexBuffer;
     protected short[] m_pIndices;
     protected CCQuad3[] m_pOriginalVertices;
-    private CCVertexBuffer<CCV3F_T2F> m_pVertexBuffer;
+    private CCVertexBuffer<CCV3F_T2F> _vertexBuffer;
     internal CCV3F_T2F[] m_pVertices;
 
     /// <summary>
@@ -77,19 +77,19 @@ public class CCTiledGrid3D : CCGridBase
         vertArray[idx + 2].vertices = coords.TopLeft;
         vertArray[idx + 3].vertices = coords.TopRight;
 
-        m_bDirty = true;
+        _dirty = true;
     }
 
     public override void Blit()
     {
-        if (m_bDirty)
+        if (_dirty)
         {
-            m_pVertexBuffer.UpdateBuffer();
+            _vertexBuffer.UpdateBuffer();
         }
 
         bool save = CCDrawManager.VertexColorEnabled;
         CCDrawManager.VertexColorEnabled = false;
-        CCDrawManager.DrawBuffer(m_pVertexBuffer, m_pIndexBuffer, 0, m_pIndices.Length / 3);
+        CCDrawManager.DrawBuffer(_vertexBuffer, _indexBuffer, 0, m_pIndices.Length / 3);
         CCDrawManager.VertexColorEnabled = save;
     }
 
@@ -123,13 +123,13 @@ public class CCTiledGrid3D : CCGridBase
 
         int numQuads = m_sGridSize.X * m_sGridSize.Y;
 
-        m_pVertexBuffer = new CCVertexBuffer<CCV3F_T2F>(numQuads * 4, BufferUsage.WriteOnly);
-        m_pVertexBuffer.Count = numQuads * 4;
-        m_pIndexBuffer = new CCIndexBuffer<short>(numQuads * 6, BufferUsage.WriteOnly);
-        m_pIndexBuffer.Count = numQuads * 6;
+        _vertexBuffer = new CCVertexBuffer<CCV3F_T2F>(numQuads * 4, BufferUsage.WriteOnly);
+        _vertexBuffer.Count = numQuads * 4;
+        _indexBuffer = new CCIndexBuffer<short>(numQuads * 6, BufferUsage.WriteOnly);
+        _indexBuffer.Count = numQuads * 6;
 
-        m_pVertices = m_pVertexBuffer.Data.Elements;
-        m_pIndices = m_pIndexBuffer.Data.Elements;
+        m_pVertices = _vertexBuffer.Data.Elements;
+        m_pIndices = _indexBuffer.Data.Elements;
 
         m_pOriginalVertices = new CCQuad3[numQuads];
 
@@ -184,7 +184,7 @@ public class CCTiledGrid3D : CCGridBase
             idxArray[i6 + 5] = (short) (i4 + 3);
         }
 
-        m_pIndexBuffer.UpdateBuffer();
+        _indexBuffer.UpdateBuffer();
 
         for (int i = 0; i < numQuads; i++)
         {

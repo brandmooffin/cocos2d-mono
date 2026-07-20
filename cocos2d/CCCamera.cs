@@ -56,7 +56,7 @@ public class CCCamera
     protected float m_fUpX;
     protected float m_fUpY;
     protected float m_fUpZ;
-    private Matrix m_lookupMatrix;
+    private Matrix _lookupMatrix;
 
     public CCCamera()
     {
@@ -96,7 +96,7 @@ public class CCCamera
         m_fUpY = 1.0f;
         m_fUpZ = 0.0f;
 
-        m_lookupMatrix = Matrix.Identity;
+        _lookupMatrix = Matrix.Identity;
 
         m_bDirty = false;
     }
@@ -108,13 +108,13 @@ public class CCCamera
     {
         if (m_bDirty)
         {
-            m_lookupMatrix = Matrix.CreateLookAt(new Vector3(m_fEyeX, m_fEyeY, m_fEyeZ),
+            _lookupMatrix = Matrix.CreateLookAt(new Vector3(m_fEyeX, m_fEyeY, m_fEyeZ),
                                                  new Vector3(m_fCenterX, m_fCenterY, m_fCenterZ),
                                                  new Vector3(m_fUpX, m_fUpY, m_fUpZ));
             m_bDirty = false;
         }
 
-        CCDrawManager.MultMatrix(ref m_lookupMatrix);
+        CCDrawManager.MultMatrix(ref _lookupMatrix);
     }
 
     /// <summary>
