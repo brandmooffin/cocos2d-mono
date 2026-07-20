@@ -4,7 +4,7 @@ namespace Cocos2D;
 
 public class CCDisplayLinkDirector : CCDirector
 {
-    private bool m_bInvalid;
+    private bool _invalid;
 
     public override double AnimationInterval
     {
@@ -13,7 +13,7 @@ public class CCDisplayLinkDirector : CCDirector
         {
             m_dAnimationInterval = value;
 
-            if (!m_bInvalid)
+            if (!_invalid)
             {
                 StopAnimation();
                 StartAnimation();
@@ -23,12 +23,12 @@ public class CCDisplayLinkDirector : CCDirector
 
     public override void StopAnimation()
     {
-        m_bInvalid = true;
+        _invalid = true;
     }
 
     public override void StartAnimation()
     {
-        m_bInvalid = false;
+        _invalid = false;
         // When using CCGameView, CCApplication.SharedApplication may not exist
         // Animation interval is managed by the game loop in that case
         if (CCApplication.SharedApplication != null)
@@ -44,7 +44,7 @@ public class CCDisplayLinkDirector : CCDirector
             PurgeDirector();
             m_bPurgeDirectorInNextLoop = false;
         }
-        else if (!m_bInvalid)
+        else if (!_invalid)
         {
             DrawScene(gameTime);
         }

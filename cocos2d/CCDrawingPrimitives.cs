@@ -7,39 +7,39 @@ namespace Cocos2D;
 
 public partial class CCDrawingPrimitives
 {
-    private static CCPrimitiveBatch m_Batch;
-    private static float m_PointSize = 3f;
-    private static CCColor4B m_Color;
+    private static CCPrimitiveBatch _batch;
+    private static float _pointSize = 3f;
+    private static CCColor4B _color;
 
     public static void Init(GraphicsDevice graphics)
     {
-        m_Batch = new CCPrimitiveBatch(graphics);
+        _batch = new CCPrimitiveBatch(graphics);
     }
 
     public static void Begin()
     {
-        m_Batch.Begin();
+        _batch.Begin();
     }
 
     public CCColor4B DefaultColor
     {
-        get { return m_Color; }
-        set { m_Color = value; }
+        get { return _color; }
+        set { _color = value; }
     }
 
     public static void End()
     {
-        m_Batch.End();
+        _batch.End();
     }
 
     public static void DrawPoint(CCPoint point)
     {
-        DrawPoint(point, m_PointSize, m_Color);
+        DrawPoint(point, _pointSize, _color);
     }
 
     public static void DrawPoint(CCPoint point, float size)
     {
-        DrawPoint(point, size, m_Color);
+        DrawPoint(point, size, _color);
     }
 
     public static void DrawPoint(CCPoint p, float size, CCColor4B color)
@@ -73,8 +73,8 @@ public partial class CCDrawingPrimitives
     {
         var c = new Color(color.R, color.G, color.B, color.A);
 
-        m_Batch.AddVertex(new Vector2(origin.X, origin.Y), c, PrimitiveType.LineList);
-        m_Batch.AddVertex(new Vector2(destination.X, destination.Y), c, PrimitiveType.LineList);
+        _batch.AddVertex(new Vector2(origin.X, origin.Y), c, PrimitiveType.LineList);
+        _batch.AddVertex(new Vector2(destination.X, destination.Y), c, PrimitiveType.LineList);
     }
 
     public static void DrawRect(CCRect rect, CCColor4B color)
@@ -113,23 +113,23 @@ public partial class CCDrawingPrimitives
         {
             for (int i = 1; i < numOfVertices - 1; i++)
             {
-                m_Batch.AddVertex(new Vector2(vertices[0].X, vertices[0].Y), c, PrimitiveType.TriangleList);
-                m_Batch.AddVertex(new Vector2(vertices[i].X, vertices[i].Y), c, PrimitiveType.TriangleList);
-                m_Batch.AddVertex(new Vector2(vertices[i + 1].X, vertices[i + 1].Y), c, PrimitiveType.TriangleList);
+                _batch.AddVertex(new Vector2(vertices[0].X, vertices[0].Y), c, PrimitiveType.TriangleList);
+                _batch.AddVertex(new Vector2(vertices[i].X, vertices[i].Y), c, PrimitiveType.TriangleList);
+                _batch.AddVertex(new Vector2(vertices[i + 1].X, vertices[i + 1].Y), c, PrimitiveType.TriangleList);
             }
         }
         else
         {
             for (int i = 0; i < numOfVertices - 1; i++)
             {
-                m_Batch.AddVertex(new Vector2(vertices[i].X, vertices[i].Y), c, PrimitiveType.LineList);
-                m_Batch.AddVertex(new Vector2(vertices[i + 1].X, vertices[i + 1].Y), c, PrimitiveType.LineList);
+                _batch.AddVertex(new Vector2(vertices[i].X, vertices[i].Y), c, PrimitiveType.LineList);
+                _batch.AddVertex(new Vector2(vertices[i + 1].X, vertices[i + 1].Y), c, PrimitiveType.LineList);
             }
 
             if (closePolygon)
             {
-                m_Batch.AddVertex(new Vector2(vertices[numOfVertices - 1].X, vertices[numOfVertices - 1].Y), c, PrimitiveType.LineList);
-                m_Batch.AddVertex(new Vector2(vertices[0].X, vertices[0].Y), c, PrimitiveType.LineList);
+                _batch.AddVertex(new Vector2(vertices[numOfVertices - 1].X, vertices[numOfVertices - 1].Y), c, PrimitiveType.LineList);
+                _batch.AddVertex(new Vector2(vertices[0].X, vertices[0].Y), c, PrimitiveType.LineList);
             }
         }
     }
@@ -153,9 +153,9 @@ public partial class CCDrawingPrimitives
 
         for (int i = 1; i < count - 1; i++)
         {
-            m_Batch.AddVertex(new Vector2(vertices[0].X, vertices[0].Y), colorFill, PrimitiveType.TriangleList);
-            m_Batch.AddVertex(new Vector2(vertices[i].X, vertices[i].Y), colorFill, PrimitiveType.TriangleList);
-            m_Batch.AddVertex(new Vector2(vertices[i + 1].X, vertices[i + 1].Y), colorFill, PrimitiveType.TriangleList);
+            _batch.AddVertex(new Vector2(vertices[0].X, vertices[0].Y), colorFill, PrimitiveType.TriangleList);
+            _batch.AddVertex(new Vector2(vertices[i].X, vertices[i].Y), colorFill, PrimitiveType.TriangleList);
+            _batch.AddVertex(new Vector2(vertices[i + 1].X, vertices[i + 1].Y), colorFill, PrimitiveType.TriangleList);
         }
 
         if (outline)

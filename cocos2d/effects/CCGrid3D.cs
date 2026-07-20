@@ -41,11 +41,11 @@ internal struct CCV3F_T2F : IVertexType
 /// </summary>
 public class CCGrid3D : CCGridBase
 {
-    private bool m_bDirty;
-    private CCIndexBuffer<ushort> m_pIndexBuffer;
+    private bool _dirty;
+    private CCIndexBuffer<ushort> _indexBuffer;
     protected ushort[] m_pIndices;
     protected CCVertex3F[] m_pOriginalVertices;
-    private CCVertexBuffer<CCV3F_T2F> m_pVertexBuffer;
+    private CCVertexBuffer<CCV3F_T2F> _vertexBuffer;
     internal CCV3F_T2F[] m_pVertices;
 
     //protected CCPoint[] m_pTexCoordinates;
@@ -73,20 +73,20 @@ public class CCGrid3D : CCGridBase
     public void SetVertex(CCGridSize pos, ref CCVertex3F vertex)
     {
         m_pVertices[pos.X * (m_sGridSize.Y + 1) + pos.Y].vertices = vertex;
-        m_bDirty = true;
+        _dirty = true;
     }
 
     public override void Blit()
     {
-        if (m_bDirty)
+        if (_dirty)
         {
-            m_pVertexBuffer.UpdateBuffer();
+            _vertexBuffer.UpdateBuffer();
         }
 
         bool save = CCDrawManager.VertexColorEnabled;
 
         CCDrawManager.VertexColorEnabled = false;
-        CCDrawManager.DrawBuffer(m_pVertexBuffer, m_pIndexBuffer, 0, m_pIndices.Length / 3);
+        CCDrawManager.DrawBuffer(_vertexBuffer, _indexBuffer, 0, m_pIndices.Length / 3);
         CCDrawManager.VertexColorEnabled = save;
     }
 
@@ -110,13 +110,13 @@ public class CCGrid3D : CCGridBase
 
         int numOfPoints = (m_sGridSize.X + 1) * (m_sGridSize.Y + 1);
 
-        m_pVertexBuffer = new CCVertexBuffer<CCV3F_T2F>(numOfPoints, BufferUsage.WriteOnly);
-        m_pVertexBuffer.Count = numOfPoints;
-        m_pIndexBuffer = new CCIndexBuffer<ushort>(m_sGridSize.X * m_sGridSize.Y * 6, BufferUsage.WriteOnly);
-        m_pIndexBuffer.Count = m_sGridSize.X * m_sGridSize.Y * 6;
+        _vertexBuffer = new CCVertexBuffer<CCV3F_T2F>(numOfPoints, BufferUsage.WriteOnly);
+        _vertexBuffer.Count = numOfPoints;
+        _indexBuffer = new CCIndexBuffer<ushort>(m_sGridSize.X * m_sGridSize.Y * 6, BufferUsage.WriteOnly);
+        _indexBuffer.Count = m_sGridSize.X * m_sGridSize.Y * 6;
 
-        m_pVertices = m_pVertexBuffer.Data.Elements;
-        m_pIndices = m_pIndexBuffer.Data.Elements;
+        m_pVertices = _vertexBuffer.Data.Elements;
+        m_pIndices = _indexBuffer.Data.Elements;
 
         m_pOriginalVertices = new CCVertex3F[numOfPoints];
 
@@ -204,9 +204,9 @@ public class CCGrid3D : CCGridBase
             m_pOriginalVertices[i] = m_pVertices[i].vertices;
         }
 
-        m_pIndexBuffer.UpdateBuffer();
+        _indexBuffer.UpdateBuffer();
 
-        m_bDirty = true;
+        _dirty = true;
     }
 
     public CCGrid3D(CCGridSize gridSize, CCTexture2D pTexture, bool bFlipped)
