@@ -4,11 +4,11 @@ namespace Cocos2D;
 
 public class CCCallFuncN : CCCallFunc
 {
-    private Action<CCNode> m_pCallFuncN;
+    private Action<CCNode> _callFuncN;
 
     public CCCallFuncN() : base()
     {
-        m_pCallFuncN = null;
+        _callFuncN = null;
     }
 
 
@@ -19,13 +19,13 @@ public class CCCallFuncN : CCCallFunc
 
     public CCCallFuncN(CCCallFuncN callFuncN) : base(callFuncN)
     {
-        InitWithTarget(callFuncN.m_pCallFuncN);
+        InitWithTarget(callFuncN._callFuncN);
     }
 
     public bool InitWithTarget(Action<CCNode> selector)
     {
-        m_pCallFuncN = selector;
-        return false;
+        _callFuncN = selector;
+        return true;
     }
 
     public override object Copy(ICCCopyable zone)
@@ -36,7 +36,7 @@ public class CCCallFuncN : CCCallFunc
             var pRet = (CCCallFuncN) (zone);
             base.Copy(zone);
 
-            pRet.InitWithTarget(m_pCallFuncN);
+            pRet.InitWithTarget(_callFuncN);
 
             return pRet;
         }
@@ -48,9 +48,9 @@ public class CCCallFuncN : CCCallFunc
 
     public override void Execute()
     {
-        if (null != m_pCallFuncN)
+        if (null != _callFuncN)
         {
-            m_pCallFuncN(m_pTarget);
+            _callFuncN(m_pTarget);
         }
         //if (m_nScriptHandler) {
         //    CCScriptEngineManager::sharedManager()->getScriptEngine()->executeFunctionWithobject(m_nScriptHandler, m_pTarget, "CCNode");

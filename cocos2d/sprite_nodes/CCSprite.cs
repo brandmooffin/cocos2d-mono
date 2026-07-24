@@ -25,7 +25,7 @@ public class CCSprite : CCNode, ICCTextureProtocol
     protected CCTextureAtlas m_pobTextureAtlas; // Sprite Sheet texture atlas (weak reference)
     protected CCBlendFunc m_sBlendFunc; // Needed for the texture protocol
 
-    private string m_TextureFile;
+    private string _textureFile;
 
     internal CCV3F_C4B_T2F_Quad m_sQuad;
     protected CCAffineTransform m_transformToBatch; //
@@ -43,7 +43,7 @@ public class CCSprite : CCNode, ICCTextureProtocol
                 CCSerialization.SerializeData(AtlasIndex, sw);
                 CCSerialization.SerializeData(TextureRect, sw);
                 CCSerialization.SerializeData(OffsetPosition, sw);
-                sw.WriteLine(m_TextureFile == null ? "null" : m_TextureFile);
+                sw.WriteLine(_textureFile == null ? "null" : _textureFile);
             }
         }
     }
@@ -55,15 +55,15 @@ public class CCSprite : CCNode, ICCTextureProtocol
             base.Deserialize(stream);
             using (StreamReader sr = new StreamReader(stream))
             {
-                m_TextureFile = sr.ReadLine();
-                if (m_TextureFile == "null")
+                _textureFile = sr.ReadLine();
+                if (_textureFile == "null")
                 {
-                    m_TextureFile = null;
+                    _textureFile = null;
                 }
                 else
                 {
-                    CCLog.Log("CCSprite - deserialized with texture file " + m_TextureFile);
-                    InitWithFile(m_TextureFile);
+                    CCLog.Log("CCSprite - deserialized with texture file " + _textureFile);
+                    InitWithFile(_textureFile);
                 }
                 Dirty = CCSerialization.DeSerializeBool(sr);
                 IsTextureRectRotated = CCSerialization.DeSerializeBool(sr);
@@ -444,9 +444,17 @@ public class CCSprite : CCNode, ICCTextureProtocol
 
     public bool IsAntialiased
     {
+#if NETFRAMEWORK
+        // On the AOT console fork a sprite whose texture failed to load (or was constructed
+        // without one) has no antialias state to read or write, and there is no managed null
+        // check under AOT -- an unguarded deref is a hard SIGSEGV, not a catchable NRE. Guard it.
+        // Other targets keep the original throw-on-null so missing-content bugs still surface.
+        get { return Texture != null && Texture.IsAntialiased; }
+        set { if (Texture != null) Texture.IsAntialiased = value; }
+#else
         get { return Texture.IsAntialiased; }
-
         set { Texture.IsAntialiased = value; }
+#endif
     }
 
     #region RGBA protocol
@@ -699,7 +707,7 @@ public class CCSprite : CCNode, ICCTextureProtocol
     {
         Debug.Assert(!String.IsNullOrEmpty(fileName), "Invalid filename for sprite");
 
-        m_TextureFile = fileName;
+        _textureFile = fileName;
         CCSpriteFrame pFrame = CCSpriteFrameCache.SharedSpriteFrameCache.SpriteFrameByName(fileName);
         if (pFrame != null)
         {
@@ -722,7 +730,7 @@ public class CCSprite : CCNode, ICCTextureProtocol
     {
         Debug.Assert(!String.IsNullOrEmpty(fileName), "Invalid filename for sprite");
 
-        m_TextureFile = fileName;
+        _textureFile = fileName;
         CCTexture2D pTexture = CCTextureCache.SharedTextureCache.AddImage(fileName);
         if (pTexture != null)
         {

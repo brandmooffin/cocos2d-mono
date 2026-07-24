@@ -27,7 +27,7 @@ public class CCBMFontConfiguration
     [ContentSerializer]
     internal CCBMFontPadding m_tPadding;
 
-    private List<int> m_pCharacterSet = new List<int>();
+    private List<int> _characterSet = new List<int>();
 
     public string AtlasName
     {
@@ -38,8 +38,8 @@ public class CCBMFontConfiguration
     
     public List<int> CharacterSet
     {
-        set { m_pCharacterSet = value; }
-        get { return m_pCharacterSet; }
+        set { _characterSet = value; }
+        get { return _characterSet; }
     }
 
     public CCBMFontConfiguration()
@@ -100,9 +100,9 @@ public class CCBMFontConfiguration
         m_pKerningDictionary.Clear();
         m_pFontDefDictionary.Clear();
 
-        m_pCharacterSet = ParseConfigFile(data, fntFile);
+        _characterSet = ParseConfigFile(data, fntFile);
 
-        if (m_pCharacterSet == null)
+        if (_characterSet == null)
         {
             return false;
         }

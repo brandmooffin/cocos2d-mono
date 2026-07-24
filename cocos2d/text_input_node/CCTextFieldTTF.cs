@@ -9,12 +9,12 @@ namespace Cocos2D;
 
 public class CCTextFieldTTF : CCLabelTTF, ICCTargetedTouchDelegate
 {
-    private IAsyncResult m_pGuideShowHandle;
-    private string m_sEditTitle = "Input";
-    private string m_sEditDescription = "Please provide input";
-    private bool m_bReadOnly = false;
-    private bool m_bAutoEdit;
-    private bool m_bTouchHandled;
+    private IAsyncResult _guideShowHandle;
+    private string _editTitle = "Input";
+    private string _editDescription = "Please provide input";
+    private bool _readOnly = false;
+    private bool _autoEdit;
+    private bool _touchHandled;
 
     public event CCTextFieldTTFDelegate BeginEditing;
     public event CCTextFieldTTFDelegate EndEditing;
@@ -24,10 +24,10 @@ public class CCTextFieldTTF : CCLabelTTF, ICCTargetedTouchDelegate
 
     public bool ReadOnly
     {
-        get { return m_bReadOnly; }
+        get { return _readOnly; }
         set
         {
-            m_bReadOnly = value;
+            _readOnly = value;
             
             if (!value)
             {
@@ -40,22 +40,22 @@ public class CCTextFieldTTF : CCLabelTTF, ICCTargetedTouchDelegate
 
     public string EditTitle
     {
-        get { return m_sEditTitle; }
-        set { m_sEditTitle = value; }
+        get { return _editTitle; }
+        set { _editTitle = value; }
     }
 
     public string EditDescription
     {
-        get { return m_sEditDescription; }
-        set { m_sEditDescription = value; }
+        get { return _editDescription; }
+        set { _editDescription = value; }
     }
 
     public bool AutoEdit
     {
-        get { return m_bAutoEdit; }
+        get { return _autoEdit; }
         set
         {
-            m_bAutoEdit = value;
+            _autoEdit = value;
             CheckTouchState();
         }
     }
@@ -85,12 +85,12 @@ public class CCTextFieldTTF : CCLabelTTF, ICCTargetedTouchDelegate
 
     public void Edit()
     {
-        Edit(m_sEditTitle, m_sEditDescription);
+        Edit(_editTitle, _editDescription);
     }
 
     public void Edit(string title, string defaultText)
     {
-        if (!m_bReadOnly)
+        if (!_readOnly)
         {
             var canceled = false;
             var text = Text;
@@ -147,10 +147,10 @@ public class CCTextFieldTTF : CCLabelTTF, ICCTargetedTouchDelegate
 
     public void EndEdit()
     {
-        if (m_pGuideShowHandle != null)
+        if (_guideShowHandle != null)
 			{
-				//Guide.EndShowKeyboardInput(m_pGuideShowHandle);
-            m_pGuideShowHandle = null;
+				//Guide.EndShowKeyboardInput(_guideShowHandle);
+            _guideShowHandle = null;
         }
 
 #if DESKTOPGL
@@ -163,23 +163,23 @@ public class CCTextFieldTTF : CCLabelTTF, ICCTargetedTouchDelegate
     {
         if (m_bRunning)
         {
-            if (!m_bTouchHandled && !m_bReadOnly && m_bAutoEdit)
+            if (!_touchHandled && !_readOnly && _autoEdit)
             {
                 CCDirector.SharedDirector.TouchDispatcher.AddTargetedDelegate(this, 0, true);
-                m_bTouchHandled = true;
+                _touchHandled = true;
             }
-            else if (m_bTouchHandled && (m_bReadOnly || !m_bAutoEdit))
+            else if (_touchHandled && (_readOnly || !_autoEdit))
             {
                 CCDirector.SharedDirector.TouchDispatcher.RemoveDelegate(this);
-                m_bTouchHandled = true;
+                _touchHandled = false;
             }
         }
         else
         {
-            if (!m_bRunning && m_bTouchHandled)
+            if (!m_bRunning && _touchHandled)
             {
                 CCDirector.SharedDirector.TouchDispatcher.RemoveDelegate(this);
-                m_bTouchHandled = false;
+                _touchHandled = false;
             }
         }
     }

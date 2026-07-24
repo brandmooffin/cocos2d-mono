@@ -74,7 +74,7 @@ namespace Cocos2D;
 		}
 
 
-		private KeyboardState m_priorKeyboardState;
+		private KeyboardState _priorKeyboardState;
 
 		public bool DispatchKeyboardState ()
 		{
@@ -99,7 +99,7 @@ namespace Cocos2D;
 					if ((pDelegate.KeyboardMode & CCKeyboardMode.KeyPressed) == CCKeyboardMode.KeyPressed) {
 						for (int k = 0; k < keys.Length; k++) {
 							// Was this key up during the last update?
-							if (m_priorKeyboardState.IsKeyUp (keys [k])) {
+							if (_priorKeyboardState.IsKeyUp (keys [k])) {
 								// Yes, so this key has been pressed
 								//CCLog.Log("Pressed: " + keys[i].ToString());
 								pDelegate.KeyPressed (keys [k]);
@@ -119,7 +119,7 @@ namespace Cocos2D;
 
 					if ((pDelegate.KeyboardMode & CCKeyboardMode.KeyReleased) == CCKeyboardMode.KeyReleased) {
 						// Loop for each possible released key (those that were pressed last update)
-						keys = m_priorKeyboardState.GetPressedKeys ();
+						keys = _priorKeyboardState.GetPressedKeys ();
 
 						for (int k = 0; k < keys.Length; k++) {
 							// Is this key now up?
@@ -152,7 +152,7 @@ namespace Cocos2D;
 			}
 
 			// Store the state for the next loop
-			m_priorKeyboardState = currentKeyState;
+			_priorKeyboardState = currentKeyState;
 
 			return true;
 		}

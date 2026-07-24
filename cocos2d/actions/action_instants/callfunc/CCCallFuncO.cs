@@ -4,13 +4,13 @@ namespace Cocos2D;
 
 public class CCCallFuncO : CCCallFunc
 {
-    private Action<object> m_pCallFuncO;
-    private object m_pObject;
+    private Action<object> _callFuncO;
+    private object _object;
 
     public CCCallFuncO()
     {
-        m_pObject = null;
-        m_pCallFuncO = null;
+        _object = null;
+        _callFuncO = null;
     }
 
     public CCCallFuncO(Action<object> selector, object pObject) : this()
@@ -20,13 +20,13 @@ public class CCCallFuncO : CCCallFunc
 
     protected CCCallFuncO(CCCallFuncO callFuncO) : base(callFuncO)
     {
-        InitWithTarget(callFuncO.m_pCallFuncO, callFuncO.m_pObject);
+        InitWithTarget(callFuncO._callFuncO, callFuncO._object);
     }
 
     public bool InitWithTarget(Action<object> selector, object pObject)
     {
-        m_pObject = pObject;
-        m_pCallFuncO = selector;
+        _object = pObject;
+        _callFuncO = selector;
         return true;
     }
 
@@ -38,7 +38,7 @@ public class CCCallFuncO : CCCallFunc
             //in case of being called at sub class
             var pRet = (CCCallFuncO) (zone);
             base.Copy(zone);
-            pRet.InitWithTarget(m_pCallFuncO, m_pObject);
+            pRet.InitWithTarget(_callFuncO, _object);
             return pRet;
         }
         else
@@ -49,20 +49,20 @@ public class CCCallFuncO : CCCallFunc
 
     public override void Execute()
     {
-        if (null != m_pCallFuncO)
+        if (null != _callFuncO)
         {
-            m_pCallFuncO(m_pObject);
+            _callFuncO(_object);
         }
 
         //if (CCScriptEngineManager::sharedScriptEngineManager()->getScriptEngine()) {
         //    CCScriptEngineManager::sharedScriptEngineManager()->getScriptEngine()->executeCallFunc0(
-        //            m_scriptFuncName.c_str(), m_pObject);
+        //            m_scriptFuncName.c_str(), _object);
         //}
     }
 
     public object Object
     {
-        get { return m_pObject; }
-        set { m_pObject = value; }
+        get { return _object; }
+        set { _object = value; }
     }
 }

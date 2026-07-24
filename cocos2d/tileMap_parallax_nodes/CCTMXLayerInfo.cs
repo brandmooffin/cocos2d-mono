@@ -5,97 +5,97 @@ namespace Cocos2D;
 public class CCTMXLayerInfo 
 {
     public Dictionary<string, string> Properties = new Dictionary<string, string>();
-    private bool m_bOwnTiles = true;
-    private bool m_bVisible;
-    private byte m_cOpacity;
-    private uint[] m_pTiles;
-    private string m_sName = "";
-    private CCSize m_tLayerSize;
-    private CCPoint m_tOffset;
-    private uint m_uMaxGID;
-    private uint m_uMinGID = 100000;
+    private bool _ownTiles = true;
+    private bool _visible;
+    private byte _opacity;
+    private uint[] _tiles;
+    private string _name = "";
+    private CCSize _layerSize;
+    private CCPoint _offset;
+    private uint _maxGID;
+    private uint _minGID = 100000;
 
     public bool OwnTiles 
     {
         get { 
-            return m_bOwnTiles; 
+            return _ownTiles; 
         }
         set { 
-            m_bOwnTiles = value; 
+            _ownTiles = value; 
         }
     }
 
     public bool Visible
     {
         get { 
-            return m_bVisible; 
+            return _visible; 
         }
         set { 
-            m_bVisible = value; 
+            _visible = value; 
         }
     }
 
     public byte Opacity
     {
         get { 
-            return m_cOpacity; 
+            return _opacity; 
         }
         set { 
-            m_cOpacity = value; 
+            _opacity = value; 
         }
     }
 
     public uint[] Tiles {
         get {
-            return m_pTiles;
+            return _tiles;
         }
         set {
-            m_pTiles = value;
+            _tiles = value;
         }
     }
 
     public string Name {
         get {
-            return m_sName;
+            return _name;
         }
         set {
-            m_sName = value;
+            _name = value;
         }
     }
 
     public CCSize LayerSize {
         get {
-            return m_tLayerSize;
+            return _layerSize;
         }
         set {
-            m_tLayerSize = value;
+            _layerSize = value;
         }
     }
 
     public CCPoint Offset {
         get {
-            return m_tOffset;
+            return _offset;
         }
         set {
-            m_tOffset = value;
+            _offset = value;
         }
     }
 
     public uint MaxGID {
         get {
-            return m_uMaxGID;
+            return _maxGID;
         }
         set {
-            m_uMaxGID = value;
+            _maxGID = value;
         }
     }
 
     public uint MinGID {
         get {
-            return m_uMinGID;
+            return _minGID;
         }
         set {
-            m_uMinGID = value;
+            _minGID = value;
         }
     }
 }

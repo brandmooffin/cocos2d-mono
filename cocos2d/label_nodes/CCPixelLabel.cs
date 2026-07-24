@@ -19,18 +19,18 @@ public class CCPixelLabel : CCNode
     private static readonly Dictionary<string, float> s_heightCache
         = new Dictionary<string, float>();
 
-    private Dictionary<char, CCTexture2D> m_charTextures;
-    private Dictionary<char, float> m_charWidths;
-    private float m_charHeight;
+    private Dictionary<char, CCTexture2D> _charTextures;
+    private Dictionary<char, float> _charWidths;
+    private float _charHeight;
 
-    private CCSprite[] m_glyphs;
-    private int m_maxChars;
-    private string m_text = "";
-    private CCTextAlignment m_alignment;
-    private bool m_antialiased;
-    private string m_fontName;
-    private float m_fontSize;
-    private string m_cacheKey;
+    private CCSprite[] _glyphs;
+    private int _maxChars;
+    private string _text = "";
+    private CCTextAlignment _alignment;
+    private bool _antialiased;
+    private string _fontName;
+    private float _fontSize;
+    private string _cacheKey;
 
     private const string DefaultCharSet =
         "0123456789+-/:*x[](){}ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,!?@#$%&=<>\"'`~^_;\\| ";
@@ -41,13 +41,13 @@ public class CCPixelLabel : CCNode
     /// </summary>
     public string Text
     {
-        get { return m_text; }
+        get { return _text; }
         set
         {
             string newText = value ?? "";
-            if (m_text == newText) return;
-            m_text = newText;
-            CacheCharacters(m_text);
+            if (_text == newText) return;
+            _text = newText;
+            CacheCharacters(_text);
             Layout();
         }
     }
@@ -57,11 +57,11 @@ public class CCPixelLabel : CCNode
     /// </summary>
     public CCTextAlignment Alignment
     {
-        get { return m_alignment; }
+        get { return _alignment; }
         set
         {
-            if (m_alignment == value) return;
-            m_alignment = value;
+            if (_alignment == value) return;
+            _alignment = value;
             Layout();
         }
     }
@@ -75,8 +75,8 @@ public class CCPixelLabel : CCNode
         set
         {
             base.Color = value;
-            for (int i = 0; i < m_glyphs.Length; i++)
-                m_glyphs[i].Color = value;
+            for (int i = 0; i < _glyphs.Length; i++)
+                _glyphs[i].Color = value;
         }
     }
 
@@ -89,8 +89,8 @@ public class CCPixelLabel : CCNode
         set
         {
             base.Opacity = value;
-            for (int i = 0; i < m_glyphs.Length; i++)
-                m_glyphs[i].Opacity = value;
+            for (int i = 0; i < _glyphs.Length; i++)
+                _glyphs[i].Opacity = value;
         }
     }
 
@@ -99,7 +99,7 @@ public class CCPixelLabel : CCNode
     /// </summary>
     public string FontName
     {
-        get { return m_fontName; }
+        get { return _fontName; }
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public class CCPixelLabel : CCNode
     /// </summary>
     public float FontSize
     {
-        get { return m_fontSize; }
+        get { return _fontSize; }
     }
 
     /// <summary>
@@ -115,7 +115,7 @@ public class CCPixelLabel : CCNode
     /// </summary>
     public float CharHeight
     {
-        get { return m_charHeight; }
+        get { return _charHeight; }
     }
 
     /// <summary>
@@ -124,18 +124,18 @@ public class CCPixelLabel : CCNode
     /// </summary>
     public bool IsAntialiased
     {
-        get { return m_antialiased; }
+        get { return _antialiased; }
         set
         {
-            if (m_antialiased == value) return;
+            if (_antialiased == value) return;
 
-            m_antialiased = value;
-            m_cacheKey = BuildCacheKey(m_fontName, m_fontSize, value);
+            _antialiased = value;
+            _cacheKey = BuildCacheKey(_fontName, _fontSize, value);
 
             // Switch to a separate texture cache for this filtering mode
             // so shared textures are not mutated across labels
             Dictionary<char, CCTexture2D> textures;
-            if (!s_fontCache.TryGetValue(m_cacheKey, out textures))
+            if (!s_fontCache.TryGetValue(_cacheKey, out textures))
             {
                 textures = new Dictionary<char, CCTexture2D>();
                 var widths = new Dictionary<char, float>();
@@ -145,7 +145,7 @@ public class CCPixelLabel : CCNode
                 {
                     if (c == ' ') continue;
 
-                    var label = new CCLabelTTF(c.ToString(), m_fontName, m_fontSize);
+                    var label = new CCLabelTTF(c.ToString(), _fontName, _fontSize);
                     if (label.Texture != null)
                     {
                         label.Texture.IsAntialiased = value;
@@ -157,14 +157,14 @@ public class CCPixelLabel : CCNode
                     }
                 }
 
-                s_fontCache[m_cacheKey] = textures;
-                s_widthCache[m_cacheKey] = widths;
-                s_heightCache[m_cacheKey] = maxH;
+                s_fontCache[_cacheKey] = textures;
+                s_widthCache[_cacheKey] = widths;
+                s_heightCache[_cacheKey] = maxH;
             }
 
-            m_charTextures = textures;
-            m_charWidths = s_widthCache[m_cacheKey];
-            m_charHeight = s_heightCache[m_cacheKey];
+            _charTextures = textures;
+            _charWidths = s_widthCache[_cacheKey];
+            _charHeight = s_heightCache[_cacheKey];
 
             Layout();
         }
@@ -183,15 +183,15 @@ public class CCPixelLabel : CCNode
         CCTextAlignment alignment = CCTextAlignment.Left,
         bool antialiased = false, int maxChars = 32)
     {
-        m_fontName = fontName;
-        m_fontSize = fontSize;
-        m_alignment = alignment;
-        m_antialiased = antialiased;
-        m_maxChars = maxChars;
-        m_cacheKey = BuildCacheKey(fontName, fontSize, antialiased);
+        _fontName = fontName;
+        _fontSize = fontSize;
+        _alignment = alignment;
+        _antialiased = antialiased;
+        _maxChars = maxChars;
+        _cacheKey = BuildCacheKey(fontName, fontSize, antialiased);
 
         Dictionary<char, CCTexture2D> textures;
-        if (!s_fontCache.TryGetValue(m_cacheKey, out textures))
+        if (!s_fontCache.TryGetValue(_cacheKey, out textures))
         {
             textures = new Dictionary<char, CCTexture2D>();
             var widths = new Dictionary<char, float>();
@@ -213,21 +213,21 @@ public class CCPixelLabel : CCNode
                 }
             }
 
-            s_fontCache[m_cacheKey] = textures;
-            s_widthCache[m_cacheKey] = widths;
-            s_heightCache[m_cacheKey] = maxH;
+            s_fontCache[_cacheKey] = textures;
+            s_widthCache[_cacheKey] = widths;
+            s_heightCache[_cacheKey] = maxH;
         }
 
-        m_charTextures = textures;
-        m_charWidths = s_widthCache[m_cacheKey];
-        m_charHeight = s_heightCache[m_cacheKey];
+        _charTextures = textures;
+        _charWidths = s_widthCache[_cacheKey];
+        _charHeight = s_heightCache[_cacheKey];
 
         AllocateGlyphs(maxChars);
 
-        m_text = text ?? "";
-        if (m_text.Length > 0)
+        _text = text ?? "";
+        if (_text.Length > 0)
         {
-            CacheCharacters(m_text);
+            CacheCharacters(_text);
             Layout();
         }
     }
@@ -252,22 +252,22 @@ public class CCPixelLabel : CCNode
     {
         foreach (char c in characters)
         {
-            if (c == ' ' || m_charTextures.ContainsKey(c))
+            if (c == ' ' || _charTextures.ContainsKey(c))
                 continue;
 
-            var label = new CCLabelTTF(c.ToString(), m_fontName, m_fontSize);
+            var label = new CCLabelTTF(c.ToString(), _fontName, _fontSize);
             if (label.Texture != null)
             {
-                label.Texture.IsAntialiased = m_antialiased;
-                m_charTextures[c] = label.Texture;
+                label.Texture.IsAntialiased = _antialiased;
+                _charTextures[c] = label.Texture;
                 float w = label.Texture.ContentSize.Width;
                 float h = label.Texture.ContentSize.Height;
-                m_charWidths[c] = w;
+                _charWidths[c] = w;
 
-                if (h > m_charHeight)
+                if (h > _charHeight)
                 {
-                    m_charHeight = h;
-                    s_heightCache[m_cacheKey] = h;
+                    _charHeight = h;
+                    s_heightCache[_cacheKey] = h;
                 }
             }
         }
@@ -278,14 +278,14 @@ public class CCPixelLabel : CCNode
     /// </summary>
     public void SetMaxChars(int maxChars)
     {
-        if (maxChars <= m_maxChars) return;
+        if (maxChars <= _maxChars) return;
 
-        for (int i = 0; i < m_glyphs.Length; i++)
+        for (int i = 0; i < _glyphs.Length; i++)
         {
-            RemoveChild(m_glyphs[i], true);
+            RemoveChild(_glyphs[i], true);
         }
 
-        m_maxChars = maxChars;
+        _maxChars = maxChars;
         AllocateGlyphs(maxChars);
         Layout();
     }
@@ -302,8 +302,8 @@ public class CCPixelLabel : CCNode
         {
             char c = text[i];
             if (c == ' ')
-                width += m_charHeight * 0.4f;
-            else if (m_charWidths.TryGetValue(c, out float w))
+                width += _charHeight * 0.4f;
+            else if (_charWidths.TryGetValue(c, out float w))
                 width += w;
         }
         return width;
@@ -329,13 +329,13 @@ public class CCPixelLabel : CCNode
 
     private void AllocateGlyphs(int count)
     {
-        m_glyphs = new CCSprite[count];
+        _glyphs = new CCSprite[count];
         for (int i = 0; i < count; i++)
         {
-            m_glyphs[i] = new CCSprite();
-            m_glyphs[i].AnchorPoint = CCPoint.Zero;
-            m_glyphs[i].Visible = false;
-            AddChild(m_glyphs[i]);
+            _glyphs[i] = new CCSprite();
+            _glyphs[i].AnchorPoint = CCPoint.Zero;
+            _glyphs[i].Visible = false;
+            AddChild(_glyphs[i]);
         }
     }
 
@@ -343,18 +343,18 @@ public class CCPixelLabel : CCNode
     {
         // First pass: measure total width across full string
         float totalWidth = 0;
-        for (int i = 0; i < m_text.Length; i++)
+        for (int i = 0; i < _text.Length; i++)
         {
-            char c = m_text[i];
+            char c = _text[i];
             if (c == ' ')
-                totalWidth += m_charHeight * 0.4f;
-            else if (m_charWidths.TryGetValue(c, out float w))
+                totalWidth += _charHeight * 0.4f;
+            else if (_charWidths.TryGetValue(c, out float w))
                 totalWidth += w;
         }
 
         // Alignment offset
         float offsetX = 0;
-        switch (m_alignment)
+        switch (_alignment)
         {
             case CCTextAlignment.Center:
                 offsetX = -totalWidth / 2f;
@@ -364,30 +364,30 @@ public class CCPixelLabel : CCNode
                 break;
         }
 
-        float offsetY = -m_charHeight;
+        float offsetY = -_charHeight;
 
         // Second pass: position glyphs, iterating the full string
         // and only counting rendered characters against the sprite budget
         float x = offsetX;
         int glyphIdx = 0;
 
-        for (int i = 0; i < m_text.Length; i++)
+        for (int i = 0; i < _text.Length; i++)
         {
-            char c = m_text[i];
+            char c = _text[i];
             if (c == ' ')
             {
-                x += m_charHeight * 0.4f;
+                x += _charHeight * 0.4f;
                 continue;
             }
 
-            if (!m_charTextures.TryGetValue(c, out var tex))
+            if (!_charTextures.TryGetValue(c, out var tex))
                 continue;
 
-            if (glyphIdx >= m_maxChars) break;
+            if (glyphIdx >= _maxChars) break;
 
-            var glyph = m_glyphs[glyphIdx];
+            var glyph = _glyphs[glyphIdx];
             glyph.InitWithTexture(tex);
-            glyph.IsAntialiased = m_antialiased;
+            glyph.IsAntialiased = _antialiased;
             glyph.AnchorPoint = CCPoint.Zero;
             glyph.PositionX = x;
             glyph.PositionY = offsetY;
@@ -396,14 +396,14 @@ public class CCPixelLabel : CCNode
             glyph.Visible = true;
             glyphIdx++;
 
-            x += m_charWidths.TryGetValue(c, out float w) ? w : m_charHeight * 0.5f;
+            x += _charWidths.TryGetValue(c, out float w) ? w : _charHeight * 0.5f;
         }
 
         // Hide unused glyphs
-        for (int i = glyphIdx; i < m_maxChars; i++)
-            m_glyphs[i].Visible = false;
+        for (int i = glyphIdx; i < _maxChars; i++)
+            _glyphs[i].Visible = false;
 
         // Update content size
-        ContentSize = new CCSize(totalWidth, m_charHeight);
+        ContentSize = new CCSize(totalWidth, _charHeight);
     }
 }

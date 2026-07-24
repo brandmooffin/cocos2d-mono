@@ -5,14 +5,14 @@ namespace Cocos2D;
 public class CCMenuItemSprite : CCMenuItem
 {
     protected float m_fOriginalScale;
-    private CCNode m_pDisabledImage;
-    private CCNode m_pNormalImage;
+    private CCNode _disabledImage;
+    private CCNode _normalImage;
 
-    private CCNode m_pSelectedImage;
+    private CCNode _selectedImage;
 
     public CCNode NormalImage
     {
-        get { return m_pNormalImage; }
+        get { return _normalImage; }
         set
         {
             if (value != null)
@@ -22,20 +22,23 @@ public class CCMenuItemSprite : CCMenuItem
                 ContentSize = value.ContentSize;
             }
 
-            if (m_pNormalImage != null)
+            if (_normalImage != null)
             {
-                value.Position = m_pNormalImage.Position;
-                RemoveChild(m_pNormalImage, true);
+                if (value != null)
+                {
+                    value.Position = _normalImage.Position;
+                }
+                RemoveChild(_normalImage, true);
             }
 
-            m_pNormalImage = value;
+            _normalImage = value;
             UpdateImagesVisibility();
         }
     }
 
     public CCNode SelectedImage
     {
-        get { return m_pSelectedImage; }
+        get { return _selectedImage; }
         set
         {
             if (value != null)
@@ -44,20 +47,23 @@ public class CCMenuItemSprite : CCMenuItem
                 value.AnchorPoint = CCPoint.Zero;
             }
 
-            if (m_pSelectedImage != null)
+            if (_selectedImage != null)
             {
-                value.Position = m_pSelectedImage.Position;
-                RemoveChild(m_pSelectedImage, true);
+                if (value != null)
+                {
+                    value.Position = _selectedImage.Position;
+                }
+                RemoveChild(_selectedImage, true);
             }
 
-            m_pSelectedImage = value;
+            _selectedImage = value;
             UpdateImagesVisibility();
         }
     }
 
     public CCNode DisabledImage
     {
-        get { return m_pDisabledImage; }
+        get { return _disabledImage; }
         set
         {
             if (value != null)
@@ -66,13 +72,16 @@ public class CCMenuItemSprite : CCMenuItem
                 value.AnchorPoint = CCPoint.Zero;
             }
 
-            if (m_pDisabledImage != null)
+            if (_disabledImage != null)
             {
-                value.Position = m_pDisabledImage.Position;
-                RemoveChild(m_pDisabledImage, true);
+                if (value != null)
+                {
+                    value.Position = _disabledImage.Position;
+                }
+                RemoveChild(_disabledImage, true);
             }
 
-            m_pDisabledImage = value;
+            _disabledImage = value;
             UpdateImagesVisibility();
         }
     }
@@ -200,9 +209,9 @@ public class CCMenuItemSprite : CCMenuItem
         SelectedImage = selectedSprite;
         DisabledImage = disabledSprite;
 
-        if (m_pNormalImage != null)
+        if (_normalImage != null)
         {
-            ContentSize = m_pNormalImage.ContentSize;
+            ContentSize = _normalImage.ContentSize;
         }
 
         CascadeColorEnabled = true;
@@ -218,21 +227,21 @@ public class CCMenuItemSprite : CCMenuItem
     {
         base.Selected();
 
-        if (m_pNormalImage != null)
+        if (_normalImage != null)
         {
-            if (m_pDisabledImage != null)
+            if (_disabledImage != null)
             {
-                m_pDisabledImage.Visible = false;
+                _disabledImage.Visible = false;
             }
 
-            if (m_pSelectedImage != null)
+            if (_selectedImage != null)
             {
-                m_pNormalImage.Visible = false;
-                m_pSelectedImage.Visible = true;
+                _normalImage.Visible = false;
+                _selectedImage.Visible = true;
             }
             else
             {
-                m_pNormalImage.Visible = true;
+                _normalImage.Visible = true;
                 if (ZoomBehaviorOnTouch)
                 {
                     CCAction action = GetAction(unchecked((int)kZoomActionTag));
@@ -256,13 +265,13 @@ public class CCMenuItemSprite : CCMenuItem
     public override void Unselected()
     {
         base.Unselected();
-        if (m_pNormalImage != null)
+        if (_normalImage != null)
         {
-            m_pNormalImage.Visible = true;
+            _normalImage.Visible = true;
 
-            if (m_pSelectedImage != null)
+            if (_selectedImage != null)
             {
-                m_pSelectedImage.Visible = false;
+                _selectedImage.Visible = false;
             }
             if (ZoomBehaviorOnTouch)
             {
@@ -272,9 +281,9 @@ public class CCMenuItemSprite : CCMenuItem
                 RunAction(zoomAction);
             }
 
-            if (m_pDisabledImage != null)
+            if (_disabledImage != null)
             {
-                m_pDisabledImage.Visible = false;
+                _disabledImage.Visible = false;
             }
         }
     }
@@ -297,23 +306,23 @@ public class CCMenuItemSprite : CCMenuItem
     {
         if (m_bIsEnabled)
         {
-            if (m_pNormalImage != null) m_pNormalImage.Visible = true;
-            if (m_pSelectedImage != null) m_pSelectedImage.Visible = false;
-            if (m_pDisabledImage != null) m_pDisabledImage.Visible = false;
+            if (_normalImage != null) _normalImage.Visible = true;
+            if (_selectedImage != null) _selectedImage.Visible = false;
+            if (_disabledImage != null) _disabledImage.Visible = false;
         }
         else
         {
-            if (m_pDisabledImage != null)
+            if (_disabledImage != null)
             {
-                if (m_pNormalImage != null) m_pNormalImage.Visible = false;
-                if (m_pSelectedImage != null) m_pSelectedImage.Visible = false;
-                if (m_pDisabledImage != null) m_pDisabledImage.Visible = true;
+                if (_normalImage != null) _normalImage.Visible = false;
+                if (_selectedImage != null) _selectedImage.Visible = false;
+                if (_disabledImage != null) _disabledImage.Visible = true;
             }
             else
             {
-                if (m_pNormalImage != null) m_pNormalImage.Visible = true;
-                if (m_pSelectedImage != null) m_pSelectedImage.Visible = false;
-                if (m_pDisabledImage != null) m_pDisabledImage.Visible = false;
+                if (_normalImage != null) _normalImage.Visible = true;
+                if (_selectedImage != null) _selectedImage.Visible = false;
+                if (_disabledImage != null) _disabledImage.Visible = false;
             }
         }
     }

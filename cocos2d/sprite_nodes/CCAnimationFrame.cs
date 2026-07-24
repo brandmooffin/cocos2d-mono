@@ -4,23 +4,23 @@ namespace Cocos2D;
 
 public class CCAnimationFrame : ICCCopyable
 {
-    private float m_fDelayUnits;
-    private CCSpriteFrame m_pSpriteFrame;
-    private PlistDictionary m_pUserInfo;
+    private float _delayUnits;
+    private CCSpriteFrame _spriteFrame;
+    private PlistDictionary _userInfo;
 
     public CCSpriteFrame SpriteFrame
     {
-        get { return m_pSpriteFrame; }
+        get { return _spriteFrame; }
     }
 
     public float DelayUnits
     {
-        get { return m_fDelayUnits; }
+        get { return _delayUnits; }
     }
 
     public PlistDictionary UserInfo
     {
-        get { return m_pUserInfo; }
+        get { return _userInfo; }
     }
 
 		public CCAnimationFrame Copy()
@@ -41,16 +41,16 @@ public class CCAnimationFrame : ICCCopyable
             pCopy = new CCAnimationFrame();
         }
 
-        pCopy.InitWithSpriteFrame((CCSpriteFrame) m_pSpriteFrame.Copy(), m_fDelayUnits, m_pUserInfo);
+        pCopy.InitWithSpriteFrame((CCSpriteFrame) _spriteFrame.Copy(), _delayUnits, _userInfo);
 
         return pCopy;
     }
 
     public bool InitWithSpriteFrame(CCSpriteFrame spriteFrame, float delayUnits, PlistDictionary userInfo)
     {
-        m_pSpriteFrame = spriteFrame;
-        m_fDelayUnits = delayUnits;
-        m_pUserInfo = userInfo;
+        _spriteFrame = spriteFrame;
+        _delayUnits = delayUnits;
+        _userInfo = userInfo;
         return true;
     }
 }

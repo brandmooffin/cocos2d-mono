@@ -5,7 +5,7 @@ namespace Cocos2D;
 
 public class CCGrabber
 {
-    private RenderTarget2D m_pOldRenderTarget;
+    private RenderTarget2D _oldRenderTarget;
 
     public void Grab(CCTexture2D pTexture)
     {
@@ -14,13 +14,13 @@ public class CCGrabber
 
     public void BeforeRender(CCTexture2D pTexture)
     {
-        m_pOldRenderTarget = CCDrawManager.GetRenderTarget();
+        _oldRenderTarget = CCDrawManager.GetRenderTarget();
         CCDrawManager.SetRenderTarget(pTexture);
         CCDrawManager.Clear(Color.Transparent);
     }
 
     public void AfterRender(CCTexture2D pTexture)
     {
-        CCDrawManager.SetRenderTarget(m_pOldRenderTarget);
+        CCDrawManager.SetRenderTarget(_oldRenderTarget);
     }
 }

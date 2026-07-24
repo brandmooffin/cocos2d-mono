@@ -4,12 +4,12 @@ namespace Cocos2D;
 
 public partial class CCEaseCustom : CCActionEase
 {
-    private Func<float, float> m_EaseFunc;
+    private Func<float, float> _easeFunc;
 
     public Func<float, float> EaseFunc
     {
-        get { return m_EaseFunc; }
-        set { m_EaseFunc = value; }
+        get { return _easeFunc; }
+        set { _easeFunc = value; }
     }
 
     public CCEaseCustom(CCActionInterval pAction, Func<float, float> easeFunc)
@@ -31,18 +31,18 @@ public partial class CCEaseCustom : CCActionEase
     public void InitWithAction(CCActionInterval action, Func<float, float> easeFunc)
     {
         base.InitWithAction(action);
-        m_EaseFunc = easeFunc;
+        _easeFunc = easeFunc;
     }
 
     public void InitWithAction(CCFiniteTimeAction action, Func<float, float> easeFunc)
     {
         base.InitWithAction(action);
-        m_EaseFunc = easeFunc;
+        _easeFunc = easeFunc;
     }
 
     public override void Update(float time)
     {
-        m_pInner.Update(m_EaseFunc(time));
+        m_pInner.Update(_easeFunc(time));
     }
 
     public override CCFiniteTimeAction Reverse()
@@ -57,7 +57,7 @@ public partial class CCEaseCustom : CCActionEase
             //in case of being called at sub class
             var pCopy = pZone as CCEaseCustom;
             base.Copy(pCopy);
-            pCopy.InitWithAction((CCActionInterval) m_pInner.Copy(), m_EaseFunc);
+            pCopy.InitWithAction((CCActionInterval) m_pInner.Copy(), _easeFunc);
 
             return pCopy;
         }

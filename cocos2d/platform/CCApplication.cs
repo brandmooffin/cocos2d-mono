@@ -13,8 +13,8 @@ public abstract class CCApplication : DrawableGameComponent
 {
     protected static CCApplication s_pSharedApplication;
     private readonly List<CCTouch> endedTouches = new List<CCTouch>();
-    private readonly Dictionary<int, LinkedListNode<CCTouch>> m_pTouchMap = new Dictionary<int, LinkedListNode<CCTouch>>();
-    private readonly LinkedList<CCTouch> m_pTouches = new LinkedList<CCTouch>();
+    private readonly Dictionary<int, LinkedListNode<CCTouch>> _touchMap = new Dictionary<int, LinkedListNode<CCTouch>>();
+    private readonly LinkedList<CCTouch> _touches = new LinkedList<CCTouch>();
     private readonly List<CCTouch> movedTouches = new List<CCTouch>();
     private readonly List<CCTouch> newTouches = new List<CCTouch>();
 #if WINDOWS || WINDOWSGL || MACOS || LINUX || ENABLE_MOUSE
@@ -56,7 +56,7 @@ public abstract class CCApplication : DrawableGameComponent
     private void GameActivated(object sender, EventArgs e)
     {
         // Clear out the prior gamepad state because we don't want it anymore.
-        m_PriorGamePadState.Clear();
+        _priorGamePadState.Clear();
 #if !IOS
         if (HandleMediaStateAutomatically)
         {
@@ -104,8 +104,8 @@ public abstract class CCApplication : DrawableGameComponent
 
     public void ClearTouches()
     {
-        m_pTouches.Clear();
-        m_pTouchMap.Clear();
+        _touches.Clear();
+        _touchMap.Clear();
     }
 
     /// <summary>
@@ -272,14 +272,14 @@ public abstract class CCApplication : DrawableGameComponent
     public event CCGamePadTriggerDelegate GamePadTriggerUpdate;
     public event CCGamePadConnectionDelegate GamePadConnectionUpdate;
 
-    private Dictionary<PlayerIndex, GamePadState> m_PriorGamePadState = new Dictionary<PlayerIndex, GamePadState>();
+    private Dictionary<PlayerIndex, GamePadState> _priorGamePadState = new Dictionary<PlayerIndex, GamePadState>();
 
     private void ProcessGamePad(GamePadState gps, PlayerIndex player)
     {
         GamePadState lastState = new GamePadState();
-        if (m_PriorGamePadState.ContainsKey(player))
+        if (_priorGamePadState.ContainsKey(player))
         {
-            lastState = m_PriorGamePadState[player];
+            lastState = _priorGamePadState[player];
             // Notify listeners when the gamepad is connected.
             if ((lastState.IsConnected != gps.IsConnected) && GamePadConnectionUpdate != null)
             {
@@ -403,7 +403,7 @@ public abstract class CCApplication : DrawableGameComponent
                 GamePadDPadUpdate(left, up, right, down, player);
             }
         }
-        m_PriorGamePadState[player] = gps;
+        _priorGamePadState[player] = gps;
     }
 
     private void ProcessGamePad()
@@ -421,7 +421,7 @@ public abstract class CCApplication : DrawableGameComponent
     #endregion
 
     #region Keyboard support
-    private KeyboardState m_priorKeyboardState;
+    private KeyboardState _priorKeyboardState;
 
     private void ProcessKeyboard()
     {
@@ -431,11 +431,11 @@ public abstract class CCApplication : DrawableGameComponent
     private void ProcessKeyboard(KeyboardState currentKeyState)
     {
 			// Check for Keypad interaction
-        if(currentKeyState.IsKeyUp(Keys.Back) && m_priorKeyboardState.IsKeyDown(Keys.Back)) 
+        if(currentKeyState.IsKeyUp(Keys.Back) && _priorKeyboardState.IsKeyDown(Keys.Back)) 
         {
             CCDirector.SharedDirector.KeypadDispatcher.DispatchKeypadMsg(CCKeypadMSGType.BackClicked);
         }
-        else if(currentKeyState.IsKeyUp(Keys.Home) && m_priorKeyboardState.IsKeyDown(Keys.Home)) 
+        else if(currentKeyState.IsKeyUp(Keys.Home) && _priorKeyboardState.IsKeyDown(Keys.Home)) 
         {
             CCDirector.SharedDirector.KeypadDispatcher.DispatchKeypadMsg(CCKeypadMSGType.MenuClicked);
         }
@@ -443,7 +443,7 @@ public abstract class CCApplication : DrawableGameComponent
 			CCDirector.SharedDirector.KeyboardDispatcher.DispatchKeyboardState ();
 
 			// Store the state for the next loop
-        m_priorKeyboardState = currentKeyState;
+        _priorKeyboardState = currentKeyState;
 
     }
     #endregion
@@ -474,31 +474,31 @@ public abstract class CCApplication : DrawableGameComponent
             {
                 pos = CCDrawManager.ScreenToWorld(_lastMouseState.X, _lastMouseState.Y);
                 _lastMouseId++;
-                m_pTouches.AddLast(new CCTouch(_lastMouseId, pos.X, pos.Y));
-                m_pTouchMap.Add(_lastMouseId, m_pTouches.Last);
-                newTouches.Add(m_pTouches.Last.Value);
+                _touches.AddLast(new CCTouch(_lastMouseId, pos.X, pos.Y));
+                _touchMap.Add(_lastMouseId, _touches.Last);
+                newTouches.Add(_touches.Last.Value);
 
                 m_bCaptured = true;
             }
             else if (_prevMouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Pressed)
             {
-                if (m_pTouchMap.ContainsKey(_lastMouseId))
+                if (_touchMap.ContainsKey(_lastMouseId))
                 {
                     if (_prevMouseState.X != _lastMouseState.X || _prevMouseState.Y != _lastMouseState.Y)
                     {
                         pos = CCDrawManager.ScreenToWorld(_lastMouseState.X, _lastMouseState.Y);
-                        movedTouches.Add(m_pTouchMap[_lastMouseId].Value);
-                        m_pTouchMap[_lastMouseId].Value.SetTouchInfo(_lastMouseId, pos.X, pos.Y);
+                        movedTouches.Add(_touchMap[_lastMouseId].Value);
+                        _touchMap[_lastMouseId].Value.SetTouchInfo(_lastMouseId, pos.X, pos.Y);
                     }
                 }
             }
             else if (_prevMouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Released)
             {
-                if (m_pTouchMap.ContainsKey(_lastMouseId))
+                if (_touchMap.ContainsKey(_lastMouseId))
                 {
-                    endedTouches.Add(m_pTouchMap[_lastMouseId].Value);
-                    m_pTouches.Remove(m_pTouchMap[_lastMouseId]);
-                    m_pTouchMap.Remove(_lastMouseId);
+                    endedTouches.Add(_touchMap[_lastMouseId].Value);
+                    _touches.Remove(_touchMap[_lastMouseId]);
+                    _touchMap.Remove(_lastMouseId);
                 }
             }
             if (newTouches.Count > 0)
@@ -544,7 +544,7 @@ public abstract class CCApplication : DrawableGameComponent
                 switch (touch.State)
                 {
                     case TouchLocationState.Pressed:
-                        if (m_pTouchMap.ContainsKey(touch.Id))
+                        if (_touchMap.ContainsKey(touch.Id))
                         {
                             break;
                         }
@@ -553,15 +553,15 @@ public abstract class CCApplication : DrawableGameComponent
                         {
                             pos = CCDrawManager.ScreenToWorld(touch.Position.X, touch.Position.Y);
 
-                            m_pTouches.AddLast(new CCTouch(touch.Id, pos.X, pos.Y));
-                            m_pTouchMap.Add(touch.Id, m_pTouches.Last);
-                            newTouches.Add(m_pTouches.Last.Value);
+                            _touches.AddLast(new CCTouch(touch.Id, pos.X, pos.Y));
+                            _touchMap.Add(touch.Id, _touches.Last);
+                            newTouches.Add(_touches.Last.Value);
                         }
                         break;
 
                     case TouchLocationState.Moved:
                         LinkedListNode<CCTouch> existingTouch;
-                        if (m_pTouchMap.TryGetValue(touch.Id, out existingTouch))
+                        if (_touchMap.TryGetValue(touch.Id, out existingTouch))
                         {
                             pos = CCDrawManager.ScreenToWorld(touch.Position.X, touch.Position.Y);
                             var delta = existingTouch.Value.LocationInView - pos;
@@ -574,11 +574,11 @@ public abstract class CCApplication : DrawableGameComponent
                         break;
 
                     case TouchLocationState.Released:
-                        if (m_pTouchMap.TryGetValue(touch.Id, out existingTouch))
+                        if (_touchMap.TryGetValue(touch.Id, out existingTouch))
                         {
                             endedTouches.Add(existingTouch.Value);
-                            m_pTouches.Remove(existingTouch);
-                            m_pTouchMap.Remove(touch.Id);
+                            _touches.Remove(existingTouch);
+                            _touchMap.Remove(touch.Id);
                         }
                         break;
 
@@ -606,9 +606,9 @@ public abstract class CCApplication : DrawableGameComponent
 
     private CCTouch GetTouchBasedOnId(int nID)
     {
-        if (m_pTouchMap.ContainsKey(nID))
+        if (_touchMap.ContainsKey(nID))
         {
-            LinkedListNode<CCTouch> curTouch = m_pTouchMap[nID];
+            LinkedListNode<CCTouch> curTouch = _touchMap[nID];
             //If ID's match...
             if (curTouch.Value.Id == nID)
             {

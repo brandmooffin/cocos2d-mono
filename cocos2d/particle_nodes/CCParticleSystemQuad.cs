@@ -7,7 +7,7 @@ namespace Cocos2D;
 
 public class CCParticleSystemQuad : CCParticleSystem
 {
-    private CCRawList<CCV3F_C4B_T2F_Quad> m_pQuads; // quads to be rendered
+    private CCRawList<CCV3F_C4B_T2F_Quad> _quads; // quads to be rendered
 
     //implementation CCParticleSystemQuad
     // overriding the init method
@@ -74,7 +74,7 @@ public class CCParticleSystemQuad : CCParticleSystem
         }
         else
         {
-            quads = m_pQuads.Elements;
+            quads = _quads.Elements;
             start = 0;
             end = m_uTotalParticles;
         }
@@ -261,7 +261,7 @@ public class CCParticleSystemQuad : CCParticleSystem
         }
         else
         {
-            quads = m_pQuads.Elements;
+            quads = _quads.Elements;
         }
 
         var particles = m_pParticles;
@@ -292,7 +292,7 @@ public class CCParticleSystemQuad : CCParticleSystem
 
         CCDrawManager.BindTexture(m_pTexture);
         CCDrawManager.BlendFunc(m_tBlendFunc);
-        CCDrawManager.DrawQuads(m_pQuads, 0, m_uParticleCount);
+        CCDrawManager.DrawQuads(_quads, 0, m_uParticleCount);
     }
 
     public override int TotalParticles
@@ -305,13 +305,13 @@ public class CCParticleSystemQuad : CCParticleSystem
             {
                 m_pParticles = new CCParticle[value];
 
-                if (m_pQuads == null)
+                if (_quads == null)
                 {
-                    m_pQuads = new CCRawList<CCV3F_C4B_T2F_Quad>(value); 
+                    _quads = new CCRawList<CCV3F_C4B_T2F_Quad>(value); 
                 }
                 else
                 {
-                    m_pQuads.Capacity = value;
+                    _quads.Capacity = value;
                 }
 
                 m_uTotalParticles = value;
@@ -334,9 +334,9 @@ public class CCParticleSystemQuad : CCParticleSystem
 
     private bool AllocMemory()
     {
-        Debug.Assert(m_pBatchNode == null, "Memory should not be alloced when not using batchNode");
-        Debug.Assert((m_pQuads == null), "Memory already alloced");
-        m_pQuads = new CCRawList<CCV3F_C4B_T2F_Quad>(m_uTotalParticles);
+        Debug.Assert(m_pBatchNode == null, "Memory should not be allocated when not using batchNode");
+        Debug.Assert((_quads == null), "Memory already allocated");
+        _quads = new CCRawList<CCV3F_C4B_T2F_Quad>(m_uTotalParticles);
         return true;
     }
 
@@ -362,8 +362,8 @@ public class CCParticleSystemQuad : CCParticleSystem
                     // copy current state to batch
                     var batchQuads = m_pBatchNode.TextureAtlas.m_pQuads.Elements;
                     m_pBatchNode.TextureAtlas.Dirty = true;
-                    Array.Copy(m_pQuads.Elements, 0, batchQuads, m_uAtlasIndex, m_uTotalParticles);
-                    m_pQuads = null;
+                    Array.Copy(_quads.Elements, 0, batchQuads, m_uAtlasIndex, m_uTotalParticles);
+                    _quads = null;
                 }
             }
         }

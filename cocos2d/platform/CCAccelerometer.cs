@@ -14,11 +14,11 @@ public class CCAccelerometer
 #endif
 
     private const float TG3_GRAVITY_EARTH = 9.80665f;
-    private ICCAccelerometerDelegate m_pAccelDelegate;
-    private readonly CCAcceleration m_obAccelerationValue = new CCAcceleration();
+    private ICCAccelerometerDelegate _accelDelegate;
+    private readonly CCAcceleration _accelerationValue = new CCAcceleration();
 
-    private bool m_bActive;
-    private bool m_bEmulation;
+    private bool _active;
+    private bool _emulation;
 
     static CCAccelerometer()
     {
@@ -45,16 +45,16 @@ public class CCAccelerometer
 
     private void ResetAccelerometer()
     {
-        m_obAccelerationValue.X = 0;
-        m_obAccelerationValue.Y = 0;
-        m_obAccelerationValue.Z = 0;
+        _accelerationValue.X = 0;
+        _accelerationValue.Y = 0;
+        _accelerationValue.Z = 0;
     }
 
     public void SetDelegate(ICCAccelerometerDelegate pDelegate)
     {
-        m_pAccelDelegate = pDelegate;
+        _accelDelegate = pDelegate;
 
-        if (pDelegate != null && !m_bActive)
+        if (pDelegate != null && !_active)
         {
 #if ANDROID || IOS
                 try
@@ -63,32 +63,32 @@ public class CCAccelerometer
                 {
                     accelerometer.CurrentValueChanged += accelerometer_CurrentValueChanged;
                     accelerometer.Start();
-                    m_bActive = true;
+                    _active = true;
                 }
                 else
                 {
-                    m_bActive = false;
+                    _active = false;
                 }
             }
             catch (Exception)
             {
                 accelerometer = null;
-                m_bActive = false;
+                _active = false;
             }
 #endif
-            if (!m_bActive)
+            if (!_active)
             {
-                m_bActive = true;
-                m_bEmulation = true;
+                _active = true;
+                _emulation = true;
             }
             else
             {
-                m_bEmulation = false;
+                _emulation = false;
             }
         }
         else
         {
-            if (m_bActive && !m_bEmulation)
+            if (_active && !_emulation)
             {
 #if ANDROID || IOS
                 if (accelerometer != null)
@@ -108,8 +108,8 @@ public class CCAccelerometer
             
             ResetAccelerometer();
 
-            m_bActive = false;
-            m_bEmulation = false;
+            _active = false;
+            _emulation = false;
         }
     }
 
@@ -136,7 +136,7 @@ public class CCAccelerometer
         // store the accelerometer value in our acceleration object to be updated.
         UpdateAccelerationValue(val.ToString());
 
-        m_obAccelerationValue.TimeStamp = e.SensorReading.Timestamp.Ticks;
+        _accelerationValue.TimeStamp = e.SensorReading.Timestamp.Ticks;
     }
 
     private void UpdateAccelerationValue(string acceleration)
@@ -147,9 +147,9 @@ public class CCAccelerometer
         //  Cocos2D-XNA mapps the Sensor reading of the X value to be our Y value
         //  and the Y value to our X value.  Also the values need to be negated so that 
         //  it maps correctly.
-        m_obAccelerationValue.Y = -float.Parse(temp[1].Substring(0, temp[1].Length - 1));
-        m_obAccelerationValue.X = -float.Parse(temp[2].Substring(0, temp[2].Length - 1));
-        m_obAccelerationValue.Z = float.Parse(temp[3]);
+        _accelerationValue.Y = -float.Parse(temp[1].Substring(0, temp[1].Length - 1));
+        _accelerationValue.X = -float.Parse(temp[2].Substring(0, temp[2].Length - 1));
+        _accelerationValue.Z = float.Parse(temp[3]);
 
     }
 
@@ -168,9 +168,9 @@ public class CCAccelerometer
 
     public void Update()
     {
-        if (m_pAccelDelegate != null)
+        if (_accelDelegate != null)
         {
-            if (m_bEmulation)
+            if (_emulation)
             {
                 // if we're in the emulator, we'll generate a fake acceleration value using the arrow keys
                 // press the pause/break key to toggle keyboard input for the emulator
@@ -191,13 +191,13 @@ public class CCAccelerometer
 
                 stateValue.Normalize();
 
-                m_obAccelerationValue.X = stateValue.X;
-                m_obAccelerationValue.Y = stateValue.Y;
-                m_obAccelerationValue.Z = stateValue.Z;
-                m_obAccelerationValue.TimeStamp = DateTime.Now.Ticks;
+                _accelerationValue.X = stateValue.X;
+                _accelerationValue.Y = stateValue.Y;
+                _accelerationValue.Z = stateValue.Z;
+                _accelerationValue.TimeStamp = DateTime.Now.Ticks;
             }
 
-            m_pAccelDelegate.DidAccelerate(m_obAccelerationValue);
+            _accelDelegate.DidAccelerate(_accelerationValue);
         }
     }
 }

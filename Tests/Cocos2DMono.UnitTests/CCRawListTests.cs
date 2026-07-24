@@ -87,4 +87,62 @@ public class CCRawListTests
         list.Clear(true);
         Assert.Equal(0, list.count);
     }
+
+    // Regression tests for RemoveRange's shift condition. The old check compared
+    // (index + rangeCount) - an old-index-space value - against the post-removal count,
+    // so removing a middle range with 1..rangeCount surviving trailing elements skipped
+    // the shift AND the tail-clear then destroyed the survivors: stale removed values
+    // stayed visible while real ones were zeroed.
+    private static CCRawList<int> ListOf(int n)
+    {
+        var list = new CCRawList<int>();
+        for (int i = 0; i < n; i++)
+            list.Add(i);
+        return list;
+    }
+
+    [Fact]
+    public void RemoveRange_MiddleRangeNearEnd_ShiftsSingleSurvivor()
+    {
+        var list = ListOf(10);
+
+        list.RemoveRange(6, 3);   // remove 6,7,8 - element 9 must survive at index 6
+
+        Assert.Equal(7, list.count);
+        Assert.Equal(5, list.Elements[5]);
+        Assert.Equal(9, list.Elements[6]);
+    }
+
+    [Fact]
+    public void RemoveRange_SurvivorCountEqualToRangeCount_PreservesSurvivors()
+    {
+        var list = ListOf(10);
+
+        list.RemoveRange(5, 3);   // remove 5,6,7 - elements 8,9 must survive at 5,6
+
+        Assert.Equal(7, list.count);
+        Assert.Equal(8, list.Elements[5]);
+        Assert.Equal(9, list.Elements[6]);
+    }
+
+    [Fact]
+    public void RemoveRange_ExactTail_RemovesWithoutShift()
+    {
+        var list = ListOf(10);
+
+        list.RemoveRange(7, 3);   // remove the exact tail 7,8,9 - nothing shifts
+
+        Assert.Equal(7, list.count);
+        Assert.Equal(6, list.Elements[6]);
+    }
+
+    [Fact]
+    public void RemoveRange_All_EmptiesList()
+    {
+        var list = ListOf(10);
+
+        list.RemoveRange(0, 10);
+
+        Assert.Equal(0, list.count);
+    }
 }

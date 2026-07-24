@@ -2,7 +2,7 @@ namespace Cocos2D;
 
 public class CCFlipY : CCActionInstant
 {
-    private bool m_bFlipY;
+    private bool _flipY;
 
     public CCFlipY()
     {
@@ -15,24 +15,24 @@ public class CCFlipY : CCActionInstant
 
     protected virtual bool InitWithFlipY(bool y)
     {
-        m_bFlipY = y;
+        _flipY = y;
         return true;
     }
 
     protected CCFlipY(CCFlipY flipY) : base(flipY)
     {
-        InitWithFlipY(m_bFlipY);
+        InitWithFlipY(flipY._flipY);
     }
 
     protected internal override void StartWithTarget(CCNode target)
     {
         base.StartWithTarget(target);
-        ((CCSprite) (target)).FlipY = m_bFlipY;
+        ((CCSprite) (target)).FlipY = _flipY;
     }
 
     public override CCFiniteTimeAction Reverse()
     {
-        return new CCFlipY(!m_bFlipY);
+        return new CCFlipY(!_flipY);
     }
 
     public override object Copy(ICCCopyable pZone)
@@ -41,7 +41,7 @@ public class CCFlipY : CCActionInstant
         {
             var pRet = (CCFlipY) (pZone);
             base.Copy(pZone);
-            pRet.InitWithFlipY(m_bFlipY);
+            pRet.InitWithFlipY(_flipY);
             return pRet;
         }
         return new CCFlipY(this);

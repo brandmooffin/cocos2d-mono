@@ -4,7 +4,7 @@ namespace Cocos2D;
 
 public class CCTiledGrid3DAction : CCGridAction
 {
-    private CCTiledGrid3D m_pGrid;
+    private CCTiledGrid3D _grid;
 
     public CCTiledGrid3DAction()
     {
@@ -22,30 +22,30 @@ public class CCTiledGrid3DAction : CCGridAction
 
     public CCQuad3 Tile(CCGridSize pos)
     {
-        return m_pGrid.Tile(pos);
+        return _grid.Tile(pos);
     }
 
     public CCQuad3 OriginalTile(CCGridSize pos)
     {
-        return m_pGrid.OriginalTile(pos);
+        return _grid.OriginalTile(pos);
     }
 
     public void SetTile(CCGridSize pos, ref CCQuad3 coords)
     {
-        m_pGrid.SetTile(pos, ref coords);
+        _grid.SetTile(pos, ref coords);
     }
 
     public override CCGridBase Grid
     {
         get
         {
-            m_pGrid = new CCTiledGrid3D(m_sGridSize);
-            return m_pGrid;
+            _grid = new CCTiledGrid3D(m_sGridSize);
+            return _grid;
         }
         set
         {
             Debug.Assert(value is CCTiledGrid3D);
-            m_pGrid = (CCTiledGrid3D) value;
+            _grid = (CCTiledGrid3D) value;
         }
     }
 }
