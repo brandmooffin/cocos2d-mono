@@ -647,7 +647,10 @@ public class CCRawList<T> : IList<T>
         if (this.count > 0)
         {
             this.count -= rangeCount;
-            if (this.count > 0 && (index + rangeCount) < this.count)
+            // Trailing survivors exist iff index < the post-removal count. (The old check
+            // compared index + rangeCount - old-index space - against the new count, which
+            // skipped the shift when 1..rangeCount elements trailed the removed range.)
+            if (index < this.count)
             {
                 Array.Copy(this.Elements, index + rangeCount, this.Elements, index, this.count - index);
             }

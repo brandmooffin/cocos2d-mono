@@ -40,7 +40,7 @@
 - CCCallFuncN.InitWithTarget returns true on success, matching CCCallFuncO (was false).
 - CCMenuItemSprite: assigning null to NormalImage/SelectedImage/DisabledImage clears the image instead of throwing NullReferenceException.
 - CCTextFieldTTF: auto-edit touch handling re-registers correctly after toggling ReadOnly/AutoEdit.
-- CCRawList: reworked pooled-buffer rent/return handling and fixed a tail-clear buffer leak.
+- CCRawList: RemoveRange no longer corrupts the list when removing a middle range near the end; also reworked pooled-buffer rent/return handling and fixed a tail-clear buffer leak.
 Internal: completed the private-field naming modernization (Hungarian m_ to _camelCase) library-wide; no public API change.
 2.5.11 - Debut of the consolidated package line replacing the per-platform Cocos2D-Mono.{DesktopGL,Windows,Linux,macOS,Android,iOS} packages (2.5.10 was their final release). Assembly is Cocos2DMono.dll (was Cocos2D.dll; namespace Cocos2D unchanged); OpenTK is no longer a dependency.
 - See https://github.com/Cocos2D-Mono/cocos2d-mono for the full changelog.

@@ -20,8 +20,10 @@ modernization (no public API change).
   `DisabledImage` now clears the image instead of throwing `NullReferenceException`.
 - **`CCTextFieldTTF`** — auto-edit touch handling re-registers correctly after toggling
   `ReadOnly` / `AutoEdit`; a field returned to editable is touch-interactive again.
-- **`CCRawList<T>`** — reworked pooled-buffer rent/return handling and fixed a tail-clear
-  buffer leak.
+- **`CCRawList<T>`** — `RemoveRange` no longer corrupts the list when the removed range is
+  followed by `1..rangeCount` surviving elements (the shift was skipped and the survivors
+  zeroed — visible as vertex corruption when removing middle segments from draw nodes).
+  Also reworked pooled-buffer rent/return handling and fixed a tail-clear buffer leak.
 
 ### Changed (internal)
 
