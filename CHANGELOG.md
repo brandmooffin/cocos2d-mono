@@ -4,6 +4,30 @@ All notable changes to Cocos2D-Mono are recorded here. This file was introduced 
 2.5.10; earlier releases are described in their GitHub release notes / git history.
 The project follows [Semantic Versioning](https://semver.org/) where practical.
 
+## 2.5.12 - 2026-07-23
+
+A bug-fix release. Consumer-visible behavior fixes to actions, menu items, and text
+fields, plus a buffer-leak fix and the completion of the internal private-field naming
+modernization (no public API change).
+
+### Fixed
+
+- **Instant action copy constructors** — `CCFlipX`, `CCFlipY`, and `CCPlace` now preserve
+  their state when copied (e.g. via `Copy`) instead of copying default values.
+- **`CCCallFuncN.InitWithTarget`** now returns `true` on success, matching
+  `CCCallFuncO.InitWithTarget` (previously returned `false`).
+- **`CCMenuItemSprite`** — assigning `null` to `NormalImage`, `SelectedImage`, or
+  `DisabledImage` now clears the image instead of throwing `NullReferenceException`.
+- **`CCTextFieldTTF`** — auto-edit touch handling re-registers correctly after toggling
+  `ReadOnly` / `AutoEdit`; a field returned to editable is touch-interactive again.
+- **`CCRawList<T>`** — reworked pooled-buffer rent/return handling and fixed a tail-clear
+  buffer leak.
+
+### Changed (internal)
+
+- Completed the private-field naming modernization: every private Hungarian `m_*` field
+  across the library is now `_camelCase`. No public, protected, or internal API change.
+
 ## 2.5.11 - 2026-07-10
 
 The debut of the **consolidated NuGet package line**. The build was collapsed from ~30
