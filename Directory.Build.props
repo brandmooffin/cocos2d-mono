@@ -5,7 +5,7 @@
     <Version>2.5.12</Version>
 
     <!-- Centralized MonoGame version for all projects -->
-    <MonoGameVersion>3.8.4.1</MonoGameVersion>
+    <MonoGameVersion>3.8.5</MonoGameVersion>
 
     <!-- Several legacy csprojs relocate BaseIntermediateOutputPath per configuration
          (e.g. obj\DesktopGL\Release) from the csproj body - too late for the SDK's
