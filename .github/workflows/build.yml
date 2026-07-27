@@ -28,18 +28,18 @@ jobs:
         # Actions produces a true cartesian product.
         configuration: [Debug, Release]
         target:
-          # DesktopGL (net9.0) is validated on all three desktop hosts - each
+          # DesktopGL (net10.0) is validated on all three desktop hosts - each
           # host bakes its own IsOSPlatform constant (LINUX / WINDOWSGL / MACOS)
           # and each feeds its own README status badge via the status-*.yml shims.
-          - { label: DesktopGL Linux,   os: ubuntu-latest,  tfm: net9.0, workloads: '' }
-          - { label: DesktopGL Windows, os: windows-latest, tfm: net9.0, workloads: '' }
-          - { label: DesktopGL macOS,   os: macos-latest,   tfm: net9.0, workloads: '' }
-          # WindowsDX requires net9.0-windows7.0 which only builds on Windows.
-          - { label: WindowsDX, os: windows-latest, tfm: net9.0-windows7.0, workloads: '' }
+          - { label: DesktopGL Linux,   os: ubuntu-latest,  tfm: net10.0, workloads: '' }
+          - { label: DesktopGL Windows, os: windows-latest, tfm: net10.0, workloads: '' }
+          - { label: DesktopGL macOS,   os: macos-latest,   tfm: net10.0, workloads: '' }
+          # WindowsDX requires net10.0-windows7.0 which only builds on Windows.
+          - { label: WindowsDX, os: windows-latest, tfm: net10.0-windows7.0, workloads: '' }
           # Android workload installs on Linux runners (cheaper than Windows).
-          - { label: Android, os: ubuntu-latest, tfm: net9.0-android35.0, workloads: android }
+          - { label: Android, os: ubuntu-latest, tfm: net10.0-android36.0, workloads: android }
           # iOS requires a macOS host (Apple toolchain).
-          - { label: iOS, os: macos-latest, tfm: net9.0-ios18.0, workloads: ios }
+          - { label: iOS, os: macos-latest, tfm: net10.0-ios26.0, workloads: ios }
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
@@ -64,7 +64,7 @@ jobs:
 
       # Build per-TFM so non-Windows hosts never evaluate the Windows TFM
       # (restoring the full <TargetFrameworks> on macOS/Linux raises NETSDK1100
-      # for net9.0-windows7.0). -p:TargetFrameworks=<tfm> narrows each project
+      # for net10.0-windows7.0). -p:TargetFrameworks=<tfm> narrows each project
       # to the single TFM being built. Box2D builds first so Cocos2DMono's
       # ProjectReference resolves from a populated cache.
       - name: Build Box2D
@@ -83,7 +83,7 @@ jobs:
       # library alone - so Windows-only integration builds still exceed the old
       # coverage.
       - name: Build IntegrationTests (Windows desktop only)
-        if: runner.os == 'Windows' && (matrix.target.tfm == 'net9.0' || matrix.target.tfm == 'net9.0-windows7.0')
+        if: runner.os == 'Windows' && (matrix.target.tfm == 'net10.0' || matrix.target.tfm == 'net10.0-windows7.0')
         run: dotnet build Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
 
   # Aggregate gate over every matrix cell. Branch protection should require THIS
