@@ -2,11 +2,11 @@
 # Runs the interactive Cocos2D-Mono test app.
 #
 # Usage:
-#   ./run-testapp.ps1                       # DesktopGL (net9.0), Debug
-#   ./run-testapp.ps1 -Tfm net9.0-windows7.0
+#   ./run-testapp.ps1                       # DesktopGL (net10.0), Debug
+#   ./run-testapp.ps1 -Tfm net10.0-windows7.0
 #   ./run-testapp.ps1 -Configuration Release
 param(
-    [string]$Tfm = "net9.0",
+    [string]$Tfm = "net10.0",
     [string]$Configuration = "Debug"
 )
 
