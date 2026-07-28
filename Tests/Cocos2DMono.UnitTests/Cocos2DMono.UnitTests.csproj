@@ -17,8 +17,9 @@
 
   <!--
     References the consolidated csproj (Stage C4a) so the suite defends the
-    assembly that ships from src/; resolves its net9.0 TFM. The suite runs
-    headless (pure value types + a graphics-free director init).
+    assembly that ships from src/; both resolve the base TFM from the
+    $(Cocos2DBaseTfm) dial in the repo-root Directory.Build.props. The suite
+    runs headless (pure value types + a graphics-free director init).
   -->
   <ItemGroup>
     <ProjectReference Include="..\..\src\Cocos2DMono\Cocos2DMono.csproj" />
