@@ -215,12 +215,16 @@ public class CCInputState
         {
             try
             {
+                // There is one physical keyboard; the per-PlayerIndex overload was an
+                // XNA-era chatpad concept and is obsolete in MonoGame (the index was
+                // ignored). Gamepads remain genuinely per-player.
+                KeyboardState keyboardState = Keyboard.GetState();
                 for (int i = 0; i < MaxInputs; i++)
                 {
                     LastKeyboardStates[i] = CurrentKeyboardStates[i];
                     LastGamePadStates[i] = CurrentGamePadStates[i];
 
-                    CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex)i);
+                    CurrentKeyboardStates[i] = keyboardState;
                     CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex)i);
 
                     // Keep track of whether a gamepad has ever been

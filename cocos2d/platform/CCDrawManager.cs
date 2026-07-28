@@ -1112,7 +1112,7 @@ public static class CCDrawManager
         for (int i = 0; i < passes.Count; i++)
         {
             passes[i].Apply();
-            graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, n * 4, start * 6, n * 2);
+            graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, start * 6, n * 2);
         }
 
         graphicsDevice.SetVertexBuffer(null);
@@ -1134,7 +1134,7 @@ public static class CCDrawManager
         for (int i = 0; i < passes.Count; i++)
         {
             passes[i].Apply();
-            graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertexBuffer.VertexBuffer.VertexCount, start, count);
+            graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, start, count);
         }
 
         graphicsDevice.SetVertexBuffer(null);
@@ -1160,7 +1160,7 @@ public static class CCDrawManager
         for (int i = 0; i < passes.Count; i++)
         {
             passes[i].Apply();
-            graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertexBuffer.VertexBuffer.VertexCount, start * 6, n * 2);
+            graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, start * 6, n * 2);
         }
 
         graphicsDevice.SetVertexBuffer(null);
