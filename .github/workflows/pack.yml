@@ -22,7 +22,7 @@ jobs:
   pack:
     name: Pack NuGet packages
     # Windows: the only host that can build all four TFMs
-    # (net9.0-windows7.0 requires Windows; android/ios are workload installs).
+    # (net10.0-windows7.0 requires Windows; android/ios are workload installs).
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1

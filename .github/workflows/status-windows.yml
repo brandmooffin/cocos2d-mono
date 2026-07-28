@@ -1,6 +1,6 @@
 name: Windows
 
-# Status reflector for the WindowsDX (net9.0-windows7.0) matrix cells.
+# Status reflector for the WindowsDX (net10.0-windows7.0) matrix cells.
 # See status-desktopgl.yml for how these shims work.
 
 on:

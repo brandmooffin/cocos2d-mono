@@ -1,6 +1,6 @@
 name: macOS
 
-# Status reflector for the DesktopGL (net9.0) cells on the macOS host.
+# Status reflector for the DesktopGL (net10.0) cells on the macOS host.
 # See status-desktopgl.yml for how these shims work.
 
 on:

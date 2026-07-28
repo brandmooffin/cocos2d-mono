@@ -23,23 +23,26 @@
     the consolidated csprojs under src/ (Cocos2DMono, Box2D) via
     $(Cocos2DTargetFrameworks) and their per-TFM Condition checks.
 
-    Legacy csprojs under cocos2d/, box2d/, and Tests/ do NOT reference these
-    properties, so defining them here is a no-op for the legacy build.
+    Also consumed by the consolidated test projects under Tests/:
+    Cocos2DMono.UnitTests targets $(Cocos2DBaseTfm) and
+    Cocos2DMono.IntegrationTests multi-targets $(Cocos2DTargetFrameworks),
+    so a TFM bump here carries the whole repo - src/, tests, and CI (the
+    workflows narrow builds with -p:Cocos2DTargetFrameworks=<tfm>).
 
-    The release/2.6.0-preview branch overrides these four properties (plus
-    MonoGameVersion above) to move the whole build to net10.0 + MonoGame 3.8.5;
-    no csproj edits required.
+    2.6.0: these dials moved the build from net9 + MonoGame 3.8.4.1 to
+    net10 + MonoGame 3.8.5 with no csproj edits - the payoff of the
+    Stage C consolidation.
   -->
   <!-- The Condition guards keep each dial overridable from the environment or the
        command line (-p:). Tools without an msbuild-property passthrough (e.g.
        `dotnet format`, which otherwise evaluates every TFM and can emit unmerged-
        change conflict markers when per-TFM edits diverge) can narrow the build by
-       exporting e.g. Cocos2DTargetFrameworks=net9.0. -->
+       exporting e.g. Cocos2DTargetFrameworks=net10.0. -->
   <PropertyGroup>
-    <Cocos2DBaseTfm Condition="'$(Cocos2DBaseTfm)' == ''">net9.0</Cocos2DBaseTfm>
-    <Cocos2DWindowsTfm Condition="'$(Cocos2DWindowsTfm)' == ''">net9.0-windows7.0</Cocos2DWindowsTfm>
-    <Cocos2DAndroidTfm Condition="'$(Cocos2DAndroidTfm)' == ''">net9.0-android35.0</Cocos2DAndroidTfm>
-    <Cocos2DIosTfm Condition="'$(Cocos2DIosTfm)' == ''">net9.0-ios18.0</Cocos2DIosTfm>
+    <Cocos2DBaseTfm Condition="'$(Cocos2DBaseTfm)' == ''">net10.0</Cocos2DBaseTfm>
+    <Cocos2DWindowsTfm Condition="'$(Cocos2DWindowsTfm)' == ''">net10.0-windows7.0</Cocos2DWindowsTfm>
+    <Cocos2DAndroidTfm Condition="'$(Cocos2DAndroidTfm)' == ''">net10.0-android36.0</Cocos2DAndroidTfm>
+    <Cocos2DIosTfm Condition="'$(Cocos2DIosTfm)' == ''">net10.0-ios26.0</Cocos2DIosTfm>
     <Cocos2DTargetFrameworks Condition="'$(Cocos2DTargetFrameworks)' == ''">$(Cocos2DBaseTfm);$(Cocos2DWindowsTfm);$(Cocos2DAndroidTfm);$(Cocos2DIosTfm)</Cocos2DTargetFrameworks>
   </PropertyGroup>
 </Project>
