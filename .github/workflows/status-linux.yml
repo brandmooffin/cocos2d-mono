@@ -1,6 +1,6 @@
 name: Linux
 
-# Status reflector for the DesktopGL (net9.0) cells on the Linux host.
+# Status reflector for the DesktopGL (net10.0) cells on the Linux host.
 # See status-desktopgl.yml for how these shims work.
 
 on:
