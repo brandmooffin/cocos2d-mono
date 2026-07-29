@@ -6,12 +6,12 @@
       Stage C3 consolidation: one csproj replaces 12 platform variants
       (cocos2d.{DesktopGL,Linux,macOS,Windows,Android,iOS} plus the .Core.* duplicates).
 
-        net9.0              DesktopGL host (Windows-GL, Linux, macOS via DesktopGL).
-                            macOS is served by net9.0 + DesktopGL today; Mac Catalyst is
-                            NOT shipped because MonoGame 3.8.4.1 has no maccatalyst asset.
-        net9.0-windows7.0   WindowsDX (UseWindowsForms; replaces cocos2d.Windows).
-        net9.0-android35.0  Android  (replaces cocos2d.Android).
-        net9.0-ios18.0      iOS      (replaces cocos2d.iOS).
+        net10.0             DesktopGL host (Windows-GL, Linux, macOS via DesktopGL).
+                            macOS is served by net10.0 + DesktopGL today; Mac Catalyst is
+                            NOT shipped because MonoGame has no maccatalyst asset (still true at 3.8.5).
+        net10.0-windows7.0  WindowsDX (UseWindowsForms; replaces cocos2d.Windows).
+        net10.0-android36.0 Android  (replaces cocos2d.Android).
+        net10.0-ios26.0     iOS      (replaces cocos2d.iOS).
 
       Source physically remains under ../../cocos2d/ during the side-by-side
       transition; the new csproj globs it and applies platform-specific
@@ -19,8 +19,8 @@
       cocos2d/cocos2d.* and cocos2d/cocos2d.Core.* csproj folders are excluded.
     -->
     <!-- TFMs come from the repo-root Directory.Build.props ($(Cocos2DBaseTfm) etc.)
-         so a .NET / MonoGame bump (e.g., the release/2.6.0-preview branch's move to
-         net10.0 + MonoGame 3.8.5) is a four-property change in one file. -->
+         so a .NET / MonoGame bump is a four-property change in one file (the 2.6.0
+         move to net10.0 + MonoGame 3.8.5 was exactly that). -->
     <TargetFrameworks>$(Cocos2DTargetFrameworks)</TargetFrameworks>
     <OutputType>Library</OutputType>
     <RootNamespace>Cocos2D</RootNamespace>
@@ -35,14 +35,9 @@
     <Product>Cocos2D-Mono</Product>
     <Description>Cocos2D-Mono is a managed C# port of cocos2d-x built on MonoGame. This single package multi-targets DesktopGL (Windows-GL, Linux, macOS), WindowsDX, Android, and iOS.</Description>
     <PackageReleaseNotes>
-2.5.12 - Bug-fix release.
-- Instant action copy constructors (CCFlipX, CCFlipY, CCPlace) preserve their state when copied.
-- CCCallFuncN.InitWithTarget returns true on success, matching CCCallFuncO (was false).
-- CCMenuItemSprite: assigning null to NormalImage/SelectedImage/DisabledImage clears the image instead of throwing NullReferenceException.
-- CCTextFieldTTF: auto-edit touch handling re-registers correctly after toggling ReadOnly/AutoEdit.
-- CCRawList: RemoveRange no longer corrupts the list when removing a middle range near the end; also reworked pooled-buffer rent/return handling and fixed a tail-clear buffer leak.
-Internal: completed the private-field naming modernization (Hungarian m_ to _camelCase) library-wide; no public API change.
-2.5.11 - Debut of the consolidated package line replacing the per-platform Cocos2D-Mono.{DesktopGL,Windows,Linux,macOS,Android,iOS} packages (2.5.10 was their final release). Assembly is Cocos2DMono.dll (was Cocos2D.dll; namespace Cocos2D unchanged); OpenTK is no longer a dependency.
+2.6.0 - The platform release: .NET 10 + MonoGame 3.8.5. No engine API changes.
+Migration: retarget your game to .NET 10 (net10.0 desktop, net10.0-windows7.0 WindowsDX, net10.0-android36.0 Android, net10.0-ios26.0 iOS) and bump the package reference. Requires the .NET 10 SDK. Also migrated off MonoGame-obsoleted APIs; validated end-to-end on the new MonoGame native core.
+2.5.12 - Final bug-fix release of the 2.5 line (action copies, CCMenuItemSprite null-clear, CCTextFieldTTF auto-edit, CCRawList RemoveRange corruption + buffer leak).
 - See https://github.com/Cocos2D-Mono/cocos2d-mono for the full changelog.
     </PackageReleaseNotes>
     <PackageTags>mono monogame cocos2d game gamedev 2d mgcb content-pipeline</PackageTags>
@@ -55,7 +50,7 @@ Internal: completed the private-field naming modernization (Hungarian m_ to _cam
        ============================================================ -->
   <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)'">
     <!-- DesktopGL covers Linux, macOS, and Windows-GL hosts. OS-specific constants
-         are added below via MSBuild::IsOSPlatform so a single net9.0 build is portable. -->
+         are added below via MSBuild::IsOSPlatform so a single net10.0 build is portable. -->
     <DefineConstants>$(DefineConstants);OPENGL;MONOGAME;DESKTOPGL</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DBaseTfm)' and '$([MSBuild]::IsOSPlatform(`Windows`))' == 'true'">

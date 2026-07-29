@@ -4,6 +4,42 @@ All notable changes to Cocos2D-Mono are recorded here. This file was introduced 
 2.5.10; earlier releases are described in their GitHub release notes / git history.
 The project follows [Semantic Versioning](https://semver.org/) where practical.
 
+## 2.6.0 - 2026-07-28
+
+The platform-line release: **.NET 10 + MonoGame 3.8.5**. No engine API changes — scenes,
+nodes, actions, and every public type behave exactly as they did on 2.5.12.
+
+### ⚠️ Migration (one step)
+
+Retarget your game project to .NET 10 and bump the package reference to 2.6.0:
+
+| Your target | New TFM |
+|---|---|
+| Desktop (DesktopGL) | `net10.0` |
+| WindowsDX | `net10.0-windows7.0` |
+| Android | `net10.0-android36.0` |
+| iOS | `net10.0-ios26.0` (note Apple's version-numbering jump — the .NET 10 iOS workload ships 26.x bindings) |
+
+The .NET 10 SDK is required to build. The MonoGame 3.8.5 move rides along transparently —
+no code changes.
+
+### Changed
+
+- **MonoGame 3.8.4.1 → 3.8.5** — MonoGame's major restructuring release (new native core,
+  ARM64 support, Vulkan/Direct3D 12 backends in preview). The engine continues to ship on
+  the DesktopGL and WindowsDX backends; the new preview backends are not consumed yet.
+- **.NET 9 → .NET 10** across every target — .NET 9 is an STS release past its support
+  window; 2.6.0 puts the engine on the current LTS.
+- Migrated off MonoGame-obsoleted APIs (`GraphicsDevice.DrawIndexedPrimitives` legacy
+  overload, `Keyboard.GetState(PlayerIndex)`) — no behavior change, and the engine is
+  clean ahead of their eventual removal upstream.
+
+### Validation
+
+Full pass on the new stack: all four TFMs + Box2D compile clean, 132 unit tests, the MGCB
+content build, and an interactive test-app pass (sprites, particles, every label backend,
+tilemaps, draw nodes, transitions, input, audio, Box2D testbed) on both desktop backends.
+
 ## 2.5.12 - 2026-07-23
 
 A bug-fix release. Consumer-visible behavior fixes to actions, menu items, and text
