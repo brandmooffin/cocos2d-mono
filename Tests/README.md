@@ -16,10 +16,10 @@ was lost, only the launch path changed). Pick the target framework for your plat
 
 ```bash
 # Desktop (DesktopGL) — the usual dev target
-dotnet run --project Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -f net10.0
+dotnet run --project Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -f net10.0 -p:TargetFrameworks=net10.0
 
 # Windows (WindowsDX)
-dotnet run --project Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -f net10.0-windows7.0
+dotnet run --project Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -f net10.0-windows7.0 -p:TargetFrameworks=net10.0-windows7.0
 ```
 
 Android (`net10.0-android36.0`) and iOS (`net10.0-ios26.0`) build from the same project but

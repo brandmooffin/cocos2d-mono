@@ -16,7 +16,7 @@ if (-not $Tfm) {
     # Default to the repo's base TFM dial so this script can't drift when
     # Directory.Build.props bumps .NET versions (it shipped hardcoded to net9.0
     # once and went stale at the .NET 10 retarget).
-    $props = Join-Path $PSScriptRoot "..\Directory.Build.props"
+    $props = Join-Path $PSScriptRoot ".." "Directory.Build.props"
     $match = Select-String -Path $props -Pattern '<Cocos2DBaseTfm[^>]*>([^<]+)</Cocos2DBaseTfm>' | Select-Object -First 1
     if (-not $match) { throw "Could not resolve Cocos2DBaseTfm from $props" }
     $Tfm = $match.Matches[0].Groups[1].Value

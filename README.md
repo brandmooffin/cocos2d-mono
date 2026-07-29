@@ -52,7 +52,7 @@ The library and its interactive test app build from a single solution, `Cocos2DM
 dotnet build Cocos2DMono.sln
 
 # Run the interactive test app on the desktop (DesktopGL / net10.0)
-dotnet run --project Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -f net10.0
+dotnet run --project Tests/Cocos2DMono.IntegrationTests/Cocos2DMono.IntegrationTests.csproj -f net10.0 -p:TargetFrameworks=net10.0
 
 # Run the headless unit tests
 dotnet test Tests/Cocos2DMono.UnitTests/Cocos2DMono.UnitTests.csproj
