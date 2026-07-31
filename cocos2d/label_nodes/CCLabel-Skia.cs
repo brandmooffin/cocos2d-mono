@@ -169,10 +169,10 @@ public partial class CCLabel
 
         _canvas.Clear(SKColors.Transparent);
 
+        // Glyph state (typeface + size) lives on the SKFont below; the paint only
+        // carries color and antialiasing on the modern DrawText overload.
         using var paint = new SKPaint
         {
-            Typeface = _currentTypeface,
-            TextSize = _currentFontSize,
             IsAntialias = true,
             Color = SKColors.White
         };
