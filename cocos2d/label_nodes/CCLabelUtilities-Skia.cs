@@ -44,7 +44,9 @@ internal static partial class CCLabelUtilities
             return new CCTexture2D();
         }
 
-        var font = CreateFontSkia(fontName, fontSize);
+        // fontName/fontSize are currently NOT applied on the Skia path - the static
+        // Sans-serif/12 font below is what measures and draws (tracked as C2D-236).
+        // The dead CreateFontSkia call that used to sit here leaked a typeface per label.
 
         if (dimensions.Equals(CCSize.Zero))
         {
@@ -98,18 +100,26 @@ internal static partial class CCLabelUtilities
         width = Math.Max(width, 1);
         height = Math.Max(height, 1);
 
+        // Dispose before reassigning: these wrap native Skia handles, and this
+        // method runs twice per label (1x1 for measurement, then final size).
+        _canvas?.Dispose();
+        _bitmapSkia?.Dispose();
         _bitmapSkia = new SKBitmap(width, height);
         _canvas = new SKCanvas(_bitmapSkia);
 
         // SkiaSharp 3.x splits text state out of SKPaint: the font (typeface + size)
         // draws the glyphs, the paint keeps color/antialiasing. FilterQuality is
         // dropped outright - it only ever affected bitmap sampling, never text.
-        _paint = new SKPaint
+        // Neither depends on the bitmap dimensions, so they initialize once.
+        if (_paint == null)
         {
-            IsAntialias = true,
-            Color = SKColors.White
-        };
-        _font = new SKFont(SKTypeface.FromFamilyName("Sans-serif"), 12);
+            _paint = new SKPaint
+            {
+                IsAntialias = true,
+                Color = SKColors.White
+            };
+            _font = new SKFont(SKTypeface.FromFamilyName("Sans-serif"), 12);
+        }
     }
 
     static SKTypeface CreateFontSkia(string familyName, float emSize)

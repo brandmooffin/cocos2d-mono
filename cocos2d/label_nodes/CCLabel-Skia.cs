@@ -119,7 +119,6 @@ public partial class CCLabel
             if (!_kerningInfo.ContainsKey(ch))
             {
                 var width = font.MeasureText(ch.ToString());
-                var with2 = font.GetGlyphWidths(new[] { ch });
                 if (width > 0)
                 {
                     _kerningInfo[ch] = new KerningInfo
@@ -151,6 +150,7 @@ public partial class CCLabel
     {
         if (_bitmapSkia == null || (_bitmapSkia.Width < width || _bitmapSkia.Height < height))
         {
+            _canvas?.Dispose();
             _bitmapSkia?.Dispose();
 
             _bitmapSkia = new SKBitmap(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
