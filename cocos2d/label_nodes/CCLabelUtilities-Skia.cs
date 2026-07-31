@@ -10,6 +10,7 @@ internal static partial class CCLabelUtilities
     private static SKBitmap _bitmapSkia;
     private static SKCanvas _canvas;
     private static SKPaint _paint;
+    private static SKFont _font;
 
     #if (LINUX || MACOS)
     internal static CCTexture2D CreateNativeLabel(string text, CCSize dimensions, CCTextAlignment hAlignment,
@@ -49,8 +50,7 @@ internal static partial class CCLabelUtilities
         {
             CreateBitmapSkia(1, 1);
 
-            var size = new SKRect();
-            _paint.MeasureText(text, ref size);
+            _font.MeasureText(text, out var size);
 
             dimensions.Width = size.Width;
             dimensions.Height = size.Height;
@@ -83,10 +83,9 @@ internal static partial class CCLabelUtilities
         }
 
         _paint.Color = new SKColor(textColor.R, textColor.G, textColor.B, textColor.A);
-        _paint.TextAlign = alignment;
 
         _canvas.Clear(SKColors.Transparent);
-        _canvas.DrawText(text, 0, lineAlignment, _paint);
+        _canvas.DrawText(text, 0, lineAlignment, alignment, _font, _paint);
 
         var texture = new CCTexture2D();
         texture.InitWithStream(SaveToStreamSkia(), Microsoft.Xna.Framework.Graphics.SurfaceFormat.Bgra4444);
@@ -102,14 +101,15 @@ internal static partial class CCLabelUtilities
         _bitmapSkia = new SKBitmap(width, height);
         _canvas = new SKCanvas(_bitmapSkia);
 
+        // SkiaSharp 3.x splits text state out of SKPaint: the font (typeface + size)
+        // draws the glyphs, the paint keeps color/antialiasing. FilterQuality is
+        // dropped outright - it only ever affected bitmap sampling, never text.
         _paint = new SKPaint
         {
             IsAntialias = true,
-            FilterQuality = SKFilterQuality.High,
-            Color = SKColors.White,
-            Typeface = SKTypeface.FromFamilyName("Sans-serif"),
-            TextSize = 12
+            Color = SKColors.White
         };
+        _font = new SKFont(SKTypeface.FromFamilyName("Sans-serif"), 12);
     }
 
     static SKTypeface CreateFontSkia(string familyName, float emSize)
