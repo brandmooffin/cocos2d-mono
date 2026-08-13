@@ -5,6 +5,11 @@ that apply across **all** Cocos2D-Mono repositories — how work is branched, ve
 and released. For user-facing guides (installation, tutorials, API usage), see
 [cocos2d-mono.dev](https://cocos2d-mono.dev/docs/category/contributing).
 
+The [contributing guides on the site](https://cocos2d-mono.dev/docs/category/contributing)
+cover the same conventions in more detail, including code style. Where the two ever
+disagree, **this file is authoritative** — it ships with the code and is versioned
+alongside it.
+
 ## Repository map
 
 The project spans several repositories. Changes to the engine often have downstream
@@ -16,7 +21,7 @@ counterparts, and knowing which repo owns what saves a lot of time.
 | `Cocos2D-Mono.Docs` | The documentation site (Docusaurus) | Publishes from `main` — merged work is not live until released |
 | `Cocos2D-Mono.Samples` | Sample games and the tutorial sample projects | Tutorial checkpoints must stay in sync with the docs |
 | `Cocos2D-Mono.ProjectTemplates` | `dotnet new` templates and the Visual Studio extension | Ships to NuGet *and* the VS Marketplace |
-| `Cocos2D-Mono.Tests` | Multi-platform showcase app consuming the **published** packages | Validates what consumers actually install; store-packaging vehicle |
+| `Cocos2D-Mono.Tests` | The `Cocos2DMono.IntegrationTests` host plus shared scenes, built against the **published** packages | A separate repo — not this one's `Tests/` directory. Validates what consumers actually install; store-packaging vehicle |
 
 ## Branching and pull requests
 
