@@ -11,7 +11,10 @@
       transition; this csproj globs it. The legacy per-platform test csprojs are
       deleted at the Stage C4 cutover.
     -->
-    <TargetFrameworks>$(Cocos2DTargetFrameworks)</TargetFrameworks>
+    <!-- The test host has no Mac Catalyst head yet (C2D-238 proves the engine under
+         Catalyst through a real title), so it stays on the four shipped TFMs even on a
+         macOS host where the repo-root Directory.Build.props adds the Catalyst TFM. -->
+    <TargetFrameworks>$(Cocos2DTargetFrameworks.Replace(';$(Cocos2DMacCatalystTfm)', ''))</TargetFrameworks>
     <RootNamespace>tests</RootNamespace>
     <AssemblyName>Cocos2DMono.IntegrationTests</AssemblyName>
     <IsPackable>false</IsPackable>

@@ -59,8 +59,13 @@
     <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
     <CheckEolWorkloads>false</CheckEolWorkloads>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DMacCatalystTfm)'">
+    <DefineConstants>$(DefineConstants);__IOS__;__MOBILE__;__UNIFIED__;IPHONE;IOS;MACCATALYST;GLES;OPENGL;MONOGAME</DefineConstants>
+    <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+    <CheckEolWorkloads>false</CheckEolWorkloads>
+  </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)' or '$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
+  <PropertyGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)' or '$(TargetFramework)' == '$(Cocos2DMacCatalystTfm)' or '$(TargetFramework)' == '$(Cocos2DAndroidTfm)'">
     <IncludeSymbols>false</IncludeSymbols>
     <NoWarn>$(NoWarn);NU5119</NoWarn>
   </PropertyGroup>
@@ -92,6 +97,12 @@
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DIosTfm)'">
     <PackageReference Include="MonoGame.Framework.iOS" />
+  </ItemGroup>
+  <!-- Mac Catalyst: fork-built assembly, see Cocos2DMono.csproj / repo-root Directory.Build.props. -->
+  <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DMacCatalystTfm)'">
+    <Reference Include="MonoGame.Framework">
+      <HintPath>$(MonoGameMacCatalystArtifactsRoot)$(Configuration)\MonoGame.Framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
