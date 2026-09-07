@@ -12,9 +12,16 @@
       deleted at the Stage C4 cutover.
     -->
     <!-- The test host has no Mac Catalyst head yet (C2D-238 proves the engine under
-         Catalyst through a real title), so it stays on the four shipped TFMs even on a
-         macOS host where the repo-root Directory.Build.props adds the Catalyst TFM. -->
-    <TargetFrameworks>$(Cocos2DTargetFrameworks.Replace(';$(Cocos2DMacCatalystTfm)', ''))</TargetFrameworks>
+         Catalyst through a real title), so the Catalyst TFM is filtered out of the
+         shared list wherever it sits: appended by the repo-root Directory.Build.props
+         on a macOS host with the fork, or placed anywhere by a -p: override. The list
+         is wrapped in separators so first, middle, last and only-entry all match; a
+         list that was Catalyst-only falls back to the desktop host. -->
+    <_Cocos2DTestHostTfms>;$(Cocos2DTargetFrameworks);</_Cocos2DTestHostTfms>
+    <_Cocos2DTestHostTfms>$(_Cocos2DTestHostTfms.Replace(';$(Cocos2DMacCatalystTfm);', ';'))</_Cocos2DTestHostTfms>
+    <_Cocos2DTestHostTfms>$(_Cocos2DTestHostTfms.Trim(';'))</_Cocos2DTestHostTfms>
+    <TargetFrameworks>$(_Cocos2DTestHostTfms)</TargetFrameworks>
+    <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">$(Cocos2DBaseTfm)</TargetFrameworks>
     <RootNamespace>tests</RootNamespace>
     <AssemblyName>Cocos2DMono.IntegrationTests</AssemblyName>
     <IsPackable>false</IsPackable>
