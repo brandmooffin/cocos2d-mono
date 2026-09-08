@@ -101,7 +101,7 @@
   <!-- Mac Catalyst: fork-built assembly, see Cocos2DMono.csproj / repo-root Directory.Build.props. -->
   <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DMacCatalystTfm)'">
     <Reference Include="MonoGame.Framework">
-      <HintPath>$(MonoGameMacCatalystArtifactsRoot)$(Configuration)\MonoGame.Framework.dll</HintPath>
+      <HintPath>$([System.IO.Path]::Combine('$(MonoGameMacCatalystArtifactsRoot)', '$(Configuration)', 'MonoGame.Framework.dll'))</HintPath>
     </Reference>
   </ItemGroup>
 
