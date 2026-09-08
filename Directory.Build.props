@@ -43,6 +43,42 @@
     <Cocos2DWindowsTfm Condition="'$(Cocos2DWindowsTfm)' == ''">net10.0-windows7.0</Cocos2DWindowsTfm>
     <Cocos2DAndroidTfm Condition="'$(Cocos2DAndroidTfm)' == ''">net10.0-android36.0</Cocos2DAndroidTfm>
     <Cocos2DIosTfm Condition="'$(Cocos2DIosTfm)' == ''">net10.0-ios26.0</Cocos2DIosTfm>
-    <Cocos2DTargetFrameworks Condition="'$(Cocos2DTargetFrameworks)' == ''">$(Cocos2DBaseTfm);$(Cocos2DWindowsTfm);$(Cocos2DAndroidTfm);$(Cocos2DIosTfm)</Cocos2DTargetFrameworks>
+    <Cocos2DMacCatalystTfm Condition="'$(Cocos2DMacCatalystTfm)' == ''">net10.0-maccatalyst26.0</Cocos2DMacCatalystTfm>
+  </PropertyGroup>
+
+  <!--
+    ==================== Mac Catalyst (C2D-238) ====================
+
+    MonoGame publishes no maccatalyst package (still true at 3.8.5), so the Catalyst
+    TFM builds against the MonoGame.Framework assembly produced by our fork:
+      https://github.com/Cocos2D-Mono/MonoGame   (branch feature/mac-catalyst-support)
+      dotnet build MonoGame.Framework/MonoGame.Framework.MacCatalyst.csproj -c <Configuration>
+    which writes Artifacts/MonoGame.Framework/MacCatalyst/<Configuration>/MonoGame.Framework.dll.
+    $(MonoGameMacCatalystArtifactsRoot) points at that MacCatalyst folder; the default
+    is a checkout of the fork beside this repo, and an override may be given with or
+    without a trailing separator. The csprojs combine it with the configuration folder
+    themselves, so a Debug engine build references the fork's Debug assembly and a
+    Release build its Release assembly.
+
+    The maccatalyst workload exists only on macOS, and the reference only resolves when
+    the fork has been built for the configuration being built, so the TFM joins the
+    default list only when both hold. Every other host, every checkout without the
+    fork, and a configuration the fork has not been built for all build the four
+    shipped TFMs unchanged. Force it either way with -p:Cocos2DIncludeMacCatalyst=true|false.
+  -->
+  <PropertyGroup>
+    <MonoGameMacCatalystArtifactsRoot Condition="'$(MonoGameMacCatalystArtifactsRoot)' == ''">$(MSBuildThisFileDirectory)..\MonoGame\Artifacts\MonoGame.Framework\MacCatalyst</MonoGameMacCatalystArtifactsRoot>
+    <!-- Probe the exact assembly the csprojs will reference. $(Configuration) is only
+         set this early when it was passed in (-c, or a referencing project); otherwise
+         the SDK defaults it to Debug later, so the probe assumes Debug in that case. -->
+    <_Cocos2DMacCatalystProbeConfiguration>$(Configuration)</_Cocos2DMacCatalystProbeConfiguration>
+    <_Cocos2DMacCatalystProbeConfiguration Condition="'$(_Cocos2DMacCatalystProbeConfiguration)' == ''">Debug</_Cocos2DMacCatalystProbeConfiguration>
+    <_Cocos2DMacCatalystProbeAssembly>$([System.IO.Path]::Combine('$(MonoGameMacCatalystArtifactsRoot)', '$(_Cocos2DMacCatalystProbeConfiguration)', 'MonoGame.Framework.dll'))</_Cocos2DMacCatalystProbeAssembly>
+    <Cocos2DIncludeMacCatalyst Condition="'$(Cocos2DIncludeMacCatalyst)' == '' and '$([MSBuild]::IsOSPlatform(`OSX`))' == 'true' and Exists('$(_Cocos2DMacCatalystProbeAssembly)')">true</Cocos2DIncludeMacCatalyst>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Cocos2DTargetFrameworks)' == ''">
+    <Cocos2DTargetFrameworks>$(Cocos2DBaseTfm);$(Cocos2DWindowsTfm);$(Cocos2DAndroidTfm);$(Cocos2DIosTfm)</Cocos2DTargetFrameworks>
+    <Cocos2DTargetFrameworks Condition="'$(Cocos2DIncludeMacCatalyst)' == 'true'">$(Cocos2DTargetFrameworks);$(Cocos2DMacCatalystTfm)</Cocos2DTargetFrameworks>
   </PropertyGroup>
 </Project>
