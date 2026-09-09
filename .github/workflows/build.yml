@@ -13,6 +13,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Mac Catalyst builds against the Catalyst MonoGame.Framework from our fork
+  # (MonoGame publishes no maccatalyst package; see Directory.Build.props). The
+  # Catalyst cell clones the fork at exactly this commit, so a push to the fork's
+  # branch cannot break this workflow. Bump it deliberately, once the fork's own
+  # "Catalyst platform" workflow is green on the new commit.
+  MONOGAME_FORK_REF: 36d2a915e756db3c544c19747e65f3042f2d3c28 # Cocos2D-Mono/MonoGame feature/mac-catalyst-support, 2026-09-09
+
 jobs:
   build:
     # The label-based job name ("DesktopGL Linux (Debug)", "iOS (Release)", ...)
@@ -40,6 +48,9 @@ jobs:
           - { label: Android, os: ubuntu-latest, tfm: net10.0-android36.0, workloads: android }
           # iOS requires a macOS host (Apple toolchain).
           - { label: iOS, os: macos-latest, tfm: net10.0-ios26.0, workloads: ios }
+          # Mac Catalyst: macOS host plus the fork-built MonoGame assembly (see the
+          # clone step below and MONOGAME_FORK_REF above).
+          - { label: Mac Catalyst, os: macos-latest, tfm: net10.0-maccatalyst26.0, workloads: maccatalyst }
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
@@ -62,11 +73,29 @@ jobs:
         if: matrix.target.workloads != ''
         run: dotnet workload install ${{ matrix.target.workloads }} --ignore-failed-sources
 
-      # Build per-TFM so non-Windows hosts never evaluate the Windows TFM
-      # (restoring the full <TargetFrameworks> on macOS/Linux raises NETSDK1100
-      # for net10.0-windows7.0). -p:TargetFrameworks=<tfm> narrows each project
-      # to the single TFM being built. Box2D builds first so Cocos2DMono's
-      # ProjectReference resolves from a populated cache.
+      # Mac Catalyst only: clone the MonoGame fork beside the repo, where the
+      # engine's default $(MonoGameMacCatalystArtifactsRoot) expects it, pinned to
+      # MONOGAME_FORK_REF, and build its Catalyst assembly for this configuration.
+      # actions/checkout cannot place a repository outside the workspace, and a
+      # clone inside it would fall under this repo's central package management,
+      # so plain git does the clone. Only the two source submodules the Catalyst
+      # project compiles are fetched.
+      - name: Clone and build the MonoGame fork (Mac Catalyst only)
+        if: matrix.target.workloads == 'maccatalyst'
+        run: |
+          FORK="$GITHUB_WORKSPACE/../MonoGame"
+          git init -q "$FORK"
+          cd "$FORK"
+          git remote add origin https://github.com/Cocos2D-Mono/MonoGame.git
+          git fetch -q --depth 1 origin "$MONOGAME_FORK_REF"
+          git checkout -q --detach FETCH_HEAD
+          git submodule update --init --depth 1 ThirdParty/StbImageSharp ThirdParty/StbImageWriteSharp
+          dotnet build MonoGame.Framework/MonoGame.Framework.MacCatalyst.csproj -c ${{ matrix.configuration }}
+
+      # Build per-TFM: -p:TargetFrameworks=<tfm> narrows each project to the single
+      # TFM the cell validates, so a cell never needs the other cells' workloads
+      # (and never spends time on their targets). Box2D builds first so
+      # Cocos2DMono's ProjectReference resolves from a populated cache.
       - name: Build Box2D
         run: dotnet build src/Box2D/Box2D.csproj -c ${{ matrix.configuration }} -f ${{ matrix.target.tfm }} -p:TargetFrameworks=${{ matrix.target.tfm }}
 
