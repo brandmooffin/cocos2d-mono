@@ -14,6 +14,15 @@
          CS0579 duplicate-attribute errors. Excluding obj/bin explicitly covers every
          custom layout and makes configuration switches safe in one working tree. -->
     <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
+
+    <!-- The WindowsDX TFM (net10.0-windows7.0) cannot even be restored on macOS or Linux
+         without this: NETSDK1100 stops the whole multi-target restore, and a consumer's
+         project reference (a game's Catalyst head, say) cannot narrow the TFM list
+         because NuGet restore ignores reference metadata. Enabling Windows targeting off
+         Windows restores and builds the WinForms-based TFM against reference assemblies;
+         the one-time cost is the WindowsDesktop reference pack download. CI still narrows
+         each cell to its own TFM and is unaffected. -->
+    <EnableWindowsTargeting Condition="'$([MSBuild]::IsOSPlatform(`Windows`))' != 'true'">true</EnableWindowsTargeting>
   </PropertyGroup>
 
   <!--
@@ -61,20 +70,25 @@
     Release build its Release assembly.
 
     The maccatalyst workload exists only on macOS, and the reference only resolves when
-    the fork has been built for the configuration being built, so the TFM joins the
-    default list only when both hold. Every other host, every checkout without the
-    fork, and a configuration the fork has not been built for all build the four
-    shipped TFMs unchanged. Force it either way with -p:Cocos2DIncludeMacCatalyst=true|false.
+    the fork has been built, so the TFM joins the default list only when both hold.
+    Every other host, and every checkout without the fork, builds the four shipped
+    TFMs unchanged. Force it either way with -p:Cocos2DIncludeMacCatalyst=true|false.
   -->
   <PropertyGroup>
     <MonoGameMacCatalystArtifactsRoot Condition="'$(MonoGameMacCatalystArtifactsRoot)' == ''">$(MSBuildThisFileDirectory)..\MonoGame\Artifacts\MonoGame.Framework\MacCatalyst</MonoGameMacCatalystArtifactsRoot>
-    <!-- Probe the exact assembly the csprojs will reference. $(Configuration) is only
-         set this early when it was passed in (-c, or a referencing project); otherwise
-         the SDK defaults it to Debug later, so the probe assumes Debug in that case. -->
-    <_Cocos2DMacCatalystProbeConfiguration>$(Configuration)</_Cocos2DMacCatalystProbeConfiguration>
-    <_Cocos2DMacCatalystProbeConfiguration Condition="'$(_Cocos2DMacCatalystProbeConfiguration)' == ''">Debug</_Cocos2DMacCatalystProbeConfiguration>
-    <_Cocos2DMacCatalystProbeAssembly>$([System.IO.Path]::Combine('$(MonoGameMacCatalystArtifactsRoot)', '$(_Cocos2DMacCatalystProbeConfiguration)', 'MonoGame.Framework.dll'))</_Cocos2DMacCatalystProbeAssembly>
-    <Cocos2DIncludeMacCatalyst Condition="'$(Cocos2DIncludeMacCatalyst)' == '' and '$([MSBuild]::IsOSPlatform(`OSX`))' == 'true' and Exists('$(_Cocos2DMacCatalystProbeAssembly)')">true</Cocos2DIncludeMacCatalyst>
+    <!-- Resolve which of the fork's configuration folders this build references.
+         $(Configuration) is only set this early when it was passed in (-c, or a
+         referencing project); otherwise the SDK defaults it to Debug later, so Debug is
+         assumed in that case. A configuration the fork has not been built for (a
+         consumer's AppStore configuration, say) falls back to Release, then Debug, so the
+         reference binds to an artifact that exists. The csprojs use the resolved value
+         for their HintPaths, so the opt-in probe and the reference always agree. -->
+    <MonoGameMacCatalystAssemblyConfiguration Condition="'$(MonoGameMacCatalystAssemblyConfiguration)' == ''">$(Configuration)</MonoGameMacCatalystAssemblyConfiguration>
+    <MonoGameMacCatalystAssemblyConfiguration Condition="'$(MonoGameMacCatalystAssemblyConfiguration)' == ''">Debug</MonoGameMacCatalystAssemblyConfiguration>
+    <MonoGameMacCatalystAssemblyConfiguration Condition="!Exists('$([System.IO.Path]::Combine(`$(MonoGameMacCatalystArtifactsRoot)`, `$(MonoGameMacCatalystAssemblyConfiguration)`, `MonoGame.Framework.dll`))') and Exists('$([System.IO.Path]::Combine(`$(MonoGameMacCatalystArtifactsRoot)`, `Release`, `MonoGame.Framework.dll`))')">Release</MonoGameMacCatalystAssemblyConfiguration>
+    <MonoGameMacCatalystAssemblyConfiguration Condition="!Exists('$([System.IO.Path]::Combine(`$(MonoGameMacCatalystArtifactsRoot)`, `$(MonoGameMacCatalystAssemblyConfiguration)`, `MonoGame.Framework.dll`))') and Exists('$([System.IO.Path]::Combine(`$(MonoGameMacCatalystArtifactsRoot)`, `Debug`, `MonoGame.Framework.dll`))')">Debug</MonoGameMacCatalystAssemblyConfiguration>
+    <MonoGameMacCatalystAssembly>$([System.IO.Path]::Combine('$(MonoGameMacCatalystArtifactsRoot)', '$(MonoGameMacCatalystAssemblyConfiguration)', 'MonoGame.Framework.dll'))</MonoGameMacCatalystAssembly>
+    <Cocos2DIncludeMacCatalyst Condition="'$(Cocos2DIncludeMacCatalyst)' == '' and '$([MSBuild]::IsOSPlatform(`OSX`))' == 'true' and Exists('$(MonoGameMacCatalystAssembly)')">true</Cocos2DIncludeMacCatalyst>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Cocos2DTargetFrameworks)' == ''">

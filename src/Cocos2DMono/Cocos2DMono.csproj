@@ -225,12 +225,12 @@ Migration: retarget your game to .NET 10 (net10.0 desktop, net10.0-windows7.0 Wi
   </ItemGroup>
 
   <!-- Mac Catalyst: no MonoGame NuGet package exists for this platform, so the
-       assembly built from our fork is referenced directly. The root comes from the
-       repo-root Directory.Build.props (trailing separator optional); the configuration
-       folder mirrors this build's. -->
+       assembly built from our fork is referenced directly. The repo-root
+       Directory.Build.props resolves the path, including the fallback to the fork's
+       Release or Debug artifact for configurations it has not been built for. -->
   <ItemGroup Condition="'$(TargetFramework)' == '$(Cocos2DMacCatalystTfm)'">
     <Reference Include="MonoGame.Framework">
-      <HintPath>$([System.IO.Path]::Combine('$(MonoGameMacCatalystArtifactsRoot)', '$(Configuration)', 'MonoGame.Framework.dll'))</HintPath>
+      <HintPath>$(MonoGameMacCatalystAssembly)</HintPath>
     </Reference>
   </ItemGroup>
 
