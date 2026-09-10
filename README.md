@@ -13,6 +13,7 @@
 [![Android](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-android.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-android.yml)
 [![iOS](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-ios.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-ios.yml)
 [![Mac Catalyst](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-maccatalyst.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-maccatalyst.yml)
+[![tvOS](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-tvos.yml/badge.svg)](https://github.com/Cocos2D-Mono/cocos2d-mono/actions/workflows/status-tvos.yml)
 
 </div>
 
